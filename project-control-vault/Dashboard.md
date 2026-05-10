@@ -6,7 +6,8 @@ Last updated: 2026-05-10
 
 - Mac + Codex: control plane for project planning, site edits, newsletter automation, Git, and documentation.
 - Windows + Claude Desktop: GPU/render workstation and Obsidian progress reader.
-- Obsidian vault path: `project-control-vault/`.
+- Obsidian vault path: `/Users/mac/Documents/New project 3/fursay/project-control-vault`.
+- Start note: `00 Home.md`.
 - Render jobs path: `render-jobs/`.
 
 ## Current project state
