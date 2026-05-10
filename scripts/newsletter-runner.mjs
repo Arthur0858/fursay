@@ -12,6 +12,10 @@ const YOUTUBE_API = "https://www.googleapis.com/youtube/v3/playlistItems";
 const OPENAI_API = "https://api.openai.com/v1/responses";
 const MAILERLITE_API = "https://connect.mailerlite.com/api";
 
+function projectPath(filePath) {
+  return path.relative(ROOT, filePath).replaceAll(path.sep, "/");
+}
+
 const CHANNELS = {
   koko: {
     label: "Koko's Forest",
@@ -288,7 +292,7 @@ function buildCodexRequest(channelKey, episode, runId) {
       videoUrl: episode.videoUrl,
       thumbnail: episode.thumbnail
     },
-    requiredOutputPath: outputPath,
+    requiredOutputPath: projectPath(outputPath),
     requiredSchema: schema,
     instructions: [
       `Create one production-ready weekly email newsletter for ${config.label}.`,
@@ -550,7 +554,7 @@ async function runPrepare(args, state, run) {
 
   const request = buildCodexRequest(args.channel, episode, run.runId);
   const requestPath = await writePendingRequest(request);
-  run.requestPath = requestPath;
+  run.requestPath = projectPath(requestPath);
   run.newsletterOutputPath = request.requiredOutputPath;
   run.status = "prepared";
   return {
@@ -558,12 +562,12 @@ async function runPrepare(args, state, run) {
     channel: run.channel,
     episodeNo: run.episodeNo,
     videoUrl: run.videoUrl,
-    requestPath,
+    requestPath: run.requestPath,
     newsletterOutputPath: request.requiredOutputPath,
-    nextCommand: `node scripts/newsletter-runner.mjs --mode send --channel ${run.channel} --input ${path.relative(ROOT, request.requiredOutputPath)}${run.dryRun ? " --dry-run" : ""}`,
+    nextCommand: `node scripts/newsletter-runner.mjs --mode send --channel ${run.channel} --input ${request.requiredOutputPath}${run.dryRun ? " --dry-run" : ""}`,
     codexTask: [
-      `Read ${path.relative(ROOT, requestPath)}.`,
-      `Create the required newsletter JSON at ${path.relative(ROOT, request.requiredOutputPath)}.`,
+      `Read ${run.requestPath}.`,
+      `Create the required newsletter JSON at ${request.requiredOutputPath}.`,
       `Then run the nextCommand.`
     ].join(" ")
   };
@@ -580,7 +584,7 @@ async function runSend(args, state, run) {
   run.episodeNo = episode.episodeNo;
   run.videoId = episode.videoId;
   run.videoUrl = episode.videoUrl;
-  run.inputPath = fullPath;
+  run.inputPath = projectPath(fullPath);
 
   const cleanNewsletter = { ...newsletter };
   delete cleanNewsletter.episodeNo;

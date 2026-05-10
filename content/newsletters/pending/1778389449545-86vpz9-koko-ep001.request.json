@@ -19,7 +19,7 @@
     "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
     "thumbnail": "https://i.ytimg.com/vi/zoGksIelZDw/maxresdefault.jpg"
   },
-  "requiredOutputPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389449545-86vpz9-koko-ep001.newsletter.json",
+  "requiredOutputPath": "content/newsletters/pending/1778389449545-86vpz9-koko-ep001.newsletter.json",
   "requiredSchema": {
     "episodeNo": "number",
     "videoId": "string",

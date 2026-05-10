@@ -9,7 +9,7 @@
   "episodeNo": 1,
   "videoId": "uFicgPqbxms",
   "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
-  "requestPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389435033-uyxsaw-arabic-ep001.request.json",
-  "newsletterOutputPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389435033-uyxsaw-arabic-ep001.newsletter.json",
+  "requestPath": "content/newsletters/pending/1778389435033-uyxsaw-arabic-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1778389435033-uyxsaw-arabic-ep001.newsletter.json",
   "finishedAt": "2026-05-10T05:03:55.360Z"
 }
