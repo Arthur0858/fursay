@@ -18,9 +18,9 @@ Last updated: 2026-05-10
 
 ## Next actions
 
-- Use `Render Queue.md` to add GPU tasks before moving work to Windows.
-- Use `Handoff for Claude.md` when asking Claude Desktop to review or run a render job.
-- Keep source edits and handoff docs in Git.
+- Send the current transfer bundle to the Windows GPU machine if no Git remote is available yet.
+- On Windows, clone the bundle or Git remote, then open `project-control-vault/` in Obsidian.
+- Use `Render Queue.md` to run `test-gpu-handoff-001` as the first smoke test.
 - Keep generated media and machine-specific outputs out of Git unless they are intentionally promoted.
 
 ## Do not sync
@@ -31,4 +31,3 @@ Last updated: 2026-05-10
 - generated videos
 - model caches
 - Obsidian `.obsidian/` app settings
-

@@ -48,3 +48,12 @@ This project uses a split workflow:
 5. Save generated files into the job `outputs/` folder locally.
 6. Write the result summary into the job completion note and Obsidian queue before returning the output to Mac.
 
+## When no Git remote exists yet
+
+Create a portable Git bundle on Mac:
+
+```bash
+node scripts/create-windows-transfer-bundle.mjs
+```
+
+Copy the generated files from `transfer/` to Windows and follow `docs/windows-claude-setup.md`.

@@ -11,6 +11,8 @@ node_modules
 
 # Generated archives and heavy QA outputs
 *.zip
+*.bundle
+transfer/
 output/
 qa-screenshots/
 *.png
