@@ -1,0 +1,9 @@
+{
+  "runId": "1778388771563-g3eh3y",
+  "channel": "koko",
+  "dryRun": false,
+  "startedAt": "2026-05-10T04:52:51.563Z",
+  "status": "failed",
+  "error": "HTTP 400: API key not valid. Please pass a valid API key.",
+  "finishedAt": "2026-05-10T04:52:51.664Z"
+}

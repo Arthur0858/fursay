@@ -1,0 +1,46 @@
+{
+  "runId": "1778389396204-r8o0r6",
+  "channel": "koko",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-05-10T05:03:16.204Z",
+  "status": "dry_run_passed",
+  "episodeNo": 1,
+  "videoId": "zoGksIelZDw",
+  "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+  "inputPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389360971-9m2ebp-koko-ep001.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "Koko's Forest EP001: A gentle story about making friends",
+    "preview_text": "Watch Koko meet a new ladybug friend, then try three simple feeling words with your child. 親子一起練習友情、分享與勇氣。",
+    "hero_title": "Koko Meets a New Friend",
+    "intro": "This week's Koko story is a short, warm moment about meeting a new friend in the forest. Watch it once with your child, then talk about how Koko can be kind, brave, and gentle. 這一集很適合陪孩子聊「新朋友」和「勇敢打招呼」。",
+    "learning_words": [
+      {
+        "term": "friend",
+        "pronunciation": "frend",
+        "meaning": "朋友",
+        "example": "Koko meets a new friend."
+      },
+      {
+        "term": "share",
+        "pronunciation": "shair",
+        "meaning": "分享",
+        "example": "We can share a smile."
+      },
+      {
+        "term": "brave",
+        "pronunciation": "brayv",
+        "meaning": "勇敢",
+        "example": "Koko is brave and says hello."
+      }
+    ],
+    "parent_activity": "After watching, ask your child to choose one toy as Koko and one toy as the new friend. Practice this short line three times: 'Hello, friend.' Then invite your child to say it in a happy voice, a shy voice, and a brave voice. 可以接著問：如果你是叩叩，你會怎麼跟新朋友打招呼？",
+    "video_cta": "Watch EP001 with your child",
+    "site_cta": "Visit Koko's Forest on Fursay",
+    "closing": "A small hello can become the start of a kind friendship. See you next week in Koko's Forest. 下週再一起進森林陪叩叩學一句新的英文。"
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">Watch Koko meet a new ladybug friend, then try three simple feeling words with your child. 親子一起練習友情、分享與勇氣。</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP001</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">Koko Meets a New Friend</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">This week's Koko story is a short, warm moment about meeting a new friend in the forest. Watch it once with your child, then talk about how Koko can be kind, brave, and gentle. 這一集很適合陪孩子聊「新朋友」和「勇敢打招呼」。</p>\n            <img src=\"https://i.ytimg.com/vi/zoGksIelZDw/maxresdefault.jpg\" alt=\"叩叩的新朋友：小瓢蟲亮亮 #兒童故事 #親子共賞\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>friend</strong><br><span style=\"color:#6d6258;\">frend</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">朋友<br><em>Koko meets a new friend.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>share</strong><br><span style=\"color:#6d6258;\">shair</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">分享<br><em>We can share a smile.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>brave</strong><br><span style=\"color:#6d6258;\">brayv</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">勇敢<br><em>Koko is brave and says hello.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">After watching, ask your child to choose one toy as Koko and one toy as the new friend. Practice this short line three times: 'Hello, friend.' Then invite your child to say it in a happy voice, a shy voice, and a brave voice. 可以接著問：如果你是叩叩，你會怎麼跟新朋友打招呼？</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=zoGksIelZDw\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch EP001 with your child</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko\" style=\"color:#c05f18;font-weight:bold;\">Visit Koko's Forest on Fursay</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">A small hello can become the start of a kind friendship. See you next week in Koko's Forest. 下週再一起進森林陪叩叩學一句新的英文。</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "scheduledAt": "2026-05-11T09:00:00+08:00",
+  "finishedAt": "2026-05-10T05:03:16.232Z"
+}

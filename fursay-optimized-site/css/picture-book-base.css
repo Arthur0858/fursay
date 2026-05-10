@@ -1,0 +1,277 @@
+/* ── Picture book visual pass ── */
+body {
+  background:
+    linear-gradient(90deg, rgba(123,83,45,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(123,83,45,0.026) 1px, transparent 1px),
+    #FFF9EE;
+  background-size: 36px 36px, 36px 36px, auto;
+}
+nav {
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,249,238,0.94));
+  border-bottom: 2px solid rgba(90,52,24,0.12);
+  box-shadow: 0 6px 0 rgba(90,52,24,0.035);
+}
+.nav-logo { text-shadow: 0 2px 0 rgba(255,255,255,0.9); }
+section {
+  position: relative;
+  background-color: #FFF9EE;
+}
+.section-title,
+.hero h1,
+.hero-text h1 {
+  text-shadow: 0 3px 0 rgba(255,255,255,0.78);
+}
+.section-sub { max-width: 680px; }
+.hero {
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.28) 50%, rgba(90,52,24,0.04) 50.2%, rgba(255,255,255,0.14) 50.8%),
+    radial-gradient(circle at 24% 20%, rgba(255,255,255,0.72), transparent 30%),
+    linear-gradient(150deg, #E3F2D7 0%, #FFF2C9 49%, #FFD8BE 100%) !important;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 86px;
+  bottom: 58px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(90,52,24,0.13), transparent);
+  box-shadow: 12px 0 34px rgba(90,52,24,0.08), -12px 0 34px rgba(90,52,24,0.05);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -10%;
+  height: 35%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.48), rgba(255,255,255,0.94)),
+    linear-gradient(135deg, rgba(46,157,95,0.16), rgba(255,201,64,0.18));
+  border-radius: 50% 50% 0 0 / 42% 42% 0 0;
+  transform: rotate(-1deg);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero > *:not(.hero-sun):not(.hero-dune), .hero-content, .hero-text, .hero-visual { position: relative; z-index: 1; }
+.hero-sun { position: absolute !important; z-index: 0; pointer-events: none; }
+.hero-dune { position: absolute !important; z-index: 0; pointer-events: none; }
+.hero-bg-circles { display: none; }
+.hero-badge {
+  background: rgba(255,254,247,0.92) !important;
+  box-shadow: 0 8px 0 rgba(90,52,24,0.06), 0 18px 26px rgba(90,52,24,0.08) !important;
+  border: 2px solid rgba(90,52,24,0.13) !important;
+  border-radius: 999px !important;
+}
+.hero-float,
+.hero-char-main,
+.hero-mini-friend,
+.hero-card-img,
+.card-char-img,
+.char-img {
+  filter: drop-shadow(0 10px 0 rgba(255,255,255,0.52)) drop-shadow(0 12px 16px rgba(90,52,24,0.16));
+}
+.hero-note {
+  border-radius: 12px 16px 13px 18px;
+  background: rgba(255,254,247,0.74);
+  border: 2px solid rgba(90,52,24,0.12);
+  box-shadow: 0 3px 0 rgba(90,52,24,0.06);
+}
+.hero-proof,
+.hero-stats,
+.hero-card {
+  background: rgba(255,254,247,0.80) !important;
+  border: 2px solid rgba(90,52,24,0.12) !important;
+  border-radius: 22px 28px 24px 30px !important;
+  box-shadow: 0 8px 0 rgba(90,52,24,0.055), 0 24px 42px rgba(90,52,24,0.09) !important;
+}
+.hero-card { overflow: hidden; }
+.hero-card::after,
+.channel-card::after,
+.vid-card::after,
+.ep-card::after,
+.char-card::after,
+.learn-card::after,
+.curr-card::after,
+.cul-card::after,
+.book-card::after,
+.feature-card::after,
+.step-card::after,
+.faq-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 58px;
+  height: 58px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0) 50%, rgba(90,52,24,0.08) 51%),
+    linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,235,192,0.88));
+  border-bottom-left-radius: 16px;
+  box-shadow: -4px 4px 10px rgba(90,52,24,0.08);
+  pointer-events: none;
+}
+[dir="rtl"] .hero-card::after,
+[dir="rtl"] .channel-card::after,
+[dir="rtl"] .vid-card::after,
+[dir="rtl"] .ep-card::after,
+[dir="rtl"] .char-card::after,
+[dir="rtl"] .learn-card::after,
+[dir="rtl"] .curr-card::after,
+[dir="rtl"] .cul-card::after,
+[dir="rtl"] .book-card::after,
+[dir="rtl"] .feature-card::after,
+[dir="rtl"] .step-card::after,
+[dir="rtl"] .faq-item::after {
+  right: auto;
+  left: 0;
+  transform: scaleX(-1);
+}
+.channels,
+.episodes,
+.characters,
+.curriculum,
+.learn,
+.features,
+.steps,
+.faq,
+.booklist-sec,
+.culture {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(90,52,24,0.07) 50%, transparent calc(50% + 1px)),
+    linear-gradient(180deg, #FFFDF7 0%, #FFF4E2 100%) !important;
+}
+.channels::before,
+.episodes::before,
+.characters::before,
+.curriculum::before,
+.learn::before,
+.features::before,
+.steps::before,
+.faq::before,
+.booklist-sec::before,
+.culture::before {
+  content: '';
+  position: absolute;
+  inset: 34px max(18px, calc((100% - 1120px) / 2)) 28px;
+  border: 2px solid rgba(90,52,24,0.10);
+  border-radius: 28px 34px 30px 36px;
+  box-shadow: inset 0 0 0 8px rgba(255,255,255,0.30), 0 20px 48px rgba(90,52,24,0.055);
+  pointer-events: none;
+}
+.channels > *,
+.episodes > *,
+.characters > *,
+.curriculum > *,
+.learn > *,
+.features > *,
+.steps > *,
+.faq > *,
+.booklist-sec > *,
+.culture > * { position: relative; z-index: 1; }
+.channel-card,
+.vid-card,
+.ep-card,
+.char-card,
+.learn-card,
+.curr-card,
+.cul-card,
+.book-card,
+.feature-card,
+.step-card,
+.faq-item {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,253,247,0.96) !important;
+  border: 2px solid rgba(90,52,24,0.13) !important;
+  border-radius: 16px 24px 18px 22px !important;
+  box-shadow: 0 9px 0 rgba(90,52,24,0.065), 0 22px 38px rgba(90,52,24,0.10) !important;
+}
+.channel-card:hover,
+.vid-card:hover,
+.ep-card:hover,
+.char-card:hover,
+.learn-card:hover,
+.curr-card:hover,
+.cul-card:hover,
+.book-card:hover,
+.feature-card:hover,
+.step-card:hover,
+.faq-item:hover {
+  box-shadow: 0 11px 0 rgba(90,52,24,0.075), 0 28px 54px rgba(90,52,24,0.14) !important;
+}
+.card-header,
+.char-img-wrap,
+.vid-thumb,
+.ep-thumb,
+.book-cover,
+.book-cover-fallback {
+  border-radius: 12px 18px 14px 20px;
+}
+.card-pill,
+.book-tag,
+.char-role,
+.char-role-lbl,
+.ep-tag,
+.vid-tag,
+.learn-icon,
+.feature-icon {
+  border-radius: 10px 13px 11px 14px !important;
+  box-shadow: 0 3px 0 rgba(90,52,24,0.055);
+}
+.paw-divider {
+  background: #FFF4E2;
+  color: rgba(90,52,24,0.42);
+  text-shadow: 0 2px 0 rgba(255,255,255,0.85);
+}
+@media (max-width: 768px) {
+  .hero {
+    background:
+      radial-gradient(circle at 50% 8%, rgba(255,255,255,0.78), transparent 34%),
+      linear-gradient(180deg, #E4F2D9 0%, #FFF1C8 54%, #FFDCC2 100%) !important;
+  }
+  .hero::before { display: none; }
+  .hero-sun, .hero-dune { display: none; }
+  .channels::before,
+  .episodes::before,
+  .characters::before,
+  .curriculum::before,
+  .learn::before,
+  .features::before,
+  .steps::before,
+  .faq::before,
+  .booklist-sec::before,
+  .culture::before { inset: 24px 12px 20px; border-radius: 24px; }
+}
+
+  
+
+/* Image frame final fit: animated artwork stays inside its picture frame. */
+.hero-visual picture,
+.hero-card picture {
+  box-sizing: content-box;
+  padding: 18px;
+  overflow: visible;
+}
+@media (max-width: 700px) {
+  .hero-visual picture,
+  .hero-card picture { padding: 10px; }
+}
+
+
+/* Koko floating friends use full hero frame as their picture container. */
+.hero-visual > picture:has(.hero-mini-friend) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}

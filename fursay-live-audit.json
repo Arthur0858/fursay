@@ -1,0 +1,568 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "title": "Fursay — Where Furry Friends Teach Little Ones to Speak",
+    "lang": "en",
+    "dir": "",
+    "canonical": "",
+    "description": "Fursay is a children's language learning platform with two bilingual YouTube channels: Koko's Forest Adventure (English) and Arabic Kids Chinese Picture Book.",
+    "h1Count": 1,
+    "h1": "Where furry friendsteach little ones to speak",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/index.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/index.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/index.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/index.html"
+      }
+    ],
+    "brokenImages": [
+      "https://i.ytimg.com/vi/T2go6XGjIcQ/hqdefault.jpg",
+      "https://i.ytimg.com/vi/EPUq2eLnqKs/hqdefault.jpg",
+      "https://i.ytimg.com/vi/SHBRaRFufQA/hqdefault.jpg",
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0385376715-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0399257748-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 6,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/koko.html",
+    "status": 200,
+    "title": "Koko's Forest Adventure — Free Bilingual Stories for Kids | Fursay",
+    "lang": "en",
+    "dir": "",
+    "canonical": "",
+    "description": "1000+ bilingual English-Chinese bedtime stories for children ages 2-8. Follow Koko and forest friends on magical adventures. Free on YouTube.",
+    "h1Count": 1,
+    "h1": "Koko'sForest Adventure",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/koko.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/koko.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/koko.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/koko.html"
+      }
+    ],
+    "brokenImages": [
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0385376715-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0399257748-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/turtly.png",
+      "https://fursay.com/images/chars/hoppy.png",
+      "https://fursay.com/images/chars/poki.png",
+      "https://fursay.com/images/chars/snaily.png",
+      "https://fursay.com/images/chars/lili.png",
+      "https://fursay.com/images/chars/tiny.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 14,
+    "charAvifCurrent": 0,
+    "consoleMessages": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x12407b34e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      }
+    ],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/arabic.html",
+    "status": 200,
+    "title": "Arabic Kids Chinese Picture Book — Free Bilingual Stories | Fursay",
+    "lang": "en",
+    "dir": "",
+    "canonical": "",
+    "description": "Bilingual Arabic-Chinese picture book stories for children ages 3-6. Meet Nour, Zayd and friends as they learn Chinese words and culture. Free on YouTube.",
+    "h1Count": 1,
+    "h1": "Arabic KidsChinese Picture Book",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/arabic.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/arabic.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/arabic.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/arabic.html"
+      }
+    ],
+    "brokenImages": [
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/arabic_nour_zayd_together.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/arabic_mingming.png",
+      "https://fursay.com/images/chars/arabic_huhu.png",
+      "https://fursay.com/images/chars/arabic_shanshan.png",
+      "https://fursay.com/images/chars/arabic_tutu.png",
+      "https://fursay.com/images/chars/arabic_xiaolu.png",
+      "https://fursay.com/images/chars/arabic_doudou.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 9,
+    "charAvifCurrent": 0,
+    "consoleMessages": [
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x11c001d7a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      }
+    ],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/zh/",
+    "status": 200,
+    "title": "Fursay — 讓毛茸茸的好朋友帶孩子開口說話",
+    "lang": "zh-TW",
+    "dir": "",
+    "canonical": "",
+    "description": "Fursay 是兒童語言學習平台，旗下有兩個雙語 YouTube 頻道：叩叩的森林冒險（英文）和阿拉伯兒童中文繪本。",
+    "h1Count": 1,
+    "h1": "讓 毛茸茸的朋友帶孩子開口說話",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/index.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/index.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/index.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/index.html"
+      }
+    ],
+    "brokenImages": [
+      "https://i.ytimg.com/vi/T2go6XGjIcQ/hqdefault.jpg",
+      "https://i.ytimg.com/vi/EPUq2eLnqKs/hqdefault.jpg",
+      "https://i.ytimg.com/vi/SHBRaRFufQA/hqdefault.jpg",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/098/53/0010985365.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/096/09/0010960916.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/104/74/0011047467.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/094/51/0010945157.jpg&w=150&h=150"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 6,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/zh/koko.html",
+    "status": 200,
+    "title": "叩叩的森林冒險 — 免費雙語兒童故事 | Fursay",
+    "lang": "zh-TW",
+    "dir": "",
+    "canonical": "",
+    "description": "1000+ 中英雙語兒童故事，給 2–8 歲孩子。跟叩叩與森林朋友展開奇幻冒險，YouTube 免費觀看。",
+    "h1Count": 1,
+    "h1": "叩叩的森林冒險",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/koko.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/koko.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/koko.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/koko.html"
+      }
+    ],
+    "brokenImages": [
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/098/53/0010985365.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/096/09/0010960916.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/104/74/0011047467.jpg&w=150&h=150",
+      "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/094/51/0010945157.jpg&w=150&h=150"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/turtly.png",
+      "https://fursay.com/images/chars/hoppy.png",
+      "https://fursay.com/images/chars/poki.png",
+      "https://fursay.com/images/chars/snaily.png",
+      "https://fursay.com/images/chars/lili.png",
+      "https://fursay.com/images/chars/tiny.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 14,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/zh/arabic.html",
+    "status": 200,
+    "title": "阿拉伯兒童中文繪本 — 免費雙語繪本故事 | Fursay",
+    "lang": "zh-TW",
+    "dir": "",
+    "canonical": "",
+    "description": "3–6 歲孩子的阿中雙語繪本故事。認識努爾、扎伊德與朋友，一起學習中文字與華人文化。YouTube 免費觀看。",
+    "h1Count": 1,
+    "h1": "阿拉伯兒童中文繪本",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/arabic.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/arabic.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/arabic.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/arabic.html"
+      }
+    ],
+    "brokenImages": [
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/arabic_nour_zayd_together.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/arabic_mingming.png",
+      "https://fursay.com/images/chars/arabic_huhu.png",
+      "https://fursay.com/images/chars/arabic_shanshan.png",
+      "https://fursay.com/images/chars/arabic_tutu.png",
+      "https://fursay.com/images/chars/arabic_xiaolu.png",
+      "https://fursay.com/images/chars/arabic_doudou.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 9,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/ar/",
+    "status": 200,
+    "title": "Fursay — حيث الأصدقاء الفرويون يعلّمون الصغار الكلام",
+    "lang": "ar",
+    "dir": "rtl",
+    "canonical": "",
+    "description": "Fursay منصة لتعلّم اللغات للأطفال، لها قناتان ثنائيتا اللغة على يوتيوب: مغامرة كوكو الغابوية (الإنجليزية) وكتاب الصور الصيني للأطفال العرب.",
+    "h1Count": 1,
+    "h1": "حيث الأصدقاء الفرويونيعلّمون الصغار الكلام",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/index.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/index.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/index.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/index.html"
+      }
+    ],
+    "brokenImages": [
+      "https://i.ytimg.com/vi/T2go6XGjIcQ/hqdefault.jpg",
+      "https://i.ytimg.com/vi/EPUq2eLnqKs/hqdefault.jpg",
+      "https://i.ytimg.com/vi/SHBRaRFufQA/hqdefault.jpg",
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0385376715-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0399257748-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/arabic_nour.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 6,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/ar/koko.html",
+    "status": 200,
+    "title": "مغامرة كوكو الغابوية — قصص ثنائية اللغة مجانية للأطفال | Fursay",
+    "lang": "ar",
+    "dir": "rtl",
+    "canonical": "",
+    "description": "أكثر من 1000 قصة إنجليزية-صينية ثنائية اللغة للأطفال من 2 إلى 8 سنوات. تابع كوكو وأصدقاء الغابة في مغامرات سحرية. مجاني على يوتيوب.",
+    "h1Count": 1,
+    "h1": "كوكوومغامرة الغابة",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/koko.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/koko.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/koko.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/koko.html"
+      }
+    ],
+    "brokenImages": [
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/koko.png",
+      "https://fursay.com/images/chars/mimi.png",
+      "https://fursay.com/images/chars/gugu.png",
+      "https://fursay.com/images/chars/boingy.png",
+      "https://fursay.com/images/chars/turtly.png",
+      "https://fursay.com/images/chars/hoppy.png",
+      "https://fursay.com/images/chars/poki.png",
+      "https://fursay.com/images/chars/snaily.png",
+      "https://fursay.com/images/chars/lili.png",
+      "https://fursay.com/images/chars/tiny.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 14,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  },
+  {
+    "path": "/ar/arabic.html",
+    "status": 200,
+    "title": "كتاب الصور الصيني للأطفال العرب — قصص ثنائية اللغة مجانية | Fursay",
+    "lang": "ar",
+    "dir": "rtl",
+    "canonical": "",
+    "description": "قصص كتب صور ثنائية اللغة عربية-صينية للأطفال من 3 إلى 6 سنوات. تعرّف على نور وزيد والأصدقاء وهم يتعلّمون الكلمات والثقافة الصينية. مجاني على يوتيوب.",
+    "h1Count": 1,
+    "h1": "الأطفال العربوكتاب الصور الصيني",
+    "ogImage": "https://fursay.com/og-image.png",
+    "twitterImage": "https://fursay.com/og-image.png",
+    "hreflangs": [
+      {
+        "lang": "en",
+        "href": "https://fursay.com/arabic.html"
+      },
+      {
+        "lang": "zh-TW",
+        "href": "https://fursay.com/zh/arabic.html"
+      },
+      {
+        "lang": "ar",
+        "href": "https://fursay.com/ar/arabic.html"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://fursay.com/arabic.html"
+      }
+    ],
+    "brokenImages": [
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0316450014-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/9781931855884-M.jpg",
+      "https://covers.openlibrary.org/b/isbn/0996099948-M.jpg"
+    ],
+    "imagesMissingAlt": [],
+    "characterImagesMissingSize": [
+      "https://fursay.com/images/chars/arabic_nour_zayd_together.png",
+      "https://fursay.com/images/chars/arabic_nour.png",
+      "https://fursay.com/images/chars/arabic_zayd.png",
+      "https://fursay.com/images/chars/arabic_mingming.png",
+      "https://fursay.com/images/chars/arabic_huhu.png",
+      "https://fursay.com/images/chars/arabic_shanshan.png",
+      "https://fursay.com/images/chars/arabic_tutu.png",
+      "https://fursay.com/images/chars/arabic_xiaolu.png",
+      "https://fursay.com/images/chars/arabic_doudou.png"
+    ],
+    "externalBlankNoNoopener": [],
+    "emptyLinks": [],
+    "bodyOverflow": false,
+    "scrollWidth": 1366,
+    "viewportWidth": 1366,
+    "pictureCount": 0,
+    "charPngCurrent": 9,
+    "charAvifCurrent": 0,
+    "consoleMessages": [],
+    "failedRequests": [],
+    "badStatuses": []
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "runId": "1778388537660-j0d3nr",
+  "channel": "koko",
+  "dryRun": true,
+  "startedAt": "2026-05-10T04:48:57.660Z",
+  "status": "failed",
+  "error": "Missing required environment variable: YOUTUBE_API_KEY",
+  "finishedAt": "2026-05-10T04:48:57.666Z"
+}

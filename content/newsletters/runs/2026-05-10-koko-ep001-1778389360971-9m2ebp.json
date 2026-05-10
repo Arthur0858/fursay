@@ -1,0 +1,15 @@
+{
+  "runId": "1778389360971-9m2ebp",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-10T05:02:40.971Z",
+  "status": "prepared",
+  "syncedEpisodes": 274,
+  "episodeNo": 1,
+  "videoId": "zoGksIelZDw",
+  "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+  "requestPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389360971-9m2ebp-koko-ep001.request.json",
+  "newsletterOutputPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389360971-9m2ebp-koko-ep001.newsletter.json",
+  "finishedAt": "2026-05-10T05:02:42.432Z"
+}

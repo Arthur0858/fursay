@@ -1,0 +1,23 @@
+{
+  "job_id": "test-gpu-handoff-001",
+  "status": "ready_for_windows",
+  "owner": "Windows GPU workstation",
+  "purpose": "Verify that Claude Desktop on Windows can read a portable render job and return a usable completion note.",
+  "input_paths": [
+    "render-jobs/test-gpu-handoff-001/inputs/prompt.md"
+  ],
+  "output_requirements": {
+    "type": "image_or_short_video",
+    "minimum": "One small render output is enough for this smoke test.",
+    "preferred_size": "1024x1024 image or 3-5 second video",
+    "output_folder": "render-jobs/test-gpu-handoff-001/outputs/"
+  },
+  "render_settings": {
+    "tool": "ComfyUI or available Windows GPU renderer",
+    "model": null,
+    "seed": null,
+    "duration_seconds": null,
+    "notes": "Use any locally available lightweight model. This job tests the handoff process, not final visual quality."
+  },
+  "completion_note_path": "render-jobs/test-gpu-handoff-001/completion-note.md"
+}

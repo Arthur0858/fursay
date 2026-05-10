@@ -1,0 +1,88 @@
+{
+  "site": {
+    "name": "Fursay",
+    "origin": "https://fursay.com",
+    "defaultLocale": "en",
+    "locales": [
+      {
+        "code": "en",
+        "label": "EN",
+        "dir": "ltr",
+        "basePath": "/"
+      },
+      {
+        "code": "zh-TW",
+        "label": "中文",
+        "dir": "ltr",
+        "basePath": "/zh/"
+      },
+      {
+        "code": "ar",
+        "label": "عربي",
+        "dir": "rtl",
+        "basePath": "/ar/"
+      }
+    ]
+  },
+  "pages": [
+    {
+      "key": "home",
+      "route": "/",
+      "localizedRoutes": {
+        "en": "/",
+        "zh-TW": "/zh/",
+        "ar": "/ar/"
+      }
+    },
+    {
+      "key": "koko",
+      "route": "/koko",
+      "channel": "koko",
+      "localizedRoutes": {
+        "en": "/koko",
+        "zh-TW": "/zh/koko",
+        "ar": "/ar/koko"
+      }
+    },
+    {
+      "key": "arabic",
+      "route": "/arabic",
+      "channel": "noor",
+      "localizedRoutes": {
+        "en": "/arabic",
+        "zh-TW": "/zh/arabic",
+        "ar": "/ar/arabic"
+      }
+    }
+  ],
+  "channels": {
+    "koko": {
+      "name": "Koko's Forest Adventure",
+      "youtube": "https://www.youtube.com/@KokosForest",
+      "playlistEmbed": "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
+      "primaryCharacter": "koko",
+      "scene": "/images/scenes/story-world-forest.webp"
+    },
+    "noor": {
+      "name": "Arabic Kids Chinese Picture Book",
+      "youtube": "https://www.youtube.com/@ArabicKidsChinese",
+      "playlistEmbed": "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
+      "primaryCharacter": "arabic_nour_zayd_together",
+      "scene": "/images/scenes/story-world-desert.webp"
+    }
+  },
+  "sharedAssets": {
+    "css": [
+      "/css/picture-book-base.css",
+      "/css/picture-world-shared.css"
+    ],
+    "js": [
+      "/js/site-shared.js"
+    ],
+    "scenes": [
+      "/images/scenes/story-world-home.webp",
+      "/images/scenes/story-world-forest.webp",
+      "/images/scenes/story-world-desert.webp"
+    ]
+  }
+}

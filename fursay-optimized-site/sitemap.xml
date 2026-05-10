@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://fursay.com/</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/koko</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/koko"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/koko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/koko"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/koko</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/koko"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/koko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/koko"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/koko</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/koko"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/koko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/koko"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/arabic</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/arabic"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/arabic"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/arabic"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/arabic"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/arabic</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/arabic"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/arabic"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/arabic"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/arabic"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/arabic</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/arabic"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/arabic"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/arabic"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/arabic"/>
+  </url>
+</urlset>

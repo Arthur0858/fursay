@@ -1,0 +1,35 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies and local tool caches
+node_modules/
+node_modules
+.wrangler/
+.dev.vars
+
+# Generated archives and heavy QA outputs
+*.zip
+output/
+qa-screenshots/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mov
+*.mp4
+!fursay-optimized-site/**/*.png
+!fursay-optimized-site/**/*.jpg
+!fursay-optimized-site/**/*.jpeg
+!fursay-optimized-site/**/*.webp
+!render-jobs/*/inputs/**
+
+# Keep render jobs portable: inputs/configs are tracked, machine outputs are not.
+render-jobs/*/outputs/*
+!render-jobs/*/outputs/.gitkeep
+render-jobs/*/completion-note.md
+
+# Obsidian local app state
+.obsidian/
+project-control-vault/.obsidian/

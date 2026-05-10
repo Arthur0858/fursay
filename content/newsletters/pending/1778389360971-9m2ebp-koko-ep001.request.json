@@ -1,0 +1,50 @@
+{
+  "runId": "1778389360971-9m2ebp",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "audience": "families using Koko's Forest for gentle English learning",
+  "languageBrief": "English newsletter with Traditional Chinese parent support",
+  "contentRules": [
+    "Use warm, clear English as the main language.",
+    "Include Traditional Chinese parent guidance after the English learning content.",
+    "Keep the tone playful, calm, and practical for parents of young children.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 1,
+    "videoId": "zoGksIelZDw",
+    "title": "叩叩的新朋友：小瓢蟲亮亮 #兒童故事 #親子共賞",
+    "description": "這裡是孩子快樂學習與想像力成長的樂園！\n\n為學齡前兒童打造，分享由小松鼠叩叩和牠的森林朋友們帶來的溫馨短故事，每則影片都有正向教育意義，鼓勵孩子學習友情、分享、同理心與勇氣。\n\n✨ 內容特色\n✔ 30–60 秒短影片，專為 YouTube Shorts 設計\n✔ 適合 2–6 歲觀看的安全內容\n✔ 培養孩子的情緒力與社交力\n\n點選訂閱 🔔，陪孩子一起探索森林的愛與成長故事吧！",
+    "publishedAt": "2025-05-30T14:38:49Z",
+    "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+    "thumbnail": "https://i.ytimg.com/vi/zoGksIelZDw/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "/Users/mac/Documents/New project 2/content/newsletters/pending/1778389360971-9m2ebp-koko-ep001.newsletter.json",
+  "requiredSchema": {
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Koko's Forest.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}
