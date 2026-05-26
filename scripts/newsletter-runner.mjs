@@ -8,6 +8,7 @@ const ROOT = process.cwd();
 const STATE_PATH = path.join(ROOT, "content", "newsletters", "state.json");
 const RUNS_DIR = path.join(ROOT, "content", "newsletters", "runs");
 const PENDING_DIR = path.join(ROOT, "content", "newsletters", "pending");
+const BROWSER_HANDOFF_DIR = path.join(ROOT, "content", "newsletters", "browser-handoff");
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3/playlistItems";
 const OPENAI_API = "https://api.openai.com/v1/responses";
 const MAILERLITE_API = "https://connect.mailerlite.com/api";
@@ -61,6 +62,12 @@ function parseArgs(argv) {
     else if (item === "--schedule-date") args.scheduleDate = argv[++i];
     else if (item === "--schedule-time") args.scheduleTime = argv[++i];
     else if (item === "--delivery") args.delivery = argv[++i];
+    else if (item === "--browser-status") args.browserStatus = argv[++i];
+    else if (item === "--campaign-id") args.campaignId = argv[++i];
+    else if (item === "--campaign-url") args.campaignUrl = argv[++i];
+    else if (item === "--failure-code") args.failureCode = argv[++i];
+    else if (item === "--failure-detail") args.failureDetail = argv[++i];
+    else if (item === "--handoff") args.handoff = argv[++i];
     else if (item === "--dry-run") args.dryRun = true;
     else if (item === "--sync-only") args.syncOnly = true;
     else if (item === "--help" || item === "-h") args.help = true;
@@ -74,6 +81,9 @@ function printHelp() {
   node scripts/newsletter-runner.mjs --mode prepare --channel koko
   node scripts/newsletter-runner.mjs --mode api-preflight --channel koko
   node scripts/newsletter-runner.mjs --mode send --channel koko --input content/newsletters/pending/<file>.newsletter.json
+  node scripts/newsletter-runner.mjs --mode chrome-handoff --channel koko --input content/newsletters/pending/<file>.newsletter.json
+  node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url>
+  node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status failed --failure-code login_required --failure-detail "MailerLite asked for login"
   node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-03 --schedule-time 09:00
 
 Legacy OpenAI API mode:
@@ -471,6 +481,39 @@ function renderHtml(channelKey, episode, newsletter) {
 </html>`;
 }
 
+function renderRichTextBody(channelKey, episode, newsletter) {
+  const config = CHANNELS[channelKey];
+  const words = newsletter.learning_words
+    .map((word) => [
+      `${word.term} - ${word.pronunciation}`,
+      `${word.meaning}`,
+      `${word.example}`
+    ].join("\n"))
+    .join("\n\n");
+
+  return [
+    `${config.label} - EP${String(episode.episodeNo).padStart(3, "0")}`,
+    "",
+    newsletter.hero_title,
+    "",
+    newsletter.intro,
+    "",
+    "Learning words",
+    words,
+    "",
+    "Parent activity",
+    newsletter.parent_activity,
+    "",
+    newsletter.video_cta,
+    episode.videoUrl,
+    "",
+    newsletter.site_cta,
+    config.siteUrl,
+    "",
+    newsletter.closing
+  ].join("\n");
+}
+
 function taipeiDateString(date) {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Taipei",
@@ -584,6 +627,32 @@ async function runApiPreflight(args, run) {
   };
 }
 
+async function resolveMailerLiteTarget(channelKey, schedule) {
+  const config = CHANNELS[channelKey];
+  const token = requireEnv("MAILERLITE_API_TOKEN");
+  const groupId = requireEnv(config.groupEnv);
+  const from = requireEnv("NEWSLETTER_FROM_EMAIL");
+  const fromName = optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay";
+  const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
+
+  const groups = await fetchJson(`${MAILERLITE_API}/groups?limit=1000`, {
+    headers: mailerLiteHeaders(token)
+  });
+  const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
+  if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
+
+  return {
+    groupId,
+    groupName: group.name,
+    groupActiveCount: group.active_count ?? null,
+    from,
+    fromName,
+    replyTo,
+    delivery: schedule.delivery,
+    scheduledAt: schedule.scheduledAt
+  };
+}
+
 async function createAndScheduleCampaign(channelKey, episode, newsletter, html, args = {}) {
   const config = CHANNELS[channelKey];
   const token = requireEnv("MAILERLITE_API_TOKEN");
@@ -652,6 +721,38 @@ async function writePendingRequest(request) {
   return file;
 }
 
+async function writeBrowserHandoff(handoff) {
+  await fs.mkdir(BROWSER_HANDOFF_DIR, { recursive: true });
+  const baseName = `${handoff.createdAt.slice(0, 10)}-${handoff.channel}-ep${String(handoff.episodeNo || 0).padStart(3, "0")}-${handoff.runId}`;
+  const jsonFile = path.join(BROWSER_HANDOFF_DIR, `${baseName}.json`);
+  const mdFile = path.join(BROWSER_HANDOFF_DIR, `${baseName}.md`);
+  await fs.writeFile(jsonFile, `${JSON.stringify(handoff, null, 2)}\n`);
+  await fs.writeFile(mdFile, [
+    `# ${handoff.campaignName}`,
+    "",
+    `- Channel: ${handoff.channel}`,
+    `- MailerLite group: ${handoff.mailerLite.groupName} (${handoff.mailerLite.groupActiveCount} active)`,
+    `- Sender: ${handoff.mailerLite.fromName} <${handoff.mailerLite.from}>`,
+    `- Reply-to: ${handoff.mailerLite.replyTo}`,
+    `- Schedule: ${handoff.schedule.scheduledAt}`,
+    `- Editor: ${handoff.browser.editor}`,
+    "",
+    "## Subject",
+    handoff.email.subject,
+    "",
+    "## Preheader",
+    handoff.email.previewText,
+    "",
+    "## Rich Text Body",
+    handoff.email.richTextBody,
+    "",
+    "## Source",
+    handoff.episode.videoUrl,
+    ""
+  ].join("\n"));
+  return { jsonFile, mdFile };
+}
+
 function findEpisode(channelKey, state, episodeNo, videoId) {
   const episodes = state.channels[channelKey]?.episodes || [];
   return episodes.find((episode) => episode.videoId === videoId)
@@ -659,10 +760,53 @@ function findEpisode(channelKey, state, episodeNo, videoId) {
 }
 
 async function loadNewsletterInput(inputPath) {
-  if (!inputPath) throw new Error("--input is required for --mode send");
+  if (!inputPath) throw new Error("--input is required for newsletter delivery modes");
   const fullPath = path.isAbsolute(inputPath) ? inputPath : path.join(ROOT, inputPath);
   const data = JSON.parse(await fs.readFile(fullPath, "utf8"));
   return { fullPath, data };
+}
+
+function scheduleArgs(args) {
+  const parts = [];
+  if (args.scheduleDate) parts.push(`--schedule-date ${args.scheduleDate}`);
+  if (args.scheduleTime) parts.push(`--schedule-time ${args.scheduleTime}`);
+  if (args.delivery && args.delivery !== "scheduled") parts.push(`--delivery ${args.delivery}`);
+  return parts.length ? ` ${parts.join(" ")}` : "";
+}
+
+function normalizeNewsletterInput(newsletter) {
+  const cleanNewsletter = { ...newsletter };
+  delete cleanNewsletter.episodeNo;
+  delete cleanNewsletter.episode_no;
+  delete cleanNewsletter.videoId;
+  delete cleanNewsletter.video_id;
+  delete cleanNewsletter.episode;
+  return cleanNewsletter;
+}
+
+async function prepareNewsletterForDelivery(args, state, run) {
+  const { fullPath, data: newsletter } = await loadNewsletterInput(args.input);
+  const episodeNo = newsletter.episodeNo || newsletter.episode_no || newsletter.episode?.episodeNo;
+  const videoId = newsletter.videoId || newsletter.video_id || newsletter.episode?.videoId;
+
+  const episode = findEpisode(args.channel, state, episodeNo, videoId) || selectNextEpisode(args.channel, state);
+  if (episode.sentAt) throw new Error(`Episode already sent: ${args.channel} ep${episode.episodeNo}`);
+
+  run.episodeNo = episode.episodeNo;
+  run.videoId = episode.videoId;
+  run.videoUrl = episode.videoUrl;
+  run.inputPath = projectPath(fullPath);
+
+  const cleanNewsletter = normalizeNewsletterInput(newsletter);
+  const qaErrors = validateNewsletter(args.channel, episode, cleanNewsletter);
+  run.qaErrors = qaErrors;
+  if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
+
+  const html = renderHtml(args.channel, episode, cleanNewsletter);
+  run.newsletter = cleanNewsletter;
+  run.htmlPreview = html;
+
+  return { fullPath, newsletter: cleanNewsletter, episode, html };
 }
 
 async function runPrepare(args, state, run) {
@@ -695,32 +839,7 @@ async function runPrepare(args, state, run) {
 }
 
 async function runSend(args, state, run) {
-  const { fullPath, data: newsletter } = await loadNewsletterInput(args.input);
-  const episodeNo = newsletter.episodeNo || newsletter.episode_no || newsletter.episode?.episodeNo;
-  const videoId = newsletter.videoId || newsletter.video_id || newsletter.episode?.videoId;
-
-  const episode = findEpisode(args.channel, state, episodeNo, videoId) || selectNextEpisode(args.channel, state);
-  if (episode.sentAt) throw new Error(`Episode already sent: ${args.channel} ep${episode.episodeNo}`);
-
-  run.episodeNo = episode.episodeNo;
-  run.videoId = episode.videoId;
-  run.videoUrl = episode.videoUrl;
-  run.inputPath = projectPath(fullPath);
-
-  const cleanNewsletter = { ...newsletter };
-  delete cleanNewsletter.episodeNo;
-  delete cleanNewsletter.episode_no;
-  delete cleanNewsletter.videoId;
-  delete cleanNewsletter.video_id;
-  delete cleanNewsletter.episode;
-
-  const qaErrors = validateNewsletter(args.channel, episode, cleanNewsletter);
-  run.qaErrors = qaErrors;
-  if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
-
-  const html = renderHtml(args.channel, episode, cleanNewsletter);
-  run.newsletter = cleanNewsletter;
-  run.htmlPreview = html;
+  const { newsletter: cleanNewsletter, episode, html } = await prepareNewsletterForDelivery(args, state, run);
 
   if (args.dryRun) {
     const schedule = scheduleFor(args.channel, args);
@@ -746,6 +865,130 @@ async function runSend(args, state, run) {
     videoUrl: run.videoUrl,
     campaignId: run.campaignId || null,
     scheduledAt: run.scheduledAt || null
+  };
+}
+
+async function runChromeHandoff(args, state, run) {
+  const { newsletter, episode, html } = await prepareNewsletterForDelivery(args, state, run);
+  const schedule = scheduleFor(args.channel, args);
+  const target = await resolveMailerLiteTarget(args.channel, schedule);
+  const config = CHANNELS[args.channel];
+  const warnings = [];
+
+  if (!Number(target.groupActiveCount || 0)) {
+    warnings.push(`Target group "${target.groupName}" has 0 active subscribers`);
+  }
+
+  const handoff = {
+    version: 1,
+    runId: run.runId,
+    channel: args.channel,
+    channelLabel: config.label,
+    createdAt: new Date().toISOString(),
+    episodeNo: episode.episodeNo,
+    campaignName: `${config.label} EP${String(episode.episodeNo).padStart(3, "0")} - ${schedule.delivery === "scheduled" ? schedule.date : "instant"}`,
+    episode: {
+      episodeNo: episode.episodeNo,
+      videoId: episode.videoId,
+      title: episode.title,
+      videoUrl: episode.videoUrl,
+      thumbnail: episode.thumbnail
+    },
+    schedule,
+    mailerLite: target,
+    email: {
+      subject: newsletter.subject,
+      previewText: newsletter.preview_text,
+      heroTitle: newsletter.hero_title,
+      richTextBody: renderRichTextBody(args.channel, episode, newsletter),
+      htmlPreview: html
+    },
+    browser: {
+      requiredLoginUrl: "https://dashboard.mailerlite.com/dashboard",
+      campaignUrl: "https://dashboard.mailerlite.com/campaigns",
+      campaignType: "Regular campaign",
+      editor: "Rich-text editor",
+      action: "Create or duplicate a regular campaign, paste this rich-text body, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+      successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <outbox-or-campaign-url>${scheduleArgs(args)}`,
+      failureCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail "<exact blocker>"`
+    },
+    warnings
+  };
+
+  const { jsonFile, mdFile } = await writeBrowserHandoff(handoff);
+  run.status = "chrome_handoff_ready";
+  run.delivery = schedule.delivery;
+  run.scheduledAt = schedule.scheduledAt;
+  run.browserHandoff = {
+    jsonPath: projectPath(jsonFile),
+    mdPath: projectPath(mdFile),
+    editor: handoff.browser.editor,
+    action: handoff.browser.action
+  };
+  run.mailerLiteBrowserTarget = target;
+  run.warnings = warnings;
+
+  return {
+    status: run.status,
+    channel: run.channel,
+    episodeNo: run.episodeNo,
+    videoUrl: run.videoUrl,
+    scheduledAt: run.scheduledAt,
+    groupName: target.groupName,
+    groupActiveCount: target.groupActiveCount,
+    browserHandoffJson: run.browserHandoff.jsonPath,
+    browserHandoffMd: run.browserHandoff.mdPath,
+    successCommand: handoff.browser.successCommand,
+    failureCommand: handoff.browser.failureCommand,
+    warnings
+  };
+}
+
+async function runChromeResult(args, state, run) {
+  const { episode } = await prepareNewsletterForDelivery(args, state, run);
+  const allowed = ["scheduled", "sent", "failed"];
+  if (!allowed.includes(args.browserStatus)) {
+    throw new Error("--browser-status must be one of: scheduled, sent, failed");
+  }
+
+  run.browserResult = {
+    status: args.browserStatus,
+    campaignId: args.campaignId || null,
+    campaignUrl: args.campaignUrl || null,
+    failureCode: args.failureCode || null,
+    failureDetail: args.failureDetail || null,
+    handoffPath: args.handoff || null,
+    recordedAt: new Date().toISOString()
+  };
+
+  if (args.browserStatus === "failed") {
+    run.status = "chrome_publish_failed";
+    run.providerErrorCode = args.failureCode || "browser_publish_failed";
+    run.error = args.failureDetail || "Chrome publishing failed before MailerLite outbox confirmation";
+  } else {
+    const schedule = scheduleFor(args.channel, args);
+    run.status = args.browserStatus === "sent" ? "sent_by_chrome" : "scheduled_by_chrome";
+    run.delivery = schedule.delivery;
+    run.scheduledAt = schedule.scheduledAt;
+    run.campaignId = args.campaignId || null;
+    run.campaignUrl = args.campaignUrl || null;
+    episode.sentAt = new Date().toISOString();
+    episode.campaignId = args.campaignId || args.campaignUrl || `chrome-${run.runId}`;
+    episode.deliveryMethod = "mailerlite_chrome";
+    state.channels[args.channel].lastSentEpisodeNo = Math.max(state.channels[args.channel].lastSentEpisodeNo || 0, episode.episodeNo);
+  }
+
+  return {
+    status: run.status,
+    channel: run.channel,
+    episodeNo: run.episodeNo,
+    videoUrl: run.videoUrl,
+    campaignId: run.campaignId || null,
+    campaignUrl: run.campaignUrl || null,
+    scheduledAt: run.scheduledAt || null,
+    browserStatus: args.browserStatus,
+    failureCode: args.failureCode || null,
+    failureDetail: args.failureDetail || null
   };
 }
 
@@ -776,6 +1019,10 @@ async function main() {
       result = await runApiPreflight(args, run);
     } else if (args.mode === "send") {
       result = await runSend(args, state, run);
+    } else if (args.mode === "chrome-handoff") {
+      result = await runChromeHandoff(args, state, run);
+    } else if (args.mode === "chrome-result") {
+      result = await runChromeResult(args, state, run);
     } else {
       const episodes = await syncEpisodes(args.channel, state);
       run.syncedEpisodes = episodes.length;
@@ -854,11 +1101,17 @@ async function main() {
       delivery: run.delivery || null,
       providerErrorCode: run.providerErrorCode || null,
       warnings: run.warnings || [],
+      browserHandoff: run.browserHandoff || null,
+      browserResult: run.browserResult || null,
       artifact,
       requestPath: run.requestPath || null,
       newsletterOutputPath: run.newsletterOutputPath || null,
       retryCommand: run.mode === "send"
         ? `node scripts/newsletter-runner.mjs --mode send --channel ${run.channel} --input ${args.input || "<newsletter.json>"}${run.dryRun ? " --dry-run" : ""}`
+        : run.mode === "chrome-handoff"
+          ? `node scripts/newsletter-runner.mjs --mode chrome-handoff --channel ${run.channel} --input ${args.input || "<newsletter.json>"}`
+        : run.mode === "chrome-result"
+          ? `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${run.channel} --input ${args.input || "<newsletter.json>"} --browser-status ${args.browserStatus || "<scheduled|failed>"}`
         : run.mode === "prepare"
           ? `node scripts/newsletter-runner.mjs --mode prepare --channel ${run.channel}${run.dryRun ? " --dry-run" : ""}`
           : run.mode === "api-preflight"
