@@ -7,7 +7,7 @@ Codex Automation is the scheduler and copywriter. The project script is the sour
 - Koko: Codex runs every Sunday and schedules the MailerLite campaign for Monday 09:00 Asia/Taipei.
 - Arabic: Codex runs every Tuesday and schedules the MailerLite campaign for Wednesday 09:00 Asia/Taipei.
 
-## Manual commands
+## API-first commands
 
 Prepare the next episode for Codex copywriting:
 
@@ -16,11 +16,25 @@ node scripts/newsletter-runner.mjs --mode prepare --channel koko
 node scripts/newsletter-runner.mjs --mode prepare --channel arabic
 ```
 
-Send a Codex-generated newsletter JSON:
+Verify MailerLite API access without creating a campaign:
+
+```bash
+node scripts/newsletter-runner.mjs --mode api-preflight --channel koko
+node scripts/newsletter-runner.mjs --mode api-preflight --channel arabic
+```
+
+Create and schedule a MailerLite campaign from a Codex-generated newsletter JSON:
 
 ```bash
 node scripts/newsletter-runner.mjs --mode send --channel koko --input content/newsletters/pending/<file>.newsletter.json
 node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json
+```
+
+Override the default send slot when needed:
+
+```bash
+node scripts/newsletter-runner.mjs --mode send --channel koko --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-01 --schedule-time 09:00
+node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-03 --schedule-time 09:00
 ```
 
 Validate without creating a MailerLite campaign:
@@ -51,8 +65,13 @@ node scripts/newsletter-runner.mjs --channel arabic --sync-only
 3. Select the lowest unsent episode for the channel.
 4. Write a request JSON for Codex.
 5. Codex writes the structured newsletter JSON.
-6. Validate required fields, language expectations, video CTA, and repeat protection.
-7. Create and schedule a MailerLite campaign for the channel group.
-8. Mark the episode as sent only after MailerLite schedule succeeds.
+6. Run MailerLite API preflight: token, target group, sender/reply-to, and target schedule.
+7. Validate required fields, language expectations, video CTA, and repeat protection.
+8. Create and schedule a MailerLite campaign for the channel group through the API.
+9. Mark the episode as sent only after MailerLite schedule succeeds.
 
 If any step fails, the job writes a failed run artifact and does not mark the episode as sent.
+
+## MailerLite plan note
+
+MailerLite's campaign API accepts HTML content through `emails.*.content`, but the official API currently documents that this field requires the Advanced plan. If the account is still on the Free plan, API delivery may fail with `providerErrorCode: "advanced_plan_required"`. In that case the runner leaves the episode unsent, preserves the generated `htmlPreview`, and reports the exact retry command.

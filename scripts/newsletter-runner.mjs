@@ -52,12 +52,15 @@ const CHANNELS = {
 };
 
 function parseArgs(argv) {
-  const args = { dryRun: false, syncOnly: false, mode: "legacy" };
+  const args = { dryRun: false, syncOnly: false, mode: "legacy", delivery: "scheduled" };
   for (let i = 2; i < argv.length; i += 1) {
     const item = argv[i];
     if (item === "--channel") args.channel = argv[++i];
     else if (item === "--mode") args.mode = argv[++i];
     else if (item === "--input") args.input = argv[++i];
+    else if (item === "--schedule-date") args.scheduleDate = argv[++i];
+    else if (item === "--schedule-time") args.scheduleTime = argv[++i];
+    else if (item === "--delivery") args.delivery = argv[++i];
     else if (item === "--dry-run") args.dryRun = true;
     else if (item === "--sync-only") args.syncOnly = true;
     else if (item === "--help" || item === "-h") args.help = true;
@@ -69,8 +72,9 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage:
   node scripts/newsletter-runner.mjs --mode prepare --channel koko
+  node scripts/newsletter-runner.mjs --mode api-preflight --channel koko
   node scripts/newsletter-runner.mjs --mode send --channel koko --input content/newsletters/pending/<file>.newsletter.json
-  node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --dry-run
+  node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-03 --schedule-time 09:00
 
 Legacy OpenAI API mode:
   node scripts/newsletter-runner.mjs --channel koko
@@ -148,6 +152,26 @@ async function fetchJson(url, options = {}) {
     throw new Error(`HTTP ${response.status}: ${detail}`);
   }
   return data;
+}
+
+function mailerLiteHeaders(token) {
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  };
+}
+
+function classifyMailerLiteError(error) {
+  const message = String(error?.message || error || "");
+  if (/401|Unauthenticated|API-Key Unauthorized|Unauthorized/i.test(message)) return "auth";
+  if (/403|Forbidden/i.test(message)) return "forbidden";
+  if (/Content submission is only available on advanced plan|Advanced plan/i.test(message)) return "advanced_plan_required";
+  if (/valid email address|verified on MailerLite|from field/i.test(message)) return "sender_verification";
+  if (/group|groups/i.test(message) && /invalid|valid|required|belonging/i.test(message)) return "group_configuration";
+  if (/429|Too Many Attempts|rate limit/i.test(message)) return "rate_limited";
+  if (/422|validation|invalid|given data/i.test(message)) return "validation";
+  return "unknown";
 }
 
 function extractEpisodeNo(text) {
@@ -443,37 +467,131 @@ function renderHtml(channelKey, episode, newsletter) {
 </html>`;
 }
 
-function nextTaipeiDate(daysFromNow = 1) {
-  const now = new Date();
-  const target = new Date(now.getTime() + daysFromNow * 24 * 60 * 60 * 1000);
+function taipeiDateString(date) {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Taipei",
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
-  }).formatToParts(target);
+  }).formatToParts(date);
   const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
-async function createAndScheduleCampaign(channelKey, episode, newsletter, html) {
+function nextTaipeiDate(daysFromNow = 1) {
+  const now = new Date();
+  const target = new Date(now.getTime() + daysFromNow * 24 * 60 * 60 * 1000);
+  return taipeiDateString(target);
+}
+
+function nextSendDate(channelKey) {
+  const weekdays = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6
+  };
+  const targetWeekday = weekdays[CHANNELS[channelKey].sendWeekday];
+  const now = new Date();
+  const todayParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Taipei",
+    weekday: "long"
+  }).formatToParts(now);
+  const todayName = todayParts.find((part) => part.type === "weekday")?.value;
+  const todayWeekday = weekdays[todayName];
+  let days = (targetWeekday - todayWeekday + 7) % 7;
+  if (days === 0) days = 7;
+  return nextTaipeiDate(days);
+}
+
+function parseScheduleTime(value = "09:00") {
+  const match = String(value).match(/^(\d{2}):(\d{2})$/);
+  if (!match) throw new Error("--schedule-time must use HH:MM format");
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours > 23 || minutes > 59) throw new Error("--schedule-time must be a valid 24-hour time");
+  return { hours: match[1], minutes: match[2] };
+}
+
+function scheduleFor(channelKey, args = {}) {
+  const delivery = args.delivery || "scheduled";
+  if (!["scheduled", "instant"].includes(delivery)) {
+    throw new Error("--delivery must be one of: scheduled, instant");
+  }
+  if (delivery === "instant") {
+    return { delivery, scheduledAt: new Date().toISOString() };
+  }
+  const date = args.scheduleDate || nextSendDate(channelKey);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("--schedule-date must use YYYY-MM-DD format");
+  const { hours, minutes } = parseScheduleTime(args.scheduleTime || optionalEnv("NEWSLETTER_DEFAULT_TIME") || "09:00");
+  return { delivery, date, hours, minutes, scheduledAt: `${date}T${hours}:${minutes}:00+08:00` };
+}
+
+async function runApiPreflight(args, run) {
+  const config = CHANNELS[args.channel];
+  const token = requireEnv("MAILERLITE_API_TOKEN");
+  const groupId = requireEnv(config.groupEnv);
+  const from = requireEnv("NEWSLETTER_FROM_EMAIL");
+  const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(from)) throw new Error("NEWSLETTER_FROM_EMAIL must be a valid email address");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(replyTo)) throw new Error("NEWSLETTER_REPLY_TO must be a valid email address");
+
+  const groups = await fetchJson(`${MAILERLITE_API}/groups?limit=1000`, {
+    headers: mailerLiteHeaders(token)
+  });
+  const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
+  if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
+
+  const schedule = scheduleFor(args.channel, args);
+  const warnings = [];
+  if (!Number(group.active_count || 0)) {
+    warnings.push(`Target group "${group.name}" has 0 active subscribers`);
+  }
+  run.status = "api_preflight_passed";
+  run.scheduledAt = schedule.scheduledAt;
+  run.delivery = schedule.delivery;
+  run.warnings = warnings;
+  run.mailerLiteApi = {
+    baseUrl: MAILERLITE_API,
+    groupId,
+    groupName: group.name,
+    groupActiveCount: group.active_count ?? null,
+    from,
+    replyTo,
+    delivery: schedule.delivery,
+    scheduledAt: schedule.scheduledAt,
+    warnings,
+    contentSubmission: "requires MailerLite Advanced plan when emails.*.content is sent by API"
+  };
+  return {
+    status: run.status,
+    channel: run.channel,
+    groupName: group.name,
+    groupActiveCount: group.active_count ?? null,
+    delivery: schedule.delivery,
+    scheduledAt: schedule.scheduledAt,
+    warnings,
+    contentSubmission: run.mailerLiteApi.contentSubmission
+  };
+}
+
+async function createAndScheduleCampaign(channelKey, episode, newsletter, html, args = {}) {
   const config = CHANNELS[channelKey];
   const token = requireEnv("MAILERLITE_API_TOKEN");
   const groupId = requireEnv(config.groupEnv);
   const from = requireEnv("NEWSLETTER_FROM_EMAIL");
   const fromName = optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay";
   const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
-  const scheduleDate = nextTaipeiDate(1);
+  const schedule = scheduleFor(channelKey, args);
 
   const campaign = await fetchJson(`${MAILERLITE_API}/campaigns`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
+    headers: mailerLiteHeaders(token),
     body: JSON.stringify({
-      name: `${config.label} EP${String(episode.episodeNo).padStart(3, "0")} - ${scheduleDate}`,
+      name: `${config.label} EP${String(episode.episodeNo).padStart(3, "0")} - ${schedule.delivery === "scheduled" ? schedule.date : "instant"}`,
       type: "regular",
       groups: [groupId],
       emails: [{
@@ -489,30 +607,27 @@ async function createAndScheduleCampaign(channelKey, episode, newsletter, html) 
   const campaignId = campaign.data?.id || campaign.id;
   if (!campaignId) throw new Error("MailerLite create campaign response did not include campaign id");
 
-  const scheduleBody = {
-    delivery: "scheduled",
-    schedule: {
-      date: scheduleDate,
-      hours: "09",
-      minutes: "00"
-    }
-  };
+  const scheduleBody = { delivery: schedule.delivery };
+  if (schedule.delivery === "scheduled") {
+    scheduleBody.schedule = {
+      date: schedule.date,
+      hours: schedule.hours,
+      minutes: schedule.minutes
+    };
+  }
   const timezoneId = optionalEnv("MAILERLITE_TIMEZONE_ID");
-  if (timezoneId) scheduleBody.schedule.timezone_id = Number(timezoneId);
+  if (timezoneId && scheduleBody.schedule) scheduleBody.schedule.timezone_id = Number(timezoneId);
 
   const scheduled = await fetchJson(`${MAILERLITE_API}/campaigns/${campaignId}/schedule`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
+    headers: mailerLiteHeaders(token),
     body: JSON.stringify(scheduleBody)
   });
 
   return {
     campaignId,
-    scheduledAt: `${scheduleDate}T09:00:00+08:00`,
+    scheduledAt: schedule.scheduledAt,
+    delivery: schedule.delivery,
     mailerLiteStatus: scheduled.data?.status || "scheduled"
   };
 }
@@ -602,10 +717,12 @@ async function runSend(args, state, run) {
   run.htmlPreview = html;
 
   if (args.dryRun) {
+    const schedule = scheduleFor(args.channel, args);
     run.status = "dry_run_passed";
-    run.scheduledAt = nextTaipeiDate(1) + "T09:00:00+08:00";
+    run.delivery = schedule.delivery;
+    run.scheduledAt = schedule.scheduledAt;
   } else {
-    const scheduled = await createAndScheduleCampaign(args.channel, episode, cleanNewsletter, html);
+    const scheduled = await createAndScheduleCampaign(args.channel, episode, cleanNewsletter, html, args);
     Object.assign(run, scheduled);
     run.status = "scheduled";
     episode.sentAt = new Date().toISOString();
@@ -646,6 +763,8 @@ async function main() {
   try {
     if (args.mode === "prepare") {
       result = await runPrepare(args, state, run);
+    } else if (args.mode === "api-preflight") {
+      result = await runApiPreflight(args, run);
     } else if (args.mode === "send") {
       result = await runSend(args, state, run);
     } else {
@@ -672,10 +791,12 @@ async function main() {
       run.htmlPreview = html;
 
       if (args.dryRun) {
+        const schedule = scheduleFor(args.channel, args);
         run.status = "dry_run_passed";
-        run.scheduledAt = nextTaipeiDate(1) + "T09:00:00+08:00";
+        run.delivery = schedule.delivery;
+        run.scheduledAt = schedule.scheduledAt;
       } else {
-        const scheduled = await createAndScheduleCampaign(args.channel, episode, newsletter, html);
+        const scheduled = await createAndScheduleCampaign(args.channel, episode, newsletter, html, args);
         Object.assign(run, scheduled);
         run.status = "scheduled";
         episode.sentAt = new Date().toISOString();
@@ -686,6 +807,7 @@ async function main() {
   } catch (error) {
     run.status = "failed";
     run.error = error.message;
+    run.providerErrorCode = classifyMailerLiteError(error);
     process.exitCode = 1;
   } finally {
     run.finishedAt = new Date().toISOString();
@@ -699,6 +821,8 @@ async function main() {
       dryRun: run.dryRun,
       campaignId: run.campaignId || null,
       scheduledAt: run.scheduledAt || null,
+      providerErrorCode: run.providerErrorCode || null,
+      warnings: run.warnings || [],
       error: run.error || null,
       startedAt: run.startedAt,
       finishedAt: run.finishedAt
@@ -715,6 +839,9 @@ async function main() {
       videoUrl: run.videoUrl || null,
       campaignId: run.campaignId || null,
       scheduledAt: run.scheduledAt || null,
+      delivery: run.delivery || null,
+      providerErrorCode: run.providerErrorCode || null,
+      warnings: run.warnings || [],
       artifact,
       requestPath: run.requestPath || null,
       newsletterOutputPath: run.newsletterOutputPath || null,
@@ -722,6 +849,8 @@ async function main() {
         ? `node scripts/newsletter-runner.mjs --mode send --channel ${run.channel} --input ${args.input || "<newsletter.json>"}${run.dryRun ? " --dry-run" : ""}`
         : run.mode === "prepare"
           ? `node scripts/newsletter-runner.mjs --mode prepare --channel ${run.channel}${run.dryRun ? " --dry-run" : ""}`
+          : run.mode === "api-preflight"
+            ? `node scripts/newsletter-runner.mjs --mode api-preflight --channel ${run.channel}`
           : `node scripts/newsletter-runner.mjs --channel ${run.channel}${run.dryRun ? " --dry-run" : ""}`,
       error: run.error || null
     }, null, 2));
