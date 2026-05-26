@@ -136,6 +136,10 @@ function optionalEnv(name) {
   return process.env[name] || "";
 }
 
+function envFlag(name) {
+  return /^(1|true|yes|on)$/i.test(optionalEnv(name));
+}
+
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, options);
   const text = await response.text();
@@ -564,6 +568,7 @@ async function runApiPreflight(args, run) {
     delivery: schedule.delivery,
     scheduledAt: schedule.scheduledAt,
     warnings,
+    contentApiEnabled: envFlag("MAILERLITE_ALLOW_CONTENT_API_SEND"),
     contentSubmission: "requires MailerLite Advanced plan when emails.*.content is sent by API"
   };
   return {
@@ -574,6 +579,7 @@ async function runApiPreflight(args, run) {
     delivery: schedule.delivery,
     scheduledAt: schedule.scheduledAt,
     warnings,
+    contentApiEnabled: run.mailerLiteApi.contentApiEnabled,
     contentSubmission: run.mailerLiteApi.contentSubmission
   };
 }
@@ -722,6 +728,9 @@ async function runSend(args, state, run) {
     run.delivery = schedule.delivery;
     run.scheduledAt = schedule.scheduledAt;
   } else {
+    if (!envFlag("MAILERLITE_ALLOW_CONTENT_API_SEND")) {
+      throw new Error("MailerLite content API send is disabled. Set MAILERLITE_ALLOW_CONTENT_API_SEND=true only after the account supports Advanced plan content submission.");
+    }
     const scheduled = await createAndScheduleCampaign(args.channel, episode, cleanNewsletter, html, args);
     Object.assign(run, scheduled);
     run.status = "scheduled";
@@ -796,6 +805,9 @@ async function main() {
         run.delivery = schedule.delivery;
         run.scheduledAt = schedule.scheduledAt;
       } else {
+        if (!envFlag("MAILERLITE_ALLOW_CONTENT_API_SEND")) {
+          throw new Error("MailerLite content API send is disabled. Set MAILERLITE_ALLOW_CONTENT_API_SEND=true only after the account supports Advanced plan content submission.");
+        }
         const scheduled = await createAndScheduleCampaign(args.channel, episode, newsletter, html, args);
         Object.assign(run, scheduled);
         run.status = "scheduled";

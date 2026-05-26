@@ -74,4 +74,6 @@ If any step fails, the job writes a failed run artifact and does not mark the ep
 
 ## MailerLite plan note
 
-MailerLite's campaign API accepts HTML content through `emails.*.content`, but the official API currently documents that this field requires the Advanced plan. If the account is still on the Free plan, API delivery may fail with `providerErrorCode: "advanced_plan_required"`. In that case the runner leaves the episode unsent, preserves the generated `htmlPreview`, and reports the exact retry command.
+MailerLite's campaign API accepts HTML content through `emails.*.content`, but the official API currently documents that this field requires the Advanced plan. Keep `MAILERLITE_ALLOW_CONTENT_API_SEND=false` on the Free plan. In that state, non-dry-run sends fail closed with `providerErrorCode: "advanced_plan_required"` before calling the campaign content endpoint. The runner leaves the episode unsent, preserves the generated `htmlPreview`, and reports the exact retry command.
+
+Set `MAILERLITE_ALLOW_CONTENT_API_SEND=true` only after the MailerLite account plan is upgraded or otherwise verified to support API content submission.
