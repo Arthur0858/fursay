@@ -1,0 +1,10 @@
+{
+  "runId": "1778547712818-dvj9jx",
+  "channel": "arabic",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-12T01:01:52.818Z",
+  "status": "failed",
+  "error": "fetch failed",
+  "finishedAt": "2026-05-12T01:01:52.860Z"
+}

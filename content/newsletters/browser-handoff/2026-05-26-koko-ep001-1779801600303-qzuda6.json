@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "runId": "1779801600303-qzuda6",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "createdAt": "2026-05-26T13:20:00.839Z",
+  "episodeNo": 1,
+  "campaignName": "Koko's Forest EP001 - 2026-06-01",
+  "episode": {
+    "episodeNo": 1,
+    "videoId": "zoGksIelZDw",
+    "title": "叩叩的新朋友：小瓢蟲亮亮 #兒童故事 #親子共賞",
+    "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+    "thumbnail": "https://i.ytimg.com/vi/zoGksIelZDw/maxresdefault.jpg"
+  },
+  "schedule": {
+    "delivery": "scheduled",
+    "date": "2026-06-01",
+    "hours": "09",
+    "minutes": "00",
+    "scheduledAt": "2026-06-01T09:00:00+08:00"
+  },
+  "mailerLite": {
+    "groupId": "185164682657531180",
+    "groupName": "Koko 電子報訂閱者",
+    "groupActiveCount": 1,
+    "from": "hello@fursay.com",
+    "fromName": "Fursay",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-06-01T09:00:00+08:00"
+  },
+  "email": {
+    "subject": "Koko meets a tiny new friend",
+    "previewText": "A gentle forest story for practicing friend, kind, and share with your child.",
+    "heroTitle": "This Week in Koko's Forest: Meeting a New Friend",
+    "richTextBody": "Koko's Forest - EP001\n\nThis Week in Koko's Forest: Meeting a New Friend\n\nIn this short forest story, Koko meets Liangliang, a little ladybug. Use the episode as a calm moment to help your child notice friendship, kindness, and brave first hellos.\n\nLearning words\nfriend - frend\nsomeone you like and care about\nKoko meets a new friend in the forest.\n\nkind - kynd\ngentle and helpful to others\nKoko is kind to Liangliang.\n\nshare - shair\nto let someone enjoy something with you\nFriends can share a happy moment.\n\nParent activity\nAfter watching, ask your child: \"Who was kind in the story?\" Then invite them to draw Koko and Liangliang together. Parent support: 看完後可以問孩子：「故事裡誰很溫柔？誰是好朋友？」再請孩子畫出叩叩和亮亮，幫助孩子把 friend, kind, share 連結到友情、同理心與分享。\n\nWatch the Koko story together\nhttps://www.youtube.com/watch?v=zoGksIelZDw\n\nVisit Fursay for more gentle family learning\nhttps://fursay.com/koko\n\nSee you next week for another quiet forest moment with Koko.",
+    "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">A gentle forest story for practicing friend, kind, and share with your child.</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP001</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">This Week in Koko's Forest: Meeting a New Friend</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">In this short forest story, Koko meets Liangliang, a little ladybug. Use the episode as a calm moment to help your child notice friendship, kindness, and brave first hellos.</p>\n            <img src=\"https://i.ytimg.com/vi/zoGksIelZDw/maxresdefault.jpg\" alt=\"叩叩的新朋友：小瓢蟲亮亮 #兒童故事 #親子共賞\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>friend</strong><br><span style=\"color:#6d6258;\">frend</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">someone you like and care about<br><em>Koko meets a new friend in the forest.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>kind</strong><br><span style=\"color:#6d6258;\">kynd</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">gentle and helpful to others<br><em>Koko is kind to Liangliang.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>share</strong><br><span style=\"color:#6d6258;\">shair</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">to let someone enjoy something with you<br><em>Friends can share a happy moment.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">After watching, ask your child: &quot;Who was kind in the story?&quot; Then invite them to draw Koko and Liangliang together. Parent support: 看完後可以問孩子：「故事裡誰很溫柔？誰是好朋友？」再請孩子畫出叩叩和亮亮，幫助孩子把 friend, kind, share 連結到友情、同理心與分享。</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=zoGksIelZDw\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch the Koko story together</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko\" style=\"color:#c05f18;font-weight:bold;\">Visit Fursay for more gentle family learning</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">See you next week for another quiet forest moment with Koko.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+  },
+  "browser": {
+    "requiredLoginUrl": "https://dashboard.mailerlite.com/dashboard",
+    "campaignUrl": "https://dashboard.mailerlite.com/campaigns",
+    "campaignType": "Regular campaign",
+    "editor": "Rich-text editor",
+    "action": "Create or duplicate a regular campaign, paste this rich-text body, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+    "successCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/1779585415430-qganvw-koko-ep001.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url>",
+    "failureCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/1779585415430-qganvw-koko-ep001.newsletter.json --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail \"<exact blocker>\""
+  },
+  "warnings": []
+}

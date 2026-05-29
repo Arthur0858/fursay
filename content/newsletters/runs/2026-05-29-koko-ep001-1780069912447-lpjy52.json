@@ -1,0 +1,15 @@
+{
+  "runId": "1780069912447-lpjy52",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-29T15:51:52.447Z",
+  "status": "prepared",
+  "syncedEpisodes": 440,
+  "episodeNo": 1,
+  "videoId": "zoGksIelZDw",
+  "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+  "requestPath": "content/newsletters/pending/1780069912447-lpjy52-koko-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1780069912447-lpjy52-koko-ep001.newsletter.json",
+  "finishedAt": "2026-05-29T15:51:56.323Z"
+}

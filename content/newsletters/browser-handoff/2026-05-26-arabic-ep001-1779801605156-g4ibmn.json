@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "runId": "1779801605156-g4ibmn",
+  "channel": "arabic",
+  "channelLabel": "Arabic Kids Chinese",
+  "createdAt": "2026-05-26T13:20:05.608Z",
+  "episodeNo": 1,
+  "campaignName": "Arabic Kids Chinese EP001 - 2026-05-27",
+  "episode": {
+    "episodeNo": 1,
+    "videoId": "uFicgPqbxms",
+    "title": "你好朋友 مرحبا يا أصدقاء | 學中文 EP001 | صيني للأطفال",
+    "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+    "thumbnail": "https://i.ytimg.com/vi/uFicgPqbxms/maxresdefault.jpg"
+  },
+  "schedule": {
+    "delivery": "scheduled",
+    "date": "2026-05-27",
+    "hours": "09",
+    "minutes": "00",
+    "scheduledAt": "2026-05-27T09:00:00+08:00"
+  },
+  "mailerLite": {
+    "groupId": "185908830918411331",
+    "groupName": "Noor subscribers",
+    "groupActiveCount": 0,
+    "from": "hello@fursay.com",
+    "fromName": "Fursay",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-05-27T09:00:00+08:00"
+  },
+  "email": {
+    "subject": "هذا الأسبوع: نبدأ التحية بالصينية مع 你好",
+    "previewText": "حلقة قصيرة للعائلة: 你好 nǐ hǎo، 謝謝 xiè xiè، 再見 zài jiàn مع نشاط منزلي بسيط.",
+    "heroTitle": "لنقل مرحباً بالصينية مع نور وزيد",
+    "richTextBody": "Arabic Kids Chinese - EP001\n\nلنقل مرحباً بالصينية مع نور وزيد\n\nفي حلقة EP001 من Arabic Kids Chinese، يتعرّف الأطفال على كلمات التحية الأولى بالصينية بطريقة هادئة ومناسبة للعائلة. ركّزوا هذا الأسبوع على ثلاث عبارات سهلة: 你好 nǐ hǎo، 謝謝 xiè xiè، 再見 zài jiàn. يمكن للطفل أن يسمع العبارة، يكرّرها، ثم يستخدمها في موقف صغير داخل البيت.\n\nLearning words\n你好 - nǐ hǎo\nمرحباً\nقسم التعلّم: قولوا 你好 nǐ hǎo عندما يدخل أحد أفراد العائلة إلى الغرفة.\n\n謝謝 - xiè xiè\nشكراً\nقسم التعلّم: بعد أن يساعدك الطفل في ترتيب لعبة، شجّعيه أن يقول 謝謝 xiè xiè.\n\n再見 - zài jiàn\nوداعاً\nقسم التعلّم: عند نهاية وقت اللعب، لوّحوا باليد وقولوا 再見 zài jiàn بصوت واضح.\n\nParent activity\nنشاط خمس دقائق: اختاروا دمية أو كتاباً مصوراً، وافتحوا مشهداً صغيراً بثلاث خطوات. أولاً تقول الدمية 你好 nǐ hǎo، ثم يعطيها الطفل شيئاً صغيراً فتقول 謝謝 xiè xiè، وفي النهاية تلوّح وتقول 再見 zài jiàn. كرّروا المشهد مرتين فقط حتى يبقى لطيفاً وغير متعب.\n\nشاهدوا حلقة التحية الصينية مع الطفل\nhttps://www.youtube.com/watch?v=uFicgPqbxms\n\nزوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال\nhttps://fursay.com/arabic\n\nاجعلوا الهدف بسيطاً هذا الأسبوع: عبارة واحدة في موقف حقيقي أفضل من حفظ طويل. عندما يسمع الطفل الصينية داخل روتينه اليومي، تصبح الكلمات مألوفة وهادئة.",
+    "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">حلقة قصيرة للعائلة: 你好 nǐ hǎo، 謝謝 xiè xiè، 再見 zài jiàn مع نشاط منزلي بسيط.</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:right;direction:rtl;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Arabic Kids Chinese · EP001</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">لنقل مرحباً بالصينية مع نور وزيد</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">في حلقة EP001 من Arabic Kids Chinese، يتعرّف الأطفال على كلمات التحية الأولى بالصينية بطريقة هادئة ومناسبة للعائلة. ركّزوا هذا الأسبوع على ثلاث عبارات سهلة: 你好 nǐ hǎo، 謝謝 xiè xiè، 再見 zài jiàn. يمكن للطفل أن يسمع العبارة، يكرّرها، ثم يستخدمها في موقف صغير داخل البيت.</p>\n            <img src=\"https://i.ytimg.com/vi/uFicgPqbxms/maxresdefault.jpg\" alt=\"你好朋友 مرحبا يا أصدقاء | 學中文 EP001 | صيني للأطفال\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>你好</strong><br><span style=\"color:#6d6258;\">nǐ hǎo</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">مرحباً<br><em>قسم التعلّم: قولوا 你好 nǐ hǎo عندما يدخل أحد أفراد العائلة إلى الغرفة.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>謝謝</strong><br><span style=\"color:#6d6258;\">xiè xiè</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">شكراً<br><em>قسم التعلّم: بعد أن يساعدك الطفل في ترتيب لعبة، شجّعيه أن يقول 謝謝 xiè xiè.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>再見</strong><br><span style=\"color:#6d6258;\">zài jiàn</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">وداعاً<br><em>قسم التعلّم: عند نهاية وقت اللعب، لوّحوا باليد وقولوا 再見 zài jiàn بصوت واضح.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">نشاط خمس دقائق: اختاروا دمية أو كتاباً مصوراً، وافتحوا مشهداً صغيراً بثلاث خطوات. أولاً تقول الدمية 你好 nǐ hǎo، ثم يعطيها الطفل شيئاً صغيراً فتقول 謝謝 xiè xiè، وفي النهاية تلوّح وتقول 再見 zài jiàn. كرّروا المشهد مرتين فقط حتى يبقى لطيفاً وغير متعب.</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=uFicgPqbxms\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">شاهدوا حلقة التحية الصينية مع الطفل</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/arabic\" style=\"color:#c05f18;font-weight:bold;\">زوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">اجعلوا الهدف بسيطاً هذا الأسبوع: عبارة واحدة في موقف حقيقي أفضل من حفظ طويل. عندما يسمع الطفل الصينية داخل روتينه اليومي، تصبح الكلمات مألوفة وهادئة.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>"
+  },
+  "browser": {
+    "requiredLoginUrl": "https://dashboard.mailerlite.com/dashboard",
+    "campaignUrl": "https://dashboard.mailerlite.com/campaigns",
+    "campaignType": "Regular campaign",
+    "editor": "Rich-text editor",
+    "action": "Create or duplicate a regular campaign, paste this rich-text body, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+    "successCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel arabic --input content/newsletters/pending/1779152462192-ddxmw2-arabic-ep001.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url>",
+    "failureCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel arabic --input content/newsletters/pending/1779152462192-ddxmw2-arabic-ep001.newsletter.json --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail \"<exact blocker>\""
+  },
+  "warnings": [
+    "Target group \"Noor subscribers\" has 0 active subscribers"
+  ]
+}

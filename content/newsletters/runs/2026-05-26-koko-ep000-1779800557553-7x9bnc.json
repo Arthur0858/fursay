@@ -1,0 +1,20 @@
+{
+  "runId": "1779800557553-7x9bnc",
+  "channel": "koko",
+  "mode": "api-preflight",
+  "dryRun": false,
+  "startedAt": "2026-05-26T13:02:37.553Z",
+  "status": "api_preflight_passed",
+  "mailerLiteApi": {
+    "baseUrl": "https://connect.mailerlite.com/api",
+    "groupId": "185908812467668238",
+    "groupName": "KOKO subscribers",
+    "groupActiveCount": 0,
+    "from": "hello@fursay.com",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-06-01T09:00:00+08:00",
+    "contentSubmission": "requires MailerLite Advanced plan when emails.*.content is sent by API"
+  },
+  "finishedAt": "2026-05-26T13:02:38.497Z"
+}

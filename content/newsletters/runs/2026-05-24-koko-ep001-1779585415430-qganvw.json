@@ -1,0 +1,15 @@
+{
+  "runId": "1779585415430-qganvw",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-24T01:16:55.430Z",
+  "status": "prepared",
+  "syncedEpisodes": 411,
+  "episodeNo": 1,
+  "videoId": "zoGksIelZDw",
+  "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+  "requestPath": "content/newsletters/pending/1779585415430-qganvw-koko-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1779585415430-qganvw-koko-ep001.newsletter.json",
+  "finishedAt": "2026-05-24T01:16:58.328Z"
+}

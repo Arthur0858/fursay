@@ -1,0 +1,15 @@
+{
+  "runId": "1779152462192-ddxmw2",
+  "channel": "arabic",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-19T01:01:02.192Z",
+  "status": "prepared",
+  "syncedEpisodes": 30,
+  "episodeNo": 1,
+  "videoId": "uFicgPqbxms",
+  "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+  "requestPath": "content/newsletters/pending/1779152462192-ddxmw2-arabic-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1779152462192-ddxmw2-arabic-ep001.newsletter.json",
+  "finishedAt": "2026-05-19T01:01:02.633Z"
+}
