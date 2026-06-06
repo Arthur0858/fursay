@@ -23,6 +23,15 @@ for (const path of paths) {
 
   const response = await page.goto(base + path, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.waitForLoadState("networkidle", { timeout: 12000 }).catch(() => {});
+  await page.evaluate(async () => {
+    const step = Math.max(480, Math.floor(window.innerHeight * 0.75));
+    for (let y = 0; y <= document.documentElement.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 80));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
 
   const data = await page.evaluate(() => {
     const q = (selector) => document.querySelector(selector);
@@ -40,7 +49,8 @@ for (const path of paths) {
       ogImage: q('meta[property="og:image"]')?.getAttribute("content") || "",
       twitterImage: q('meta[name="twitter:image"]')?.getAttribute("content") || "",
       hreflangs: qa('link[rel="alternate"][hreflang]').map((el) => ({ lang: el.getAttribute("hreflang"), href: el.href })),
-      brokenImages: images.filter((img) => !img.complete || img.naturalWidth === 0).map((img) => img.currentSrc || img.src),
+      brokenImages: images.filter((img) => img.complete && img.naturalWidth === 0).map((img) => img.currentSrc || img.src),
+      lazyUnloadedImages: images.filter((img) => !img.complete && !img.currentSrc).map((img) => img.src),
       imagesMissingAlt: images.filter((img) => !img.hasAttribute("alt")).map((img) => img.currentSrc || img.src),
       characterImagesMissingSize: images
         .filter((img) => img.currentSrc.includes("/images/chars/"))
