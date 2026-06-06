@@ -1125,6 +1125,23 @@
       color: var(--brown, #5D4E37); margin-bottom: 8px;
     }
     .subscribe-sec p { color: #666; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+    .story-pack-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px auto 24px;
+      max-width: 760px;
+      text-align: right;
+    }
+    .story-pack-item {
+      background: #fffaf1;
+      border: 1px solid rgba(245,114,36,0.18);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(89,64,35,0.07);
+    }
+    .story-pack-item strong { display: block; color: #3c6f4a; margin-bottom: 6px; font-size: 0.95rem; }
+    .story-pack-item span { display: block; color: #6f6254; font-size: 0.88rem; line-height: 1.45; }
     .newsletter-cta-btn {
       padding: 16px 36px;
       background: var(--orange, #F57224);
@@ -1231,6 +1248,7 @@
     @media (max-width: 600px) {
       .modal-box { padding: 28px 22px 24px; }
       .modal-checks { flex-direction: column; }
+      .story-pack-proof { grid-template-columns: 1fr; }
     }
     /* Shared picture-book base styles live in /css/picture-book-base.css. */
     /* Shared picture-world styles live in /css/picture-world-shared.css. */
@@ -1438,10 +1456,15 @@
 <section class="subscribe-sec" id="subscribe">
   <div class="subscribe-inner">
     <span class="big-emoji">📬</span>
-    <h2>اشترك في نشرتنا الأسبوعية</h2>
-    <p>كلمات صينية جديدة، نصائح لغوية، وحلقات مميزة — مباشرة إلى بريدك كل أسبوع. مجاناً تماماً.</p>
+    <h2>احصلوا على حزمة قصة في 3 دقائق</h2>
+    <p>روتين صيني بسيط للعائلات العربية: قصة قصيرة، عبارة واحدة، ونشاط صغير بعد المشاهدة.</p>
+    <div class="story-pack-proof" aria-label="محتوى حزمة القصة الأسبوعية">
+      <div class="story-pack-item"><strong>قصة واحدة</strong><span>حلقة من نور وزيد لاستخدامها في لحظة قراءة قصيرة مع الطفل.</span></div>
+      <div class="story-pack-item"><strong>عبارة صينية واحدة</strong><span>الحروف الصينية، البينيين، معنى مناسب للعربية، وتلميح نطق سريع.</span></div>
+      <div class="story-pack-item"><strong>نشاط واحد</strong><span>سؤالان للوالدين وفكرة رسم أو ورقة قابلة للطباعة بعد القصة.</span></div>
+    </div>
     <button class="newsletter-cta-btn" data-open-subscribe="noor">
-      📧 احصل على حزمة القصة الأسبوعية
+      📧 أرسلوا لي حزمة 3 دقائق
     </button>
     <div class="newsletter-note">لا إزعاج · إلغاء الاشتراك في أي وقت</div>
   </div>
@@ -1528,8 +1551,8 @@
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe aria-label="إغلاق">✕</button>
     <span class="modal-emoji">📬</span>
-    <div class="modal-title">احصل على حزمة قصة هذا الأسبوع</div>
-    <div class="modal-sub">كلمات صينية جديدة ونصائح لغوية مباشرة إلى بريدك — مجاناً.</div>
+    <div class="modal-title">احصلوا على حزمة قصة في 3 دقائق</div>
+    <div class="modal-sub">قصة من نور وزيد، عبارة صينية مع البينيين، سؤالان للوالدين، ونشاط صغير.</div>
     <form id="subscribeForm">
       <div class="modal-field">
         <label for="modalEmail">البريد الإلكتروني *</label>
@@ -1546,7 +1569,7 @@
           </label>
         </div>
       </div>
-      <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي الحزمة الأسبوعية</button>
+      <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي حزمة 3 دقائق</button>
       <div class="modal-note">لا إزعاج · إلغاء الاشتراك في أي وقت</div>
     </form>
   </div>

@@ -1125,6 +1125,23 @@
       color: var(--brown, #5D4E37); margin-bottom: 8px;
     }
     .subscribe-sec p { color: #666; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+    .story-pack-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px auto 24px;
+      max-width: 760px;
+      text-align: left;
+    }
+    .story-pack-item {
+      background: #fffaf1;
+      border: 1px solid rgba(245,114,36,0.18);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(89,64,35,0.07);
+    }
+    .story-pack-item strong { display: block; color: #3c6f4a; margin-bottom: 6px; font-size: 0.95rem; }
+    .story-pack-item span { display: block; color: #6f6254; font-size: 0.88rem; line-height: 1.45; }
     .newsletter-cta-btn {
       padding: 16px 36px;
       background: var(--orange, #F57224);
@@ -1229,6 +1246,7 @@
     @media (max-width: 600px) {
       .modal-box { padding: 28px 22px 24px; }
       .modal-checks { flex-direction: column; }
+      .story-pack-proof { grid-template-columns: 1fr; }
     }
     /* Shared picture-book base styles live in /css/picture-book-base.css. */
     /* Shared picture-world styles live in /css/picture-world-shared.css. */
@@ -1447,9 +1465,14 @@
 <section class="subscribe-sec" id="subscribe">
   <div class="subscribe-inner reveal">
     <span class="big-emoji">📬</span>
-    <h2>取得努爾每週故事包</h2>
-    <p>每週收到一則努爾與扎伊德故事、一句含拼音的中文、兩個問題，和一張可列印活動。</p>
-    <button class="newsletter-cta-btn" data-open-subscribe="noor">取得每週陪讀包</button>
+    <h2>取得 3 分鐘故事陪讀包</h2>
+    <p>給阿語家庭使用的簡短中文陪讀流程，不是另一堂冗長課程。</p>
+    <div class="story-pack-proof" aria-label="每週故事包內容">
+      <div class="story-pack-item"><strong>一則故事</strong><span>挑一則努爾與扎伊德影片，讓親子有一個小小共讀時刻。</span></div>
+      <div class="story-pack-item"><strong>一句中文</strong><span>中文、拼音、阿語友善解釋，以及簡短發音提示。</span></div>
+      <div class="story-pack-item"><strong>一個活動</strong><span>兩個親子提問，加一個列印或畫圖小活動。</span></div>
+    </div>
+    <button class="newsletter-cta-btn" data-open-subscribe="noor">寄給我 3 分鐘陪讀包</button>
     <p class="newsletter-note">絕不寄廣告。隨時可以退訂。</p>
   </div>
 </section>
@@ -1536,8 +1559,8 @@
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe>✕</button>
     <span class="modal-emoji">📬</span>
-    <h3 class="modal-title">取得努爾每週故事包</h3>
-    <p class="modal-sub">一則故事、一組雙語詞句、兩個親子提問、一張可列印小活動。就這樣。</p>
+    <h3 class="modal-title">取得 3 分鐘故事陪讀包</h3>
+    <p class="modal-sub">一則努爾與扎伊德故事、一句含拼音中文、兩個親子提問、一個小活動。</p>
     <form id="subscribe-form">
       <div class="modal-field">
         <label for="sub-email">Email *</label>
@@ -1558,7 +1581,7 @@
           </label>
         </div>
       </div>
-      <button type="submit" class="modal-submit">寄給我每週陪讀包</button>
+      <button type="submit" class="modal-submit">寄給我 3 分鐘陪讀包</button>
       <p id="sub-msg" class="modal-note" style="display:none"></p>
     </form>
     <p class="modal-note">絕不寄廣告。隨時可以退訂。</p>
