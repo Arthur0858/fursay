@@ -1,0 +1,15 @@
+{
+  "runId": "1780205544002-m42aym",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-05-31T05:32:24.002Z",
+  "status": "prepared",
+  "syncedEpisodes": 455,
+  "episodeNo": 1,
+  "videoId": "zoGksIelZDw",
+  "videoUrl": "https://www.youtube.com/watch?v=zoGksIelZDw",
+  "requestPath": "content/newsletters/pending/1780205544002-m42aym-koko-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1780205544002-m42aym-koko-ep001.newsletter.json",
+  "finishedAt": "2026-05-31T05:32:27.686Z"
+}

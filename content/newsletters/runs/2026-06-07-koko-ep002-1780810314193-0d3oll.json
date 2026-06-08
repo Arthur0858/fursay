@@ -1,0 +1,15 @@
+{
+  "runId": "1780810314193-0d3oll",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-06-07T05:31:54.193Z",
+  "status": "prepared",
+  "syncedEpisodes": 492,
+  "episodeNo": 2,
+  "videoId": "fO8X_gT7934",
+  "videoUrl": "https://www.youtube.com/watch?v=fO8X_gT7934",
+  "requestPath": "content/newsletters/pending/1780810314193-0d3oll-koko-ep002.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1780810314193-0d3oll-koko-ep002.newsletter.json",
+  "finishedAt": "2026-06-07T05:31:58.007Z"
+}

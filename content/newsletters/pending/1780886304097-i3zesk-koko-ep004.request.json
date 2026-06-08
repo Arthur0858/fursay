@@ -1,0 +1,52 @@
+{
+  "runId": "1780886304097-i3zesk",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "audience": "families using Koko's Forest for gentle English learning",
+  "languageBrief": "English newsletter with Traditional Chinese parent support",
+  "contentRules": [
+    "Use warm, clear English as the main language.",
+    "Include Traditional Chinese parent guidance after the English learning content.",
+    "Keep the tone playful, calm, and practical for parents of young children.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 4,
+    "videoId": "vu3ZuovnIOw",
+    "title": "Koko and Gugu 🦉 The Starry Night | English Bedtime Story | Koko's Forest Adventure",
+    "description": "EP004 - The Starry Night\n叩叩的森林冒險\n\nIn this episode, Koko the squirrel gets lost in the dark forest and worries she chose the wrong path. The wise owl Gugu teaches her a valuable lesson: when you feel confused, stop, look up at the stars, and listen to the sounds around you. The answers are already inside of you!\n\n🌙 VOCABULARY / 單字\n⭐ Star (星星)\n🦉 Wise (有智慧)\n👂 Listen (聽)\n\n💡 MORAL LESSON\nWhen you feel confused or scared, remember: stop running, look up, and listen to the world around you. The answers are already inside of you.\n\n📺 SERIES INFORMATION\n\"Koko's Forest Adventure\" is a bilingual English learning series for children aged 3-8. Each episode features a gentle bedtime story designed to:\n✓ Build English vocabulary naturally\n✓ Teach important life lessons through storytelling\n✓ Provide calming, sleep-friendly narration\n✓ Include both English and Traditional Chinese\n\n🎯 EPISODE THEMES\n- Wisdom & Learning to Listen\n- Overcoming Confusion & Fear\n- Trust in Nature & Guidance\n\n🎵 AUDIO\nNarrated by professional bilingual narrators in English and Mandarin Chinese. Perfect for bedtime, quiet time, or English language learning.\n\n📚 CHARACTERS\n- Koko: A brave little squirrel discovering the forest\n- Gugu: A wise, gentle owl who shares forest wisdom\n\n✨ CHAPTERS\n0:00 Koko Gets Lost\n2:30 Gugu Appears\n5:15 The Stars Teach\n8:45 Listen to the Forest\n12:00 Koko Finds Home\n15:30 Word Time (Vocabulary)\n18:00 Goodnight Message\n\n🔔 SUBSCRIBE for more bedtime stories, English learning, and forest adventures!\n\n#KokosForesAdventure #BedbimeStory #EnglishLearning #BilingualChildren #ForestStories #ChildrenSleep #EnglishForKids #MandaredChinese #EducationalStories #KidsEntertainment 免費訂閱叩叩電子報 — 每週五收到故事精華、英文單字卡、親子活動，還有免費著色本 PDF！\nhttps://kokos-forest-adventure-g7f3ah.subscribepage.io 🌐 官方網站 / Official Website：https://fursay.com\n📖 更多親子英文資源：fursay.com",
+    "publishedAt": "2026-04-08T17:12:54Z",
+    "videoUrl": "https://www.youtube.com/watch?v=vu3ZuovnIOw",
+    "thumbnail": "https://i.ytimg.com/vi/vu3ZuovnIOw/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "content/newsletters/pending/1780886304097-i3zesk-koko-ep004.newsletter.json",
+  "requiredSchema": {
+    "episodeNo": "number",
+    "videoId": "string",
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Koko's Forest.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}

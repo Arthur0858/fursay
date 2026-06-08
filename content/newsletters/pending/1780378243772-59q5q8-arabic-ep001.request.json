@@ -1,0 +1,52 @@
+{
+  "runId": "1780378243772-59q5q8",
+  "channel": "arabic",
+  "channelLabel": "Arabic Kids Chinese",
+  "audience": "Arabic-speaking families learning Chinese through picture-book stories",
+  "languageBrief": "Arabic newsletter with Chinese and Pinyin learning support",
+  "contentRules": [
+    "Use Arabic as the main language.",
+    "Include a clear Chinese phrase section with Pinyin and short meaning.",
+    "Use right-to-left friendly wording and avoid mixing long English passages into Arabic sections.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 1,
+    "videoId": "uFicgPqbxms",
+    "title": "你好朋友 مرحبا يا أصدقاء | 學中文 EP001 | صيني للأطفال",
+    "description": "في هذه الحلقة تتعلّم كلمات التحيّة ! أنضم إلى نور وزيد — يتعلّمان معًا الصينيّة مع أصدقائهما ! 🐼🦁🦌\n\n★ كلمات اليوم بالصينيّة:\n• 你好 (nǐ hǎo) = مرحباً\n• 謝謝 (xiè xiè) = شكراً\n• 對不起 (duì bu qǐ) = آسف\n• 沒關係 (méi guān xi) = لا بأس\n• 再見 (zài jiàn) = وداعاً\n\n🌟 مناسب للأطفال من 3 إلى 8 سنوات\n📺 اشترك في القناة: https://www.youtube.com/@ArabicKidsChinese\n\n#صيني_للأطفال #تعلم_الصينية #小小中文 #LearnChinese #ArabicKids #MandarinForKids 🌐 الموقع الرسمي / 官方網站 / Official Website：https://fursay.com\n📖 المزيد من موارد التعلم：fursay.com",
+    "publishedAt": "2026-04-16T17:32:15Z",
+    "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+    "thumbnail": "https://i.ytimg.com/vi/uFicgPqbxms/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "content/newsletters/pending/1780378243772-59q5q8-arabic-ep001.newsletter.json",
+  "requiredSchema": {
+    "episodeNo": "number",
+    "videoId": "string",
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Arabic Kids Chinese.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}

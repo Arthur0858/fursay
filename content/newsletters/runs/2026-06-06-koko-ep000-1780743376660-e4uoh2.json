@@ -1,0 +1,11 @@
+{
+  "runId": "1780743376660-e4uoh2",
+  "channel": "koko",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-06-06T10:56:16.660Z",
+  "status": "failed",
+  "error": "Episode already sent: koko ep1",
+  "providerErrorCode": "unknown",
+  "finishedAt": "2026-06-06T10:56:16.662Z"
+}

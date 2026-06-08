@@ -55,7 +55,7 @@ node scripts/newsletter-runner.mjs --mode chrome-handoff --channel koko --input 
 node scripts/newsletter-runner.mjs --mode chrome-handoff --channel arabic --input content/newsletters/pending/<file>.newsletter.json
 ```
 
-The handoff writes both JSON and Markdown files under `content/newsletters/browser-handoff/`. These files contain the campaign name, target group, sender, subject, preheader, rich-text body, schedule, and the exact success/failure recording commands.
+The handoff writes both JSON and Markdown files under `content/newsletters/browser-handoff/`. These files contain the campaign name, target group, sender, subject, preheader, rich-text body, schedule, MailerLite block-building order, footer QA, post-send Gmail spot-check instructions, and the exact success/failure recording commands.
 
 After Chrome confirms the campaign is scheduled and visible in MailerLite Outbox, record success:
 
@@ -111,4 +111,12 @@ Set `MAILERLITE_ALLOW_CONTENT_API_SEND=true` only after the MailerLite account p
 
 The Chrome path is a Free-plan compatibility bridge, not a durable API sender. The automation must stop and write a `chrome-result` failure if MailerLite asks for login/MFA, the expected group is missing, the selected group has 0 active subscribers, the editor cannot be reached, the schedule page blocks the selected time, or the campaign cannot be verified in Outbox.
 
-Use the Rich-text editor for Free plan publishing. Do not use Custom HTML editor unless the account explicitly exposes it without an upgrade prompt.
+Use the Rich-text editor for Free plan publishing. Do not use Custom HTML editor unless the account explicitly exposes it without an upgrade prompt. Build the email with MailerLite's native heading, image, text, and button blocks in the order listed by the handoff file; do not paste the full body as a single unstyled text block.
+
+Before scheduling, preview the footer. Stop and record a `chrome-result` failure if the footer or message preview contains `Add your company postal address here`, `TODO`, `placeholder`, or `lorem ipsum`.
+
+## Post-send Gmail spot check
+
+- Koko: after Monday 09:10 Asia/Taipei, find the latest Fursay/Koko Gmail message.
+- Arabic: after Wednesday 09:10 Asia/Taipei, find the latest Fursay/Arabic Gmail message.
+- Confirm the message exists, contains the YouTube CTA and site CTA, has no blocked placeholder text, and did not collapse into a single plain-text paragraph.

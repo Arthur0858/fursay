@@ -12,6 +12,7 @@ const BROWSER_HANDOFF_DIR = path.join(ROOT, "content", "newsletters", "browser-h
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3/playlistItems";
 const OPENAI_API = "https://api.openai.com/v1/responses";
 const MAILERLITE_API = "https://connect.mailerlite.com/api";
+const BLOCKED_COPY_PATTERN = /add your company postal address here|postal address here|lorem ipsum|placeholder|TODO/i;
 
 function projectPath(filePath) {
   return path.relative(ROOT, filePath).replaceAll(path.sep, "/");
@@ -404,6 +405,7 @@ async function generateNewsletter(channelKey, episode) {
 
 function validateNewsletter(channelKey, episode, newsletter) {
   const errors = [];
+  const config = CHANNELS[channelKey];
   const required = ["subject", "preview_text", "hero_title", "intro", "parent_activity", "video_cta", "site_cta", "closing"];
   for (const field of required) {
     if (!newsletter[field] || String(newsletter[field]).trim().length < 4) errors.push(`Missing or too short: ${field}`);
@@ -418,14 +420,43 @@ function validateNewsletter(channelKey, episode, newsletter) {
     });
   }
   if (!episode.videoUrl || !newsletter.video_cta) errors.push("video CTA and video URL are required");
+  if (!config.siteUrl || !newsletter.site_cta) errors.push("site CTA and site URL are required");
   if (String(newsletter.subject || "").length > 255) errors.push("subject exceeds 255 characters");
   if (String(newsletter.preview_text || "").length > 255) errors.push("preview_text exceeds 255 characters");
-  if (/lorem ipsum|placeholder|TODO/i.test(JSON.stringify(newsletter))) errors.push("placeholder text detected");
+  if (BLOCKED_COPY_PATTERN.test(JSON.stringify(newsletter))) errors.push("blocked placeholder text detected");
   if (channelKey === "arabic" && !/[\u0600-\u06FF]/.test(JSON.stringify(newsletter))) {
     errors.push("Arabic newsletter must contain Arabic text");
   }
   if (channelKey === "koko" && !/[\u4E00-\u9FFF]/.test(JSON.stringify(newsletter))) {
     errors.push("Koko newsletter must include Traditional Chinese parent support");
+  }
+  return errors;
+}
+
+function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTextBody) {
+  const errors = [];
+  const config = CHANNELS[channelKey];
+  const bodyText = `${newsletter.preview_text}\n${html}\n${richTextBody}`;
+
+  if (BLOCKED_COPY_PATTERN.test(bodyText)) {
+    errors.push("blocked placeholder text detected in rendered email body or preview");
+  }
+  if (!html.includes(episode.videoUrl) || !richTextBody.includes(episode.videoUrl)) {
+    errors.push("rendered email must include the source video URL");
+  }
+  if (!html.includes(config.siteUrl) || !richTextBody.includes(config.siteUrl)) {
+    errors.push("rendered email must include the site CTA URL");
+  }
+  if (!html.includes(escapeHtml(newsletter.video_cta)) || !richTextBody.includes(newsletter.video_cta)) {
+    errors.push("rendered email must include the video CTA text");
+  }
+  if (!html.includes(escapeHtml(newsletter.site_cta)) || !richTextBody.includes(newsletter.site_cta)) {
+    errors.push("rendered email must include the site CTA text");
+  }
+  if (!String(newsletter.subject || "").trim()) errors.push("subject is required before handoff");
+  if (!String(newsletter.preview_text || "").trim()) errors.push("preheader is required before handoff");
+  if (!Array.isArray(newsletter.learning_words) || newsletter.learning_words.length !== 3) {
+    errors.push("exactly 3 learning words are required before handoff");
   }
   return errors;
 }
@@ -512,6 +543,66 @@ function renderRichTextBody(channelKey, episode, newsletter) {
     "",
     newsletter.closing
   ].join("\n");
+}
+
+function buildEditorBlocks(channelKey, episode, newsletter) {
+  const config = CHANNELS[channelKey];
+  return [
+    {
+      name: "Header",
+      action: `Add a heading block with: ${config.label} - EP${String(episode.episodeNo).padStart(3, "0")}`
+    },
+    {
+      name: "Hero title",
+      action: `Add the main title: ${newsletter.hero_title}`
+    },
+    {
+      name: "Intro",
+      action: "Add the intro paragraph below the title."
+    },
+    {
+      name: "Cover image",
+      action: episode.thumbnail
+        ? `Add an image block using ${episode.thumbnail}. Link the image to ${episode.videoUrl}.`
+        : "Skip only if MailerLite cannot add an image block; do not replace it with plain text."
+    },
+    {
+      name: "Learning words",
+      action: "Add three repeated word rows or separate text blocks, one for each learning word, instead of pasting them as one unstyled paragraph.",
+      items: newsletter.learning_words.map((word) => `${word.term} - ${word.pronunciation}: ${word.meaning}`)
+    },
+    {
+      name: "Parent activity",
+      action: "Add a separate text block for the parent activity."
+    },
+    {
+      name: "Primary CTA",
+      action: `Add a button block labeled "${newsletter.video_cta}" and link it to ${episode.videoUrl}.`
+    },
+    {
+      name: "Site CTA",
+      action: `Add a secondary text link labeled "${newsletter.site_cta}" and link it to ${config.siteUrl}.`
+    },
+    {
+      name: "Footer QA",
+      action: "Before scheduling, preview the campaign footer and fail closed if it still says Add your company postal address here or any other default placeholder."
+    }
+  ];
+}
+
+function buildPostSendGmailCheck(channelKey) {
+  const config = CHANNELS[channelKey];
+  return {
+    expectedAfterTaipei: channelKey === "koko" ? "Monday 09:10 Asia/Taipei" : "Wednesday 09:10 Asia/Taipei",
+    searchQuery: `from:hello@fursay.com (${config.label} OR Fursay) newer_than:7d -in:trash -in:spam`,
+    checks: [
+      "latest matching Gmail message exists after the scheduled send slot",
+      "message body does not contain Add your company postal address here, TODO, placeholder, or lorem ipsum",
+      `message body includes ${config.siteUrl}`,
+      "message body includes a YouTube CTA link",
+      "message did not collapse into a single plain-text paragraph"
+    ]
+  };
 }
 
 function taipeiDateString(date) {
@@ -726,6 +817,13 @@ async function writeBrowserHandoff(handoff) {
   const baseName = `${handoff.createdAt.slice(0, 10)}-${handoff.channel}-ep${String(handoff.episodeNo || 0).padStart(3, "0")}-${handoff.runId}`;
   const jsonFile = path.join(BROWSER_HANDOFF_DIR, `${baseName}.json`);
   const mdFile = path.join(BROWSER_HANDOFF_DIR, `${baseName}.md`);
+  const editorBlocks = handoff.browser.editorBlocks
+    .map((block, index) => [
+      `${index + 1}. ${block.name}: ${block.action}`,
+      ...(block.items || []).map((item) => `   - ${item}`)
+    ].join("\n"))
+    .join("\n");
+  const postSendChecks = handoff.postSendGmailCheck.checks.map((check) => `- ${check}`).join("\n");
   await fs.writeFile(jsonFile, `${JSON.stringify(handoff, null, 2)}\n`);
   await fs.writeFile(mdFile, [
     `# ${handoff.campaignName}`,
@@ -743,8 +841,23 @@ async function writeBrowserHandoff(handoff) {
     "## Preheader",
     handoff.email.previewText,
     "",
+    "## MailerLite Editor Order",
+    "Use MailerLite built-in rich-text, image, and button blocks. Do not paste the whole body as one plain-text block.",
+    "",
+    editorBlocks,
+    "",
     "## Rich Text Body",
     handoff.email.richTextBody,
+    "",
+    "## Footer QA",
+    "- Preview the footer before scheduling.",
+    "- Stop and record a chrome-result failure if the footer contains Add your company postal address here, TODO, placeholder, or lorem ipsum.",
+    "- Confirm the unsubscribe footer exists and the sender/reply-to fields match the values above.",
+    "",
+    "## Post-send Gmail Spot Check",
+    `- Check after: ${handoff.postSendGmailCheck.expectedAfterTaipei}`,
+    `- Gmail query: ${handoff.postSendGmailCheck.searchQuery}`,
+    postSendChecks,
     "",
     "## Source",
     handoff.episode.videoUrl,
@@ -799,14 +912,18 @@ async function prepareNewsletterForDelivery(args, state, run) {
 
   const cleanNewsletter = normalizeNewsletterInput(newsletter);
   const qaErrors = validateNewsletter(args.channel, episode, cleanNewsletter);
+
+  const html = renderHtml(args.channel, episode, cleanNewsletter);
+  const richTextBody = renderRichTextBody(args.channel, episode, cleanNewsletter);
+  qaErrors.push(...validateDeliveryArtifact(args.channel, episode, cleanNewsletter, html, richTextBody));
   run.qaErrors = qaErrors;
   if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
 
-  const html = renderHtml(args.channel, episode, cleanNewsletter);
   run.newsletter = cleanNewsletter;
   run.htmlPreview = html;
+  run.richTextPreview = richTextBody;
 
-  return { fullPath, newsletter: cleanNewsletter, episode, html };
+  return { fullPath, newsletter: cleanNewsletter, episode, html, richTextBody };
 }
 
 async function runPrepare(args, state, run) {
@@ -869,7 +986,7 @@ async function runSend(args, state, run) {
 }
 
 async function runChromeHandoff(args, state, run) {
-  const { newsletter, episode, html } = await prepareNewsletterForDelivery(args, state, run);
+  const { newsletter, episode, html, richTextBody } = await prepareNewsletterForDelivery(args, state, run);
   const schedule = scheduleFor(args.channel, args);
   const target = await resolveMailerLiteTarget(args.channel, schedule);
   const config = CHANNELS[args.channel];
@@ -900,7 +1017,7 @@ async function runChromeHandoff(args, state, run) {
       subject: newsletter.subject,
       previewText: newsletter.preview_text,
       heroTitle: newsletter.hero_title,
-      richTextBody: renderRichTextBody(args.channel, episode, newsletter),
+      richTextBody,
       htmlPreview: html
     },
     browser: {
@@ -908,10 +1025,12 @@ async function runChromeHandoff(args, state, run) {
       campaignUrl: "https://dashboard.mailerlite.com/campaigns",
       campaignType: "Regular campaign",
       editor: "Rich-text editor",
-      action: "Create or duplicate a regular campaign, paste this rich-text body, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+      action: "Create or duplicate a regular campaign, build the email with MailerLite blocks in the listed order, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+      editorBlocks: buildEditorBlocks(args.channel, episode, newsletter),
       successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <outbox-or-campaign-url>${scheduleArgs(args)}`,
       failureCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail "<exact blocker>"`
     },
+    postSendGmailCheck: buildPostSendGmailCheck(args.channel),
     warnings
   };
 
@@ -1039,12 +1158,16 @@ async function main() {
 
       const newsletter = await generateNewsletter(args.channel, episode);
       const qaErrors = validateNewsletter(args.channel, episode, newsletter);
+
+      const html = renderHtml(args.channel, episode, newsletter);
+      const richTextBody = renderRichTextBody(args.channel, episode, newsletter);
+      qaErrors.push(...validateDeliveryArtifact(args.channel, episode, newsletter, html, richTextBody));
       run.qaErrors = qaErrors;
       if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
 
-      const html = renderHtml(args.channel, episode, newsletter);
       run.newsletter = newsletter;
       run.htmlPreview = html;
+      run.richTextPreview = richTextBody;
 
       if (args.dryRun) {
         const schedule = scheduleFor(args.channel, args);

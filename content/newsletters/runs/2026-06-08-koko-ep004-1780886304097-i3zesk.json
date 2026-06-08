@@ -1,0 +1,15 @@
+{
+  "runId": "1780886304097-i3zesk",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-06-08T02:38:24.097Z",
+  "status": "prepared",
+  "syncedEpisodes": 493,
+  "episodeNo": 4,
+  "videoId": "vu3ZuovnIOw",
+  "videoUrl": "https://www.youtube.com/watch?v=vu3ZuovnIOw",
+  "requestPath": "content/newsletters/pending/1780886304097-i3zesk-koko-ep004.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1780886304097-i3zesk-koko-ep004.newsletter.json",
+  "finishedAt": "2026-06-08T02:38:28.273Z"
+}

@@ -1,0 +1,48 @@
+{
+  "runId": "1780810353108-yc4rvz",
+  "channel": "koko",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-06-07T05:32:33.108Z",
+  "status": "dry_run_passed",
+  "episodeNo": 2,
+  "videoId": "fO8X_gT7934",
+  "videoUrl": "https://www.youtube.com/watch?v=fO8X_gT7934",
+  "inputPath": "content/newsletters/pending/1780810314193-0d3oll-koko-ep002.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "A calm Koko story about helping a lost friend",
+    "preview_text": "Practice lost, friend, and brave with Koko, then try a simple 5-minute parent-child retelling activity. 親子一起用溫柔方式陪孩子說出友情與勇氣。",
+    "hero_title": "This Week in Koko's Forest: Helping Lili Find Her Way",
+    "intro": "In this gentle bedtime story, Koko meets Lili, a little ladybug who feels lost. The episode gives families a calm way to talk about friendship, small acts of kindness, and being brave enough to help someone.",
+    "learning_words": [
+      {
+        "term": "lost",
+        "pronunciation": "lawst",
+        "meaning": "not knowing where you are or how to get home",
+        "example": "Lili feels lost in the forest."
+      },
+      {
+        "term": "friend",
+        "pronunciation": "frend",
+        "meaning": "someone who cares about you and stays by your side",
+        "example": "Koko becomes a kind friend to Lili."
+      },
+      {
+        "term": "brave",
+        "pronunciation": "brayv",
+        "meaning": "trying to help even when something feels a little scary",
+        "example": "Koko is brave when they walk along the dark path."
+      }
+    ],
+    "parent_activity": "After watching, invite your child to retell the story with two small toys: one toy can be Koko and one can be Lili. Ask, \"Who was lost? Who was brave?\" Then let your child show how Koko helped a friend get home. Parent support: 看完後可以用兩個小玩具陪孩子重說故事，一個當叩叩、一個當亮亮。可以問孩子：「誰迷路了？誰很勇敢？」幫孩子把 lost、friend、brave 連到迷路、陪伴與幫助別人的情境。",
+    "video_cta": "Watch the Koko story together",
+    "site_cta": "Visit Fursay for more gentle bilingual learning moments",
+    "closing": "Thank you for spending a quiet story moment with Koko. See you next week for another small forest lesson your family can share together."
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">Practice lost, friend, and brave with Koko, then try a simple 5-minute parent-child retelling activity. 親子一起用溫柔方式陪孩子說出友情與勇氣。</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP002</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">This Week in Koko's Forest: Helping Lili Find Her Way</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">In this gentle bedtime story, Koko meets Lili, a little ladybug who feels lost. The episode gives families a calm way to talk about friendship, small acts of kindness, and being brave enough to help someone.</p>\n            <img src=\"https://i.ytimg.com/vi/fO8X_gT7934/maxresdefault.jpg\" alt=\"Koko and the Lost Ladybug 🐞 A New Friendship | Bedtime Story | Koko's Forest Adventure\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>lost</strong><br><span style=\"color:#6d6258;\">lawst</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">not knowing where you are or how to get home<br><em>Lili feels lost in the forest.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>friend</strong><br><span style=\"color:#6d6258;\">frend</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">someone who cares about you and stays by your side<br><em>Koko becomes a kind friend to Lili.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>brave</strong><br><span style=\"color:#6d6258;\">brayv</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">trying to help even when something feels a little scary<br><em>Koko is brave when they walk along the dark path.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">After watching, invite your child to retell the story with two small toys: one toy can be Koko and one can be Lili. Ask, &quot;Who was lost? Who was brave?&quot; Then let your child show how Koko helped a friend get home. Parent support: 看完後可以用兩個小玩具陪孩子重說故事，一個當叩叩、一個當亮亮。可以問孩子：「誰迷路了？誰很勇敢？」幫孩子把 lost、friend、brave 連到迷路、陪伴與幫助別人的情境。</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=fO8X_gT7934\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch the Koko story together</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko\" style=\"color:#c05f18;font-weight:bold;\">Visit Fursay for more gentle bilingual learning moments</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">Thank you for spending a quiet story moment with Koko. See you next week for another small forest lesson your family can share together.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Koko's Forest - EP002\n\nThis Week in Koko's Forest: Helping Lili Find Her Way\n\nIn this gentle bedtime story, Koko meets Lili, a little ladybug who feels lost. The episode gives families a calm way to talk about friendship, small acts of kindness, and being brave enough to help someone.\n\nLearning words\nlost - lawst\nnot knowing where you are or how to get home\nLili feels lost in the forest.\n\nfriend - frend\nsomeone who cares about you and stays by your side\nKoko becomes a kind friend to Lili.\n\nbrave - brayv\ntrying to help even when something feels a little scary\nKoko is brave when they walk along the dark path.\n\nParent activity\nAfter watching, invite your child to retell the story with two small toys: one toy can be Koko and one can be Lili. Ask, \"Who was lost? Who was brave?\" Then let your child show how Koko helped a friend get home. Parent support: 看完後可以用兩個小玩具陪孩子重說故事，一個當叩叩、一個當亮亮。可以問孩子：「誰迷路了？誰很勇敢？」幫孩子把 lost、friend、brave 連到迷路、陪伴與幫助別人的情境。\n\nWatch the Koko story together\nhttps://www.youtube.com/watch?v=fO8X_gT7934\n\nVisit Fursay for more gentle bilingual learning moments\nhttps://fursay.com/koko\n\nThank you for spending a quiet story moment with Koko. See you next week for another small forest lesson your family can share together.",
+  "delivery": "scheduled",
+  "scheduledAt": "2026-06-08T09:00:00+08:00",
+  "finishedAt": "2026-06-07T05:32:33.141Z"
+}

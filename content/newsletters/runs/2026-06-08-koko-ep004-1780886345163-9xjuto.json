@@ -1,0 +1,48 @@
+{
+  "runId": "1780886345163-9xjuto",
+  "channel": "koko",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-06-08T02:39:05.163Z",
+  "status": "dry_run_passed",
+  "episodeNo": 4,
+  "videoId": "vu3ZuovnIOw",
+  "videoUrl": "https://www.youtube.com/watch?v=vu3ZuovnIOw",
+  "inputPath": "content/newsletters/pending/1780886304097-i3zesk-koko-ep004.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "A quiet Koko story about stars, wisdom, and listening",
+    "preview_text": "Practice star, wise, and listen with Koko, then try a calm bedtime listening game. 親子一起陪孩子練習停下來、看星星、聽聲音。",
+    "hero_title": "This Week in Koko's Forest: The Starry Night",
+    "intro": "In this gentle bedtime story, Koko feels lost in the dark forest. Gugu the wise owl helps her slow down, look up at the stars, and listen to the forest around her. It is a calm story for talking about confusion, fear, and finding the next small step.",
+    "learning_words": [
+      {
+        "term": "star",
+        "pronunciation": "stahr",
+        "meaning": "a bright light we can see in the night sky",
+        "example": "Koko looks up and sees a star in the sky."
+      },
+      {
+        "term": "wise",
+        "pronunciation": "wyz",
+        "meaning": "knowing how to make a kind and thoughtful choice",
+        "example": "Gugu is a wise owl who helps Koko feel calm."
+      },
+      {
+        "term": "listen",
+        "pronunciation": "LIS-uhn",
+        "meaning": "to hear carefully and pay attention",
+        "example": "Koko learns to listen to the forest sounds."
+      }
+    ],
+    "parent_activity": "After watching, turn off bright lights for one quiet minute. Ask your child to look up, point to an imaginary star, and name one sound they can hear. Then say the three words together: star, wise, listen. Parent support: 看完後可以關掉強光一分鐘，請孩子假裝看到星星，再說出一個聽到的聲音。用這個小活動陪孩子理解：害怕或混亂時，可以先停下來、抬頭看、仔細聽。",
+    "video_cta": "Watch The Starry Night with Koko",
+    "site_cta": "Visit Fursay for more gentle bilingual learning moments",
+    "closing": "Thank you for sharing another quiet forest story with Koko. May this week's words give your family a simple way to slow down, listen, and find the next step together."
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">Practice star, wise, and listen with Koko, then try a calm bedtime listening game. 親子一起陪孩子練習停下來、看星星、聽聲音。</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP004</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">This Week in Koko's Forest: The Starry Night</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">In this gentle bedtime story, Koko feels lost in the dark forest. Gugu the wise owl helps her slow down, look up at the stars, and listen to the forest around her. It is a calm story for talking about confusion, fear, and finding the next small step.</p>\n            <img src=\"https://i.ytimg.com/vi/vu3ZuovnIOw/maxresdefault.jpg\" alt=\"Koko and Gugu 🦉 The Starry Night | English Bedtime Story | Koko's Forest Adventure\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>star</strong><br><span style=\"color:#6d6258;\">stahr</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">a bright light we can see in the night sky<br><em>Koko looks up and sees a star in the sky.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>wise</strong><br><span style=\"color:#6d6258;\">wyz</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">knowing how to make a kind and thoughtful choice<br><em>Gugu is a wise owl who helps Koko feel calm.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>listen</strong><br><span style=\"color:#6d6258;\">LIS-uhn</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">to hear carefully and pay attention<br><em>Koko learns to listen to the forest sounds.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">After watching, turn off bright lights for one quiet minute. Ask your child to look up, point to an imaginary star, and name one sound they can hear. Then say the three words together: star, wise, listen. Parent support: 看完後可以關掉強光一分鐘，請孩子假裝看到星星，再說出一個聽到的聲音。用這個小活動陪孩子理解：害怕或混亂時，可以先停下來、抬頭看、仔細聽。</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=vu3ZuovnIOw\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch The Starry Night with Koko</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko\" style=\"color:#c05f18;font-weight:bold;\">Visit Fursay for more gentle bilingual learning moments</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">Thank you for sharing another quiet forest story with Koko. May this week's words give your family a simple way to slow down, listen, and find the next step together.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Koko's Forest - EP004\n\nThis Week in Koko's Forest: The Starry Night\n\nIn this gentle bedtime story, Koko feels lost in the dark forest. Gugu the wise owl helps her slow down, look up at the stars, and listen to the forest around her. It is a calm story for talking about confusion, fear, and finding the next small step.\n\nLearning words\nstar - stahr\na bright light we can see in the night sky\nKoko looks up and sees a star in the sky.\n\nwise - wyz\nknowing how to make a kind and thoughtful choice\nGugu is a wise owl who helps Koko feel calm.\n\nlisten - LIS-uhn\nto hear carefully and pay attention\nKoko learns to listen to the forest sounds.\n\nParent activity\nAfter watching, turn off bright lights for one quiet minute. Ask your child to look up, point to an imaginary star, and name one sound they can hear. Then say the three words together: star, wise, listen. Parent support: 看完後可以關掉強光一分鐘，請孩子假裝看到星星，再說出一個聽到的聲音。用這個小活動陪孩子理解：害怕或混亂時，可以先停下來、抬頭看、仔細聽。\n\nWatch The Starry Night with Koko\nhttps://www.youtube.com/watch?v=vu3ZuovnIOw\n\nVisit Fursay for more gentle bilingual learning moments\nhttps://fursay.com/koko\n\nThank you for sharing another quiet forest story with Koko. May this week's words give your family a simple way to slow down, listen, and find the next step together.",
+  "delivery": "scheduled",
+  "scheduledAt": "2026-06-15T09:00:00+08:00",
+  "finishedAt": "2026-06-08T02:39:05.178Z"
+}
