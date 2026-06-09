@@ -1,0 +1,15 @@
+{
+  "runId": "1781011866331-ndv1sm",
+  "channel": "arabic",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-06-09T13:31:06.331Z",
+  "status": "prepared",
+  "syncedEpisodes": 277,
+  "episodeNo": 1,
+  "videoId": "uFicgPqbxms",
+  "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+  "requestPath": "content/newsletters/pending/1781011866331-ndv1sm-arabic-ep001.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1781011866331-ndv1sm-arabic-ep001.newsletter.json",
+  "finishedAt": "2026-06-09T13:31:08.653Z"
+}

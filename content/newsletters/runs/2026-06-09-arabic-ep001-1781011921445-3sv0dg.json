@@ -1,0 +1,67 @@
+{
+  "runId": "1781011921445-3sv0dg",
+  "channel": "arabic",
+  "mode": "chrome-handoff",
+  "dryRun": false,
+  "startedAt": "2026-06-09T13:32:01.445Z",
+  "status": "chrome_handoff_ready",
+  "episodeNo": 1,
+  "videoId": "uFicgPqbxms",
+  "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+  "inputPath": "content/newsletters/pending/1781011866331-ndv1sm-arabic-ep001.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "هذا الأسبوع: نبدأ التحية بالصينية مع 你好",
+    "preview_text": "ثلاث كلمات صينية سهلة مع نطق Pinyin ونشاط عائلي قصير: 你好، 謝謝، 再見.",
+    "hero_title": "لنتعلّم التحية الصينية مع نور وزيد",
+    "intro": "في هذه الرسالة نراجع مع الطفل ثلاث كلمات صينية بسيطة من حلقة EP001 بطريقة مناسبة للبيت. قسم التعلّم الصيني اليوم واضح وسهل: 你好 (nǐ hǎo) معناها مرحباً، 謝謝 (xiè xiè) معناها شكراً، 再見 (zài jiàn) معناها إلى اللقاء. يمكنكم مشاهدة الحلقة أولاً، ثم اختيار موقف واحد فقط لتكرار كل عبارة بهدوء حتى تبقى الكلمات سهلة ومحببة.",
+    "learning_words": [
+      {
+        "term": "你好",
+        "pronunciation": "nǐ hǎo",
+        "meaning": "مرحباً",
+        "example": "قولوا 你好 nǐ hǎo عندما يدخل أحد أفراد العائلة إلى الغرفة أو عندما يبدأ الطفل وقت اللعب."
+      },
+      {
+        "term": "謝謝",
+        "pronunciation": "xiè xiè",
+        "meaning": "شكراً",
+        "example": "بعد أن يساعد الطفل في جمع ألعابه أو يتسلّم شيئاً منكم، شجّعوه على قول 謝謝 xiè xiè."
+      },
+      {
+        "term": "再見",
+        "pronunciation": "zài jiàn",
+        "meaning": "إلى اللقاء",
+        "example": "عند نهاية النشاط أو قبل النوم، لوّحوا باليد وقولوا 再見 zài jiàn بصوت واضح ومبتسم."
+      }
+    ],
+    "parent_activity": "نشاط منزلي لخمس دقائق: اصنعوا مشهداً صغيراً من ثلاث خطوات. أولاً تقول الدمية 你好 nǐ hǎo، ثم تعطي شيئاً صغيراً للطفل فيردّ 謝謝 xiè xiè، وفي النهاية تلوّح الدمية وتقول 再見 zài jiàn. قسم الصينية والحروف الصوتية Pinyin هنا يساعد الطفل على ربط شكل الكلمة ونطقها ومعناها العربي في موقف حقيقي قصير.",
+    "video_cta": "شاهدوا الحلقة مع الطفل وكرّروا الكلمات الثلاث معها",
+    "site_cta": "زوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال",
+    "closing": "لا يحتاج الطفل إلى حفظ كثير في أسبوع واحد. يكفي أن يسمع عبارة صينية قصيرة ويستخدمها في موقف يومي بسيط. التكرار اللطيف مع الصينية والحروف الصوتية Pinyin يصنع تعلّماً أهدأ وأكثر ثباتاً."
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">ثلاث كلمات صينية سهلة مع نطق Pinyin ونشاط عائلي قصير: 你好، 謝謝، 再見.</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:right;direction:rtl;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Arabic Kids Chinese · EP001</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">لنتعلّم التحية الصينية مع نور وزيد</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">في هذه الرسالة نراجع مع الطفل ثلاث كلمات صينية بسيطة من حلقة EP001 بطريقة مناسبة للبيت. قسم التعلّم الصيني اليوم واضح وسهل: 你好 (nǐ hǎo) معناها مرحباً، 謝謝 (xiè xiè) معناها شكراً، 再見 (zài jiàn) معناها إلى اللقاء. يمكنكم مشاهدة الحلقة أولاً، ثم اختيار موقف واحد فقط لتكرار كل عبارة بهدوء حتى تبقى الكلمات سهلة ومحببة.</p>\n            <img src=\"https://i.ytimg.com/vi/uFicgPqbxms/maxresdefault.jpg\" alt=\"你好朋友 مرحبا يا أصدقاء | 學中文 EP001 | صيني للأطفال\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>你好</strong><br><span style=\"color:#6d6258;\">nǐ hǎo</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">مرحباً<br><em>قولوا 你好 nǐ hǎo عندما يدخل أحد أفراد العائلة إلى الغرفة أو عندما يبدأ الطفل وقت اللعب.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>謝謝</strong><br><span style=\"color:#6d6258;\">xiè xiè</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">شكراً<br><em>بعد أن يساعد الطفل في جمع ألعابه أو يتسلّم شيئاً منكم، شجّعوه على قول 謝謝 xiè xiè.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>再見</strong><br><span style=\"color:#6d6258;\">zài jiàn</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">إلى اللقاء<br><em>عند نهاية النشاط أو قبل النوم، لوّحوا باليد وقولوا 再見 zài jiàn بصوت واضح ومبتسم.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">نشاط منزلي لخمس دقائق: اصنعوا مشهداً صغيراً من ثلاث خطوات. أولاً تقول الدمية 你好 nǐ hǎo، ثم تعطي شيئاً صغيراً للطفل فيردّ 謝謝 xiè xiè، وفي النهاية تلوّح الدمية وتقول 再見 zài jiàn. قسم الصينية والحروف الصوتية Pinyin هنا يساعد الطفل على ربط شكل الكلمة ونطقها ومعناها العربي في موقف حقيقي قصير.</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=uFicgPqbxms\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">شاهدوا الحلقة مع الطفل وكرّروا الكلمات الثلاث معها</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/arabic\" style=\"color:#c05f18;font-weight:bold;\">زوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">لا يحتاج الطفل إلى حفظ كثير في أسبوع واحد. يكفي أن يسمع عبارة صينية قصيرة ويستخدمها في موقف يومي بسيط. التكرار اللطيف مع الصينية والحروف الصوتية Pinyin يصنع تعلّماً أهدأ وأكثر ثباتاً.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Arabic Kids Chinese - EP001\n\nلنتعلّم التحية الصينية مع نور وزيد\n\nفي هذه الرسالة نراجع مع الطفل ثلاث كلمات صينية بسيطة من حلقة EP001 بطريقة مناسبة للبيت. قسم التعلّم الصيني اليوم واضح وسهل: 你好 (nǐ hǎo) معناها مرحباً، 謝謝 (xiè xiè) معناها شكراً، 再見 (zài jiàn) معناها إلى اللقاء. يمكنكم مشاهدة الحلقة أولاً، ثم اختيار موقف واحد فقط لتكرار كل عبارة بهدوء حتى تبقى الكلمات سهلة ومحببة.\n\nLearning words\n你好 - nǐ hǎo\nمرحباً\nقولوا 你好 nǐ hǎo عندما يدخل أحد أفراد العائلة إلى الغرفة أو عندما يبدأ الطفل وقت اللعب.\n\n謝謝 - xiè xiè\nشكراً\nبعد أن يساعد الطفل في جمع ألعابه أو يتسلّم شيئاً منكم، شجّعوه على قول 謝謝 xiè xiè.\n\n再見 - zài jiàn\nإلى اللقاء\nعند نهاية النشاط أو قبل النوم، لوّحوا باليد وقولوا 再見 zài jiàn بصوت واضح ومبتسم.\n\nParent activity\nنشاط منزلي لخمس دقائق: اصنعوا مشهداً صغيراً من ثلاث خطوات. أولاً تقول الدمية 你好 nǐ hǎo، ثم تعطي شيئاً صغيراً للطفل فيردّ 謝謝 xiè xiè، وفي النهاية تلوّح الدمية وتقول 再見 zài jiàn. قسم الصينية والحروف الصوتية Pinyin هنا يساعد الطفل على ربط شكل الكلمة ونطقها ومعناها العربي في موقف حقيقي قصير.\n\nشاهدوا الحلقة مع الطفل وكرّروا الكلمات الثلاث معها\nhttps://www.youtube.com/watch?v=uFicgPqbxms\n\nزوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال\nhttps://fursay.com/arabic\n\nلا يحتاج الطفل إلى حفظ كثير في أسبوع واحد. يكفي أن يسمع عبارة صينية قصيرة ويستخدمها في موقف يومي بسيط. التكرار اللطيف مع الصينية والحروف الصوتية Pinyin يصنع تعلّماً أهدأ وأكثر ثباتاً.",
+  "delivery": "scheduled",
+  "scheduledAt": "2026-06-10T09:00:00+08:00",
+  "browserHandoff": {
+    "jsonPath": "content/newsletters/browser-handoff/2026-06-09-arabic-ep001-1781011921445-3sv0dg.json",
+    "mdPath": "content/newsletters/browser-handoff/2026-06-09-arabic-ep001-1781011921445-3sv0dg.md",
+    "editor": "Rich-text editor",
+    "action": "Create or duplicate a regular campaign, build the email with MailerLite blocks in the listed order, choose the listed group, set the schedule, then confirm it appears in Outbox."
+  },
+  "mailerLiteBrowserTarget": {
+    "groupId": "185908830918411331",
+    "groupName": "Noor subscribers",
+    "groupActiveCount": 0,
+    "from": "hello@fursay.com",
+    "fromName": "Fursay",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-06-10T09:00:00+08:00"
+  },
+  "warnings": [
+    "Target group \"Noor subscribers\" has 0 active subscribers"
+  ],
+  "finishedAt": "2026-06-09T13:32:01.957Z"
+}
