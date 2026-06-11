@@ -84,7 +84,7 @@ async function handleSubscribe(request, env) {
 
   try {
     const body = await request.json();
-    const { email, groups, child_age, region } = body;
+    const { email, groups, child_age, region, attribution } = body;
 
     if (!email || !email.includes("@")) {
       return json({ success: false, message: "Invalid email" }, 400, headers);
@@ -103,6 +103,7 @@ async function handleSubscribe(request, env) {
     const fields = {};
     if (child_age) fields.child_age = child_age;
     if (region) fields.region = region;
+    Object.assign(fields, attributionFields(attribution, env));
 
     const payload = {
       email,
@@ -147,4 +148,35 @@ function json(data, status, headers) {
       "Content-Type": "application/json"
     }
   }));
+}
+
+function attributionFields(attribution, env) {
+  if (!env || !["1", "true", "yes"].includes(String(env.MAILERLITE_ENABLE_ATTRIBUTION_FIELDS || "").toLowerCase())) {
+    return {};
+  }
+  if (!attribution || typeof attribution !== "object") return {};
+
+  const fieldNames = {
+    signup_source: env.MAILERLITE_FIELD_SIGNUP_SOURCE || "signup_source",
+    landing_path: env.MAILERLITE_FIELD_LANDING_PATH || "landing_path",
+    landing_locale: env.MAILERLITE_FIELD_LANDING_LOCALE || "landing_locale",
+    referrer_host: env.MAILERLITE_FIELD_REFERRER_HOST || "referrer_host",
+    utm_source: env.MAILERLITE_FIELD_UTM_SOURCE || "utm_source",
+    utm_medium: env.MAILERLITE_FIELD_UTM_MEDIUM || "utm_medium",
+    utm_campaign: env.MAILERLITE_FIELD_UTM_CAMPAIGN || "utm_campaign",
+    utm_content: env.MAILERLITE_FIELD_UTM_CONTENT || "utm_content",
+    utm_term: env.MAILERLITE_FIELD_UTM_TERM || "utm_term"
+  };
+
+  const fields = {};
+  for (const [key, fieldName] of Object.entries(fieldNames)) {
+    const value = cleanAttributionValue(attribution[key]);
+    if (value) fields[fieldName] = value;
+  }
+  return fields;
+}
+
+function cleanAttributionValue(value) {
+  if (typeof value !== "string") return "";
+  return value.replace(/[\r\n\t]/g, " ").trim().slice(0, 180);
 }

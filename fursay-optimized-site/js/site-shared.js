@@ -68,7 +68,10 @@
       var opener = event.target.closest('[data-open-subscribe]');
       if (opener) {
         event.preventDefault();
-        window.openSubscribeModal(opener.getAttribute('data-open-subscribe') || undefined);
+        window.openSubscribeModal(
+          opener.getAttribute('data-open-subscribe') || undefined,
+          opener.getAttribute('data-signup-source') || undefined
+        );
         return;
       }
 
@@ -133,9 +136,32 @@
     }
   };
 
-  window.openSubscribeModal = function (preselect) {
+  function collectSubscribeAttribution() {
+    var params = new URLSearchParams(window.location.search || '');
+    var overlay = qs('subscribeModal');
+    var attribution = {
+      signup_source: overlay && overlay.dataset.signupSource ? overlay.dataset.signupSource : 'site_subscribe_modal',
+      landing_path: window.location.pathname || '/',
+      landing_locale: document.documentElement.lang || '',
+      referrer_host: ''
+    };
+
+    if (document.referrer) {
+      try { attribution.referrer_host = new URL(document.referrer).host; } catch (e) {}
+    }
+
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+      var value = params.get(key);
+      if (value) attribution[key] = value;
+    });
+
+    return attribution;
+  }
+
+  window.openSubscribeModal = function (preselect, signupSource) {
     var overlay = qs('subscribeModal');
     if (!overlay) return;
+    overlay.dataset.signupSource = signupSource || (preselect ? preselect + '_subscribe_cta' : 'site_subscribe_modal');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (preselect) {
@@ -181,7 +207,8 @@
       name: nameEl ? nameEl.value.trim() : undefined,
       groups: groups,
       child_age: qs('modalAge') ? qs('modalAge').value : (qs('sub-age') ? qs('sub-age').value : ''),
-      region: qs('modalRegion') ? qs('modalRegion').value : (qs('sub-region') ? qs('sub-region').value : '')
+      region: qs('modalRegion') ? qs('modalRegion').value : (qs('sub-region') ? qs('sub-region').value : ''),
+      attribution: collectSubscribeAttribution()
     };
 
     if (btn) {

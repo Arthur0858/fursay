@@ -107,6 +107,18 @@ MailerLite's campaign API accepts HTML content through `emails.*.content`, but t
 
 Set `MAILERLITE_ALLOW_CONTENT_API_SEND=true` only after the MailerLite account plan is upgraded or otherwise verified to support API content submission.
 
+## Signup attribution
+
+The public signup modal sends non-secret attribution metadata with each `/api/subscribe` request: CTA source, landing path, landing locale, referrer host, and any `utm_*` query parameters. The Worker receives this payload without logging secrets.
+
+By default the Worker does not forward attribution into MailerLite custom fields, because unknown field names can break subscriber creation. Enable forwarding only after the matching MailerLite subscriber fields exist:
+
+```bash
+MAILERLITE_ENABLE_ATTRIBUTION_FIELDS=1
+```
+
+Optional field-name overrides are available through `MAILERLITE_FIELD_SIGNUP_SOURCE`, `MAILERLITE_FIELD_LANDING_PATH`, `MAILERLITE_FIELD_LANDING_LOCALE`, `MAILERLITE_FIELD_REFERRER_HOST`, `MAILERLITE_FIELD_UTM_SOURCE`, `MAILERLITE_FIELD_UTM_MEDIUM`, `MAILERLITE_FIELD_UTM_CAMPAIGN`, `MAILERLITE_FIELD_UTM_CONTENT`, and `MAILERLITE_FIELD_UTM_TERM`.
+
 ## Chrome publishing safety
 
 The Chrome path is a Free-plan compatibility bridge, not a durable API sender. The automation must stop and write a `chrome-result` failure if MailerLite asks for login/MFA, the expected group is missing, the selected group has 0 active subscribers, the editor cannot be reached, the schedule page blocks the selected time, or the campaign cannot be verified in Outbox.
