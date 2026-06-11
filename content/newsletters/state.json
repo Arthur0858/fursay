@@ -8488,6 +8488,38 @@
   },
   "runs": [
     {
+      "runId": "1781139647601-12l5di",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-17T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [
+        "Target group \"Noor subscribers\" has 0 active subscribers"
+      ],
+      "error": null,
+      "startedAt": "2026-06-11T01:00:47.601Z",
+      "finishedAt": "2026-06-11T01:00:48.040Z"
+    },
+    {
+      "runId": "1781139647009-osh1zr",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-15T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-11T01:00:47.009Z",
+      "finishedAt": "2026-06-11T01:00:47.544Z"
+    },
+    {
       "runId": "1781011928228-5tuezq",
       "channel": "arabic",
       "mode": "chrome-result",
@@ -9197,32 +9229,6 @@
       "error": "fetch failed",
       "startedAt": "2026-05-12T01:01:52.818Z",
       "finishedAt": "2026-05-12T01:01:52.860Z"
-    },
-    {
-      "runId": "1778389449545-86vpz9",
-      "channel": "koko",
-      "mode": "prepare",
-      "episodeNo": 1,
-      "status": "prepared",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "error": null,
-      "startedAt": "2026-05-10T05:04:09.545Z",
-      "finishedAt": "2026-05-10T05:04:11.023Z"
-    },
-    {
-      "runId": "1778389435033-uyxsaw",
-      "channel": "arabic",
-      "mode": "prepare",
-      "episodeNo": 1,
-      "status": "prepared",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "error": null,
-      "startedAt": "2026-05-10T05:03:55.033Z",
-      "finishedAt": "2026-05-10T05:03:55.360Z"
     }
   ]
 }
