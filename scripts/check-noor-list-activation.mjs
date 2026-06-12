@@ -12,6 +12,7 @@ const PAGES = ["/arabic", "/zh/arabic", "/ar/arabic"];
 const REQUIRED_SOURCES = [
   "arabic_hero_weekly_pack",
   "arabic_episode_story_pack",
+  "arabic_sample_pack_cta",
   "arabic_story_pack_section",
 ];
 
@@ -99,7 +100,10 @@ async function checkPage(browser, baseUrl, path) {
       ctas,
       missingSources: sources.filter((source) => !sourceSet.has(source)),
       hasNoorLeadMagnet: !!document.querySelector(".noor-lead-magnet"),
+      leadMagnetVariant: document.querySelector(".noor-lead-magnet")?.getAttribute("data-noor-lead-magnet") || "",
+      leadMagnetText: document.querySelector(".noor-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
       leadMagnetItems: document.querySelectorAll(".noor-lead-magnet li").length,
+      sampleCtaGroup: document.querySelector('[data-signup-source="arabic_sample_pack_cta"]')?.getAttribute("data-open-subscribe") || "",
       hasNoorCheckbox: !!document.querySelector('#subscribeModal input[name="groups"][value="noor"]'),
       hasSubscribeForm: !!document.querySelector("#subscribeModal form"),
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
@@ -129,7 +133,11 @@ async function checkPage(browser, baseUrl, path) {
   const failures = [];
   if (staticChecks.missingSources.length) failures.push(`missing_sources:${staticChecks.missingSources.join(",")}`);
   if (!staticChecks.hasNoorLeadMagnet) failures.push("missing_noor_lead_magnet");
+  if (staticChecks.leadMagnetVariant !== "weekly-sample-v2") failures.push(`bad_lead_magnet_variant:${staticChecks.leadMagnetVariant || "none"}`);
   if (staticChecks.leadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${staticChecks.leadMagnetItems}`);
+  if (staticChecks.sampleCtaGroup !== "noor") failures.push(`bad_sample_cta_group:${staticChecks.sampleCtaGroup || "none"}`);
+  if (!/(sample pack|樣張|نموذج)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_sample_copy");
+  if (!/(ready|準備好|جاهزة)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_delivery_copy");
   if (!staticChecks.hasNoorCheckbox) failures.push("missing_noor_checkbox");
   if (!staticChecks.hasSubscribeForm) failures.push("missing_subscribe_form");
   if (staticChecks.horizontalOverflow > 2) failures.push(`horizontal_overflow:${staticChecks.horizontalOverflow}`);

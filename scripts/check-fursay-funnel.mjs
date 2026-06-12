@@ -157,7 +157,11 @@ async function checkPage(browser, baseUrl, path) {
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
       homeCtas: homePages.includes(location.pathname) ? homeCtas : [],
       noorLeadMagnet: !!document.querySelector(".noor-lead-magnet"),
+      noorLeadMagnetVariant: document.querySelector(".noor-lead-magnet")?.getAttribute("data-noor-lead-magnet") || "",
+      noorLeadMagnetText: document.querySelector(".noor-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
       noorLeadMagnetItems: qa(".noor-lead-magnet li").length,
+      noorSampleCtaSource: document.querySelector(".noor-sample-cta")?.getAttribute("data-signup-source") || "",
+      noorSampleCtaGroup: document.querySelector(".noor-sample-cta")?.getAttribute("data-open-subscribe") || "",
       youtubeLinks: qa('a[href*="youtube.com/"], a[href*="youtu.be/"]').map((anchor) => anchor.href),
       shareStrip: !!document.querySelector(".share-strip"),
       shareUrl: document.querySelector("[data-share-fursay]")?.getAttribute("data-share-url") || "",
@@ -208,7 +212,12 @@ async function checkPage(browser, baseUrl, path) {
 
   if (path.endsWith("/arabic") || path === "/arabic") {
     if (!data.noorLeadMagnet) failures.push("missing_noor_lead_magnet");
+    if (data.noorLeadMagnetVariant !== "weekly-sample-v2") failures.push(`bad_noor_lead_magnet_variant:${data.noorLeadMagnetVariant || "none"}`);
     if (data.noorLeadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${data.noorLeadMagnetItems}`);
+    if (data.noorSampleCtaSource !== "arabic_sample_pack_cta") failures.push(`missing_noor_sample_cta_source:${data.noorSampleCtaSource || "none"}`);
+    if (data.noorSampleCtaGroup !== "noor") failures.push(`bad_noor_sample_cta_group:${data.noorSampleCtaGroup || "none"}`);
+    if (!/(sample pack|樣張|نموذج)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_sample_copy");
+    if (!/(ready|準備好|جاهزة)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_delivery_copy");
   }
   if (data.youtubeLinks.length) {
     const unattributed = data.youtubeLinks.filter((href) => !href.includes("utm_source=fursay") || !href.includes("utm_medium=site"));
@@ -411,19 +420,19 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const source of ["home_weekly_pack_koko", "share_strip_koko_pack"]) {
     if (!siteHealth.funnels?.koko?.ctaSources?.includes(source)) failures.push(`site_health_koko_missing_cta_source:${source}`);
   }
-  for (const source of ["home_weekly_pack_noor", "arabic_story_pack_section", "share_strip_noor_pack"]) {
+  for (const source of ["home_weekly_pack_noor", "arabic_sample_pack_cta", "arabic_story_pack_section", "share_strip_noor_pack"]) {
     if (!siteHealth.funnels?.noor?.ctaSources?.includes(source)) failures.push(`site_health_noor_missing_cta_source:${source}`);
   }
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic5.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic8.css")) {
     failures.push("site_health_missing_current_shared_css");
   }
   if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260612-traffic7.js")) {

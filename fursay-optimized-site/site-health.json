@@ -67,6 +67,7 @@
         "home_weekly_pack_noor",
         "arabic_hero_weekly_pack",
         "arabic_episode_story_pack",
+        "arabic_sample_pack_cta",
         "arabic_story_pack_section",
         "share_strip_noor_pack"
       ]
@@ -82,6 +83,7 @@
   "trafficSurfaces": [
     "homepage_split_cta",
     "story_world_cta",
+    "noor_sample_pack_cta",
     "share_strip",
     "copy_pack_link",
     "shortlink",
@@ -104,7 +106,7 @@
   "sharedAssets": {
     "css": [
       "/css/picture-book-base.css",
-      "/css/picture-world-shared-20260612-traffic5.css"
+      "/css/picture-world-shared-20260612-traffic8.css"
     ],
     "js": [
       "/js/site-shared-20260612-traffic7.js"
