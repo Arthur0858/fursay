@@ -132,7 +132,7 @@ function writeReleaseManifest() {
     ],
     liveExpectations: {
       pages: 9,
-      funnelChecks: 17,
+      funnelChecks: 19,
       cacheHeaderChecks: 18,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
