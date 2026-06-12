@@ -131,6 +131,8 @@ function writeReleaseManifest() {
       creatorKitPage: "https://fursay.com/creator-kit",
       shareKitManifest: "https://fursay.com/share-kit.json",
       shareKitPage: "https://fursay.com/share-kit",
+      trafficLaunchManifest: "https://fursay.com/traffic-launch.json",
+      trafficLaunchPage: "https://fursay.com/traffic-launch",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -176,7 +178,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 37,
+      cacheHeaderChecks: 39,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -185,6 +187,7 @@ function writeReleaseManifest() {
   writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
   writeShareKit(siteDir, source);
+  writeTrafficLaunchKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
 }
@@ -503,6 +506,205 @@ function writeShareKit(siteDir, source) {
   };
   writeFileSync(resolve(siteDir, "share-kit.json"), JSON.stringify(kit, null, 2) + "\n");
   writeShareKitPage(siteDir, kit);
+}
+
+function trafficLaunchChannelRows(channels) {
+  return channels.map((channel) => `
+          <article class="creator-copy-block" data-traffic-launch-channel="${escapeHtml(channel.channel)}">
+            <div class="creator-copy-heading">
+              <h3>${escapeHtml(channel.label)}</h3>
+              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(channel.copy)}">Copy copy</button>
+            </div>
+            <p>${escapeHtml(channel.checkpoint)}</p>
+            <dl>
+              ${shareKitLinkRow("Tracked link", channel.link)}
+            </dl>
+            <pre>${escapeHtml(channel.copy)}</pre>
+          </article>`).join("\n");
+}
+
+function buildTrafficLaunchKit(siteDir, source) {
+  const campaignManifest = readJson(resolve(siteDir, "campaigns.json"));
+  const creatorKit = readJson(resolve(siteDir, "creator-kit.json"));
+  const shareKit = readJson(resolve(siteDir, "share-kit.json"));
+  const packs = Object.fromEntries(Object.entries(campaignManifest.campaigns || {}).map(([pack, campaign]) => {
+    const creatorPack = creatorKit.packs?.[pack] || {};
+    const sharePack = shareKit.packs?.[pack] || {};
+    const channel = pack === "koko" ? "Koko" : "Noor";
+    const channels = [
+      {
+        channel: "youtube_description",
+        label: "YouTube description",
+        link: creatorPack.placementLinks?.youtubeDescription?.shortlink || "",
+        copy: creatorPack.youtubeDescription || "",
+        checkpoint: "Paste under the episode description and confirm the shortlink opens a preselected signup modal.",
+        attribution: {
+          utm_source: "youtube",
+          utm_medium: "description",
+          utm_campaign: campaign.campaign,
+          utm_content: "creator_kit_youtube",
+        },
+      },
+      {
+        channel: "social_profile",
+        label: "Social caption or profile",
+        link: creatorPack.placementLinks?.socialCaption?.shortlink || "",
+        copy: creatorPack.socialCaption || "",
+        checkpoint: "Use for profile copy or a post caption, then verify the redirect keeps the social attribution.",
+        attribution: {
+          utm_source: "social",
+          utm_medium: "profile",
+          utm_campaign: campaign.campaign,
+          utm_content: "creator_kit_social",
+        },
+      },
+      {
+        channel: "newsletter_email",
+        label: "Newsletter blurb",
+        link: creatorPack.placementLinks?.newsletterBlurb?.shortlink || "",
+        copy: creatorPack.newsletterBlurb || "",
+        checkpoint: "Place in MailerLite body copy only after the target group has at least one active subscriber.",
+        attribution: {
+          utm_source: "newsletter",
+          utm_medium: "email",
+          utm_campaign: campaign.campaign,
+          utm_content: "creator_kit_newsletter",
+        },
+      },
+      {
+        channel: "family_share",
+        label: "Family share message",
+        link: sharePack.familyShareShortlink || "",
+        copy: sharePack.familyShareMessage || "",
+        checkpoint: "Use for parent-to-parent forwarding; add ref and placement only at the social share surface.",
+        attribution: sharePack.attribution || {},
+      },
+      {
+        channel: "qr_poster",
+        label: "QR poster link",
+        link: sharePack.shareQrSvg || "",
+        copy: `${channel} family share QR: ${sharePack.familyShareShortlink || ""}`,
+        checkpoint: "Use the QR SVG in printable or community graphics and keep the shortlink visible nearby.",
+        attribution: sharePack.attribution || {},
+      },
+    ];
+    return [pack, {
+      title: pack === "koko" ? "Koko weekly English story pack" : "Noor 3-minute Chinese story pack",
+      campaign: campaign.campaign,
+      audience: campaign.audience,
+      primaryGoal: campaign.primaryGoal,
+      storyWorld: campaign.landingPages?.storyWorld || "",
+      sampleShortlink: campaign.shortlinks?.sample || "",
+      shareShortlink: campaign.shortlinks?.share || "",
+      creatorShortlink: campaign.shortlinks?.creator || "",
+      shareKit: "https://fursay.com/share-kit",
+      creatorKit: "https://fursay.com/creator-kit",
+      channels,
+      preflightChecklist: [
+        "Open the tracked link once and confirm the expected story world loads.",
+        `Confirm the modal preselects ${channel}.`,
+        "Confirm no smoke test submits to MailerLite.",
+        "Use one channel-specific link per placement so attribution stays readable.",
+      ],
+    }];
+  }));
+  return {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Public launch checklist for moving each Fursay story pack through YouTube, social, newsletter, family share, and QR placements with tracked links.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      linksUseShortlinksWithUtmRedirects: true,
+      creatorKitManifest: "https://fursay.com/creator-kit.json",
+      shareKitManifest: "https://fursay.com/share-kit.json",
+      shortlinkManifest: "https://fursay.com/shortlinks.json",
+    },
+    packs,
+  };
+}
+
+function writeTrafficLaunchPage(siteDir, kit) {
+  const packCards = Object.entries(kit.packs).map(([pack, item]) => `
+      <section class="creator-pack" data-traffic-launch-pack="${escapeHtml(pack)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(item.campaign)}</p>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.audience)}</p>
+          <dl>
+            ${shareKitLinkRow("Story world", item.storyWorld)}
+            ${shareKitLinkRow("Sample shortlink", item.sampleShortlink)}
+            ${shareKitLinkRow("Family share shortlink", item.shareShortlink)}
+            ${shareKitLinkRow("Creator shortlink", item.creatorShortlink)}
+          </dl>
+          <ol>
+            ${item.preflightChecklist.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("\n            ")}
+          </ol>
+        </div>
+        <div class="creator-copy-blocks">
+${trafficLaunchChannelRows(item.channels)}
+        </div>
+      </section>`).join("\n");
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Traffic Launch Kit</title>
+  <meta name="description" content="Tracked Fursay launch checklist for YouTube, social, newsletter, family share, and QR placements.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/traffic-launch">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+</head>
+<body class="picture-world creator-kit-page traffic-launch-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay traffic launch kit</p>
+      <h1>Traffic Launch Kit</h1>
+      <p>Tracked links and copy checkpoints for moving Koko and Noor story packs through the next publishing surface.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(kit.updatedAt)}</span>
+        <span>Commit ${escapeHtml(kit.source.commit)}</span>
+        <a href="/traffic-launch.json">JSON manifest</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety">
+      <h2>Safety contract</h2>
+      <p>Smoke checks do not submit to MailerLite. Subscription traffic still flows through <code>${escapeHtml(kit.safety.subscriptionEndpoint)}</code>.</p>
+    </section>
+${packCards}
+  </main>
+  <script>
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy-traffic-launch], [data-copy-share-kit]");
+      if (!button) return;
+      const value = button.getAttribute("data-copy-value") || "";
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy copy" : "Copy"; }, 1600);
+      } catch {
+        button.textContent = "Copy failed";
+        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy copy" : "Copy"; }, 1800);
+      }
+    });
+  </script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
+}
+
+function writeTrafficLaunchKit(siteDir, source) {
+  const kit = buildTrafficLaunchKit(siteDir, source);
+  writeFileSync(resolve(siteDir, "traffic-launch.json"), JSON.stringify(kit, null, 2) + "\n");
+  writeTrafficLaunchPage(siteDir, kit);
 }
 
 function buildVideoDiscoveryChannels() {

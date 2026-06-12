@@ -13,6 +13,8 @@
     "creatorKitPage": "https://fursay.com/creator-kit",
     "shareKitManifest": "https://fursay.com/share-kit.json",
     "shareKitPage": "https://fursay.com/share-kit",
+    "trafficLaunchManifest": "https://fursay.com/traffic-launch.json",
+    "trafficLaunchPage": "https://fursay.com/traffic-launch",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
     "shortlinkManifest": "https://fursay.com/shortlinks.json",
     "sitemap": "https://fursay.com/sitemap.xml",
@@ -71,6 +73,10 @@
     "shareKit": [
       "https://fursay.com/share-kit",
       "https://fursay.com/share-kit.json"
+    ],
+    "trafficLaunch": [
+      "https://fursay.com/traffic-launch",
+      "https://fursay.com/traffic-launch.json"
     ],
     "discovery": [
       "https://fursay.com/video-discovery.json",
@@ -165,6 +171,7 @@
     "sample_pack_schema",
     "story_world_faq_schema",
     "public_creator_share_panel",
+    "public_share_kit_entry",
     "direct_social_share_link",
     "direct_social_share_manifest",
     "copy_sample_shortlink",
@@ -176,6 +183,8 @@
     "creator_kit_page",
     "share_kit_manifest",
     "share_kit_page",
+    "traffic_launch_manifest",
+    "traffic_launch_page",
     "creator_shortlink",
     "creator_placement_shortlink",
     "story_world_cta",
