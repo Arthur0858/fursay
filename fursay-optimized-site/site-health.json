@@ -13,6 +13,7 @@
     "creatorKitPage": "https://fursay.com/creator-kit",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
     "packageScripts": {
+      "deployReady": "npm run deploy:ready",
       "check": "npm run check",
       "deploy": "npm run deploy",
       "liveSmoke": "npm run smoke:live"
@@ -141,6 +142,7 @@
     "social_preview_metadata",
     "sample_pack_schema",
     "story_world_faq_schema",
+    "public_creator_share_panel",
     "copy_sample_shortlink",
     "campaign_copy_kit",
     "campaign_qr_asset",
@@ -171,6 +173,7 @@
     "funnel": "scripts/check-fursay-funnel.mjs",
     "noor": "scripts/check-noor-list-activation.mjs",
     "cacheHeaders": "scripts/check-cache-headers.mjs",
+    "deployReadiness": "scripts/check-deploy-readiness.mjs",
     "release": "scripts/release-fursay.mjs"
   },
   "sharedAssets": {

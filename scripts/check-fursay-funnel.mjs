@@ -338,6 +338,14 @@ async function checkPage(browser, baseUrl, path) {
         alt: card.querySelector("img")?.getAttribute("alt") || "",
         text: card.textContent.trim().replace(/\s+/g, " "),
       })),
+      publicSharePanels: qa("[data-public-share]").map((panel) => ({
+        pack: panel.getAttribute("data-public-share") || "",
+        text: panel.textContent.trim().replace(/\s+/g, " "),
+        links: [...panel.querySelectorAll("[data-public-share-link]")].map((anchor) => ({
+          type: anchor.getAttribute("data-public-share-link") || "",
+          href: anchor.href,
+        })),
+      })),
       storyPackSchemas: qa('script[type="application/ld+json"]').flatMap((script) => {
         try {
           const parsed = JSON.parse(script.textContent);
@@ -497,6 +505,18 @@ async function checkPage(browser, baseUrl, path) {
     }
     if (qrCard && !qrCard.text.includes(`fursay.com/share/${expectedPack}`)) {
       failures.push(`bad_${expectedPack}_campaign_qr_text:${qrCard.text || "none"}`);
+    }
+    const publicSharePanel = data.publicSharePanels.find((panel) => panel.pack === expectedPack);
+    if (!publicSharePanel) failures.push(`missing_${expectedPack}_public_share_panel`);
+    const publicShareLinks = new Map((publicSharePanel?.links || []).map((link) => [link.type, link.href]));
+    if (urlPath(publicShareLinks.get("family")) !== `/share/${expectedPack}`) {
+      failures.push(`bad_${expectedPack}_public_family_link:${publicShareLinks.get("family") || "none"}`);
+    }
+    if (urlPath(publicShareLinks.get("creator")) !== `/creator/${expectedPack}/youtube`) {
+      failures.push(`bad_${expectedPack}_public_creator_link:${publicShareLinks.get("creator") || "none"}`);
+    }
+    if (publicSharePanel && !/(creator|創作者|المبدعين|فيديو|video)/i.test(publicSharePanel.text)) {
+      failures.push(`bad_${expectedPack}_public_share_copy`);
     }
     const storyPackSchema = data.storyPackSchemas.find((schema) => (
       !schema.parseError
@@ -661,6 +681,7 @@ async function checkDiscoveryFiles(baseUrl) {
   const creatorKitPage = await readDiscoveryFile(baseUrl, "creator-kit.html");
   const packageRaw = baseUrl ? "" : await readRepoFile("package.json");
   const workflowRaw = baseUrl ? "" : await readRepoFile(".github/workflows/deploy-worker.yml");
+  const deployReadinessRaw = baseUrl ? "" : await readRepoFile("scripts/check-deploy-readiness.mjs");
   let siteHealth = {};
   let release = {};
   let campaigns = {};
@@ -736,6 +757,7 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (!llms.includes("https://fursay.com/creator-kit")) failures.push("llms_missing_creator_kit_page");
   if (!llms.includes("https://fursay.com/video-discovery.json")) failures.push("llms_missing_video_discovery");
+  if (!llms.includes("npm run deploy:ready")) failures.push("llms_missing_deploy_readiness");
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
   if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
   if (!llms.includes("https://fursay.com/campaigns.json")) failures.push("llms_missing_campaign_manifest");
@@ -761,6 +783,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`site_health_video_discovery:${siteHealth.deployment?.videoDiscoveryManifest || "none"}`);
   }
+  if (siteHealth.deployment?.packageScripts?.deployReady !== "npm run deploy:ready") failures.push("site_health_bad_deploy_ready_script");
   if (siteHealth.deployment?.packageScripts?.check !== "npm run check") failures.push("site_health_bad_check_script");
   if (siteHealth.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("site_health_bad_deploy_script");
   if (siteHealth.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("site_health_bad_live_smoke_script");
@@ -794,12 +817,14 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`release_video_discovery:${release.deployment?.videoDiscoveryManifest || "none"}`);
   }
+  if (release.deployment?.packageScripts?.deployReady !== "npm run deploy:ready") failures.push("release_bad_deploy_ready_script");
   if (release.deployment?.packageScripts?.check !== "npm run check") failures.push("release_bad_check_script");
   if (release.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("release_bad_deploy_script");
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 32) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
   if (campaigns.creatorKit !== "https://fursay.com/creator-kit.json") failures.push(`campaigns_creator_kit:${campaigns.creatorKit || "none"}`);
@@ -816,15 +841,22 @@ async function checkDiscoveryFiles(baseUrl) {
   if (videoDiscovery.safety?.externalVideoHost !== "youtube") failures.push(`video_discovery_host:${videoDiscovery.safety?.externalVideoHost || "none"}`);
   if (!baseUrl) {
     if (packageJson.scripts?.check !== "node scripts/release-fursay.mjs --check-only") failures.push("package_bad_check_script");
+    if (packageJson.scripts?.["deploy:ready"] !== "node scripts/check-deploy-readiness.mjs") failures.push("package_bad_deploy_ready_script");
     if (packageJson.scripts?.deploy !== "node scripts/release-fursay.mjs") failures.push("package_bad_deploy_script");
     if (!packageJson.scripts?.["smoke:live"]?.includes("audit-fursay.mjs https://fursay.com")) failures.push("package_bad_live_smoke_script");
     if (!packageJson.devDependencies?.wrangler) failures.push("package_missing_wrangler");
     if (!packageJson.devDependencies?.playwright) failures.push("package_missing_playwright");
     if (!workflowRaw.includes("npm run check")) failures.push("workflow_missing_local_gate");
+    if (!workflowRaw.includes("npm run deploy:ready")) failures.push("workflow_missing_deploy_readiness");
+    if (!workflowRaw.includes("npm run deploy:ready -- --require-cloudflare")) failures.push("workflow_missing_strict_cloudflare_readiness");
     if (!workflowRaw.includes("npm run deploy")) failures.push("workflow_missing_deploy");
     if (!workflowRaw.includes("CLOUDFLARE_API_TOKEN")) failures.push("workflow_missing_cloudflare_token_gate");
     if (!workflowRaw.includes("CLOUDFLARE_ACCOUNT_ID")) failures.push("workflow_missing_cloudflare_account_gate");
     if (!workflowRaw.includes("npx playwright install --with-deps chromium")) failures.push("workflow_missing_browser_runtime");
+    if (!deployReadinessRaw.includes("requireCloudflare") || !deployReadinessRaw.includes("missing_CLOUDFLARE_API_TOKEN")) {
+      failures.push("deploy_readiness_missing_cloudflare_gate");
+    }
+    if (!deployReadinessRaw.includes("git_missing_origin_remote")) failures.push("deploy_readiness_missing_remote_gate");
   }
   if (!creatorKitPage.includes('<body class="picture-world creator-kit-page">')) failures.push("creator_kit_page_missing_body_class");
   if (!creatorKitPage.includes('data-creator-kit-pack="koko"')) failures.push("creator_kit_page_missing_koko_pack");
@@ -988,7 +1020,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "bio_shortlink", "video_discovery_manifest", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "bio_shortlink", "video_discovery_manifest", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
@@ -1015,6 +1047,7 @@ async function checkDiscoveryFiles(baseUrl) {
       videoDiscoveryBytes: Buffer.byteLength(videoDiscoveryRaw),
       packageBytes: Buffer.byteLength(packageRaw),
       workflowBytes: Buffer.byteLength(workflowRaw),
+      deployReadinessBytes: Buffer.byteLength(deployReadinessRaw),
       creatorKitPageBytes: Buffer.byteLength(creatorKitPage),
       platform: siteHealth.platform || "",
     },

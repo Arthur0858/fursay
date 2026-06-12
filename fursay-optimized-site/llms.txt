@@ -52,5 +52,6 @@ Technical discovery:
 - Release manifest: https://fursay.com/release.json
 - Campaign manifest: https://fursay.com/campaigns.json
 - Creator kit: https://fursay.com/creator-kit.json
+- Deploy readiness gate: npm run deploy:ready
 - Local release gate: npm run check
 - Cloudflare deploy command: npm run deploy

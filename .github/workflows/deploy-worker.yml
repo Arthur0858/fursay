@@ -31,8 +31,15 @@ jobs:
       - name: Install browser runtime
         run: npx playwright install --with-deps chromium
 
+      - name: Check deploy readiness
+        run: npm run deploy:ready
+
       - name: Run local release gate
         run: npm run check
+
+      - name: Check Cloudflare deployment readiness
+        if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: npm run deploy:ready -- --require-cloudflare
 
       - name: Deploy Worker Static Assets
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}

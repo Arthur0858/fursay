@@ -108,6 +108,7 @@ function writeReleaseManifest() {
       creatorKitPage: "https://fursay.com/creator-kit",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       packageScripts: {
+        deployReady: "npm run deploy:ready",
         check: "npm run check",
         deploy: "npm run deploy",
         liveSmoke: "npm run smoke:live",
@@ -140,6 +141,7 @@ function writeReleaseManifest() {
       "scripts/check-noor-list-activation.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
       "scripts/check-cache-headers.mjs",
+      "scripts/check-deploy-readiness.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
@@ -524,6 +526,8 @@ async function main() {
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
+  run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
+  run("node", ["scripts/check-deploy-readiness.mjs"]);
 
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);

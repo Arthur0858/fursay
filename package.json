@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/release-fursay.mjs --check-only",
+    "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "deploy": "node scripts/release-fursay.mjs",
     "deploy:push": "node scripts/release-fursay.mjs --push-git",
     "smoke:live": "node scripts/check-fursay-funnel.mjs --base-url https://fursay.com && node scripts/check-noor-list-activation.mjs --base-url https://fursay.com && node scripts/check-newsletter-traffic-kit.mjs --base-url https://fursay.com && node scripts/check-cache-headers.mjs --base-url https://fursay.com && node audit-fursay.mjs https://fursay.com"
