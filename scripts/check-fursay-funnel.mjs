@@ -913,7 +913,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!creatorKitPage.includes('data-creator-kit-pack="noor"')) failures.push("creator_kit_page_missing_noor_pack");
   if (!creatorKitPage.includes("https://fursay.com/creator/koko")) failures.push("creator_kit_page_missing_koko_creator");
   if (!creatorKitPage.includes("https://fursay.com/creator/noor")) failures.push("creator_kit_page_missing_noor_creator");
-  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 40) failures.push("creator_kit_page_bad_copy_button_count");
+  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 48) failures.push("creator_kit_page_bad_copy_button_count");
   if (!creatorKitPage.includes("/images/qr/sample-koko.svg") || !creatorKitPage.includes("/images/qr/sample-noor.svg")
     || !creatorKitPage.includes("/images/qr/share-koko.svg") || !creatorKitPage.includes("/images/qr/share-noor.svg")) {
     failures.push("creator_kit_page_missing_qr_assets");
@@ -928,6 +928,9 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedCreator = `https://fursay.com/creator/${pack}`;
     const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedShare}`)}`;
     const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedShare)}`;
+    const expectedChannelId = pack === "koko" ? "UC0X4CIwf6KoUMoIHwRxN3jw" : "UCOxmnonpfBvpiV8Vg5LEiYw";
+    const expectedUploadsPlaylistId = pack === "koko" ? "UU0X4CIwf6KoUMoIHwRxN3jw" : "UUOxmnonpfBvpiV8Vg5LEiYw";
+    const expectedPlaylistName = pack === "koko" ? "Koko's Forest Adventure uploads" : "Arabic Kids Chinese Picture Book uploads";
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;
     const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
@@ -947,6 +950,7 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!campaign.copyKit?.shortHeadline) failures.push(`campaigns_${pack}_copy_missing_short_headline`);
     if (!campaign.copyKit?.videoDescription?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_video_missing_sample`);
     if (!campaign.copyKit?.familyShareText?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_share_missing_sample`);
+    if (!campaign.copyKit?.familyShareMessage?.includes(expectedShare)) failures.push(`campaigns_${pack}_copy_family_message_missing_share`);
     const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
     const expectedShareQr = `https://fursay.com/images/qr/share-${pack}.svg`;
     if (campaign.copyKit?.qrSvg !== expectedQr) failures.push(`campaigns_${pack}_qr_svg:${campaign.copyKit?.qrSvg || "none"}`);
@@ -973,7 +977,9 @@ async function checkDiscoveryFiles(baseUrl) {
     }
     if (!creatorPack.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`creator_kit_${pack}_youtube_missing_placement`);
     if (!creatorPack.socialCaption?.includes(expectedSocialPlacement)) failures.push(`creator_kit_${pack}_social_missing_placement`);
+    if (!creatorPack.familyShareMessage?.includes(expectedShare)) failures.push(`creator_kit_${pack}_family_message_missing_share`);
     if (!creatorPack.newsletterBlurb?.includes(expectedNewsletterPlacement)) failures.push(`creator_kit_${pack}_newsletter_missing_placement`);
+    if (!creatorKitPage.includes(creatorPack.familyShareMessage || "")) failures.push(`creator_kit_page_missing_family_share_message:${pack}`);
     if (!creatorKitPage.includes(expectedWhatsapp)) failures.push(`creator_kit_page_missing_whatsapp_share:${pack}`);
     if (!creatorKitPage.includes(expectedLine)) failures.push(`creator_kit_page_missing_line_share:${pack}`);
     if (!creatorPack.altText?.includes(expectedSample)) failures.push(`creator_kit_${pack}_alt_missing_sample`);
@@ -982,6 +988,9 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedChannel = pack === "koko" ? "https://www.youtube.com/@KokosForest" : "https://www.youtube.com/@ArabicKidsChinese";
     const expectedStoryWorld = pack === "koko" ? "https://fursay.com/koko" : "https://fursay.com/arabic";
     if (videoPack.storyWorld !== expectedStoryWorld) failures.push(`video_discovery_${pack}_story_world:${videoPack.storyWorld || "none"}`);
+    if (videoPack.channelId !== expectedChannelId) failures.push(`video_discovery_${pack}_channel_id:${videoPack.channelId || "none"}`);
+    if (videoPack.uploadsPlaylistId !== expectedUploadsPlaylistId) failures.push(`video_discovery_${pack}_uploads_playlist:${videoPack.uploadsPlaylistId || "none"}`);
+    if (videoPack.playlistName !== expectedPlaylistName) failures.push(`video_discovery_${pack}_playlist_name:${videoPack.playlistName || "none"}`);
     if (videoPack.youtubeChannel !== expectedChannel) failures.push(`video_discovery_${pack}_youtube:${videoPack.youtubeChannel || "none"}`);
     if (videoPack.youtubeVideos !== `${expectedChannel}/videos`) failures.push(`video_discovery_${pack}_videos:${videoPack.youtubeVideos || "none"}`);
     if (videoPack.youtubePlaylists !== `${expectedChannel}/playlists`) failures.push(`video_discovery_${pack}_playlists:${videoPack.youtubePlaylists || "none"}`);
@@ -989,9 +998,12 @@ async function checkDiscoveryFiles(baseUrl) {
       failures.push(`video_discovery_${pack}_bad_playlist_embed`);
     }
     if (creatorPack.videoDiscovery?.manifest !== "https://fursay.com/video-discovery.json") failures.push(`creator_kit_${pack}_video_manifest:${creatorPack.videoDiscovery?.manifest || "none"}`);
+    if (creatorPack.videoDiscovery?.channelId !== expectedChannelId) failures.push(`creator_kit_${pack}_video_channel_id:${creatorPack.videoDiscovery?.channelId || "none"}`);
+    if (creatorPack.videoDiscovery?.uploadsPlaylistId !== expectedUploadsPlaylistId) failures.push(`creator_kit_${pack}_video_uploads_playlist:${creatorPack.videoDiscovery?.uploadsPlaylistId || "none"}`);
     if (creatorPack.videoDiscovery?.youtubeChannel !== expectedChannel) failures.push(`creator_kit_${pack}_video_channel:${creatorPack.videoDiscovery?.youtubeChannel || "none"}`);
     if (creatorPack.videoDiscovery?.youtubeVideos !== `${expectedChannel}/videos`) failures.push(`creator_kit_${pack}_video_videos:${creatorPack.videoDiscovery?.youtubeVideos || "none"}`);
     if (creatorPack.videoDiscovery?.youtubePlaylists !== `${expectedChannel}/playlists`) failures.push(`creator_kit_${pack}_video_playlists:${creatorPack.videoDiscovery?.youtubePlaylists || "none"}`);
+    if (creatorPack.videoDiscovery?.playlistName !== expectedPlaylistName) failures.push(`creator_kit_${pack}_video_playlist_name:${creatorPack.videoDiscovery?.playlistName || "none"}`);
     if (creatorPack.videoDiscovery?.playlistEmbed !== videoPack.playlistEmbed) failures.push(`creator_kit_${pack}_video_embed:${creatorPack.videoDiscovery?.playlistEmbed || "none"}`);
     for (const value of Object.values(creatorPack.videoDiscovery || {})) {
       if (!creatorKitPage.includes(value)) failures.push(`creator_kit_page_missing_video_discovery:${pack}:${value || "none"}`);
@@ -1001,6 +1013,13 @@ async function checkDiscoveryFiles(baseUrl) {
     if (videoPack.qrSvg !== `https://fursay.com/images/qr/share-${pack}.svg`) failures.push(`video_discovery_${pack}_qr:${videoPack.qrSvg || "none"}`);
     if (!videoPack.structuredDataAction?.includes(`subscribe=${pack}`) || !videoPack.structuredDataAction?.includes("utm_source=structured_data")) {
       failures.push(`video_discovery_${pack}_bad_structured_action`);
+    }
+    if (!Array.isArray(videoPack.sameAs) || !videoPack.sameAs.includes(expectedStoryWorld) || !videoPack.sameAs.includes(expectedChannel)) {
+      failures.push(`video_discovery_${pack}_bad_same_as`);
+    }
+    if (videoPack.subscribeAction?.type !== "SubscribeAction" || videoPack.subscribeAction?.target !== videoPack.structuredDataAction
+      || videoPack.subscribeAction?.shortlink !== expectedSample || videoPack.subscribeAction?.campaign !== expectedCampaign) {
+      failures.push(`video_discovery_${pack}_bad_subscribe_action`);
     }
     if (campaign.copyKit?.qrSvg === expectedQr) {
       try {
@@ -1082,7 +1101,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "bio_shortlink", "video_discovery_manifest", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "video_discovery_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {

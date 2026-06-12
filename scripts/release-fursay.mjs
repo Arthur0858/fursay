@@ -207,6 +207,7 @@ function writeCampaignManifest(siteDir, source) {
         shortHeadline: "Get Koko's weekly English story pack",
         videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
         familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
+        familyShareMessage: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/share/koko",
         primaryShortlink: "https://fursay.com/sample/koko",
         shareShortlink: "https://fursay.com/share/koko",
         whatsappShareUrl: socialShareUrls("koko").whatsapp,
@@ -245,6 +246,7 @@ function writeCampaignManifest(siteDir, source) {
         shortHeadline: "Get Noor's weekly Chinese story pack",
         videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
         familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
+        familyShareMessage: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/share/noor",
         primaryShortlink: "https://fursay.com/sample/noor",
         shareShortlink: "https://fursay.com/share/noor",
         whatsappShareUrl: socialShareUrls("noor").whatsapp,
@@ -326,9 +328,12 @@ function writeCreatorKit(siteDir, source, campaigns) {
         placementLinks,
         videoDiscovery: {
           manifest: "https://fursay.com/video-discovery.json",
+          channelId: videoDiscoveryChannels[pack].channelId,
+          uploadsPlaylistId: videoDiscoveryChannels[pack].uploadsPlaylistId,
           youtubeChannel: videoDiscoveryChannels[pack].youtubeChannel,
           youtubeVideos: videoDiscoveryChannels[pack].youtubeVideos,
           youtubePlaylists: videoDiscoveryChannels[pack].youtubePlaylists,
+          playlistName: videoDiscoveryChannels[pack].playlistName,
           playlistEmbed: videoDiscoveryChannels[pack].playlistEmbed,
         },
         trackedLandingUrl: landing,
@@ -336,6 +341,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         shareQrSvg: campaign.copyKit.shareQrSvg,
         youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
         socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`,
+        familyShareMessage: campaign.copyKit.familyShareMessage,
         newsletterBlurb: `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`,
         altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
         utmContract: {
@@ -364,13 +370,28 @@ function buildVideoDiscoveryChannels() {
         ar: "https://fursay.com/ar/koko",
       },
       youtubeChannel: "https://www.youtube.com/@KokosForest",
+      channelId: "UC0X4CIwf6KoUMoIHwRxN3jw",
+      uploadsPlaylistId: "UU0X4CIwf6KoUMoIHwRxN3jw",
       youtubeVideos: "https://www.youtube.com/@KokosForest/videos",
       youtubePlaylists: "https://www.youtube.com/@KokosForest/playlists",
+      playlistName: "Koko's Forest Adventure uploads",
       playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
       subscribeShortlink: "https://fursay.com/sample/koko",
       creatorShortlink: "https://fursay.com/creator/koko/youtube",
       qrSvg: "https://fursay.com/images/qr/share-koko.svg",
       structuredDataAction: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
+      sameAs: [
+        "https://fursay.com/koko",
+        "https://www.youtube.com/@KokosForest",
+        "https://www.youtube.com/@KokosForest/videos",
+        "https://www.youtube.com/@KokosForest/playlists",
+      ],
+      subscribeAction: {
+        type: "SubscribeAction",
+        target: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
+        shortlink: "https://fursay.com/sample/koko",
+        campaign: "koko_story_funnel",
+      },
     },
     noor: {
       title: "Arabic Kids Chinese Picture Book",
@@ -383,13 +404,28 @@ function buildVideoDiscoveryChannels() {
         ar: "https://fursay.com/ar/arabic",
       },
       youtubeChannel: "https://www.youtube.com/@ArabicKidsChinese",
+      channelId: "UCOxmnonpfBvpiV8Vg5LEiYw",
+      uploadsPlaylistId: "UUOxmnonpfBvpiV8Vg5LEiYw",
       youtubeVideos: "https://www.youtube.com/@ArabicKidsChinese/videos",
       youtubePlaylists: "https://www.youtube.com/@ArabicKidsChinese/playlists",
+      playlistName: "Arabic Kids Chinese Picture Book uploads",
       playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
       subscribeShortlink: "https://fursay.com/sample/noor",
       creatorShortlink: "https://fursay.com/creator/noor/youtube",
       qrSvg: "https://fursay.com/images/qr/share-noor.svg",
       structuredDataAction: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+      sameAs: [
+        "https://fursay.com/arabic",
+        "https://www.youtube.com/@ArabicKidsChinese",
+        "https://www.youtube.com/@ArabicKidsChinese/videos",
+        "https://www.youtube.com/@ArabicKidsChinese/playlists",
+      ],
+      subscribeAction: {
+        type: "SubscribeAction",
+        target: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+        shortlink: "https://fursay.com/sample/noor",
+        campaign: "noor_story_funnel",
+      },
     },
   };
 }
@@ -482,6 +518,7 @@ function writeCreatorKitPage(siteDir, kit) {
         <div class="creator-copy-blocks">
           ${creatorCopyBlock("YouTube description", item.youtubeDescription)}
           ${creatorCopyBlock("Social caption", item.socialCaption)}
+          ${creatorCopyBlock("Family share message", item.familyShareMessage)}
           ${creatorCopyBlock("Newsletter blurb", item.newsletterBlurb)}
         </div>
         <div class="creator-qr-grid" aria-label="${escapeHtml(campaignName(pack))} QR assets">
