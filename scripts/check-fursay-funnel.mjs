@@ -398,8 +398,31 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (siteHealth.funnels?.koko?.join !== "https://fursay.com/join/koko") failures.push("site_health_bad_koko_join");
   if (siteHealth.funnels?.noor?.join !== "https://fursay.com/join/noor") failures.push("site_health_bad_noor_join");
+  if (siteHealth.funnels?.koko?.status !== "active") failures.push(`site_health_koko_status:${siteHealth.funnels?.koko?.status || "none"}`);
+  if (siteHealth.funnels?.noor?.status !== "active") failures.push(`site_health_noor_status:${siteHealth.funnels?.noor?.status || "none"}`);
+  if (siteHealth.funnels?.koko?.campaign !== "koko_story_funnel") failures.push(`site_health_koko_campaign:${siteHealth.funnels?.koko?.campaign || "none"}`);
+  if (siteHealth.funnels?.noor?.campaign !== "noor_story_funnel") failures.push(`site_health_noor_campaign:${siteHealth.funnels?.noor?.campaign || "none"}`);
   if (!siteHealth.funnels?.koko?.deepLink?.includes("subscribe=koko")) failures.push("site_health_bad_koko_deep_link");
   if (!siteHealth.funnels?.noor?.deepLink?.includes("subscribe=noor")) failures.push("site_health_bad_noor_deep_link");
+  for (const key of ["subscribe_intent", "entry_pack", "modal_preselect", "utm_campaign", "utm_content"]) {
+    if (!siteHealth.funnels?.koko?.trackedIntents?.includes(key)) failures.push(`site_health_koko_missing_tracked_intent:${key}`);
+    if (!siteHealth.funnels?.noor?.trackedIntents?.includes(key)) failures.push(`site_health_noor_missing_tracked_intent:${key}`);
+  }
+  for (const source of ["home_weekly_pack_koko", "share_strip_koko_pack"]) {
+    if (!siteHealth.funnels?.koko?.ctaSources?.includes(source)) failures.push(`site_health_koko_missing_cta_source:${source}`);
+  }
+  for (const source of ["home_weekly_pack_noor", "arabic_story_pack_section", "share_strip_noor_pack"]) {
+    if (!siteHealth.funnels?.noor?.ctaSources?.includes(source)) failures.push(`site_health_noor_missing_cta_source:${source}`);
+  }
+  if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
+  if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
+  if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
+  for (const surface of ["homepage_split_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+    if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
+  }
+  for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
+    if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
+  }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic5.css")) {
     failures.push("site_health_missing_current_shared_css");
   }

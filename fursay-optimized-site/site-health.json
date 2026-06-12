@@ -25,14 +25,77 @@
   },
   "funnels": {
     "koko": {
+      "status": "active",
+      "primaryGoal": "weekly_story_pack_subscribe",
+      "campaign": "koko_story_funnel",
       "join": "https://fursay.com/join/koko",
-      "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko"
+      "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
+      "trackedIntents": [
+        "subscribe_intent",
+        "entry_pack",
+        "modal_preselect",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content"
+      ],
+      "ctaSources": [
+        "home_koko_weekly_pack",
+        "home_weekly_pack_koko",
+        "koko_hero_weekly_pack",
+        "koko_story_pack_section",
+        "share_strip_koko_pack"
+      ]
     },
     "noor": {
+      "status": "active",
+      "primaryGoal": "weekly_story_pack_subscribe",
+      "campaign": "noor_story_funnel",
       "join": "https://fursay.com/join/noor",
-      "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor"
+      "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
+      "trackedIntents": [
+        "subscribe_intent",
+        "entry_pack",
+        "modal_preselect",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content"
+      ],
+      "ctaSources": [
+        "home_noor_weekly_pack",
+        "home_weekly_pack_noor",
+        "arabic_hero_weekly_pack",
+        "arabic_episode_story_pack",
+        "arabic_story_pack_section",
+        "share_strip_noor_pack"
+      ]
     }
   },
+  "measurement": {
+    "subscriptionEndpoint": "/api/subscribe",
+    "payloadCompatibility": "email/groups/attribution",
+    "failClosed": true,
+    "submitApiSmoke": "intercepted-only",
+    "liveSmokeCallsMailerLite": false
+  },
+  "trafficSurfaces": [
+    "homepage_split_cta",
+    "story_world_cta",
+    "share_strip",
+    "copy_pack_link",
+    "shortlink",
+    "youtube_outbound_utm",
+    "subscribe_deep_link"
+  ],
+  "successSignals": [
+    "modal_preselect_matches_pack",
+    "shortlink_redirect_keeps_utm",
+    "subscribe_payload_keeps_attribution",
+    "no_live_smoke_mailerlite_call",
+    "no_mobile_horizontal_overflow",
+    "no_console_error"
+  ],
   "checks": {
     "funnel": "scripts/check-fursay-funnel.mjs",
     "noor": "scripts/check-noor-list-activation.mjs",
