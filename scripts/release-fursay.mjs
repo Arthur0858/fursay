@@ -112,6 +112,7 @@ function writeReleaseManifest() {
         campaign: "koko_story_funnel",
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
+        share: "https://fursay.com/share/koko",
         creator: "https://fursay.com/creator/koko",
         deepLink: "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       },
@@ -119,6 +120,7 @@ function writeReleaseManifest() {
         campaign: "noor_story_funnel",
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
+        share: "https://fursay.com/share/noor",
         creator: "https://fursay.com/creator/noor",
         deepLink: "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       },
@@ -133,8 +135,8 @@ function writeReleaseManifest() {
     ],
     liveExpectations: {
       pages: 9,
-      funnelChecks: 25,
-      cacheHeaderChecks: 25,
+      funnelChecks: 27,
+      cacheHeaderChecks: 27,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -169,6 +171,7 @@ function writeCampaignManifest(siteDir, source) {
       shortlinks: {
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
+        share: "https://fursay.com/share/koko",
         creator: "https://fursay.com/creator/koko",
       },
       landingPages: {
@@ -201,6 +204,7 @@ function writeCampaignManifest(siteDir, source) {
       shortlinks: {
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
+        share: "https://fursay.com/share/noor",
         creator: "https://fursay.com/creator/noor",
       },
       landingPages: {

@@ -51,6 +51,22 @@ function joinRedirectUrl(url) {
       campaign: "noor_story_funnel",
       content: "sample_noor"
     },
+    "/share/koko": {
+      target: "/koko",
+      pack: "koko",
+      source: "family_share",
+      medium: "share",
+      campaign: "koko_story_funnel",
+      content: "share_sample_koko"
+    },
+    "/share/noor": {
+      target: "/arabic",
+      pack: "noor",
+      source: "family_share",
+      medium: "share",
+      campaign: "noor_story_funnel",
+      content: "share_sample_noor"
+    },
     "/creator/koko": {
       target: "/koko",
       pack: "koko",

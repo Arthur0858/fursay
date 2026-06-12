@@ -23,7 +23,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20260612-traffic8.js",
+    path: "/js/site-shared-20260613-share1.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",
@@ -105,6 +105,18 @@ const CHECKS = [
     status: 302,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     locationIncludes: ["/arabic", "subscribe=noor", "utm_content=sample_noor"],
+  },
+  {
+    path: "/share/koko",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=family_share", "utm_medium=share", "utm_content=share_sample_koko"],
+  },
+  {
+    path: "/share/noor",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=family_share", "utm_medium=share", "utm_content=share_sample_noor"],
   },
   {
     path: "/creator/koko",
