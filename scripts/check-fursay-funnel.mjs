@@ -36,6 +36,16 @@ function urlPath(value) {
     return "";
   }
 }
+
+const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
+
+function copyShortlinkPassthroughParams(source, target) {
+  for (const key of SHORTLINK_PASSTHROUGH_PARAMS) {
+    const value = source.searchParams.get(key);
+    if (value) target.searchParams.set(key, value);
+  }
+}
+
 const JOIN_ROUTES = [
   {
     path: "/join/koko",
@@ -224,6 +234,7 @@ function startServer() {
         location.searchParams.set("utm_medium", joinRoute.medium || "direct");
         location.searchParams.set("utm_campaign", joinRoute.campaign);
         location.searchParams.set("utm_content", joinRoute.content);
+        copyShortlinkPassthroughParams(url, location);
         res.writeHead(302, {
           "location": location.toString(),
           "cache-control": "public, max-age=300, must-revalidate",
@@ -672,23 +683,33 @@ async function checkAttributionPayload(browser, baseUrl) {
 async function checkJoinRedirects(baseUrl) {
   const results = [];
   for (const route of JOIN_ROUTES) {
-    const response = await fetch(`${baseUrl}${route.path}`, { redirect: "manual" });
+    const requestUrl = new URL(route.path, baseUrl);
+    requestUrl.searchParams.set("utm_source", "untrusted_source");
+    requestUrl.searchParams.set("utm_term", "ig_bio_smoke");
+    requestUrl.searchParams.set("ref", "creator_card");
+    requestUrl.searchParams.set("email", "blocked@example.com");
+    const response = await fetch(requestUrl, { redirect: "manual" });
     const location = response.headers.get("location") || "";
+    const redirected = location ? new URL(location) : null;
     const failures = [];
     if (![301, 302, 303, 307, 308].includes(response.status)) failures.push(`status:${response.status}`);
     if (!location.includes(route.targetPath)) failures.push(`wrong_join_target:${location || "none"}`);
-    if (!location.includes(`subscribe=${route.pack}`)) failures.push(`missing_join_subscribe:${location || "none"}`);
-    if (!location.includes(`utm_source=${route.source || "shortlink"}`) || !location.includes(`utm_medium=${route.medium || "direct"}`)) {
+    if (redirected?.searchParams.get("subscribe") !== route.pack) failures.push(`missing_join_subscribe:${location || "none"}`);
+    if (redirected?.searchParams.get("utm_source") !== (route.source || "shortlink") || redirected?.searchParams.get("utm_medium") !== (route.medium || "direct")) {
       failures.push(`missing_join_utm:${location || "none"}`);
     }
-    if (!location.includes(`utm_campaign=${route.campaign}`) || !location.includes(`utm_content=${route.content}`)) {
+    if (redirected?.searchParams.get("utm_campaign") !== route.campaign || redirected?.searchParams.get("utm_content") !== route.content) {
       failures.push(`wrong_join_campaign:${location || "none"}`);
     }
+    if (redirected?.searchParams.get("utm_term") !== "ig_bio_smoke") failures.push(`missing_passthrough_utm_term:${location || "none"}`);
+    if (redirected?.searchParams.get("ref") !== "creator_card") failures.push(`missing_passthrough_ref:${location || "none"}`);
+    if (redirected?.searchParams.get("email")) failures.push(`leaked_blocked_email:${location || "none"}`);
+    if (redirected?.searchParams.get("utm_source") === "untrusted_source") failures.push(`overrode_owned_utm_source:${location || "none"}`);
     results.push({
       path: route.path,
       ok: failures.length === 0,
       failures,
-      data: { status: response.status, location },
+      data: { status: response.status, location, requestUrl: requestUrl.toString() },
     });
   }
   return results;
@@ -1158,10 +1179,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
-  for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
+  for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {

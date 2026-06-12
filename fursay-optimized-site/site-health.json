@@ -145,6 +145,7 @@
     "family_share_message",
     "bio_shortlink",
     "bio_profile_copy",
+    "shortlink_query_passthrough",
     "video_discovery_manifest",
     "sitemap_manifest",
     "robots_manifest",

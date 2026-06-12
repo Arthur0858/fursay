@@ -157,7 +157,17 @@ function joinRedirectUrl(url) {
   target.searchParams.set("utm_medium", route.medium || "direct");
   target.searchParams.set("utm_campaign", route.campaign);
   target.searchParams.set("utm_content", route.content);
+  copyShortlinkPassthroughParams(url, target);
   return target.toString();
+}
+
+const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
+
+function copyShortlinkPassthroughParams(source, target) {
+  for (const key of SHORTLINK_PASSTHROUGH_PARAMS) {
+    const value = source.searchParams.get(key);
+    if (value) target.searchParams.set(key, value);
+  }
 }
 
 function redirectWithHeaders(location, status) {
