@@ -107,6 +107,12 @@ function writeReleaseManifest() {
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
+      packageScripts: {
+        check: "npm run check",
+        deploy: "npm run deploy",
+        liveSmoke: "npm run smoke:live",
+      },
+      autoDeployWorkflow: ".github/workflows/deploy-worker.yml",
     },
     funnels: {
       koko: {
@@ -251,6 +257,7 @@ function writeCampaignManifest(siteDir, source) {
 }
 
 function writeCreatorKit(siteDir, source, campaigns) {
+  const videoDiscoveryChannels = buildVideoDiscoveryChannels();
   const kit = {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -297,6 +304,13 @@ function writeCreatorKit(siteDir, source, campaigns) {
         bioShortlink: campaign.shortlinks.bio,
         creatorShortlink: creator,
         placementLinks,
+        videoDiscovery: {
+          manifest: "https://fursay.com/video-discovery.json",
+          youtubeChannel: videoDiscoveryChannels[pack].youtubeChannel,
+          youtubeVideos: videoDiscoveryChannels[pack].youtubeVideos,
+          youtubePlaylists: videoDiscoveryChannels[pack].youtubePlaylists,
+          playlistEmbed: videoDiscoveryChannels[pack].playlistEmbed,
+        },
         trackedLandingUrl: landing,
         qrSvg: campaign.copyKit.qrSvg,
         youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
@@ -316,6 +330,49 @@ function writeCreatorKit(siteDir, source, campaigns) {
   writeCreatorKitPage(siteDir, kit);
 }
 
+function buildVideoDiscoveryChannels() {
+  return {
+    koko: {
+      title: "Koko's Forest Adventure",
+      audience: "Mandarin-speaking families learning English",
+      languagePair: ["en", "zh"],
+      storyWorld: "https://fursay.com/koko",
+      localizedStoryWorlds: {
+        en: "https://fursay.com/koko",
+        "zh-TW": "https://fursay.com/zh/koko",
+        ar: "https://fursay.com/ar/koko",
+      },
+      youtubeChannel: "https://www.youtube.com/@KokosForest",
+      youtubeVideos: "https://www.youtube.com/@KokosForest/videos",
+      youtubePlaylists: "https://www.youtube.com/@KokosForest/playlists",
+      playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
+      subscribeShortlink: "https://fursay.com/sample/koko",
+      creatorShortlink: "https://fursay.com/creator/koko/youtube",
+      qrSvg: "https://fursay.com/images/qr/share-koko.svg",
+      structuredDataAction: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
+    },
+    noor: {
+      title: "Arabic Kids Chinese Picture Book",
+      audience: "Arabic-speaking families learning Chinese",
+      languagePair: ["ar", "zh"],
+      storyWorld: "https://fursay.com/arabic",
+      localizedStoryWorlds: {
+        en: "https://fursay.com/arabic",
+        "zh-TW": "https://fursay.com/zh/arabic",
+        ar: "https://fursay.com/ar/arabic",
+      },
+      youtubeChannel: "https://www.youtube.com/@ArabicKidsChinese",
+      youtubeVideos: "https://www.youtube.com/@ArabicKidsChinese/videos",
+      youtubePlaylists: "https://www.youtube.com/@ArabicKidsChinese/playlists",
+      playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
+      subscribeShortlink: "https://fursay.com/sample/noor",
+      creatorShortlink: "https://fursay.com/creator/noor/youtube",
+      qrSvg: "https://fursay.com/images/qr/share-noor.svg",
+      structuredDataAction: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+    },
+  };
+}
+
 function writeVideoDiscovery(siteDir, source) {
   const manifest = {
     site: "Fursay",
@@ -329,46 +386,7 @@ function writeVideoDiscovery(siteDir, source) {
       smokeSubmitsToMailerLite: false,
       externalVideoHost: "youtube",
     },
-    channels: {
-      koko: {
-        title: "Koko's Forest Adventure",
-        audience: "Mandarin-speaking families learning English",
-        languagePair: ["en", "zh"],
-        storyWorld: "https://fursay.com/koko",
-        localizedStoryWorlds: {
-          en: "https://fursay.com/koko",
-          "zh-TW": "https://fursay.com/zh/koko",
-          ar: "https://fursay.com/ar/koko",
-        },
-        youtubeChannel: "https://www.youtube.com/@KokosForest",
-        youtubeVideos: "https://www.youtube.com/@KokosForest/videos",
-        youtubePlaylists: "https://www.youtube.com/@KokosForest/playlists",
-        playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
-        subscribeShortlink: "https://fursay.com/sample/koko",
-        creatorShortlink: "https://fursay.com/creator/koko/youtube",
-        qrSvg: "https://fursay.com/images/qr/share-koko.svg",
-        structuredDataAction: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
-      },
-      noor: {
-        title: "Arabic Kids Chinese Picture Book",
-        audience: "Arabic-speaking families learning Chinese",
-        languagePair: ["ar", "zh"],
-        storyWorld: "https://fursay.com/arabic",
-        localizedStoryWorlds: {
-          en: "https://fursay.com/arabic",
-          "zh-TW": "https://fursay.com/zh/arabic",
-          ar: "https://fursay.com/ar/arabic",
-        },
-        youtubeChannel: "https://www.youtube.com/@ArabicKidsChinese",
-        youtubeVideos: "https://www.youtube.com/@ArabicKidsChinese/videos",
-        youtubePlaylists: "https://www.youtube.com/@ArabicKidsChinese/playlists",
-        playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
-        subscribeShortlink: "https://fursay.com/sample/noor",
-        creatorShortlink: "https://fursay.com/creator/noor/youtube",
-        qrSvg: "https://fursay.com/images/qr/share-noor.svg",
-        structuredDataAction: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
-      },
-    },
+    channels: buildVideoDiscoveryChannels(),
   };
   writeFileSync(resolve(siteDir, "video-discovery.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
@@ -410,6 +428,11 @@ function placementRows(placementLinks) {
               ${creatorLinkRow(key, link.shortlink)}`).join("");
 }
 
+function videoDiscoveryRows(videoDiscovery) {
+  return Object.entries(videoDiscovery).map(([key, value]) => `
+              ${creatorLinkRow(key, value)}`).join("");
+}
+
 function writeCreatorKitPage(siteDir, kit) {
   const packCards = Object.entries(kit.packs).map(([pack, item]) => `
       <section class="creator-pack" data-creator-kit-pack="${escapeHtml(pack)}">
@@ -423,6 +446,7 @@ function writeCreatorKitPage(siteDir, kit) {
             ${creatorLinkRow("Bio shortlink", item.bioShortlink)}
             ${creatorLinkRow("Tracked landing", item.trackedLandingUrl)}
             ${placementRows(item.placementLinks)}
+            ${videoDiscoveryRows(item.videoDiscovery)}
           </dl>
         </div>
         <div class="creator-copy-blocks">

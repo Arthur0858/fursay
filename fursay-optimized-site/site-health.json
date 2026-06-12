@@ -11,7 +11,13 @@
     "campaignManifest": "https://fursay.com/campaigns.json",
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
-    "videoDiscoveryManifest": "https://fursay.com/video-discovery.json"
+    "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
+    "packageScripts": {
+      "check": "npm run check",
+      "deploy": "npm run deploy",
+      "liveSmoke": "npm run smoke:live"
+    },
+    "autoDeployWorkflow": ".github/workflows/deploy-worker.yml"
   },
   "routes": {
     "home": [

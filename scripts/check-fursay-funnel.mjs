@@ -635,6 +635,10 @@ async function readDiscoveryFile(baseUrl, fileName) {
   return readFile(resolve(SITE_DIR, fileName), "utf8");
 }
 
+async function readRepoFile(fileName) {
+  return readFile(resolve(ROOT, fileName), "utf8");
+}
+
 async function readAssetText(baseUrl, assetUrl) {
   const url = new URL(assetUrl);
   if (baseUrl) {
@@ -655,11 +659,14 @@ async function checkDiscoveryFiles(baseUrl) {
   const creatorKitRaw = await readDiscoveryFile(baseUrl, "creator-kit.json");
   const videoDiscoveryRaw = await readDiscoveryFile(baseUrl, "video-discovery.json");
   const creatorKitPage = await readDiscoveryFile(baseUrl, "creator-kit.html");
+  const packageRaw = baseUrl ? "" : await readRepoFile("package.json");
+  const workflowRaw = baseUrl ? "" : await readRepoFile(".github/workflows/deploy-worker.yml");
   let siteHealth = {};
   let release = {};
   let campaigns = {};
   let creatorKit = {};
   let videoDiscovery = {};
+  let packageJson = {};
   try {
     siteHealth = JSON.parse(siteHealthRaw);
   } catch {
@@ -684,6 +691,13 @@ async function checkDiscoveryFiles(baseUrl) {
     videoDiscovery = JSON.parse(videoDiscoveryRaw);
   } catch {
     failures.push("video_discovery_invalid_json");
+  }
+  if (!baseUrl) {
+    try {
+      packageJson = JSON.parse(packageRaw);
+    } catch {
+      failures.push("package_invalid_json");
+    }
   }
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
   const expectedLastmod = taipeiDateString();
@@ -747,6 +761,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`site_health_video_discovery:${siteHealth.deployment?.videoDiscoveryManifest || "none"}`);
   }
+  if (siteHealth.deployment?.packageScripts?.check !== "npm run check") failures.push("site_health_bad_check_script");
+  if (siteHealth.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("site_health_bad_deploy_script");
+  if (siteHealth.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("site_health_bad_live_smoke_script");
+  if (siteHealth.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("site_health_bad_auto_deploy_workflow");
   if (release.platform !== "cloudflare-workers-static-assets") failures.push(`release_platform:${release.platform || "none"}`);
   if (release.deployment?.workerName !== "fursay") failures.push(`release_worker:${release.deployment?.workerName || "none"}`);
   if (release.deployment?.releaseCommand !== "node scripts/release-fursay.mjs") {
@@ -776,6 +794,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`release_video_discovery:${release.deployment?.videoDiscoveryManifest || "none"}`);
   }
+  if (release.deployment?.packageScripts?.check !== "npm run check") failures.push("release_bad_check_script");
+  if (release.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("release_bad_deploy_script");
+  if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
+  if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 32) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
@@ -792,12 +814,24 @@ async function checkDiscoveryFiles(baseUrl) {
   if (videoDiscovery.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("video_discovery_bad_subscription_endpoint");
   if (videoDiscovery.safety?.smokeSubmitsToMailerLite !== false) failures.push("video_discovery_bad_mailerlite_smoke_contract");
   if (videoDiscovery.safety?.externalVideoHost !== "youtube") failures.push(`video_discovery_host:${videoDiscovery.safety?.externalVideoHost || "none"}`);
+  if (!baseUrl) {
+    if (packageJson.scripts?.check !== "node scripts/release-fursay.mjs --check-only") failures.push("package_bad_check_script");
+    if (packageJson.scripts?.deploy !== "node scripts/release-fursay.mjs") failures.push("package_bad_deploy_script");
+    if (!packageJson.scripts?.["smoke:live"]?.includes("audit-fursay.mjs https://fursay.com")) failures.push("package_bad_live_smoke_script");
+    if (!packageJson.devDependencies?.wrangler) failures.push("package_missing_wrangler");
+    if (!packageJson.devDependencies?.playwright) failures.push("package_missing_playwright");
+    if (!workflowRaw.includes("npm run check")) failures.push("workflow_missing_local_gate");
+    if (!workflowRaw.includes("npm run deploy")) failures.push("workflow_missing_deploy");
+    if (!workflowRaw.includes("CLOUDFLARE_API_TOKEN")) failures.push("workflow_missing_cloudflare_token_gate");
+    if (!workflowRaw.includes("CLOUDFLARE_ACCOUNT_ID")) failures.push("workflow_missing_cloudflare_account_gate");
+    if (!workflowRaw.includes("npx playwright install --with-deps chromium")) failures.push("workflow_missing_browser_runtime");
+  }
   if (!creatorKitPage.includes('<body class="picture-world creator-kit-page">')) failures.push("creator_kit_page_missing_body_class");
   if (!creatorKitPage.includes('data-creator-kit-pack="koko"')) failures.push("creator_kit_page_missing_koko_pack");
   if (!creatorKitPage.includes('data-creator-kit-pack="noor"')) failures.push("creator_kit_page_missing_noor_pack");
   if (!creatorKitPage.includes("https://fursay.com/creator/koko")) failures.push("creator_kit_page_missing_koko_creator");
   if (!creatorKitPage.includes("https://fursay.com/creator/noor")) failures.push("creator_kit_page_missing_noor_creator");
-  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 20) failures.push("creator_kit_page_bad_copy_button_count");
+  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 30) failures.push("creator_kit_page_bad_copy_button_count");
   if (!creatorKitPage.includes("/images/qr/sample-koko.svg") || !creatorKitPage.includes("/images/qr/sample-noor.svg")) {
     failures.push("creator_kit_page_missing_qr_assets");
   }
@@ -859,6 +893,14 @@ async function checkDiscoveryFiles(baseUrl) {
     if (videoPack.youtubePlaylists !== `${expectedChannel}/playlists`) failures.push(`video_discovery_${pack}_playlists:${videoPack.youtubePlaylists || "none"}`);
     if (!videoPack.playlistEmbed?.startsWith("https://www.youtube-nocookie.com/embed/videoseries?list=UU")) {
       failures.push(`video_discovery_${pack}_bad_playlist_embed`);
+    }
+    if (creatorPack.videoDiscovery?.manifest !== "https://fursay.com/video-discovery.json") failures.push(`creator_kit_${pack}_video_manifest:${creatorPack.videoDiscovery?.manifest || "none"}`);
+    if (creatorPack.videoDiscovery?.youtubeChannel !== expectedChannel) failures.push(`creator_kit_${pack}_video_channel:${creatorPack.videoDiscovery?.youtubeChannel || "none"}`);
+    if (creatorPack.videoDiscovery?.youtubeVideos !== `${expectedChannel}/videos`) failures.push(`creator_kit_${pack}_video_videos:${creatorPack.videoDiscovery?.youtubeVideos || "none"}`);
+    if (creatorPack.videoDiscovery?.youtubePlaylists !== `${expectedChannel}/playlists`) failures.push(`creator_kit_${pack}_video_playlists:${creatorPack.videoDiscovery?.youtubePlaylists || "none"}`);
+    if (creatorPack.videoDiscovery?.playlistEmbed !== videoPack.playlistEmbed) failures.push(`creator_kit_${pack}_video_embed:${creatorPack.videoDiscovery?.playlistEmbed || "none"}`);
+    for (const value of Object.values(creatorPack.videoDiscovery || {})) {
+      if (!creatorKitPage.includes(value)) failures.push(`creator_kit_page_missing_video_discovery:${pack}:${value || "none"}`);
     }
     if (videoPack.subscribeShortlink !== expectedSample) failures.push(`video_discovery_${pack}_subscribe:${videoPack.subscribeShortlink || "none"}`);
     if (videoPack.creatorShortlink !== expectedYoutubePlacement) failures.push(`video_discovery_${pack}_creator:${videoPack.creatorShortlink || "none"}`);
@@ -971,6 +1013,8 @@ async function checkDiscoveryFiles(baseUrl) {
       campaignsBytes: Buffer.byteLength(campaignsRaw),
       creatorKitBytes: Buffer.byteLength(creatorKitRaw),
       videoDiscoveryBytes: Buffer.byteLength(videoDiscoveryRaw),
+      packageBytes: Buffer.byteLength(packageRaw),
+      workflowBytes: Buffer.byteLength(workflowRaw),
       creatorKitPageBytes: Buffer.byteLength(creatorKitPage),
       platform: siteHealth.platform || "",
     },
