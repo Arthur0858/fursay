@@ -34,6 +34,10 @@
       "https://fursay.com/share/koko",
       "https://fursay.com/share/noor"
     ],
+    "bio": [
+      "https://fursay.com/bio/koko",
+      "https://fursay.com/bio/noor"
+    ],
     "creator": [
       "https://fursay.com/creator/koko",
       "https://fursay.com/creator/noor"
@@ -59,6 +63,7 @@
       "join": "https://fursay.com/join/koko",
       "sample": "https://fursay.com/sample/koko",
       "share": "https://fursay.com/share/koko",
+      "bio": "https://fursay.com/bio/koko",
       "creator": "https://fursay.com/creator/koko",
       "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       "trackedIntents": [
@@ -86,6 +91,7 @@
       "join": "https://fursay.com/join/noor",
       "sample": "https://fursay.com/sample/noor",
       "share": "https://fursay.com/share/noor",
+      "bio": "https://fursay.com/bio/noor",
       "creator": "https://fursay.com/creator/noor",
       "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       "trackedIntents": [
@@ -120,11 +126,13 @@
     "homepage_sample_deep_link",
     "sample_shortlink",
     "family_share_shortlink",
+    "bio_shortlink",
     "social_preview_metadata",
     "sample_pack_schema",
     "copy_sample_shortlink",
     "campaign_copy_kit",
     "campaign_qr_asset",
+    "campaign_share_qr_asset",
     "campaign_qr_card",
     "creator_kit_manifest",
     "creator_kit_page",

@@ -32,6 +32,8 @@ Useful actions:
 - Preview Noor's sample story pack: https://fursay.com/sample/noor
 - Share Koko's family sample link: https://fursay.com/share/koko
 - Share Noor's family sample link: https://fursay.com/share/noor
+- Koko social profile bio link: https://fursay.com/bio/koko
+- Noor social profile bio link: https://fursay.com/bio/noor
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
 - Creator link for Noor descriptions: https://fursay.com/creator/noor
 - Koko YouTube creator link: https://fursay.com/creator/koko/youtube

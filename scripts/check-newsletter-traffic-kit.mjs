@@ -148,15 +148,17 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 18) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (data.copyButtonCount !== 20) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
   for (const value of [
     `${baseUrl}/creator/koko`,
     `${baseUrl}/sample/koko`,
+    `${baseUrl}/bio/koko`,
     `${baseUrl}/creator/koko/youtube`,
     `${baseUrl}/creator/koko/social`,
     `${baseUrl}/creator/koko/newsletter`,
     `${baseUrl}/creator/noor`,
     `${baseUrl}/sample/noor`,
+    `${baseUrl}/bio/noor`,
     `${baseUrl}/creator/noor/youtube`,
     `${baseUrl}/creator/noor/social`,
     `${baseUrl}/creator/noor/newsletter`,
@@ -192,11 +194,13 @@ async function main() {
   for (const [pack, expectedCampaign] of Object.entries({ koko: "koko_story_funnel", noor: "noor_story_funnel" })) {
     const item = creatorKit.packs?.[pack] || {};
     const expectedSample = `https://fursay.com/sample/${pack}`;
+    const expectedBio = `https://fursay.com/bio/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;
     const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
     if (item.sampleShortlink !== expectedSample) failures.push(`${pack}_bad_sample_shortlink`);
+    if (item.bioShortlink !== expectedBio) failures.push(`${pack}_bad_bio_shortlink`);
     if (item.creatorShortlink !== expectedCreator) failures.push(`${pack}_bad_creator_shortlink`);
     if (!item.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`${pack}_missing_creator_source`);
     if (!item.trackedLandingUrl?.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`${pack}_missing_campaign`);
@@ -210,6 +214,7 @@ async function main() {
     if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
+    if (!creatorKitPage.includes(expectedBio)) failures.push(`${pack}_creator_page_missing_bio`);
     if (!creatorKitPage.includes(expectedYoutubePlacement)) failures.push(`${pack}_creator_page_missing_youtube_placement`);
     if (!creatorKitPage.includes(expectedSocialPlacement)) failures.push(`${pack}_creator_page_missing_social_placement`);
     if (!creatorKitPage.includes(expectedNewsletterPlacement)) failures.push(`${pack}_creator_page_missing_newsletter_placement`);

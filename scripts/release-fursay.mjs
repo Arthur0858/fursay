@@ -113,6 +113,7 @@ function writeReleaseManifest() {
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
         share: "https://fursay.com/share/koko",
+        bio: "https://fursay.com/bio/koko",
         creator: "https://fursay.com/creator/koko",
         deepLink: "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       },
@@ -121,6 +122,7 @@ function writeReleaseManifest() {
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
         share: "https://fursay.com/share/noor",
+        bio: "https://fursay.com/bio/noor",
         creator: "https://fursay.com/creator/noor",
         deepLink: "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       },
@@ -135,8 +137,8 @@ function writeReleaseManifest() {
     ],
     liveExpectations: {
       pages: 9,
-      funnelChecks: 27,
-      cacheHeaderChecks: 27,
+      funnelChecks: 29,
+      cacheHeaderChecks: 31,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -172,6 +174,7 @@ function writeCampaignManifest(siteDir, source) {
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
         share: "https://fursay.com/share/koko",
+        bio: "https://fursay.com/bio/koko",
         creator: "https://fursay.com/creator/koko",
       },
       landingPages: {
@@ -186,7 +189,9 @@ function writeCampaignManifest(siteDir, source) {
         videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
         familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
         primaryShortlink: "https://fursay.com/sample/koko",
+        shareShortlink: "https://fursay.com/share/koko",
         qrSvg: "https://fursay.com/images/qr/sample-koko.svg",
+        shareQrSvg: "https://fursay.com/images/qr/share-koko.svg",
       },
       ctaSources: [
         "home_koko_weekly_pack",
@@ -205,6 +210,7 @@ function writeCampaignManifest(siteDir, source) {
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
         share: "https://fursay.com/share/noor",
+        bio: "https://fursay.com/bio/noor",
         creator: "https://fursay.com/creator/noor",
       },
       landingPages: {
@@ -219,7 +225,9 @@ function writeCampaignManifest(siteDir, source) {
         videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
         familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
         primaryShortlink: "https://fursay.com/sample/noor",
+        shareShortlink: "https://fursay.com/share/noor",
         qrSvg: "https://fursay.com/images/qr/sample-noor.svg",
+        shareQrSvg: "https://fursay.com/images/qr/share-noor.svg",
       },
       ctaSources: [
         "home_noor_weekly_pack",
@@ -283,6 +291,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         campaign: campaign.campaign,
         primaryAction: "preview_weekly_story_pack",
         sampleShortlink: sample,
+        bioShortlink: campaign.shortlinks.bio,
         creatorShortlink: creator,
         placementLinks,
         trackedLandingUrl: landing,
@@ -351,6 +360,7 @@ function writeCreatorKitPage(siteDir, kit) {
           <dl>
             ${creatorLinkRow("Creator shortlink", item.creatorShortlink)}
             ${creatorLinkRow("Sample shortlink", item.sampleShortlink)}
+            ${creatorLinkRow("Bio shortlink", item.bioShortlink)}
             ${creatorLinkRow("Tracked landing", item.trackedLandingUrl)}
             ${placementRows(item.placementLinks)}
           </dl>

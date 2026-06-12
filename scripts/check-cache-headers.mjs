@@ -47,6 +47,18 @@ const CHECKS = [
     contentTypeIncludes: "image/svg+xml",
   },
   {
+    path: "/images/qr/share-koko.svg",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/svg+xml",
+  },
+  {
+    path: "/images/qr/share-noor.svg",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/svg+xml",
+  },
+  {
     path: "/site-health.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],
@@ -117,6 +129,18 @@ const CHECKS = [
     status: 302,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     locationIncludes: ["/arabic", "subscribe=noor", "utm_source=family_share", "utm_medium=share", "utm_content=share_sample_noor"],
+  },
+  {
+    path: "/bio/koko",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=social_profile", "utm_medium=bio", "utm_content=bio_koko"],
+  },
+  {
+    path: "/bio/noor",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=social_profile", "utm_medium=bio", "utm_content=bio_noor"],
   },
   {
     path: "/creator/koko",

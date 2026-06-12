@@ -84,6 +84,24 @@ const JOIN_ROUTES = [
     content: "share_sample_noor",
   },
   {
+    path: "/bio/koko",
+    targetPath: "/koko",
+    pack: "koko",
+    source: "social_profile",
+    medium: "bio",
+    campaign: "koko_story_funnel",
+    content: "bio_koko",
+  },
+  {
+    path: "/bio/noor",
+    targetPath: "/arabic",
+    pack: "noor",
+    source: "social_profile",
+    medium: "bio",
+    campaign: "noor_story_funnel",
+    content: "bio_noor",
+  },
+  {
     path: "/creator/koko",
     targetPath: "/koko",
     pack: "koko",
@@ -457,13 +475,13 @@ async function checkPage(browser, baseUrl, path) {
     }
     const qrCard = data.campaignQrCards.find((card) => card.pack === expectedPack);
     if (!qrCard) failures.push(`missing_${expectedPack}_campaign_qr_card`);
-    if (qrCard && qrCard.href !== `${baseUrl}/sample/${expectedPack}`) {
+    if (urlPath(qrCard?.href || "") !== `/share/${expectedPack}`) {
       failures.push(`bad_${expectedPack}_campaign_qr_href:${qrCard.href || "none"}`);
     }
-    if (qrCard && qrCard.image !== `/images/qr/sample-${expectedPack}.svg`) {
+    if (qrCard && qrCard.image !== `/images/qr/share-${expectedPack}.svg`) {
       failures.push(`bad_${expectedPack}_campaign_qr_image:${qrCard.image || "none"}`);
     }
-    if (qrCard && !qrCard.text.includes(`fursay.com/sample/${expectedPack}`)) {
+    if (qrCard && !qrCard.text.includes(`fursay.com/share/${expectedPack}`)) {
       failures.push(`bad_${expectedPack}_campaign_qr_text:${qrCard.text || "none"}`);
     }
     const storyPackSchema = data.storyPackSchemas.find((schema) => (
@@ -661,6 +679,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/share/koko") || !llms.includes("https://fursay.com/share/noor")) {
     failures.push("llms_missing_share_routes");
   }
+  if (!llms.includes("https://fursay.com/bio/koko") || !llms.includes("https://fursay.com/bio/noor")) {
+    failures.push("llms_missing_bio_routes");
+  }
   if (!llms.includes("https://fursay.com/creator/koko") || !llms.includes("https://fursay.com/creator/noor")) {
     failures.push("llms_missing_creator_routes");
   }
@@ -707,6 +728,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("release_bad_noor_sample");
   if (release.funnels?.koko?.share !== "https://fursay.com/share/koko") failures.push("release_bad_koko_share");
   if (release.funnels?.noor?.share !== "https://fursay.com/share/noor") failures.push("release_bad_noor_share");
+  if (release.funnels?.koko?.bio !== "https://fursay.com/bio/koko") failures.push("release_bad_koko_bio");
+  if (release.funnels?.noor?.bio !== "https://fursay.com/bio/noor") failures.push("release_bad_noor_bio");
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260612-traffic10.css") failures.push(`release_css:${release.assets?.css || "none"}`);
@@ -721,8 +744,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.creatorKitPage !== "https://fursay.com/creator-kit") {
     failures.push(`release_creator_kit_page:${release.deployment?.creatorKitPage || "none"}`);
   }
-  if (release.liveExpectations?.funnelChecks !== 27) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 27) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 31) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
   if (campaigns.creatorKit !== "https://fursay.com/creator-kit.json") failures.push(`campaigns_creator_kit:${campaigns.creatorKit || "none"}`);
@@ -737,7 +760,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!creatorKitPage.includes('data-creator-kit-pack="noor"')) failures.push("creator_kit_page_missing_noor_pack");
   if (!creatorKitPage.includes("https://fursay.com/creator/koko")) failures.push("creator_kit_page_missing_koko_creator");
   if (!creatorKitPage.includes("https://fursay.com/creator/noor")) failures.push("creator_kit_page_missing_noor_creator");
-  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 18) failures.push("creator_kit_page_bad_copy_button_count");
+  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 20) failures.push("creator_kit_page_bad_copy_button_count");
   if (!creatorKitPage.includes("/images/qr/sample-koko.svg") || !creatorKitPage.includes("/images/qr/sample-noor.svg")) {
     failures.push("creator_kit_page_missing_qr_assets");
   }
@@ -755,17 +778,22 @@ async function checkDiscoveryFiles(baseUrl) {
     if (campaign.campaign !== expectedCampaign) failures.push(`campaigns_${pack}_campaign:${campaign.campaign || "none"}`);
     if (campaign.shortlinks?.sample !== expectedSample) failures.push(`campaigns_${pack}_sample:${campaign.shortlinks?.sample || "none"}`);
     if (campaign.shortlinks?.share !== `https://fursay.com/share/${pack}`) failures.push(`campaigns_${pack}_share:${campaign.shortlinks?.share || "none"}`);
+    if (campaign.shortlinks?.bio !== `https://fursay.com/bio/${pack}`) failures.push(`campaigns_${pack}_bio:${campaign.shortlinks?.bio || "none"}`);
     if (campaign.shortlinks?.creator !== expectedCreator) failures.push(`campaigns_${pack}_creator:${campaign.shortlinks?.creator || "none"}`);
     if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) failures.push(`campaigns_${pack}_home_sample_subscribe`);
     if (!campaign.landingPages?.sampleSchema?.includes("utm_source=structured_data")) failures.push(`campaigns_${pack}_schema_source`);
     if (campaign.copyKit?.primaryShortlink !== expectedSample) failures.push(`campaigns_${pack}_copy_primary_shortlink:${campaign.copyKit?.primaryShortlink || "none"}`);
+    if (campaign.copyKit?.shareShortlink !== `https://fursay.com/share/${pack}`) failures.push(`campaigns_${pack}_copy_share_shortlink:${campaign.copyKit?.shareShortlink || "none"}`);
     if (!campaign.copyKit?.qrLabel) failures.push(`campaigns_${pack}_copy_missing_qr_label`);
     if (!campaign.copyKit?.shortHeadline) failures.push(`campaigns_${pack}_copy_missing_short_headline`);
     if (!campaign.copyKit?.videoDescription?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_video_missing_sample`);
     if (!campaign.copyKit?.familyShareText?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_share_missing_sample`);
     const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
+    const expectedShareQr = `https://fursay.com/images/qr/share-${pack}.svg`;
     if (campaign.copyKit?.qrSvg !== expectedQr) failures.push(`campaigns_${pack}_qr_svg:${campaign.copyKit?.qrSvg || "none"}`);
+    if (campaign.copyKit?.shareQrSvg !== expectedShareQr) failures.push(`campaigns_${pack}_share_qr_svg:${campaign.copyKit?.shareQrSvg || "none"}`);
     if (creatorPack.sampleShortlink !== expectedSample) failures.push(`creator_kit_${pack}_sample:${creatorPack.sampleShortlink || "none"}`);
+    if (creatorPack.bioShortlink !== `https://fursay.com/bio/${pack}`) failures.push(`creator_kit_${pack}_bio:${creatorPack.bioShortlink || "none"}`);
     if (creatorPack.creatorShortlink !== expectedCreator) failures.push(`creator_kit_${pack}_creator:${creatorPack.creatorShortlink || "none"}`);
     if (creatorPack.qrSvg !== expectedQr) failures.push(`creator_kit_${pack}_qr_svg:${creatorPack.qrSvg || "none"}`);
     if (!creatorPack.trackedLandingUrl?.includes(`subscribe=${pack}`)) failures.push(`creator_kit_${pack}_missing_subscribe`);
@@ -794,6 +822,15 @@ async function checkDiscoveryFiles(baseUrl) {
         failures.push(`campaigns_${pack}_qr_svg_unreadable:${error instanceof Error ? error.message : String(error)}`);
       }
     }
+    if (campaign.copyKit?.shareQrSvg === expectedShareQr) {
+      try {
+        const svg = await readAssetText(baseUrl, campaign.copyKit.shareQrSvg);
+        if (!svg.includes("<svg") || !svg.includes("<path")) failures.push(`campaigns_${pack}_share_qr_svg_invalid`);
+        if (Buffer.byteLength(svg) < 1000) failures.push(`campaigns_${pack}_share_qr_svg_too_small`);
+      } catch (error) {
+        failures.push(`campaigns_${pack}_share_qr_svg_unreadable:${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
     if (!campaign.ctaSources?.length) failures.push(`campaigns_${pack}_missing_cta_sources`);
   }
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
@@ -804,6 +841,9 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   for (const route of ["https://fursay.com/share/koko", "https://fursay.com/share/noor"]) {
     if (!siteHealth.routes?.share?.includes(route)) failures.push(`site_health_missing_share_route:${route}`);
+  }
+  for (const route of ["https://fursay.com/bio/koko", "https://fursay.com/bio/noor"]) {
+    if (!siteHealth.routes?.bio?.includes(route)) failures.push(`site_health_missing_bio_route:${route}`);
   }
   for (const route of ["https://fursay.com/creator/koko", "https://fursay.com/creator/noor"]) {
     if (!siteHealth.routes?.creator?.includes(route)) failures.push(`site_health_missing_creator_route:${route}`);
@@ -827,6 +867,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("site_health_bad_noor_sample");
   if (siteHealth.funnels?.koko?.share !== "https://fursay.com/share/koko") failures.push("site_health_bad_koko_share");
   if (siteHealth.funnels?.noor?.share !== "https://fursay.com/share/noor") failures.push("site_health_bad_noor_share");
+  if (siteHealth.funnels?.koko?.bio !== "https://fursay.com/bio/koko") failures.push("site_health_bad_koko_bio");
+  if (siteHealth.funnels?.noor?.bio !== "https://fursay.com/bio/noor") failures.push("site_health_bad_noor_bio");
   if (siteHealth.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("site_health_bad_koko_creator");
   if (siteHealth.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("site_health_bad_noor_creator");
   if (siteHealth.funnels?.koko?.status !== "active") failures.push(`site_health_koko_status:${siteHealth.funnels?.koko?.status || "none"}`);
@@ -848,7 +890,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "social_preview_metadata", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "bio_shortlink", "social_preview_metadata", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
