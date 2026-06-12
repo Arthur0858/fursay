@@ -469,6 +469,16 @@ async function readDiscoveryFile(baseUrl, fileName) {
   return readFile(resolve(SITE_DIR, fileName), "utf8");
 }
 
+async function readAssetText(baseUrl, assetUrl) {
+  const url = new URL(assetUrl);
+  if (baseUrl) {
+    const response = await fetch(new URL(url.pathname, baseUrl));
+    if (!response.ok) throw new Error(`${url.pathname} status ${response.status}`);
+    return response.text();
+  }
+  return readFile(resolve(SITE_DIR, `.${url.pathname}`), "utf8");
+}
+
 async function checkDiscoveryFiles(baseUrl) {
   const failures = [];
   const sitemap = await readDiscoveryFile(baseUrl, "sitemap.xml");
@@ -539,7 +549,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
     failures.push(`release_campaign_manifest:${release.deployment?.campaignManifest || "none"}`);
   }
-  if (release.liveExpectations?.cacheHeaderChecks !== 13) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 15) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
   if (campaigns.attributionContract?.endpoint !== "/api/subscribe") failures.push("campaigns_bad_endpoint");
@@ -558,6 +568,17 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!campaign.copyKit?.shortHeadline) failures.push(`campaigns_${pack}_copy_missing_short_headline`);
     if (!campaign.copyKit?.videoDescription?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_video_missing_sample`);
     if (!campaign.copyKit?.familyShareText?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_share_missing_sample`);
+    const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
+    if (campaign.copyKit?.qrSvg !== expectedQr) failures.push(`campaigns_${pack}_qr_svg:${campaign.copyKit?.qrSvg || "none"}`);
+    if (campaign.copyKit?.qrSvg === expectedQr) {
+      try {
+        const svg = await readAssetText(baseUrl, campaign.copyKit.qrSvg);
+        if (!svg.includes("<svg") || !svg.includes("<path")) failures.push(`campaigns_${pack}_qr_svg_invalid`);
+        if (Buffer.byteLength(svg) < 1000) failures.push(`campaigns_${pack}_qr_svg_too_small`);
+      } catch (error) {
+        failures.push(`campaigns_${pack}_qr_svg_unreadable:${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
     if (!campaign.ctaSources?.length) failures.push(`campaigns_${pack}_missing_cta_sources`);
   }
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
@@ -589,7 +610,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {

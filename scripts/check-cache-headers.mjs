@@ -35,6 +35,18 @@ const CHECKS = [
     contentTypeIncludes: "image/webp",
   },
   {
+    path: "/images/qr/sample-koko.svg",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/svg+xml",
+  },
+  {
+    path: "/images/qr/sample-noor.svg",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/svg+xml",
+  },
+  {
     path: "/site-health.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],

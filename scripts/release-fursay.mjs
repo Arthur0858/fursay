@@ -129,7 +129,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 17,
-      cacheHeaderChecks: 13,
+      cacheHeaderChecks: 15,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -179,6 +179,7 @@ function writeCampaignManifest(siteDir, source) {
           videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
           familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
           primaryShortlink: "https://fursay.com/sample/koko",
+          qrSvg: "https://fursay.com/images/qr/sample-koko.svg",
         },
         ctaSources: [
           "home_koko_weekly_pack",
@@ -209,6 +210,7 @@ function writeCampaignManifest(siteDir, source) {
           videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
           familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
           primaryShortlink: "https://fursay.com/sample/noor",
+          qrSvg: "https://fursay.com/images/qr/sample-noor.svg",
         },
         ctaSources: [
           "home_noor_weekly_pack",
