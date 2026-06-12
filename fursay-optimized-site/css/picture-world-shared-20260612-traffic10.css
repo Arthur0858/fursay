@@ -2175,7 +2175,8 @@ body.picture-world .public-share-actions {
   justify-content: flex-end !important;
   gap: 8px !important;
 }
-body.picture-world .public-share-actions a {
+body.picture-world .public-share-actions a,
+body.picture-world .public-share-actions button {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -2186,13 +2187,25 @@ body.picture-world .public-share-actions a {
   background: rgba(255, 255, 255, 0.76) !important;
   color: #4a3a2f !important;
   text-decoration: none !important;
+  font: inherit !important;
   font-size: 0.9rem !important;
   font-weight: 900 !important;
+  cursor: pointer !important;
   box-shadow: 0 3px 0 rgba(88, 67, 44, 0.08) !important;
 }
-body.picture-world .public-share-actions a:focus-visible {
+body.picture-world .public-share-actions button {
+  border-style: dashed !important;
+}
+body.picture-world .public-share-actions a:focus-visible,
+body.picture-world .public-share-actions button:focus-visible {
   outline: 3px solid rgba(46, 157, 95, 0.28) !important;
   outline-offset: 2px !important;
+}
+body.picture-world .public-share-status {
+  min-height: 1.2em !important;
+  color: #4f7c53 !important;
+  font-size: 0.86rem !important;
+  font-weight: 900 !important;
 }
 body.picture-world .share-strip {
   padding: clamp(34px, 5vw, 58px) clamp(18px, 5vw, 52px) !important;
@@ -2604,7 +2617,8 @@ body.picture-world .creator-qr span {
   body.picture-world .public-share-actions {
     justify-content: stretch !important;
   }
-  body.picture-world .public-share-actions a {
+  body.picture-world .public-share-actions a,
+  body.picture-world .public-share-actions button {
     flex: 1 1 160px !important;
   }
   body.picture-world .share-strip-inner {

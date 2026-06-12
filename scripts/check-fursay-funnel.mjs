@@ -31,7 +31,7 @@ function taipeiDateString(date = new Date()) {
 
 function urlPath(value) {
   try {
-    return new URL(value).pathname;
+    return new URL(value, "https://fursay.com").pathname;
   } catch {
     return "";
   }
@@ -345,6 +345,10 @@ async function checkPage(browser, baseUrl, path) {
           type: anchor.getAttribute("data-public-share-link") || "",
           href: anchor.href,
         })),
+        copyButtons: [...panel.querySelectorAll("[data-copy-public-share-link]")].map((button) => ({
+          type: button.getAttribute("data-public-share-copy") || "",
+          value: button.getAttribute("data-copy-public-share-link") || "",
+        })),
       })),
       storyPackSchemas: qa('script[type="application/ld+json"]').flatMap((script) => {
         try {
@@ -523,9 +527,44 @@ async function checkPage(browser, baseUrl, path) {
     if (!lineLink.startsWith("https://social-plugins.line.me/lineit/share?") || !decodeURIComponent(lineLink).includes(`https://fursay.com/share/${expectedPack}`)) {
       failures.push(`bad_${expectedPack}_public_line_link:${lineLink || "none"}`);
     }
+    const publicShareCopies = new Map((publicSharePanel?.copyButtons || []).map((button) => [button.type, button.value]));
+    if (urlPath(publicShareCopies.get("family")) !== `/share/${expectedPack}`) {
+      failures.push(`bad_${expectedPack}_public_family_copy:${publicShareCopies.get("family") || "none"}`);
+    }
+    if (urlPath(publicShareCopies.get("creator")) !== `/creator/${expectedPack}/youtube`) {
+      failures.push(`bad_${expectedPack}_public_creator_copy:${publicShareCopies.get("creator") || "none"}`);
+    }
     if (publicSharePanel && !/(creator|創作者|المبدعين|فيديو|video)/i.test(publicSharePanel.text)) {
       failures.push(`bad_${expectedPack}_public_share_copy`);
     }
+    const publicCopyState = await page.evaluate((pack) => {
+      const panel = document.querySelector(`[data-public-share="${pack}"]`);
+      const button = panel?.querySelector('[data-public-share-copy="family"]');
+      if (!panel || !button) return { clicked: false };
+      const writes = [];
+      const originalClipboard = navigator.clipboard;
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          writeText: async (value) => {
+            writes.push(value);
+          },
+        },
+      });
+      button.click();
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const status = panel.querySelector("[data-public-share-status]")?.textContent.trim() || "";
+          Object.defineProperty(navigator, "clipboard", { configurable: true, value: originalClipboard });
+          resolve({ clicked: true, writes, status });
+        }, 50);
+      });
+    }, expectedPack);
+    if (!publicCopyState.clicked) failures.push(`bad_${expectedPack}_public_copy_not_clickable`);
+    if (urlPath(publicCopyState.writes?.[0] || "") !== `/share/${expectedPack}`) {
+      failures.push(`bad_${expectedPack}_public_copy_write:${publicCopyState.writes?.[0] || "none"}`);
+    }
+    if (!publicCopyState.status) failures.push(`bad_${expectedPack}_public_copy_status`);
     const storyPackSchema = data.storyPackSchemas.find((schema) => (
       !schema.parseError
       && schema.target.includes(`subscribe=${expectedPack}`)
@@ -603,7 +642,8 @@ async function checkAttributionPayload(browser, baseUrl) {
   const url = `${baseUrl}/arabic?subscribe=noor&utm_source=family_share&utm_medium=share&utm_campaign=noor_story_funnel&utm_content=noor_pack_link`;
   const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.waitForTimeout(350);
-  await page.fill("#modalEmail, #sub-email", "funnel-smoke@example.test");
+  await page.waitForSelector("#subscribeModal.open", { timeout: 5000 });
+  await page.locator('#subscribeModal.open input[type="email"]:visible').fill("funnel-smoke@example.test");
   await page.evaluate(() => document.querySelector("#subscribeModal form")?.requestSubmit());
   await page.waitForFunction(() => document.querySelector("#subscribeModal .modal-note")?.textContent.includes("Subscribed"), null, { timeout: 5000 }).catch(() => {});
   await page.close();
@@ -813,7 +853,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260612-traffic10.css") failures.push(`release_css:${release.assets?.css || "none"}`);
-  if (release.assets?.js !== "/js/site-shared-20260613-share1.js") failures.push(`release_js:${release.assets?.js || "none"}`);
+  if (release.assets?.js !== "/js/site-shared-20260613-share2.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
     failures.push(`release_campaign_manifest:${release.deployment?.campaignManifest || "none"}`);
@@ -1039,7 +1079,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
     failures.push("site_health_missing_current_shared_css");
   }
-  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-share1.js")) {
+  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-share2.js")) {
     failures.push("site_health_missing_current_shared_js");
   }
   return {

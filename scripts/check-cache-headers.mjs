@@ -23,7 +23,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20260613-share1.js",
+    path: "/js/site-shared-20260613-share2.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",
