@@ -912,6 +912,10 @@ async function checkDiscoveryFiles(baseUrl) {
       failures.push("deploy_readiness_missing_artifact_gate");
     }
     if (!deployReadinessRaw.includes("git_missing_origin_remote")) failures.push("deploy_readiness_missing_remote_gate");
+    const releaseScript = await readRepoFile("scripts/release-fursay.mjs");
+    if (!releaseScript.includes("function writeSitemap") || !releaseScript.includes("writeSitemap(siteDir)")) {
+      failures.push("release_script_missing_sitemap_writer");
+    }
   }
   if (!creatorKitPage.includes('<body class="picture-world creator-kit-page">')) failures.push("creator_kit_page_missing_body_class");
   if (!creatorKitPage.includes('data-creator-kit-pack="koko"')) failures.push("creator_kit_page_missing_koko_pack");

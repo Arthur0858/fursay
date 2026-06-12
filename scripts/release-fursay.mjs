@@ -153,8 +153,66 @@ function writeReleaseManifest() {
     },
   };
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
   writeVideoDiscovery(siteDir, source);
+}
+
+function sitemapUrl(loc, alternates, priority) {
+  const lastmod = taipeiDateString();
+  const alternateLines = Object.entries(alternates).map(([lang, href]) => (
+    `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`
+  ));
+  return [
+    "  <url>",
+    `    <loc>${loc}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    "    <changefreq>weekly</changefreq>",
+    `    <priority>${priority}</priority>`,
+    ...alternateLines,
+    "  </url>",
+  ].join("\n");
+}
+
+function writeSitemap(siteDir) {
+  const homeAlternates = {
+    en: "https://fursay.com/",
+    "zh-TW": "https://fursay.com/zh/",
+    ar: "https://fursay.com/ar/",
+    "x-default": "https://fursay.com/",
+  };
+  const kokoAlternates = {
+    en: "https://fursay.com/koko",
+    "zh-TW": "https://fursay.com/zh/koko",
+    ar: "https://fursay.com/ar/koko",
+    "x-default": "https://fursay.com/koko",
+  };
+  const noorAlternates = {
+    en: "https://fursay.com/arabic",
+    "zh-TW": "https://fursay.com/zh/arabic",
+    ar: "https://fursay.com/ar/arabic",
+    "x-default": "https://fursay.com/arabic",
+  };
+  const entries = [
+    sitemapUrl("https://fursay.com/", homeAlternates, "1.0"),
+    sitemapUrl("https://fursay.com/zh/", homeAlternates, "0.8"),
+    sitemapUrl("https://fursay.com/ar/", homeAlternates, "0.8"),
+    sitemapUrl("https://fursay.com/koko", kokoAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/zh/koko", kokoAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/ar/koko", kokoAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/arabic", noorAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/zh/arabic", noorAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/ar/arabic", noorAlternates, "0.7"),
+  ];
+  const sitemap = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    entries.join("\n\n"),
+    "</urlset>",
+    "",
+  ].join("\n");
+  writeFileSync(resolve(siteDir, "sitemap.xml"), sitemap);
 }
 
 function campaignBase(source) {
