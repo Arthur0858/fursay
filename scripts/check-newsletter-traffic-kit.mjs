@@ -72,6 +72,17 @@ async function checkCreatorPlacementRedirect(baseUrl, pack, placement, expected)
   return failures;
 }
 
+async function checkSvgAsset(url) {
+  const response = await fetch(url);
+  const body = await response.text();
+  const failures = [];
+  if (!response.ok) failures.push(`status:${response.status}`);
+  if (!response.headers.get("content-type")?.includes("image/svg+xml")) failures.push("content_type");
+  if (!body.includes("<svg") || !body.includes("<path")) failures.push("svg_body");
+  if (Buffer.byteLength(body) < 1000) failures.push("too_small");
+  return failures;
+}
+
 async function checkCreatorKitBrowser(baseUrl) {
   if (!baseUrl) {
     return { failures: [], data: { skipped: true, reason: "local content check only" } };
@@ -194,8 +205,9 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (data.horizontalOverflow > 2) failures.push(`creator_kit_page_horizontal_overflow:${data.horizontalOverflow}`);
   if (data.qrImages.length !== 2) failures.push(`creator_kit_page_qr_count:${data.qrImages.length}`);
   for (const image of data.qrImages) {
-    if (!image.complete || image.naturalWidth <= 0) failures.push(`creator_kit_page_broken_qr:${image.src || "none"}`);
     if (!image.alt.includes("https://fursay.com/sample/")) failures.push(`creator_kit_page_qr_alt:${image.alt || "none"}`);
+    const assetFailures = await checkSvgAsset(image.src);
+    if (assetFailures.length) failures.push(`creator_kit_page_broken_qr:${image.src || "none"}:${assetFailures.join(",")}`);
   }
   if (consoleMessages.some((message) => message.type === "error")) failures.push("creator_kit_page_console_error");
   if (failedRequests.length) failures.push(`creator_kit_page_failed_requests:${failedRequests.length}`);
