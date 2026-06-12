@@ -148,7 +148,7 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 20) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (data.copyButtonCount !== 30) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
   for (const value of [
     `${baseUrl}/creator/koko`,
     `${baseUrl}/sample/koko`,
@@ -156,12 +156,21 @@ async function checkCreatorKitBrowser(baseUrl) {
     `${baseUrl}/creator/koko/youtube`,
     `${baseUrl}/creator/koko/social`,
     `${baseUrl}/creator/koko/newsletter`,
+    `${baseUrl}/video-discovery.json`,
+    "https://www.youtube.com/@KokosForest",
+    "https://www.youtube.com/@KokosForest/videos",
+    "https://www.youtube.com/@KokosForest/playlists",
+    "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
     `${baseUrl}/creator/noor`,
     `${baseUrl}/sample/noor`,
     `${baseUrl}/bio/noor`,
     `${baseUrl}/creator/noor/youtube`,
     `${baseUrl}/creator/noor/social`,
     `${baseUrl}/creator/noor/newsletter`,
+    "https://www.youtube.com/@ArabicKidsChinese",
+    "https://www.youtube.com/@ArabicKidsChinese/videos",
+    "https://www.youtube.com/@ArabicKidsChinese/playlists",
+    "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
   ]) {
     if (!data.copyValues.some((copyValue) => copyValue.includes(value))) failures.push(`creator_kit_page_copy_missing:${value}`);
   }
@@ -207,6 +216,11 @@ async function main() {
     if (item.placementLinks?.youtubeDescription?.shortlink !== expectedYoutubePlacement) failures.push(`${pack}_bad_youtube_placement`);
     if (item.placementLinks?.socialCaption?.shortlink !== expectedSocialPlacement) failures.push(`${pack}_bad_social_placement`);
     if (item.placementLinks?.newsletterBlurb?.shortlink !== expectedNewsletterPlacement) failures.push(`${pack}_bad_newsletter_placement`);
+    if (item.videoDiscovery?.manifest !== "https://fursay.com/video-discovery.json") failures.push(`${pack}_bad_video_manifest`);
+    if (!item.videoDiscovery?.youtubeChannel?.includes(pack === "koko" ? "@KokosForest" : "@ArabicKidsChinese")) failures.push(`${pack}_bad_video_channel`);
+    if (!item.videoDiscovery?.youtubeVideos?.endsWith("/videos")) failures.push(`${pack}_bad_video_videos`);
+    if (!item.videoDiscovery?.youtubePlaylists?.endsWith("/playlists")) failures.push(`${pack}_bad_video_playlists`);
+    if (!item.videoDiscovery?.playlistEmbed?.startsWith("https://www.youtube-nocookie.com/embed/videoseries?list=UU")) failures.push(`${pack}_bad_video_embed`);
     if (!item.newsletterBlurb?.includes(expectedNewsletterPlacement)) failures.push(`${pack}_newsletter_blurb_missing_placement`);
     if (!item.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`${pack}_youtube_missing_placement`);
     if (!item.socialCaption?.includes(expectedSocialPlacement)) failures.push(`${pack}_social_missing_placement`);
@@ -218,6 +232,9 @@ async function main() {
     if (!creatorKitPage.includes(expectedYoutubePlacement)) failures.push(`${pack}_creator_page_missing_youtube_placement`);
     if (!creatorKitPage.includes(expectedSocialPlacement)) failures.push(`${pack}_creator_page_missing_social_placement`);
     if (!creatorKitPage.includes(expectedNewsletterPlacement)) failures.push(`${pack}_creator_page_missing_newsletter_placement`);
+    for (const value of Object.values(item.videoDiscovery || {})) {
+      if (!creatorKitPage.includes(value)) failures.push(`${pack}_creator_page_missing_video_discovery`);
+    }
     if (!creatorKitPage.includes("data-copy-creator-kit")) failures.push(`${pack}_creator_page_missing_copy_buttons`);
     failures.push(...await checkCreatorRedirect(args.baseUrl, pack, expectedCampaign));
     failures.push(...await checkCreatorPlacementRedirect(args.baseUrl, pack, "youtube", {
