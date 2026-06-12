@@ -23,7 +23,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20260613-share2.js",
+    path: "/js/site-shared-20260613-attribution1.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",
@@ -33,6 +33,18 @@ const CHECKS = [
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "image/webp",
+  },
+  {
+    path: "/og-koko.png",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/png",
+  },
+  {
+    path: "/og-noor.png",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/png",
   },
   {
     path: "/images/qr/sample-koko.svg",

@@ -174,7 +174,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 33,
+      cacheHeaderChecks: 35,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },

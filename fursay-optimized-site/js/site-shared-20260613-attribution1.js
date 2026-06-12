@@ -99,6 +99,13 @@
       if (sampleLinkButton) {
         event.preventDefault();
         copySampleLink(sampleLinkButton);
+        return;
+      }
+
+      var publicShareButton = event.target.closest('[data-copy-public-share-link]');
+      if (publicShareButton) {
+        event.preventDefault();
+        copyPublicShareLink(publicShareButton);
       }
     });
 
@@ -207,7 +214,8 @@
         sampleLink: '複製樣張短連結',
         sampleLinkKoko: '複製叩叩樣張',
         sampleLinkNoor: '複製努爾樣張',
-        sampleLinkCopied: '樣張短連結已複製'
+        sampleLinkCopied: '樣張短連結已複製',
+        publicShareCopied: '分享連結已複製'
       };
     }
     if (lang === 'ar') {
@@ -228,7 +236,8 @@
         sampleLink: 'نسخ رابط النموذج',
         sampleLinkKoko: 'نسخ نموذج كوكو',
         sampleLinkNoor: 'نسخ نموذج نور',
-        sampleLinkCopied: 'تم نسخ رابط النموذج'
+        sampleLinkCopied: 'تم نسخ رابط النموذج',
+        publicShareCopied: 'تم نسخ رابط المشاركة'
       };
     }
     return {
@@ -248,7 +257,8 @@
       sampleLink: 'Copy sample link',
       sampleLinkKoko: 'Copy Koko sample',
       sampleLinkNoor: 'Copy Noor sample',
-      sampleLinkCopied: 'Sample link copied'
+      sampleLinkCopied: 'Sample link copied',
+      publicShareCopied: 'Share link copied'
     };
   }
 
@@ -388,6 +398,24 @@
         window.prompt(text.sampleLink, url);
       }
       if (status) status.textContent = text.sampleLinkCopied;
+    } catch (e) {
+      if (status) status.textContent = '';
+    }
+  }
+
+  async function copyPublicShareLink(button) {
+    var text = localeText();
+    var url = button.getAttribute('data-copy-public-share-link') || '';
+    var panel = button.closest('[data-public-share]');
+    var status = panel ? panel.querySelector('[data-public-share-status]') : null;
+    try {
+      var absoluteUrl = new URL(url, window.location.origin).toString();
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(absoluteUrl);
+      } else {
+        window.prompt(button.textContent.trim() || text.fallback, absoluteUrl);
+      }
+      if (status) status.textContent = text.publicShareCopied;
     } catch (e) {
       if (status) status.textContent = '';
     }

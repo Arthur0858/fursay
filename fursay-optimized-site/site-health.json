@@ -155,6 +155,7 @@
     "video_playlist_manifest",
     "video_subscribe_action",
     "social_preview_metadata",
+    "story_world_social_preview_image",
     "sample_pack_schema",
     "story_world_faq_schema",
     "public_creator_share_panel",
@@ -181,6 +182,7 @@
   "successSignals": [
     "modal_preselect_matches_pack",
     "shortlink_redirect_keeps_utm",
+    "shortlink_subscribe_attribution",
     "subscribe_payload_keeps_attribution",
     "no_live_smoke_mailerlite_call",
     "no_mobile_horizontal_overflow",
@@ -199,7 +201,7 @@
       "/css/picture-world-shared-20260612-traffic10.css"
     ],
     "js": [
-      "/js/site-shared-20260613-share2.js"
+      "/js/site-shared-20260613-attribution1.js"
     ]
   }
 }

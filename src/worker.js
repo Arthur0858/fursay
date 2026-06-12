@@ -337,7 +337,11 @@ function attributionFields(attribution, env) {
   const optionalFieldNames = {
     subscribe_intent: env.MAILERLITE_FIELD_SUBSCRIBE_INTENT,
     entry_pack: env.MAILERLITE_FIELD_ENTRY_PACK,
-    modal_preselect: env.MAILERLITE_FIELD_MODAL_PRESELECT
+    modal_preselect: env.MAILERLITE_FIELD_MODAL_PRESELECT,
+    ref: env.MAILERLITE_FIELD_REF,
+    source_id: env.MAILERLITE_FIELD_SOURCE_ID,
+    creator: env.MAILERLITE_FIELD_CREATOR,
+    placement: env.MAILERLITE_FIELD_PLACEMENT
   };
 
   const fields = {};
