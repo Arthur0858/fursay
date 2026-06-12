@@ -58,6 +58,18 @@ const CHECKS = [
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     locationIncludes: ["/arabic", "subscribe=noor", "utm_source=shortlink"],
   },
+  {
+    path: "/sample/koko",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_content=sample_koko"],
+  },
+  {
+    path: "/sample/noor",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_content=sample_noor"],
+  },
 ];
 
 function parseArgs() {

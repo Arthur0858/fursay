@@ -28,6 +28,8 @@ Useful actions:
 - Subscribe to the Koko or Noor weekly story pack.
 - Join Koko's weekly English story pack: https://fursay.com/join/koko
 - Join Noor's weekly Chinese story pack: https://fursay.com/join/noor
+- Preview Koko's sample story pack: https://fursay.com/sample/koko
+- Preview Noor's sample story pack: https://fursay.com/sample/noor
 
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml

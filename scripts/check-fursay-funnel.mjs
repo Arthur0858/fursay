@@ -43,6 +43,20 @@ const JOIN_ROUTES = [
     campaign: "noor_story_funnel",
     content: "join_noor",
   },
+  {
+    path: "/sample/koko",
+    targetPath: "/koko",
+    pack: "koko",
+    campaign: "koko_story_funnel",
+    content: "sample_koko",
+  },
+  {
+    path: "/sample/noor",
+    targetPath: "/arabic",
+    pack: "noor",
+    campaign: "noor_story_funnel",
+    content: "sample_noor",
+  },
 ];
 
 function parseArgs() {
@@ -187,6 +201,20 @@ async function checkPage(browser, baseUrl, path) {
       shareSubscribeGroups: qa(".share-subscribe[data-open-subscribe]").map((button) => button.getAttribute("data-open-subscribe") || ""),
       packLinkUrl: document.querySelector("[data-copy-pack-link]")?.getAttribute("data-pack-url") || "",
       packLinkUrls: qa("[data-copy-pack-link]").map((button) => button.getAttribute("data-pack-url") || ""),
+      storyPackSchemas: qa('script[type="application/ld+json"]').flatMap((script) => {
+        try {
+          const parsed = JSON.parse(script.textContent);
+          const nodes = Array.isArray(parsed) ? parsed : (parsed["@graph"] || [parsed]);
+          return nodes.filter((node) => node && node["@type"] === "ItemList").map((node) => ({
+            name: node.name || "",
+            itemCount: Array.isArray(node.itemListElement) ? node.itemListElement.length : 0,
+            target: node.potentialAction?.target || "",
+            isPartOf: node.isPartOf?.name || "",
+          }));
+        } catch {
+          return [{ parseError: true }];
+        }
+      }),
     };
   }, { homePages: HOME_PAGES, statusCode: status });
 
@@ -291,6 +319,20 @@ async function checkPage(browser, baseUrl, path) {
     }
     if (!data.packLinkUrl.includes(`utm_content=${expectedPack}_pack_link`)) {
       failures.push("bad_pack_deep_link_content");
+    }
+    const storyPackSchema = data.storyPackSchemas.find((schema) => (
+      !schema.parseError
+      && schema.target.includes(`subscribe=${expectedPack}`)
+    ));
+    if (!storyPackSchema) failures.push(`missing_${expectedPack}_story_pack_schema`);
+    if (storyPackSchema?.itemCount !== 3) failures.push(`bad_${expectedPack}_story_pack_schema_items:${storyPackSchema?.itemCount || 0}`);
+    const expectedCampaign = expectedPack === "koko" ? "koko_story_funnel" : "noor_story_funnel";
+    if (!storyPackSchema?.target?.includes(`utm_campaign=${expectedCampaign}`)) {
+      failures.push(`bad_${expectedPack}_story_pack_schema_campaign:${storyPackSchema?.target || "none"}`);
+    }
+    const expectedContent = expectedPack === "koko" ? "koko_sample_pack_schema" : "noor_sample_pack_schema";
+    if (!storyPackSchema?.target?.includes(`utm_content=${expectedContent}`)) {
+      failures.push(`bad_${expectedPack}_story_pack_schema_content:${storyPackSchema?.target || "none"}`);
     }
   }
   if (!data.shareUrl.includes("utm_source=family_share") || !data.shareUrl.includes("utm_medium=share")) {
@@ -435,6 +477,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/join/koko") || !llms.includes("https://fursay.com/join/noor")) {
     failures.push("llms_missing_join_routes");
   }
+  if (!llms.includes("https://fursay.com/sample/koko") || !llms.includes("https://fursay.com/sample/noor")) {
+    failures.push("llms_missing_sample_routes");
+  }
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
   if (siteHealth.platform !== "cloudflare-workers-static-assets") failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
   if (siteHealth.deployment?.workerName !== "fursay") failures.push(`site_health_worker:${siteHealth.deployment?.workerName || "none"}`);
@@ -445,8 +490,13 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
     if (!siteHealth.routes?.join?.includes(route)) failures.push(`site_health_missing_join_route:${route}`);
   }
+  for (const route of ["https://fursay.com/sample/koko", "https://fursay.com/sample/noor"]) {
+    if (!siteHealth.routes?.sample?.includes(route)) failures.push(`site_health_missing_sample_route:${route}`);
+  }
   if (siteHealth.funnels?.koko?.join !== "https://fursay.com/join/koko") failures.push("site_health_bad_koko_join");
   if (siteHealth.funnels?.noor?.join !== "https://fursay.com/join/noor") failures.push("site_health_bad_noor_join");
+  if (siteHealth.funnels?.koko?.sample !== "https://fursay.com/sample/koko") failures.push("site_health_bad_koko_sample");
+  if (siteHealth.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("site_health_bad_noor_sample");
   if (siteHealth.funnels?.koko?.status !== "active") failures.push(`site_health_koko_status:${siteHealth.funnels?.koko?.status || "none"}`);
   if (siteHealth.funnels?.noor?.status !== "active") failures.push(`site_health_noor_status:${siteHealth.funnels?.noor?.status || "none"}`);
   if (siteHealth.funnels?.koko?.campaign !== "koko_story_funnel") failures.push(`site_health_koko_campaign:${siteHealth.funnels?.koko?.campaign || "none"}`);
@@ -466,7 +516,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {

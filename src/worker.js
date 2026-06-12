@@ -38,6 +38,18 @@ function joinRedirectUrl(url) {
       pack: "noor",
       campaign: "noor_story_funnel",
       content: "join_noor"
+    },
+    "/sample/koko": {
+      target: "/koko",
+      pack: "koko",
+      campaign: "koko_story_funnel",
+      content: "sample_koko"
+    },
+    "/sample/noor": {
+      target: "/arabic",
+      pack: "noor",
+      campaign: "noor_story_funnel",
+      content: "sample_noor"
     }
   };
   const route = routes[path];

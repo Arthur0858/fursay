@@ -21,6 +21,10 @@
     "join": [
       "https://fursay.com/join/koko",
       "https://fursay.com/join/noor"
+    ],
+    "sample": [
+      "https://fursay.com/sample/koko",
+      "https://fursay.com/sample/noor"
     ]
   },
   "funnels": {
@@ -29,6 +33,7 @@
       "primaryGoal": "weekly_story_pack_subscribe",
       "campaign": "koko_story_funnel",
       "join": "https://fursay.com/join/koko",
+      "sample": "https://fursay.com/sample/koko",
       "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       "trackedIntents": [
         "subscribe_intent",
@@ -53,6 +58,7 @@
       "primaryGoal": "weekly_story_pack_subscribe",
       "campaign": "noor_story_funnel",
       "join": "https://fursay.com/join/noor",
+      "sample": "https://fursay.com/sample/noor",
       "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       "trackedIntents": [
         "subscribe_intent",
@@ -84,6 +90,8 @@
   "trafficSurfaces": [
     "homepage_split_cta",
     "homepage_sample_deep_link",
+    "sample_shortlink",
+    "sample_pack_schema",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",
