@@ -648,7 +648,9 @@ async function checkJoinRedirects(baseUrl) {
 
 async function readDiscoveryFile(baseUrl, fileName) {
   if (baseUrl) {
-    const response = await fetch(`${baseUrl}/${fileName}`);
+    const url = new URL(fileName, `${baseUrl}/`);
+    url.searchParams.set("fursay_discovery_smoke", SMOKE_ID);
+    const response = await fetch(url);
     if (!response.ok) throw new Error(`${fileName} status ${response.status}`);
     return response.text();
   }
