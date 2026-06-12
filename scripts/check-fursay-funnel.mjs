@@ -266,6 +266,14 @@ async function checkPage(browser, baseUrl, path) {
       lang: document.documentElement.lang || "",
       dir: document.documentElement.dir || "",
       canonical: document.querySelector('link[rel="canonical"]')?.href || "",
+      socialPreview: {
+        ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute("content") || "",
+        ogImageWidth: document.querySelector('meta[property="og:image:width"]')?.getAttribute("content") || "",
+        ogImageHeight: document.querySelector('meta[property="og:image:height"]')?.getAttribute("content") || "",
+        ogImageAlt: document.querySelector('meta[property="og:image:alt"]')?.getAttribute("content") || "",
+        twitterImage: document.querySelector('meta[name="twitter:image"]')?.getAttribute("content") || "",
+        twitterImageAlt: document.querySelector('meta[name="twitter:image:alt"]')?.getAttribute("content") || "",
+      },
       hreflangCount: qa('link[rel="alternate"][hreflang]').length,
       h1Count: qa("h1").length,
       h1Text,
@@ -332,6 +340,12 @@ async function checkPage(browser, baseUrl, path) {
   const failures = [];
   if (status !== 200) failures.push(`status:${status}`);
   if (!data.canonical) failures.push("missing_canonical");
+  if (data.socialPreview.ogImage !== "https://fursay.com/og-image.png") failures.push(`bad_og_image:${data.socialPreview.ogImage || "none"}`);
+  if (data.socialPreview.ogImageWidth !== "1200") failures.push(`bad_og_image_width:${data.socialPreview.ogImageWidth || "none"}`);
+  if (data.socialPreview.ogImageHeight !== "630") failures.push(`bad_og_image_height:${data.socialPreview.ogImageHeight || "none"}`);
+  if (!data.socialPreview.ogImageAlt.includes("Fursay")) failures.push(`bad_og_image_alt:${data.socialPreview.ogImageAlt || "none"}`);
+  if (data.socialPreview.twitterImage !== "https://fursay.com/og-image.png") failures.push(`bad_twitter_image:${data.socialPreview.twitterImage || "none"}`);
+  if (!data.socialPreview.twitterImageAlt.includes("Fursay")) failures.push(`bad_twitter_image_alt:${data.socialPreview.twitterImageAlt || "none"}`);
   if (data.hreflangCount < 4) failures.push(`short_hreflang:${data.hreflangCount}`);
   if (data.h1Count !== 1) failures.push(`h1_count:${data.h1Count}`);
   if (MERGED_TEXT_PATTERNS.some((pattern) => pattern.test(data.h1Text))) failures.push(`merged_h1_text:${data.h1Text}`);
@@ -834,7 +848,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "social_preview_metadata", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
