@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -59,10 +59,88 @@ function gitRemote() {
   return result.status === 0 ? result.stdout.trim() : "";
 }
 
+function gitValue(args, fallback = "") {
+  const result = spawnSync("git", args, {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    stdio: "pipe",
+  });
+  return result.status === 0 ? result.stdout.trim() : fallback;
+}
+
+function taipeiDateString(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function writeReleaseManifest() {
+  const siteDir = resolve(process.cwd(), "fursay-optimized-site");
+  const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
+  const css = siteStructure.sharedAssets?.css?.find((asset) => asset.includes("picture-world-shared-")) || "";
+  const js = siteStructure.sharedAssets?.js?.[0] || "";
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    releasedAt: taipeiDateString(),
+    source: {
+      branch: gitValue(["branch", "--show-current"], "unknown"),
+      commit: gitValue(["rev-parse", "--short", "HEAD"], "unknown"),
+      summary: gitValue(["log", "-1", "--pretty=%s"], "unknown"),
+    },
+    deployment: {
+      workerName: "fursay",
+      assetsBinding: "ASSETS",
+      releaseCommand: "node scripts/release-fursay.mjs",
+    },
+    funnels: {
+      koko: {
+        campaign: "koko_story_funnel",
+        join: "https://fursay.com/join/koko",
+        sample: "https://fursay.com/sample/koko",
+        deepLink: "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
+      },
+      noor: {
+        campaign: "noor_story_funnel",
+        join: "https://fursay.com/join/noor",
+        sample: "https://fursay.com/sample/noor",
+        deepLink: "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
+      },
+    },
+    assets: { css, js },
+    qualityGates: [
+      "scripts/check-fursay-funnel.mjs",
+      "scripts/check-noor-list-activation.mjs",
+      "scripts/check-cache-headers.mjs",
+      "audit-fursay.mjs",
+    ],
+    liveExpectations: {
+      pages: 9,
+      funnelChecks: 17,
+      cacheHeaderChecks: 12,
+      badAuditCount: 0,
+      liveSmokeCallsMailerLite: false,
+    },
+  };
+  writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
 async function main() {
   const args = parseArgs();
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
+
+  writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);

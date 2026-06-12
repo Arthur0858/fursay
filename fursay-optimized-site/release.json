@@ -5,8 +5,8 @@
   "releasedAt": "2026-06-13",
   "source": {
     "branch": "main",
-    "commit": "0cc3c26",
-    "summary": "Add story pack schema and sample shortlinks"
+    "commit": "c13d802",
+    "summary": "Expose Fursay release manifest"
   },
   "deployment": {
     "workerName": "fursay",
