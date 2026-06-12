@@ -458,11 +458,18 @@ async function checkDiscoveryFiles(baseUrl) {
   const sitemap = await readDiscoveryFile(baseUrl, "sitemap.xml");
   const llms = await readDiscoveryFile(baseUrl, "llms.txt");
   const siteHealthRaw = await readDiscoveryFile(baseUrl, "site-health.json");
+  const releaseRaw = await readDiscoveryFile(baseUrl, "release.json");
   let siteHealth = {};
+  let release = {};
   try {
     siteHealth = JSON.parse(siteHealthRaw);
   } catch {
     failures.push("site_health_invalid_json");
+  }
+  try {
+    release = JSON.parse(releaseRaw);
+  } catch {
+    failures.push("release_invalid_json");
   }
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
   const expectedLastmod = taipeiDateString();
@@ -481,12 +488,27 @@ async function checkDiscoveryFiles(baseUrl) {
     failures.push("llms_missing_sample_routes");
   }
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
+  if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
   if (siteHealth.platform !== "cloudflare-workers-static-assets") failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
   if (siteHealth.deployment?.workerName !== "fursay") failures.push(`site_health_worker:${siteHealth.deployment?.workerName || "none"}`);
   if (siteHealth.deployment?.assetsBinding !== "ASSETS") failures.push(`site_health_assets_binding:${siteHealth.deployment?.assetsBinding || "none"}`);
   if (siteHealth.deployment?.releaseCommand !== "node scripts/release-fursay.mjs") {
     failures.push(`site_health_release_command:${siteHealth.deployment?.releaseCommand || "none"}`);
   }
+  if (siteHealth.deployment?.releaseManifest !== "https://fursay.com/release.json") {
+    failures.push(`site_health_release_manifest:${siteHealth.deployment?.releaseManifest || "none"}`);
+  }
+  if (release.platform !== "cloudflare-workers-static-assets") failures.push(`release_platform:${release.platform || "none"}`);
+  if (release.deployment?.workerName !== "fursay") failures.push(`release_worker:${release.deployment?.workerName || "none"}`);
+  if (release.deployment?.releaseCommand !== "node scripts/release-fursay.mjs") {
+    failures.push(`release_command:${release.deployment?.releaseCommand || "none"}`);
+  }
+  if (!/^[0-9a-f]{7,40}$/.test(release.source?.commit || "")) failures.push(`release_commit:${release.source?.commit || "none"}`);
+  if (release.funnels?.koko?.sample !== "https://fursay.com/sample/koko") failures.push("release_bad_koko_sample");
+  if (release.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("release_bad_noor_sample");
+  if (release.assets?.css !== "/css/picture-world-shared-20260612-traffic10.css") failures.push(`release_css:${release.assets?.css || "none"}`);
+  if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
+  if (release.liveExpectations?.cacheHeaderChecks !== 12) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
     if (!siteHealth.routes?.join?.includes(route)) failures.push(`site_health_missing_join_route:${route}`);
   }
@@ -537,6 +559,7 @@ async function checkDiscoveryFiles(baseUrl) {
       expectedLastmod,
       llmsBytes: Buffer.byteLength(llms),
       siteHealthBytes: Buffer.byteLength(siteHealthRaw),
+      releaseBytes: Buffer.byteLength(releaseRaw),
       platform: siteHealth.platform || "",
     },
   };

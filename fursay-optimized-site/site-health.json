@@ -6,7 +6,8 @@
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
-    "releaseCommand": "node scripts/release-fursay.mjs"
+    "releaseCommand": "node scripts/release-fursay.mjs",
+    "releaseManifest": "https://fursay.com/release.json"
   },
   "routes": {
     "home": [
