@@ -129,6 +129,8 @@ function writeReleaseManifest() {
       campaignManifest: "https://fursay.com/campaigns.json",
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
+      shareKitManifest: "https://fursay.com/share-kit.json",
+      shareKitPage: "https://fursay.com/share-kit",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -174,7 +176,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 35,
+      cacheHeaderChecks: 37,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -182,6 +184,7 @@ function writeReleaseManifest() {
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
   writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
+  writeShareKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
 }
@@ -261,10 +264,12 @@ function campaignBase(source) {
 
 function socialShareUrls(pack) {
   const shareUrl = `https://fursay.com/share/${pack}`;
+  const whatsappUrl = `${shareUrl}?ref=whatsapp&placement=direct_social_share`;
+  const lineUrl = `${shareUrl}?ref=line&placement=direct_social_share`;
   const label = pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack";
   return {
-    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${label}: ${shareUrl}`)}`,
-    line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`,
+    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${label}: ${whatsappUrl}`)}`,
+    line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`,
   };
 }
 
@@ -451,6 +456,53 @@ function writeCreatorKit(siteDir, source, campaigns) {
   };
   writeFileSync(resolve(siteDir, "creator-kit.json"), JSON.stringify(kit, null, 2) + "\n");
   writeCreatorKitPage(siteDir, kit);
+}
+
+function writeShareKit(siteDir, source) {
+  const campaignManifest = readJson(resolve(siteDir, "campaigns.json"));
+  const packs = Object.fromEntries(Object.entries(campaignManifest.campaigns || {}).map(([pack, campaign]) => {
+    const copy = campaign.copyKit || {};
+    return [pack, {
+      title: pack === "koko" ? "Koko weekly English story pack" : "Noor 3-minute Chinese story pack",
+      audience: campaign.audience,
+      campaign: campaign.campaign,
+      storyWorld: campaign.landingPages?.storyWorld || "",
+      sampleShortlink: campaign.shortlinks?.sample || "",
+      familyShareShortlink: campaign.shortlinks?.share || "",
+      bioShortlink: campaign.shortlinks?.bio || "",
+      creatorShortlink: campaign.shortlinks?.creator || "",
+      whatsappShareUrl: copy.whatsappShareUrl || "",
+      lineShareUrl: copy.lineShareUrl || "",
+      sampleQrSvg: copy.qrSvg || "",
+      shareQrSvg: copy.shareQrSvg || "",
+      familyShareMessage: copy.familyShareMessage || "",
+      bioProfileCopy: copy.bioProfileCopy || "",
+      shortHeadline: copy.shortHeadline || "",
+      attribution: {
+        utm_source: "family_share",
+        utm_medium: "share",
+        utm_campaign: campaign.campaign,
+        utm_content: `share_sample_${pack}`,
+      },
+    }];
+  }));
+  const kit = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Public family sharing kit with copy-ready Fursay story-pack links, social share URLs, QR assets, and attribution contract.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      linksUseShortlinksWithUtmRedirects: true,
+      shortlinkManifest: "https://fursay.com/shortlinks.json",
+    },
+    packs,
+  };
+  writeFileSync(resolve(siteDir, "share-kit.json"), JSON.stringify(kit, null, 2) + "\n");
+  writeShareKitPage(siteDir, kit);
 }
 
 function buildVideoDiscoveryChannels() {
@@ -726,6 +778,108 @@ ${packCards}
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
+}
+
+function shareKitLinkRow(title, value) {
+  return `<div>
+                <dt>${escapeHtml(title)}</dt>
+                <dd>
+                  <a href="${escapeHtml(value)}">${escapeHtml(value)}</a>
+                  <button type="button" class="creator-link-copy" data-copy-share-kit data-copy-value="${escapeHtml(value)}">Copy</button>
+                </dd>
+              </div>`;
+}
+
+function shareKitCopyBlock(title, value) {
+  return `<article>
+            <div class="creator-copy-heading">
+              <h3>${escapeHtml(title)}</h3>
+              <button type="button" class="creator-copy-button" data-copy-share-kit data-copy-value="${escapeHtml(value)}">Copy</button>
+            </div>
+            <pre>${escapeHtml(value)}</pre>
+          </article>`;
+}
+
+function writeShareKitPage(siteDir, kit) {
+  const packCards = Object.entries(kit.packs).map(([pack, item]) => `
+      <section class="creator-pack" data-share-kit-pack="${escapeHtml(pack)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(item.campaign)}</p>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.audience)}</p>
+          <dl>
+            ${shareKitLinkRow("Family sample link", item.familyShareShortlink)}
+            ${shareKitLinkRow("Preview sample link", item.sampleShortlink)}
+            ${shareKitLinkRow("Bio link", item.bioShortlink)}
+            ${shareKitLinkRow("Creator link", item.creatorShortlink)}
+            ${shareKitLinkRow("WhatsApp share URL", item.whatsappShareUrl)}
+            ${shareKitLinkRow("LINE share URL", item.lineShareUrl)}
+            ${shareKitLinkRow("Sample QR asset", item.sampleQrSvg)}
+            ${shareKitLinkRow("Family share QR asset", item.shareQrSvg)}
+          </dl>
+        </div>
+        <div class="creator-copy-blocks">
+          ${shareKitCopyBlock("Family share message", item.familyShareMessage)}
+          ${shareKitCopyBlock("Bio profile copy", item.bioProfileCopy)}
+          ${shareKitCopyBlock("Short headline", item.shortHeadline)}
+        </div>
+        <div class="creator-qr-grid" aria-label="${escapeHtml(item.title)} QR assets">
+          <a class="creator-qr" href="${escapeHtml(item.sampleShortlink)}" aria-label="${escapeHtml(item.title)} sample QR code for ${escapeHtml(item.sampleShortlink)}">
+            <img src="${escapeHtml(new URL(item.sampleQrSvg).pathname)}" alt="${escapeHtml(item.title)} sample QR code for ${escapeHtml(item.sampleShortlink)}" width="160" height="160" loading="lazy">
+            <span>Sample QR</span>
+          </a>
+          <a class="creator-qr" href="${escapeHtml(item.familyShareShortlink)}" aria-label="${escapeHtml(item.title)} family share QR code for ${escapeHtml(item.familyShareShortlink)}">
+            <img src="${escapeHtml(new URL(item.shareQrSvg).pathname)}" alt="${escapeHtml(item.title)} family share QR code for ${escapeHtml(item.familyShareShortlink)}" width="160" height="160" loading="lazy">
+            <span>Share QR</span>
+          </a>
+        </div>
+      </section>`).join("\n");
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Share Kit</title>
+  <meta name="description" content="Copy-ready Fursay family share links, social captions, QR assets, and story-pack shortlinks for Koko and Noor.">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/share-kit">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+</head>
+<body class="picture-world creator-kit-page share-kit-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay family share kit</p>
+      <h1>Share Kit</h1>
+      <p>Copy-ready family links, QR assets, and short messages for sharing Koko or Noor story packs.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(kit.updatedAt)}</span>
+        <span>Commit ${escapeHtml(kit.source.commit)}</span>
+        <a href="/share-kit.json">JSON manifest</a>
+      </div>
+    </header>
+${packCards}
+  </main>
+  <script>
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy-share-kit]");
+      if (!button) return;
+      const value = button.getAttribute("data-copy-value") || "";
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = "Copy"; }, 1600);
+      } catch {
+        button.textContent = "Copy failed";
+        setTimeout(() => { button.textContent = "Copy"; }, 1800);
+      }
+    });
+  </script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
 }
 
 async function main() {

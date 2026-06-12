@@ -11,6 +11,8 @@
     "campaignManifest": "https://fursay.com/campaigns.json",
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
+    "shareKitManifest": "https://fursay.com/share-kit.json",
+    "shareKitPage": "https://fursay.com/share-kit",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
     "shortlinkManifest": "https://fursay.com/shortlinks.json",
     "sitemap": "https://fursay.com/sitemap.xml",
@@ -65,6 +67,10 @@
     "creatorKit": [
       "https://fursay.com/creator-kit",
       "https://fursay.com/creator-kit.json"
+    ],
+    "shareKit": [
+      "https://fursay.com/share-kit",
+      "https://fursay.com/share-kit.json"
     ],
     "discovery": [
       "https://fursay.com/video-discovery.json",
@@ -168,6 +174,8 @@
     "campaign_qr_card",
     "creator_kit_manifest",
     "creator_kit_page",
+    "share_kit_manifest",
+    "share_kit_page",
     "creator_shortlink",
     "creator_placement_shortlink",
     "story_world_cta",

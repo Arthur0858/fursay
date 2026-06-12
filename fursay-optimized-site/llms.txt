@@ -43,6 +43,7 @@ Useful actions:
 - Noor social creator link: https://fursay.com/creator/noor/social
 - Noor newsletter creator link: https://fursay.com/creator/noor/newsletter
 - Creator kit page: https://fursay.com/creator-kit
+- Family share kit page: https://fursay.com/share-kit
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
@@ -53,6 +54,7 @@ Technical discovery:
 - Release manifest: https://fursay.com/release.json
 - Campaign manifest: https://fursay.com/campaigns.json
 - Creator kit: https://fursay.com/creator-kit.json
+- Share kit: https://fursay.com/share-kit.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready
 - Local release gate: npm run check

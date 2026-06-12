@@ -189,8 +189,8 @@ async function checkCreatorKitBrowser(baseUrl) {
     `${baseUrl}/bio/koko`,
     `${baseUrl}/images/qr/sample-koko.svg`,
     `${baseUrl}/images/qr/share-koko.svg`,
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Koko weekly story pack: ${baseUrl}/share/koko`)}`,
-    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/koko`)}`,
+    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Koko weekly story pack: ${baseUrl}/share/koko?ref=whatsapp&placement=direct_social_share`)}`,
+    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/koko?ref=line&placement=direct_social_share`)}`,
     `Koko's Forest Adventure weekly pack is ready for family story time: ${baseUrl}/share/koko`,
     `Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: ${baseUrl}/bio/koko`,
     "UC0X4CIwf6KoUMoIHwRxN3jw",
@@ -210,8 +210,8 @@ async function checkCreatorKitBrowser(baseUrl) {
     `${baseUrl}/bio/noor`,
     `${baseUrl}/images/qr/sample-noor.svg`,
     `${baseUrl}/images/qr/share-noor.svg`,
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Noor 3-minute story pack: ${baseUrl}/share/noor`)}`,
-    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/noor`)}`,
+    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Noor 3-minute story pack: ${baseUrl}/share/noor?ref=whatsapp&placement=direct_social_share`)}`,
+    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/noor?ref=line&placement=direct_social_share`)}`,
     `Noor's Arabic Kids Chinese weekly pack is ready for family story time: ${baseUrl}/share/noor`,
     `Noor's Arabic Kids Chinese: 3-minute Chinese story packs for Arabic-speaking families. Start here: ${baseUrl}/bio/noor`,
     "UCOxmnonpfBvpiV8Vg5LEiYw",
@@ -270,10 +270,12 @@ async function main() {
     const item = creatorKit.packs?.[pack] || {};
     const expectedSample = `https://fursay.com/sample/${pack}`;
     const expectedShare = `https://fursay.com/share/${pack}`;
+    const expectedWhatsappShare = `${expectedShare}?ref=whatsapp&placement=direct_social_share`;
+    const expectedLineShare = `${expectedShare}?ref=line&placement=direct_social_share`;
     const expectedBio = `https://fursay.com/bio/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
-    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedShare}`)}`;
-    const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedShare)}`;
+    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedWhatsappShare}`)}`;
+    const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedLineShare)}`;
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;
     const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;

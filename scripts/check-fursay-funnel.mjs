@@ -552,11 +552,15 @@ async function checkPage(browser, baseUrl, path) {
       failures.push(`bad_${expectedPack}_public_creator_link:${publicShareLinks.get("creator") || "none"}`);
     }
     const whatsappLink = publicShareLinks.get("whatsapp") || "";
-    if (!whatsappLink.startsWith("https://api.whatsapp.com/send?") || !decodeURIComponent(whatsappLink).includes(`https://fursay.com/share/${expectedPack}`)) {
+    const decodedWhatsappLink = decodeURIComponent(whatsappLink);
+    if (!whatsappLink.startsWith("https://api.whatsapp.com/send?")
+      || !decodedWhatsappLink.includes(`https://fursay.com/share/${expectedPack}?ref=whatsapp&placement=direct_social_share`)) {
       failures.push(`bad_${expectedPack}_public_whatsapp_link:${whatsappLink || "none"}`);
     }
     const lineLink = publicShareLinks.get("line") || "";
-    if (!lineLink.startsWith("https://social-plugins.line.me/lineit/share?") || !decodeURIComponent(lineLink).includes(`https://fursay.com/share/${expectedPack}`)) {
+    const decodedLineLink = decodeURIComponent(lineLink);
+    if (!lineLink.startsWith("https://social-plugins.line.me/lineit/share?")
+      || !decodedLineLink.includes(`https://fursay.com/share/${expectedPack}?ref=line&placement=direct_social_share`)) {
       failures.push(`bad_${expectedPack}_public_line_link:${lineLink || "none"}`);
     }
     const publicShareCopies = new Map((publicSharePanel?.copyButtons || []).map((button) => [button.type, button.value]));
@@ -775,9 +779,11 @@ async function checkDiscoveryFiles(baseUrl) {
   const releaseRaw = await readDiscoveryFile(baseUrl, "release.json");
   const campaignsRaw = await readDiscoveryFile(baseUrl, "campaigns.json");
   const creatorKitRaw = await readDiscoveryFile(baseUrl, "creator-kit.json");
+  const shareKitRaw = await readDiscoveryFile(baseUrl, "share-kit.json");
   const videoDiscoveryRaw = await readDiscoveryFile(baseUrl, "video-discovery.json");
   const shortlinksRaw = await readDiscoveryFile(baseUrl, "shortlinks.json");
   const creatorKitPage = await readDiscoveryFile(baseUrl, "creator-kit.html");
+  const shareKitPage = await readDiscoveryFile(baseUrl, "share-kit.html");
   const packageRaw = baseUrl ? "" : await readRepoFile("package.json");
   const workflowRaw = baseUrl ? "" : await readRepoFile(".github/workflows/deploy-worker.yml");
   const deployReadinessRaw = baseUrl ? "" : await readRepoFile("scripts/check-deploy-readiness.mjs");
@@ -786,6 +792,7 @@ async function checkDiscoveryFiles(baseUrl) {
   let release = {};
   let campaigns = {};
   let creatorKit = {};
+  let shareKit = {};
   let videoDiscovery = {};
   let shortlinks = {};
   let packageJson = {};
@@ -808,6 +815,11 @@ async function checkDiscoveryFiles(baseUrl) {
     creatorKit = JSON.parse(creatorKitRaw);
   } catch {
     failures.push("creator_kit_invalid_json");
+  }
+  try {
+    shareKit = JSON.parse(shareKitRaw);
+  } catch {
+    failures.push("share_kit_invalid_json");
   }
   try {
     videoDiscovery = JSON.parse(videoDiscoveryRaw);
@@ -885,12 +897,14 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!llms.includes(route)) failures.push(`llms_missing_creator_placement:${route}`);
   }
   if (!llms.includes("https://fursay.com/creator-kit")) failures.push("llms_missing_creator_kit_page");
+  if (!llms.includes("https://fursay.com/share-kit")) failures.push("llms_missing_share_kit_page");
   if (!llms.includes("https://fursay.com/video-discovery.json")) failures.push("llms_missing_video_discovery");
   if (!llms.includes("npm run deploy:ready")) failures.push("llms_missing_deploy_readiness");
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
   if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
   if (!llms.includes("https://fursay.com/campaigns.json")) failures.push("llms_missing_campaign_manifest");
   if (!llms.includes("https://fursay.com/creator-kit.json")) failures.push("llms_missing_creator_kit");
+  if (!llms.includes("https://fursay.com/share-kit.json")) failures.push("llms_missing_share_kit");
   if (!llms.includes("https://fursay.com/shortlinks.json")) failures.push("llms_missing_shortlinks");
   if (siteHealth.platform !== "cloudflare-workers-static-assets") failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
   if (siteHealth.deployment?.workerName !== "fursay") failures.push(`site_health_worker:${siteHealth.deployment?.workerName || "none"}`);
@@ -909,6 +923,12 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (siteHealth.deployment?.creatorKitPage !== "https://fursay.com/creator-kit") {
     failures.push(`site_health_creator_kit_page:${siteHealth.deployment?.creatorKitPage || "none"}`);
+  }
+  if (siteHealth.deployment?.shareKitManifest !== "https://fursay.com/share-kit.json") {
+    failures.push(`site_health_share_kit_manifest:${siteHealth.deployment?.shareKitManifest || "none"}`);
+  }
+  if (siteHealth.deployment?.shareKitPage !== "https://fursay.com/share-kit") {
+    failures.push(`site_health_share_kit_page:${siteHealth.deployment?.shareKitPage || "none"}`);
   }
   if (siteHealth.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`site_health_video_discovery:${siteHealth.deployment?.videoDiscoveryManifest || "none"}`);
@@ -956,6 +976,12 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.creatorKitPage !== "https://fursay.com/creator-kit") {
     failures.push(`release_creator_kit_page:${release.deployment?.creatorKitPage || "none"}`);
   }
+  if (release.deployment?.shareKitManifest !== "https://fursay.com/share-kit.json") {
+    failures.push(`release_share_kit_manifest:${release.deployment?.shareKitManifest || "none"}`);
+  }
+  if (release.deployment?.shareKitPage !== "https://fursay.com/share-kit") {
+    failures.push(`release_share_kit_page:${release.deployment?.shareKitPage || "none"}`);
+  }
   if (release.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`release_video_discovery:${release.deployment?.videoDiscoveryManifest || "none"}`);
   }
@@ -971,7 +997,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 35) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 37) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
@@ -983,6 +1009,11 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!/^[0-9a-f]{7,40}$/.test(creatorKit.source?.commit || "")) failures.push(`creator_kit_commit:${creatorKit.source?.commit || "none"}`);
   if (creatorKit.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("creator_kit_bad_subscription_endpoint");
   if (creatorKit.safety?.smokeSubmitsToMailerLite !== false) failures.push("creator_kit_bad_mailerlite_smoke_contract");
+  if (shareKit.platform !== "cloudflare-workers-static-assets") failures.push(`share_kit_platform:${shareKit.platform || "none"}`);
+  if (!/^[0-9a-f]{7,40}$/.test(shareKit.source?.commit || "")) failures.push(`share_kit_commit:${shareKit.source?.commit || "none"}`);
+  if (shareKit.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("share_kit_bad_subscription_endpoint");
+  if (shareKit.safety?.smokeSubmitsToMailerLite !== false) failures.push("share_kit_bad_mailerlite_smoke_contract");
+  if (shareKit.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("share_kit_missing_shortlink_manifest");
   if (videoDiscovery.platform !== "cloudflare-workers-static-assets") failures.push(`video_discovery_platform:${videoDiscovery.platform || "none"}`);
   if (videoDiscovery.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("video_discovery_bad_subscription_endpoint");
   if (videoDiscovery.safety?.smokeSubmitsToMailerLite !== false) failures.push("video_discovery_bad_mailerlite_smoke_contract");
@@ -1034,15 +1065,24 @@ async function checkDiscoveryFiles(baseUrl) {
     failures.push("creator_kit_page_missing_qr_assets");
   }
   if (!creatorKitPage.includes("/creator-kit.json")) failures.push("creator_kit_page_missing_json_manifest_link");
+  if (!shareKitPage.includes('<body class="picture-world creator-kit-page share-kit-page">')) failures.push("share_kit_page_missing_body_class");
+  if (!shareKitPage.includes('data-share-kit-pack="koko"')) failures.push("share_kit_page_missing_koko_pack");
+  if (!shareKitPage.includes('data-share-kit-pack="noor"')) failures.push("share_kit_page_missing_noor_pack");
+  if (!shareKitPage.includes("/share-kit.json")) failures.push("share_kit_page_missing_json_manifest_link");
+  if ((shareKitPage.match(/<button[^>]+data-copy-share-kit/g) || []).length !== 22) failures.push("share_kit_page_bad_copy_button_count");
   for (const pack of ["koko", "noor"]) {
     const campaign = campaigns.campaigns?.[pack] || {};
     const creatorPack = creatorKit.packs?.[pack] || {};
     const expectedCampaign = pack === "koko" ? "koko_story_funnel" : "noor_story_funnel";
     const expectedSample = `https://fursay.com/sample/${pack}`;
     const expectedShare = `https://fursay.com/share/${pack}`;
+    const expectedWhatsappShare = `${expectedShare}?ref=whatsapp&placement=direct_social_share`;
+    const expectedLineShare = `${expectedShare}?ref=line&placement=direct_social_share`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
-    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedShare}`)}`;
-    const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedShare)}`;
+    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedWhatsappShare}`)}`;
+    const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedLineShare)}`;
+    const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
+    const expectedShareQr = `https://fursay.com/images/qr/share-${pack}.svg`;
     const expectedChannelId = pack === "koko" ? "UC0X4CIwf6KoUMoIHwRxN3jw" : "UCOxmnonpfBvpiV8Vg5LEiYw";
     const expectedUploadsPlaylistId = pack === "koko" ? "UU0X4CIwf6KoUMoIHwRxN3jw" : "UUOxmnonpfBvpiV8Vg5LEiYw";
     const expectedPlaylistName = pack === "koko" ? "Koko's Forest Adventure uploads" : "Arabic Kids Chinese Picture Book uploads";
@@ -1067,12 +1107,27 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!campaign.copyKit?.familyShareText?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_share_missing_sample`);
     if (!campaign.copyKit?.familyShareMessage?.includes(expectedShare)) failures.push(`campaigns_${pack}_copy_family_message_missing_share`);
     if (!campaign.copyKit?.bioProfileCopy?.includes(`https://fursay.com/bio/${pack}`)) failures.push(`campaigns_${pack}_copy_bio_profile_missing_bio`);
-    const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
-    const expectedShareQr = `https://fursay.com/images/qr/share-${pack}.svg`;
     if (campaign.copyKit?.qrSvg !== expectedQr) failures.push(`campaigns_${pack}_qr_svg:${campaign.copyKit?.qrSvg || "none"}`);
     if (campaign.copyKit?.shareQrSvg !== expectedShareQr) failures.push(`campaigns_${pack}_share_qr_svg:${campaign.copyKit?.shareQrSvg || "none"}`);
     if (creatorPack.sampleShortlink !== expectedSample) failures.push(`creator_kit_${pack}_sample:${creatorPack.sampleShortlink || "none"}`);
     if (creatorPack.shareShortlink !== expectedShare) failures.push(`creator_kit_${pack}_share:${creatorPack.shareShortlink || "none"}`);
+    const sharePack = shareKit.packs?.[pack] || {};
+    if (sharePack.sampleShortlink !== expectedSample) failures.push(`share_kit_${pack}_sample:${sharePack.sampleShortlink || "none"}`);
+    if (sharePack.familyShareShortlink !== expectedShare) failures.push(`share_kit_${pack}_share:${sharePack.familyShareShortlink || "none"}`);
+    if (sharePack.bioShortlink !== `https://fursay.com/bio/${pack}`) failures.push(`share_kit_${pack}_bio:${sharePack.bioShortlink || "none"}`);
+    if (sharePack.creatorShortlink !== expectedCreator) failures.push(`share_kit_${pack}_creator:${sharePack.creatorShortlink || "none"}`);
+    if (sharePack.whatsappShareUrl !== expectedWhatsapp) failures.push(`share_kit_${pack}_whatsapp_share:${sharePack.whatsappShareUrl || "none"}`);
+    if (sharePack.lineShareUrl !== expectedLine) failures.push(`share_kit_${pack}_line_share:${sharePack.lineShareUrl || "none"}`);
+    if (sharePack.sampleQrSvg !== expectedQr) failures.push(`share_kit_${pack}_sample_qr:${sharePack.sampleQrSvg || "none"}`);
+    if (sharePack.shareQrSvg !== expectedShareQr) failures.push(`share_kit_${pack}_share_qr:${sharePack.shareQrSvg || "none"}`);
+    if (!sharePack.familyShareMessage?.includes(expectedShare)) failures.push(`share_kit_${pack}_family_message_missing_share`);
+    if (!sharePack.bioProfileCopy?.includes(`https://fursay.com/bio/${pack}`)) failures.push(`share_kit_${pack}_bio_profile_missing_bio`);
+    if (sharePack.attribution?.utm_source !== "family_share" || sharePack.attribution?.utm_medium !== "share") failures.push(`share_kit_${pack}_bad_attribution_source`);
+    if (!shareKitPage.includes(sharePack.familyShareMessage || "")) failures.push(`share_kit_page_missing_family_message:${pack}`);
+    if (!shareKitPage.includes(sharePack.bioProfileCopy || "")) failures.push(`share_kit_page_missing_bio_profile:${pack}`);
+    for (const value of [expectedSample, expectedShare, expectedCreator, `https://fursay.com/bio/${pack}`, expectedWhatsapp, expectedLine, expectedQr, expectedShareQr]) {
+      if (!shareKitPage.includes(value)) failures.push(`share_kit_page_missing_value:${pack}:${value}`);
+    }
     if (creatorPack.directSocialShare?.whatsapp !== expectedWhatsapp) failures.push(`creator_kit_${pack}_whatsapp_share:${creatorPack.directSocialShare?.whatsapp || "none"}`);
     if (creatorPack.directSocialShare?.line !== expectedLine) failures.push(`creator_kit_${pack}_line_share:${creatorPack.directSocialShare?.line || "none"}`);
     if (creatorPack.bioShortlink !== `https://fursay.com/bio/${pack}`) failures.push(`creator_kit_${pack}_bio:${creatorPack.bioShortlink || "none"}`);
@@ -1230,6 +1285,9 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const route of ["https://fursay.com/creator-kit", "https://fursay.com/creator-kit.json"]) {
     if (!siteHealth.routes?.creatorKit?.includes(route)) failures.push(`site_health_missing_creator_kit_route:${route}`);
   }
+  for (const route of ["https://fursay.com/share-kit", "https://fursay.com/share-kit.json"]) {
+    if (!siteHealth.routes?.shareKit?.includes(route)) failures.push(`site_health_missing_share_kit_route:${route}`);
+  }
   for (const route of ["https://fursay.com/video-discovery.json", "https://fursay.com/shortlinks.json", "https://fursay.com/sitemap.xml", "https://fursay.com/robots.txt"]) {
     if (!siteHealth.routes?.discovery?.includes(route)) failures.push(`site_health_missing_discovery_route:${route}`);
   }
@@ -1262,7 +1320,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
@@ -1286,6 +1344,7 @@ async function checkDiscoveryFiles(baseUrl) {
       releaseBytes: Buffer.byteLength(releaseRaw),
       campaignsBytes: Buffer.byteLength(campaignsRaw),
       creatorKitBytes: Buffer.byteLength(creatorKitRaw),
+      shareKitBytes: Buffer.byteLength(shareKitRaw),
       videoDiscoveryBytes: Buffer.byteLength(videoDiscoveryRaw),
       shortlinksBytes: Buffer.byteLength(shortlinksRaw),
       packageBytes: Buffer.byteLength(packageRaw),
@@ -1293,6 +1352,7 @@ async function checkDiscoveryFiles(baseUrl) {
       deployReadinessBytes: Buffer.byteLength(deployReadinessRaw),
       deployRunbookBytes: Buffer.byteLength(deployRunbookRaw),
       creatorKitPageBytes: Buffer.byteLength(creatorKitPage),
+      shareKitPageBytes: Buffer.byteLength(shareKitPage),
       platform: siteHealth.platform || "",
     },
   };
