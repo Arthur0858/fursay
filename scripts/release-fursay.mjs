@@ -569,7 +569,7 @@ function trafficLaunchChannelRows(channels) {
           <article class="creator-copy-block" data-traffic-launch-channel="${escapeHtml(channel.channel)}">
             <div class="creator-copy-heading">
               <h3>${escapeHtml(channel.label)}</h3>
-              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(channel.copy)}">Copy copy</button>
+              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(channel.publishCopyTemplate)}">Copy tracked copy</button>
             </div>
             <p>${escapeHtml(channel.checkpoint)}</p>
             <dl>
@@ -578,6 +578,7 @@ function trafficLaunchChannelRows(channels) {
             </dl>
             <pre>${escapeHtml(channel.copy)}</pre>
             <pre>${escapeHtml(channel.linkTemplate)}</pre>
+            <pre>${escapeHtml(channel.publishCopyTemplate)}</pre>
           </article>`).join("\n");
 }
 
@@ -592,6 +593,10 @@ function buildTrafficLaunchKit(siteDir, source) {
     const sourceIdExample = pack === "koko" ? "koko_ep001" : "noor_ep001";
     const withSource = (link, placement) => `${link}?source_id=${sourceIdExample}&creator=fursay&placement=${placement}`;
     const template = (link, placement) => `${link}?source_id={episode_or_post_id}&creator=fursay&placement=${placement}`;
+    const templatedCopy = (copy, link, linkTemplate) => {
+      if (!copy) return linkTemplate;
+      return copy.includes(link) ? copy.replace(link, linkTemplate) : `${copy}\n${linkTemplate}`;
+    };
     const channels = [
       {
         channel: "youtube_description",
@@ -600,6 +605,11 @@ function buildTrafficLaunchKit(siteDir, source) {
         linkTemplate: template(creatorPack.placementLinks?.youtubeDescription?.shortlink || "", "youtube_description"),
         exampleUrl: withSource(creatorPack.placementLinks?.youtubeDescription?.shortlink || "", "youtube_description"),
         copy: creatorPack.youtubeDescription || "",
+        publishCopyTemplate: templatedCopy(
+          creatorPack.youtubeDescription || "",
+          creatorPack.placementLinks?.youtubeDescription?.shortlink || "",
+          template(creatorPack.placementLinks?.youtubeDescription?.shortlink || "", "youtube_description"),
+        ),
         checkpoint: "Paste under the episode description and confirm the shortlink opens a preselected signup modal.",
         attribution: {
           utm_source: "youtube",
@@ -615,6 +625,11 @@ function buildTrafficLaunchKit(siteDir, source) {
         linkTemplate: template(creatorPack.placementLinks?.socialCaption?.shortlink || "", "social_profile"),
         exampleUrl: withSource(creatorPack.placementLinks?.socialCaption?.shortlink || "", "social_profile"),
         copy: creatorPack.socialCaption || "",
+        publishCopyTemplate: templatedCopy(
+          creatorPack.socialCaption || "",
+          creatorPack.placementLinks?.socialCaption?.shortlink || "",
+          template(creatorPack.placementLinks?.socialCaption?.shortlink || "", "social_profile"),
+        ),
         checkpoint: "Use for profile copy or a post caption, then verify the redirect keeps the social attribution.",
         attribution: {
           utm_source: "social",
@@ -630,6 +645,11 @@ function buildTrafficLaunchKit(siteDir, source) {
         linkTemplate: template(creatorPack.placementLinks?.newsletterBlurb?.shortlink || "", "newsletter_email"),
         exampleUrl: withSource(creatorPack.placementLinks?.newsletterBlurb?.shortlink || "", "newsletter_email"),
         copy: creatorPack.newsletterBlurb || "",
+        publishCopyTemplate: templatedCopy(
+          creatorPack.newsletterBlurb || "",
+          creatorPack.placementLinks?.newsletterBlurb?.shortlink || "",
+          template(creatorPack.placementLinks?.newsletterBlurb?.shortlink || "", "newsletter_email"),
+        ),
         checkpoint: "Place in MailerLite body copy only after the target group has at least one active subscriber.",
         attribution: {
           utm_source: "newsletter",
@@ -645,6 +665,11 @@ function buildTrafficLaunchKit(siteDir, source) {
         linkTemplate: template(sharePack.familyShareShortlink || "", "family_share"),
         exampleUrl: withSource(sharePack.familyShareShortlink || "", "family_share"),
         copy: sharePack.familyShareMessage || "",
+        publishCopyTemplate: templatedCopy(
+          sharePack.familyShareMessage || "",
+          sharePack.familyShareShortlink || "",
+          template(sharePack.familyShareShortlink || "", "family_share"),
+        ),
         checkpoint: "Use for parent-to-parent forwarding; add ref and placement only at the social share surface.",
         attribution: sharePack.attribution || {},
       },
@@ -655,6 +680,7 @@ function buildTrafficLaunchKit(siteDir, source) {
         linkTemplate: template(sharePack.familyShareShortlink || "", "qr_poster"),
         exampleUrl: withSource(sharePack.familyShareShortlink || "", "qr_poster"),
         copy: `${channel} family share QR: ${sharePack.familyShareShortlink || ""}`,
+        publishCopyTemplate: `${channel} family share QR: ${template(sharePack.familyShareShortlink || "", "qr_poster")}`,
         checkpoint: "Use the QR SVG in printable or community graphics and keep the shortlink visible nearby.",
         attribution: sharePack.attribution || {},
       },
@@ -762,10 +788,10 @@ ${packCards}
       try {
         await navigator.clipboard.writeText(value);
         button.textContent = "Copied";
-        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy copy" : "Copy"; }, 1600);
+        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy tracked copy" : "Copy"; }, 1600);
       } catch {
         button.textContent = "Copy failed";
-        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy copy" : "Copy"; }, 1800);
+        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy tracked copy" : "Copy"; }, 1800);
       }
     });
   </script>

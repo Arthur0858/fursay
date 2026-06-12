@@ -84,6 +84,11 @@ async function main() {
     "fursay-release-evidence-${{ github.run_id }}",
     "fail-closed",
     "npm run smoke:live",
+    "/deploy-readiness.json",
+    "/share-kit.json",
+    "/traffic-launch.json",
+    "/shortlinks.json",
+    "never secret values",
   ]) {
     addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);
   }
