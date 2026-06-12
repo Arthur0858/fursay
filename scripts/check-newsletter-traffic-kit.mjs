@@ -173,7 +173,7 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 48) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (data.copyButtonCount !== 50) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
   for (const value of [
     `${baseUrl}/creator/koko`,
     `${baseUrl}/sample/koko`,
@@ -184,6 +184,7 @@ async function checkCreatorKitBrowser(baseUrl) {
     `https://api.whatsapp.com/send?text=${encodeURIComponent(`Koko weekly story pack: ${baseUrl}/share/koko`)}`,
     `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/koko`)}`,
     `Koko's Forest Adventure weekly pack is ready for family story time: ${baseUrl}/share/koko`,
+    `Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: ${baseUrl}/bio/koko`,
     "UC0X4CIwf6KoUMoIHwRxN3jw",
     "UU0X4CIwf6KoUMoIHwRxN3jw",
     "Koko's Forest Adventure uploads",
@@ -204,6 +205,7 @@ async function checkCreatorKitBrowser(baseUrl) {
     `https://api.whatsapp.com/send?text=${encodeURIComponent(`Noor 3-minute story pack: ${baseUrl}/share/noor`)}`,
     `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/noor`)}`,
     `Noor's Arabic Kids Chinese weekly pack is ready for family story time: ${baseUrl}/share/noor`,
+    `Noor's Arabic Kids Chinese: 3-minute Chinese story packs for Arabic-speaking families. Start here: ${baseUrl}/bio/noor`,
     "UCOxmnonpfBvpiV8Vg5LEiYw",
     "UUOxmnonpfBvpiV8Vg5LEiYw",
     "Arabic Kids Chinese Picture Book uploads",
@@ -280,12 +282,14 @@ async function main() {
     if (!item.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`${pack}_youtube_missing_placement`);
     if (!item.socialCaption?.includes(expectedSocialPlacement)) failures.push(`${pack}_social_missing_placement`);
     if (!item.familyShareMessage?.includes(expectedShare)) failures.push(`${pack}_family_share_message_missing_share`);
+    if (!item.bioProfileCopy?.includes(expectedBio)) failures.push(`${pack}_bio_profile_copy_missing_bio`);
     if (item.utmContract?.content !== "creator_kit_sample") failures.push(`${pack}_bad_utm_content`);
     if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
     if (!creatorKitPage.includes(expectedShare)) failures.push(`${pack}_creator_page_missing_share`);
     if (!creatorKitPage.includes(item.familyShareMessage || "")) failures.push(`${pack}_creator_page_missing_family_share_message`);
+    if (!creatorKitPage.includes(item.bioProfileCopy || "")) failures.push(`${pack}_creator_page_missing_bio_profile_copy`);
     if (!creatorKitPage.includes(expectedWhatsapp)) failures.push(`${pack}_creator_page_missing_whatsapp_share`);
     if (!creatorKitPage.includes(expectedLine)) failures.push(`${pack}_creator_page_missing_line_share`);
     if (!creatorKitPage.includes(`/images/qr/share-${pack}.svg`)) failures.push(`${pack}_creator_page_missing_share_qr`);

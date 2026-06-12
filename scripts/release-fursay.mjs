@@ -242,6 +242,12 @@ function socialShareUrls(pack) {
   };
 }
 
+function bioProfileCopy(pack) {
+  return pack === "koko"
+    ? "Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: https://fursay.com/bio/koko"
+    : "Noor's Arabic Kids Chinese: 3-minute Chinese story packs for Arabic-speaking families. Start here: https://fursay.com/bio/noor";
+}
+
 function writeCampaignManifest(siteDir, source) {
   const campaigns = {
     koko: {
@@ -268,6 +274,7 @@ function writeCampaignManifest(siteDir, source) {
         videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
         familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
         familyShareMessage: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/share/koko",
+        bioProfileCopy: bioProfileCopy("koko"),
         primaryShortlink: "https://fursay.com/sample/koko",
         shareShortlink: "https://fursay.com/share/koko",
         whatsappShareUrl: socialShareUrls("koko").whatsapp,
@@ -307,6 +314,7 @@ function writeCampaignManifest(siteDir, source) {
         videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
         familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
         familyShareMessage: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/share/noor",
+        bioProfileCopy: bioProfileCopy("noor"),
         primaryShortlink: "https://fursay.com/sample/noor",
         shareShortlink: "https://fursay.com/share/noor",
         whatsappShareUrl: socialShareUrls("noor").whatsapp,
@@ -402,6 +410,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
         socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`,
         familyShareMessage: campaign.copyKit.familyShareMessage,
+        bioProfileCopy: campaign.copyKit.bioProfileCopy,
         newsletterBlurb: `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`,
         altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
         utmContract: {
@@ -578,6 +587,7 @@ function writeCreatorKitPage(siteDir, kit) {
         <div class="creator-copy-blocks">
           ${creatorCopyBlock("YouTube description", item.youtubeDescription)}
           ${creatorCopyBlock("Social caption", item.socialCaption)}
+          ${creatorCopyBlock("Bio profile copy", item.bioProfileCopy)}
           ${creatorCopyBlock("Family share message", item.familyShareMessage)}
           ${creatorCopyBlock("Newsletter blurb", item.newsletterBlurb)}
         </div>

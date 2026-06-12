@@ -143,6 +143,7 @@
     "family_share_shortlink",
     "family_share_message",
     "bio_shortlink",
+    "bio_profile_copy",
     "video_discovery_manifest",
     "sitemap_manifest",
     "robots_manifest",

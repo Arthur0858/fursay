@@ -40,6 +40,7 @@ async function main() {
   const packageJson = await readJson("package.json");
   const wrangler = await readJson("wrangler.jsonc");
   const workflow = await readText(".github/workflows/deploy-worker.yml");
+  const deployRunbook = await readText("docs/cloudflare-deploy-runbook.md");
   const branch = gitValue(["branch", "--show-current"]);
   const commit = gitValue(["rev-parse", "--short", "HEAD"]);
   const remote = gitValue(["remote", "get-url", "origin"]);
@@ -74,6 +75,19 @@ async function main() {
     addIssue(failures, workflow.includes(needle), "workflow_missing", needle);
   }
 
+  for (const needle of [
+    "Cloudflare Workers Static Assets",
+    "CLOUDFLARE_API_TOKEN",
+    "CLOUDFLARE_ACCOUNT_ID",
+    "npm run deploy:ready -- --require-remote",
+    "npm run deploy:ready -- --require-cloudflare",
+    "fursay-release-evidence-${{ github.run_id }}",
+    "fail-closed",
+    "npm run smoke:live",
+  ]) {
+    addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);
+  }
+
   if (!remote) {
     const issue = "git_missing_origin_remote";
     (args.requireRemote ? failures : warnings).push(issue);
@@ -101,6 +115,7 @@ async function main() {
       releaseCommand: packageJson.scripts?.deploy || "",
       localGateCommand: "npm run check",
       workflow: ".github/workflows/deploy-worker.yml",
+      runbook: "docs/cloudflare-deploy-runbook.md",
       hasOriginRemote: Boolean(remote),
       hasCloudflareToken,
       hasCloudflareAccount,
