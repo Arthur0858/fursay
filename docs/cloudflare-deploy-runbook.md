@@ -14,7 +14,7 @@ Fursay deploys through Cloudflare Workers Static Assets, not Cloudflare Pages.
 
 The deploy workflow is `.github/workflows/deploy-worker.yml`.
 
-- `push` to `main` runs the local release gate and deploys only when Cloudflare secrets are present.
+- `push` to `main` runs the local release gate and deploys only when Cloudflare secrets are present and the remote gate passes.
 - `workflow_dispatch` runs the local release gate, but does not deploy unless the workflow is changed to allow manual deploys.
 - Workflow runs use concurrency group `fursay-worker-${{ github.ref }}` and cancel older in-progress runs for the same ref.
 - Every run uploads `/tmp/fursay-release-*` as `fursay-release-evidence-${{ github.run_id }}` for 14 days.
@@ -42,6 +42,7 @@ Use strict gates when validating the full auto-deploy path:
 ```bash
 npm run deploy:ready -- --require-remote
 npm run deploy:ready -- --require-cloudflare
+npm run deploy:ready -- --require-remote --require-cloudflare
 ```
 
 Expected local warnings on this Mac are:
@@ -64,7 +65,7 @@ Live smoke must keep these invariants:
 
 - 9 public pages pass audit with `badCount 0`
 - `/api/subscribe` smoke remains intercepted-only and does not call MailerLite
-- `/release.json`, `/site-health.json`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
+- `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
 - `/creator-kit`, `/share-kit`, and `/traffic-launch` render their public copy/launch kits without calling MailerLite
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
 - versioned CSS/JS and image assets use long cache headers

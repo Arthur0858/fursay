@@ -9,6 +9,7 @@
     "releaseCommand": "node scripts/release-fursay.mjs",
     "releaseManifest": "https://fursay.com/release.json",
     "deployReadinessManifest": "https://fursay.com/deploy-readiness.json",
+    "deployReadinessPage": "https://fursay.com/deploy-readiness",
     "campaignManifest": "https://fursay.com/campaigns.json",
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
@@ -78,6 +79,10 @@
     "trafficLaunch": [
       "https://fursay.com/traffic-launch",
       "https://fursay.com/traffic-launch.json"
+    ],
+    "deployReadiness": [
+      "https://fursay.com/deploy-readiness",
+      "https://fursay.com/deploy-readiness.json"
     ],
     "discovery": [
       "https://fursay.com/video-discovery.json",
@@ -191,6 +196,7 @@
     "episode_launch_link_template",
     "tracked_publish_copy",
     "deploy_readiness_manifest",
+    "deploy_readiness_page",
     "creator_shortlink",
     "creator_placement_shortlink",
     "story_world_cta",

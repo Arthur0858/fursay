@@ -127,6 +127,7 @@ function writeReleaseManifest() {
       assetsBinding: "ASSETS",
       releaseCommand: "node scripts/release-fursay.mjs",
       deployReadinessManifest: "https://fursay.com/deploy-readiness.json",
+      deployReadinessPage: "https://fursay.com/deploy-readiness",
       campaignManifest: "https://fursay.com/campaigns.json",
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
@@ -179,7 +180,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 40,
+      cacheHeaderChecks: 41,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -232,6 +233,7 @@ function writeDeployReadinessManifest(siteDir, source) {
     strictGates: {
       requireRemote: "npm run deploy:ready -- --require-remote",
       requireCloudflare: "npm run deploy:ready -- --require-cloudflare",
+      requirePushDeploy: "npm run deploy:ready -- --require-remote --require-cloudflare",
     },
     safety: {
       failClosed: true,
@@ -246,6 +248,77 @@ function writeDeployReadinessManifest(siteDir, source) {
     },
   };
   writeFileSync(resolve(siteDir, "deploy-readiness.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeDeployReadinessPage(siteDir, manifest);
+}
+
+function deployStatusLabel(manifest) {
+  return manifest.status.githubPushDeployProven ? "Push deploy ready" : "Local deploy ready";
+}
+
+function deployReadinessRow(label, value) {
+  return `<div>
+                <dt>${escapeHtml(label)}</dt>
+                <dd>${escapeHtml(value)}</dd>
+              </div>`;
+}
+
+function writeDeployReadinessPage(siteDir, manifest) {
+  const warnings = manifest.status.warnings.length
+    ? manifest.status.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("\n")
+    : "<li>No readiness warnings.</li>";
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Deploy Readiness</title>
+  <meta name="description" content="Current Fursay Cloudflare Workers Static Assets deploy readiness, safe gates, and public release evidence.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/deploy-readiness">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+</head>
+<body class="picture-world creator-kit-page deploy-readiness-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay deployment</p>
+      <h1>Deploy Readiness</h1>
+      <p>${escapeHtml(deployStatusLabel(manifest))}. This page publishes gate names and status only, never secret values.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
+        <span>Commit ${escapeHtml(manifest.source.commit)}</span>
+        <a href="/deploy-readiness.json">JSON manifest</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety">
+      <h2>Current status</h2>
+      <dl>
+        ${deployReadinessRow("Platform", manifest.platform)}
+        ${deployReadinessRow("Worker", manifest.deployment.workerName)}
+        ${deployReadinessRow("Assets binding", manifest.deployment.assetsBinding)}
+        ${deployReadinessRow("Local deploy ready", String(manifest.status.localDeployReady))}
+        ${deployReadinessRow("GitHub push deploy proven", String(manifest.status.githubPushDeployProven))}
+        ${deployReadinessRow("Local gate", manifest.deployment.localGateCommand)}
+        ${deployReadinessRow("Live smoke", manifest.deployment.liveSmokeCommand)}
+        ${deployReadinessRow("Push deploy proof", manifest.strictGates.requirePushDeploy)}
+      </dl>
+    </section>
+    <section class="creator-kit-safety">
+      <h2>Warnings</h2>
+      <ul>
+${warnings}
+      </ul>
+    </section>
+    <section class="creator-kit-safety">
+      <h2>Safety contract</h2>
+      <p>Release artifacts use <code>${escapeHtml(manifest.safety.releaseArtifacts)}</code>. Smoke checks do not submit to MailerLite. Secret values are not published.</p>
+    </section>
+  </main>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "deploy-readiness.html"), html + "\n");
 }
 
 function sitemapUrl(loc, alternates, priority) {

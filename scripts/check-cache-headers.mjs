@@ -89,6 +89,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/deploy-readiness",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
     path: "/campaigns.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],

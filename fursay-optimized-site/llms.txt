@@ -45,6 +45,7 @@ Useful actions:
 - Creator kit page: https://fursay.com/creator-kit
 - Family share kit page: https://fursay.com/share-kit
 - Traffic launch kit page: https://fursay.com/traffic-launch
+- Deploy readiness page: https://fursay.com/deploy-readiness
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
@@ -53,6 +54,7 @@ Technical discovery:
 - Robots: https://fursay.com/robots.txt
 - Site health: https://fursay.com/site-health.json
 - Release manifest: https://fursay.com/release.json
+- Deploy readiness page: https://fursay.com/deploy-readiness
 - Deploy readiness manifest: https://fursay.com/deploy-readiness.json
 - Campaign manifest: https://fursay.com/campaigns.json
 - Creator kit: https://fursay.com/creator-kit.json
