@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { chromium } from "playwright";
 
 const ROOT = process.cwd();
 const DEFAULT_OUT = "/tmp/fursay-newsletter-traffic-kit";
@@ -56,6 +57,70 @@ async function checkCreatorRedirect(baseUrl, pack, expectedCampaign) {
   return failures;
 }
 
+async function checkCreatorKitBrowser(baseUrl) {
+  if (!baseUrl) {
+    return { failures: [], data: { skipped: true, reason: "local content check only" } };
+  }
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const consoleMessages = [];
+  const failedRequests = [];
+  const badStatuses = [];
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type())) {
+      consoleMessages.push({ type: message.type(), text: message.text().slice(0, 300) });
+    }
+  });
+  page.on("requestfailed", (request) => failedRequests.push({ url: request.url(), failure: request.failure()?.errorText || "" }));
+  page.on("response", (response) => {
+    if (response.status() >= 400) badStatuses.push({ status: response.status(), url: response.url() });
+  });
+
+  const response = await page.goto(`${baseUrl}/creator-kit`, { waitUntil: "domcontentloaded", timeout: 20000 });
+  await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+  const data = await page.evaluate(() => {
+    const qa = (selector) => [...document.querySelectorAll(selector)];
+    const qrImages = qa(".creator-qr img");
+    return {
+      status: document.readyState,
+      title: document.title,
+      canonical: document.querySelector('link[rel="canonical"]')?.href || "",
+      h1Count: qa("h1").length,
+      h1Text: qa("h1").map((h1) => h1.textContent.trim().replace(/\s+/g, " ")).join(" | "),
+      packCount: qa("[data-creator-kit-pack]").length,
+      creatorLinks: qa('.creator-pack a[href*="/creator/"]').map((anchor) => anchor.href),
+      jsonManifestLink: document.querySelector('a[href="/creator-kit.json"]')?.href || "",
+      horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+      qrImages: qrImages.map((img) => ({
+        src: img.currentSrc || img.src,
+        alt: img.getAttribute("alt") || "",
+        complete: img.complete,
+        naturalWidth: img.naturalWidth,
+      })),
+    };
+  });
+  await browser.close();
+
+  const failures = [];
+  if (response.status() !== 200) failures.push(`creator_kit_page_status:${response.status()}`);
+  if (data.canonical !== `${baseUrl}/creator-kit`) failures.push(`creator_kit_page_canonical:${data.canonical || "none"}`);
+  if (data.h1Count !== 1 || data.h1Text !== "Creator Kit") failures.push(`creator_kit_page_h1:${data.h1Text || "none"}`);
+  if (data.packCount !== 2) failures.push(`creator_kit_page_pack_count:${data.packCount}`);
+  if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
+  if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
+  if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
+  if (data.horizontalOverflow > 2) failures.push(`creator_kit_page_horizontal_overflow:${data.horizontalOverflow}`);
+  if (data.qrImages.length !== 2) failures.push(`creator_kit_page_qr_count:${data.qrImages.length}`);
+  for (const image of data.qrImages) {
+    if (!image.complete || image.naturalWidth <= 0) failures.push(`creator_kit_page_broken_qr:${image.src || "none"}`);
+    if (!image.alt.includes("https://fursay.com/sample/")) failures.push(`creator_kit_page_qr_alt:${image.alt || "none"}`);
+  }
+  if (consoleMessages.some((message) => message.type === "error")) failures.push("creator_kit_page_console_error");
+  if (failedRequests.length) failures.push(`creator_kit_page_failed_requests:${failedRequests.length}`);
+  if (badStatuses.length) failures.push(`creator_kit_page_bad_statuses:${badStatuses.length}`);
+  return { failures, data: { ...data, consoleMessages, failedRequests, badStatuses } };
+}
+
 async function main() {
   const args = parseArgs();
   const creatorKit = await readCreatorKit(args.baseUrl);
@@ -96,6 +161,8 @@ async function main() {
     "rendered email must include the creator-kit sample shortlink",
   ];
   if (!hasAll(runner, runnerNeedles)) failures.push("newsletter_runner_missing_creator_kit_hooks");
+  const browserCheck = await checkCreatorKitBrowser(args.baseUrl);
+  failures.push(...browserCheck.failures);
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -106,6 +173,7 @@ async function main() {
       runnerHooks: runnerNeedles.length,
       baseUrl: args.baseUrl || "local",
       creatorKitPageBytes: Buffer.byteLength(creatorKitPage),
+      browser: browserCheck.data,
     },
   };
 
