@@ -23,7 +23,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20260612-traffic7.js",
+    path: "/js/site-shared-20260612-traffic8.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",
@@ -42,6 +42,12 @@ const CHECKS = [
   },
   {
     path: "/release.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
+    path: "/campaigns.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],
     contentTypeIncludes: "application/json",

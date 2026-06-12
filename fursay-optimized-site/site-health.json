@@ -7,7 +7,8 @@
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
     "releaseCommand": "node scripts/release-fursay.mjs",
-    "releaseManifest": "https://fursay.com/release.json"
+    "releaseManifest": "https://fursay.com/release.json",
+    "campaignManifest": "https://fursay.com/campaigns.json"
   },
   "routes": {
     "home": [
@@ -93,6 +94,7 @@
     "homepage_sample_deep_link",
     "sample_shortlink",
     "sample_pack_schema",
+    "copy_sample_shortlink",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",
@@ -122,7 +124,7 @@
       "/css/picture-world-shared-20260612-traffic10.css"
     ],
     "js": [
-      "/js/site-shared-20260612-traffic7.js"
+      "/js/site-shared-20260612-traffic8.js"
     ]
   }
 }

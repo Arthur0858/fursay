@@ -13,6 +13,7 @@ node_modules
 *.zip
 *.bundle
 fursay-optimized-site/release.json
+fursay-optimized-site/campaigns.json
 transfer/
 output/
 qa-screenshots/

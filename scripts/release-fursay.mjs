@@ -88,20 +88,22 @@ function writeReleaseManifest() {
   const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
   const css = siteStructure.sharedAssets?.css?.find((asset) => asset.includes("picture-world-shared-")) || "";
   const js = siteStructure.sharedAssets?.js?.[0] || "";
+  const source = {
+    branch: gitValue(["branch", "--show-current"], "unknown"),
+    commit: gitValue(["rev-parse", "--short", "HEAD"], "unknown"),
+    summary: gitValue(["log", "-1", "--pretty=%s"], "unknown"),
+  };
   const manifest = {
     site: "Fursay",
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
     releasedAt: taipeiDateString(),
-    source: {
-      branch: gitValue(["branch", "--show-current"], "unknown"),
-      commit: gitValue(["rev-parse", "--short", "HEAD"], "unknown"),
-      summary: gitValue(["log", "-1", "--pretty=%s"], "unknown"),
-    },
+    source,
     deployment: {
       workerName: "fursay",
       assetsBinding: "ASSETS",
       releaseCommand: "node scripts/release-fursay.mjs",
+      campaignManifest: "https://fursay.com/campaigns.json",
     },
     funnels: {
       koko: {
@@ -127,12 +129,82 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 17,
-      cacheHeaderChecks: 12,
+      cacheHeaderChecks: 13,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
   };
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeCampaignManifest(siteDir, source);
+}
+
+function campaignBase(source) {
+  return {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    attributionContract: {
+      endpoint: "/api/subscribe",
+      payload: "email/groups/attribution",
+      requiredParams: ["subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"],
+      smokeSubmitsToMailerLite: false,
+    },
+  };
+}
+
+function writeCampaignManifest(siteDir, source) {
+  const manifest = {
+    ...campaignBase(source),
+    campaigns: {
+      koko: {
+        status: "active",
+        audience: "Mandarin-speaking families learning English",
+        primaryGoal: "weekly_story_pack_subscribe",
+        campaign: "koko_story_funnel",
+        shortlinks: {
+          join: "https://fursay.com/join/koko",
+          sample: "https://fursay.com/sample/koko",
+        },
+        landingPages: {
+          storyWorld: "https://fursay.com/koko",
+          homeSample: "https://fursay.com/koko?subscribe=koko&utm_source=home&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=home_koko_sample_link",
+          sampleSchema: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
+        },
+        ctaSources: [
+          "home_koko_weekly_pack",
+          "home_weekly_pack_koko",
+          "koko_sample_pack_cta",
+          "koko_story_pack_section",
+          "share_strip_koko_pack",
+        ],
+      },
+      noor: {
+        status: "active",
+        audience: "Arabic-speaking families learning Chinese",
+        primaryGoal: "weekly_story_pack_subscribe",
+        campaign: "noor_story_funnel",
+        shortlinks: {
+          join: "https://fursay.com/join/noor",
+          sample: "https://fursay.com/sample/noor",
+        },
+        landingPages: {
+          storyWorld: "https://fursay.com/arabic",
+          homeSample: "https://fursay.com/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
+          sampleSchema: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+        },
+        ctaSources: [
+          "home_noor_weekly_pack",
+          "home_weekly_pack_noor",
+          "arabic_sample_pack_cta",
+          "arabic_story_pack_section",
+          "share_strip_noor_pack",
+        ],
+      },
+    },
+  };
+  writeFileSync(resolve(siteDir, "campaigns.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
 async function main() {
