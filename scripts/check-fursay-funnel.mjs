@@ -767,6 +767,49 @@ async function checkJoinRedirects(baseUrl) {
   return results;
 }
 
+async function checkTrafficLaunchExampleRedirects(baseUrl) {
+  const raw = await readDiscoveryFile(baseUrl, "traffic-launch.json");
+  const trafficLaunch = JSON.parse(raw);
+  const results = [];
+  for (const [pack, launchPack] of Object.entries(trafficLaunch.packs || {})) {
+    const expectedTarget = pack === "koko" ? "/koko" : "/arabic";
+    const expectedCampaign = pack === "koko" ? "koko_story_funnel" : "noor_story_funnel";
+    for (const channel of launchPack.channels || []) {
+      if (!channel.exampleUrl) {
+        results.push({
+          path: `traffic-launch:${pack}:${channel.channel || "unknown"}`,
+          ok: false,
+          failures: ["missing_example_url"],
+          data: { channel },
+        });
+        continue;
+      }
+      const requestUrl = new URL(channel.exampleUrl);
+      requestUrl.searchParams.set("email", "blocked@example.com");
+      const response = await fetch(new URL(`${requestUrl.pathname}${requestUrl.search}`, baseUrl), { redirect: "manual" });
+      const location = response.headers.get("location") || "";
+      const redirected = location ? new URL(location) : null;
+      const failures = [];
+      if (![301, 302, 303, 307, 308].includes(response.status)) failures.push(`status:${response.status}`);
+      if (!location.includes(expectedTarget)) failures.push(`wrong_target:${location || "none"}`);
+      if (redirected?.searchParams.get("subscribe") !== pack) failures.push(`wrong_subscribe:${location || "none"}`);
+      if (redirected?.searchParams.get("utm_campaign") !== expectedCampaign) failures.push(`wrong_campaign:${location || "none"}`);
+      if (redirected?.searchParams.get("utm_content") !== channel.attribution?.utm_content) failures.push(`wrong_content:${location || "none"}`);
+      if (redirected?.searchParams.get("source_id") !== `${pack}_ep001`) failures.push(`missing_source_id:${location || "none"}`);
+      if (redirected?.searchParams.get("creator") !== "fursay") failures.push(`missing_creator:${location || "none"}`);
+      if (redirected?.searchParams.get("placement") !== channel.channel) failures.push(`missing_placement:${location || "none"}`);
+      if (redirected?.searchParams.get("email")) failures.push(`leaked_blocked_email:${location || "none"}`);
+      results.push({
+        path: `traffic-launch:${pack}:${channel.channel}`,
+        ok: failures.length === 0,
+        failures,
+        data: { status: response.status, location, requestUrl: requestUrl.toString() },
+      });
+    }
+  }
+  return results;
+}
+
 async function readDiscoveryFile(baseUrl, fileName) {
   if (baseUrl) {
     const url = new URL(fileName, `${baseUrl}/`);
@@ -1487,10 +1530,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "source_id_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "deploy_readiness_page", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "episode_launch_link_template", "tracked_publish_copy", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "source_id_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "deploy_readiness_page", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "traffic_launch_example_redirect", "episode_launch_link_template", "tracked_publish_copy", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
-  for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
+  for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "traffic_launch_example_redirect_keeps_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
@@ -1540,6 +1583,7 @@ async function main() {
     results.push(await checkSubscribeDeepLink(browser, baseUrl, "/arabic", "noor"));
     results.push(await checkAttributionPayload(browser, baseUrl));
     results.push(...await checkJoinRedirects(baseUrl));
+    results.push(...await checkTrafficLaunchExampleRedirects(baseUrl));
     results.push(await checkDiscoveryFiles(args.baseUrl));
   } finally {
     await browser.close();
