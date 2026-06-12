@@ -135,6 +135,8 @@ function writeReleaseManifest() {
       shareKitPage: "https://fursay.com/share-kit",
       trafficLaunchManifest: "https://fursay.com/traffic-launch.json",
       trafficLaunchPage: "https://fursay.com/traffic-launch",
+      linksManifest: "https://fursay.com/links.json",
+      linksPage: "https://fursay.com/links",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -179,8 +181,8 @@ function writeReleaseManifest() {
     ],
     liveExpectations: {
       pages: 9,
-      funnelChecks: 40,
-      cacheHeaderChecks: 41,
+      funnelChecks: 41,
+      cacheHeaderChecks: 43,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -189,6 +191,7 @@ function writeReleaseManifest() {
   writeDeployReadinessManifest(siteDir, source);
   writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
+  writeLinksManifest(siteDir, source);
   writeShareKit(siteDir, source);
   writeTrafficLaunchKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
@@ -502,6 +505,173 @@ function writeCampaignManifest(siteDir, source) {
   };
   writeFileSync(resolve(siteDir, "campaigns.json"), JSON.stringify(manifest, null, 2) + "\n");
   writeCreatorKit(siteDir, source, campaigns);
+}
+
+function linkCard(title, description, primary, secondary, youtube) {
+  return {
+    title,
+    description,
+    primaryAction: primary,
+    secondaryAction: secondary,
+    youtube,
+  };
+}
+
+function writeLinksManifest(siteDir, source) {
+  const campaignManifest = readJson(resolve(siteDir, "campaigns.json"));
+  const campaigns = campaignManifest.campaigns || {};
+  const links = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Public social-profile landing page that lets families choose Koko or Noor before opening a tracked story-pack signup path.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      primaryLinksUseTrackedShortlinks: true,
+      manifest: "https://fursay.com/links.json",
+    },
+    primaryRoute: "https://fursay.com/links",
+    packs: {
+      koko: linkCard(
+        "Koko weekly English story pack",
+        "English stories and parent prompts for Mandarin-speaking families.",
+        {
+          label: "Get Koko's weekly pack",
+          url: campaigns.koko.shortlinks.sample,
+          pack: "koko",
+          attribution: {
+            utm_source: "shortlink",
+            utm_medium: "direct",
+            utm_campaign: campaigns.koko.campaign,
+            utm_content: "sample_koko",
+          },
+        },
+        {
+          label: "Share Koko with another family",
+          url: campaigns.koko.shortlinks.share,
+        },
+        "https://www.youtube.com/@KokosForest",
+      ),
+      noor: linkCard(
+        "Noor 3-minute Chinese story pack",
+        "Chinese stories with Pinyin support for Arabic-speaking families.",
+        {
+          label: "Get Noor's 3-minute pack",
+          url: campaigns.noor.shortlinks.sample,
+          pack: "noor",
+          attribution: {
+            utm_source: "shortlink",
+            utm_medium: "direct",
+            utm_campaign: campaigns.noor.campaign,
+            utm_content: "sample_noor",
+          },
+        },
+        {
+          label: "Share Noor with another family",
+          url: campaigns.noor.shortlinks.share,
+        },
+        "https://www.youtube.com/@ArabicKidsChinese",
+      ),
+    },
+    operations: {
+      shareKit: {
+        label: "Share kit",
+        url: "https://fursay.com/share-kit",
+      },
+      creatorKit: {
+        label: "Creator kit",
+        url: "https://fursay.com/creator-kit",
+      },
+      trafficLaunchKit: {
+        label: "Traffic launch kit",
+        url: "https://fursay.com/traffic-launch",
+      },
+      deployReadiness: {
+        label: "Deploy readiness",
+        url: "https://fursay.com/deploy-readiness",
+      },
+    },
+  };
+  writeFileSync(resolve(siteDir, "links.json"), JSON.stringify(links, null, 2) + "\n");
+  writeLinksPage(siteDir, links);
+}
+
+function linksActionRow(item) {
+  return `<a class="creator-link-copy" href="${escapeHtml(item.url)}">${escapeHtml(item.label)}</a>`;
+}
+
+function linksPackCard(pack, item) {
+  return `<article class="creator-copy-block social-link-card" data-social-links-pack="${escapeHtml(pack)}">
+            <div class="creator-copy-heading">
+              <h2>${escapeHtml(item.title)}</h2>
+              <a class="creator-copy-button" data-social-primary-link="${escapeHtml(pack)}" href="${escapeHtml(item.primaryAction.url)}">${escapeHtml(item.primaryAction.label)}</a>
+            </div>
+            <p>${escapeHtml(item.description)}</p>
+            <dl>
+              ${shareKitLinkRow("Primary tracked link", item.primaryAction.url)}
+              ${shareKitLinkRow("Family share link", item.secondaryAction.url)}
+              ${shareKitLinkRow("YouTube channel", item.youtube)}
+            </dl>
+          </article>`;
+}
+
+function writeLinksPage(siteDir, links) {
+  const packCards = Object.entries(links.packs).map(([pack, item]) => linksPackCard(pack, item)).join("\n");
+  const operationLinks = Object.values(links.operations).map((item) => linksActionRow(item)).join("\n          ");
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Links</title>
+  <meta name="description" content="Choose a Fursay story pack: Koko English stories or Noor Arabic-Chinese stories, with tracked signup and share links.">
+  <meta property="og:title" content="Fursay story pack links">
+  <meta property="og:description" content="Choose Koko or Noor and get a free family story pack.">
+  <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/links">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+</head>
+<body class="picture-world creator-kit-page social-links-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay start here</p>
+      <h1>Choose Your Story Pack</h1>
+      <p>Pick Koko for English story time or Noor for Arabic-Chinese story time. Each button opens a tracked signup path with the right pack preselected.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(links.updatedAt)}</span>
+        <span>Commit ${escapeHtml(links.source.commit)}</span>
+        <a href="/links.json">JSON manifest</a>
+      </div>
+    </header>
+    <section class="creator-pack" data-social-links-page>
+      <div class="creator-pack-copy">
+        <p class="creator-eyebrow">Social profile landing</p>
+        <h2>One link for family discovery</h2>
+        <p>Use <strong>fursay.com/links</strong> in bios, QR posters, and social profiles when families should choose a story world first.</p>
+        <div class="public-share-actions">
+          ${operationLinks}
+        </div>
+      </div>
+      <div class="creator-copy-blocks">
+${packCards}
+      </div>
+    </section>
+    <section class="creator-kit-safety">
+      <h2>Safety contract</h2>
+      <p>Smoke checks do not submit to MailerLite. Subscription traffic still flows through <code>${escapeHtml(links.safety.subscriptionEndpoint)}</code>.</p>
+    </section>
+  </main>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "links.html"), html + "\n");
 }
 
 function writeCreatorKit(siteDir, source, campaigns) {

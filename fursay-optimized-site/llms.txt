@@ -30,6 +30,7 @@ Useful actions:
 - Join Noor's weekly Chinese story pack: https://fursay.com/join/noor
 - Preview Koko's sample story pack: https://fursay.com/sample/koko
 - Preview Noor's sample story pack: https://fursay.com/sample/noor
+- Social profile story-pack chooser: https://fursay.com/links
 - Share Koko's family sample link: https://fursay.com/share/koko
 - Share Noor's family sample link: https://fursay.com/share/noor
 - Koko social profile bio link: https://fursay.com/bio/koko
@@ -45,6 +46,7 @@ Useful actions:
 - Creator kit page: https://fursay.com/creator-kit
 - Family share kit page: https://fursay.com/share-kit
 - Traffic launch kit page: https://fursay.com/traffic-launch
+- Social profile links page: https://fursay.com/links
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
@@ -60,6 +62,7 @@ Technical discovery:
 - Creator kit: https://fursay.com/creator-kit.json
 - Share kit: https://fursay.com/share-kit.json
 - Traffic launch kit: https://fursay.com/traffic-launch.json
+- Social profile links manifest: https://fursay.com/links.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready
 - Local release gate: npm run check

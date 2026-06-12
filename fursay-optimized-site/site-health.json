@@ -17,6 +17,8 @@
     "shareKitPage": "https://fursay.com/share-kit",
     "trafficLaunchManifest": "https://fursay.com/traffic-launch.json",
     "trafficLaunchPage": "https://fursay.com/traffic-launch",
+    "linksManifest": "https://fursay.com/links.json",
+    "linksPage": "https://fursay.com/links",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
     "shortlinkManifest": "https://fursay.com/shortlinks.json",
     "sitemap": "https://fursay.com/sitemap.xml",
@@ -80,6 +82,10 @@
       "https://fursay.com/traffic-launch",
       "https://fursay.com/traffic-launch.json"
     ],
+    "links": [
+      "https://fursay.com/links",
+      "https://fursay.com/links.json"
+    ],
     "deployReadiness": [
       "https://fursay.com/deploy-readiness",
       "https://fursay.com/deploy-readiness.json"
@@ -87,6 +93,7 @@
     "discovery": [
       "https://fursay.com/video-discovery.json",
       "https://fursay.com/shortlinks.json",
+      "https://fursay.com/links.json",
       "https://fursay.com/deploy-readiness.json",
       "https://fursay.com/sitemap.xml",
       "https://fursay.com/robots.txt"
@@ -166,6 +173,9 @@
     "family_share_message",
     "bio_shortlink",
     "bio_profile_copy",
+    "social_profile_links_page",
+    "social_profile_links_manifest",
+    "social_profile_primary_pack_choice",
     "shortlink_manifest",
     "shortlink_query_passthrough",
     "source_id_passthrough",
@@ -212,6 +222,7 @@
   ],
   "successSignals": [
     "modal_preselect_matches_pack",
+    "social_links_primary_cta_preselects_pack",
     "shortlink_redirect_keeps_utm",
     "shortlink_subscribe_attribution",
     "traffic_launch_example_redirect_keeps_attribution",

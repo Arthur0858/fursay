@@ -119,6 +119,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/links.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/video-discovery.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],
@@ -144,6 +150,12 @@ const CHECKS = [
   },
   {
     path: "/traffic-launch",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
+    path: "/links",
     status: 200,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     contentTypeIncludes: "text/html",
