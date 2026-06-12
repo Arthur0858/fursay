@@ -303,6 +303,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         campaign: campaign.campaign,
         primaryAction: "preview_weekly_story_pack",
         sampleShortlink: sample,
+        shareShortlink: campaign.shortlinks.share,
         bioShortlink: campaign.shortlinks.bio,
         creatorShortlink: creator,
         placementLinks,
@@ -315,6 +316,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         },
         trackedLandingUrl: landing,
         qrSvg: campaign.copyKit.qrSvg,
+        shareQrSvg: campaign.copyKit.shareQrSvg,
         youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
         socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`,
         newsletterBlurb: `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`,
@@ -445,8 +447,11 @@ function writeCreatorKitPage(siteDir, kit) {
           <dl>
             ${creatorLinkRow("Creator shortlink", item.creatorShortlink)}
             ${creatorLinkRow("Sample shortlink", item.sampleShortlink)}
+            ${creatorLinkRow("Family share shortlink", item.shareShortlink)}
             ${creatorLinkRow("Bio shortlink", item.bioShortlink)}
             ${creatorLinkRow("Tracked landing", item.trackedLandingUrl)}
+            ${creatorLinkRow("Sample QR asset", item.qrSvg)}
+            ${creatorLinkRow("Share QR asset", item.shareQrSvg)}
             ${placementRows(item.placementLinks)}
             ${videoDiscoveryRows(item.videoDiscovery)}
           </dl>
@@ -456,10 +461,16 @@ function writeCreatorKitPage(siteDir, kit) {
           ${creatorCopyBlock("Social caption", item.socialCaption)}
           ${creatorCopyBlock("Newsletter blurb", item.newsletterBlurb)}
         </div>
-        <a class="creator-qr" href="${escapeHtml(item.creatorShortlink)}" aria-label="${escapeHtml(item.altText)}">
-          <img src="${escapeHtml(new URL(item.qrSvg).pathname)}" alt="${escapeHtml(item.altText)}" width="160" height="160" loading="lazy">
-          <span>QR asset</span>
-        </a>
+        <div class="creator-qr-grid" aria-label="${escapeHtml(campaignName(pack))} QR assets">
+          <a class="creator-qr" href="${escapeHtml(item.sampleShortlink)}" aria-label="${escapeHtml(item.altText)}">
+            <img src="${escapeHtml(new URL(item.qrSvg).pathname)}" alt="${escapeHtml(item.altText)}" width="160" height="160" loading="lazy">
+            <span>Sample QR</span>
+          </a>
+          <a class="creator-qr" href="${escapeHtml(item.shareShortlink)}" aria-label="${escapeHtml(campaignName(pack))} family share QR code for ${escapeHtml(item.shareShortlink)}">
+            <img src="${escapeHtml(new URL(item.shareQrSvg).pathname)}" alt="${escapeHtml(campaignName(pack))} family share QR code for ${escapeHtml(item.shareShortlink)}" width="160" height="160" loading="lazy">
+            <span>Share QR</span>
+          </a>
+        </div>
       </section>`).join("\n");
 
   const html = `<!DOCTYPE html>

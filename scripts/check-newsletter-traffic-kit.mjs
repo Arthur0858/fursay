@@ -173,11 +173,14 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 30) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (data.copyButtonCount !== 36) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
   for (const value of [
     `${baseUrl}/creator/koko`,
     `${baseUrl}/sample/koko`,
+    `${baseUrl}/share/koko`,
     `${baseUrl}/bio/koko`,
+    `${baseUrl}/images/qr/sample-koko.svg`,
+    `${baseUrl}/images/qr/share-koko.svg`,
     `${baseUrl}/creator/koko/youtube`,
     `${baseUrl}/creator/koko/social`,
     `${baseUrl}/creator/koko/newsletter`,
@@ -188,7 +191,10 @@ async function checkCreatorKitBrowser(baseUrl) {
     "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
     `${baseUrl}/creator/noor`,
     `${baseUrl}/sample/noor`,
+    `${baseUrl}/share/noor`,
     `${baseUrl}/bio/noor`,
+    `${baseUrl}/images/qr/sample-noor.svg`,
+    `${baseUrl}/images/qr/share-noor.svg`,
     `${baseUrl}/creator/noor/youtube`,
     `${baseUrl}/creator/noor/social`,
     `${baseUrl}/creator/noor/newsletter`,
@@ -203,9 +209,9 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!copyResult.writes?.[0]) failures.push("creator_kit_page_copy_no_write");
   if (copyResult.clicked && copyResult.label !== "Copied") failures.push(`creator_kit_page_copy_label:${copyResult.label || "none"}`);
   if (data.horizontalOverflow > 2) failures.push(`creator_kit_page_horizontal_overflow:${data.horizontalOverflow}`);
-  if (data.qrImages.length !== 2) failures.push(`creator_kit_page_qr_count:${data.qrImages.length}`);
+  if (data.qrImages.length !== 4) failures.push(`creator_kit_page_qr_count:${data.qrImages.length}`);
   for (const image of data.qrImages) {
-    if (!image.alt.includes("https://fursay.com/sample/")) failures.push(`creator_kit_page_qr_alt:${image.alt || "none"}`);
+    if (!/https:\/\/fursay\.com\/(?:sample|share)\//.test(image.alt)) failures.push(`creator_kit_page_qr_alt:${image.alt || "none"}`);
     const assetFailures = await checkSvgAsset(image.src);
     if (assetFailures.length) failures.push(`creator_kit_page_broken_qr:${image.src || "none"}:${assetFailures.join(",")}`);
   }
@@ -229,14 +235,18 @@ async function main() {
   for (const [pack, expectedCampaign] of Object.entries({ koko: "koko_story_funnel", noor: "noor_story_funnel" })) {
     const item = creatorKit.packs?.[pack] || {};
     const expectedSample = `https://fursay.com/sample/${pack}`;
+    const expectedShare = `https://fursay.com/share/${pack}`;
     const expectedBio = `https://fursay.com/bio/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;
     const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
     if (item.sampleShortlink !== expectedSample) failures.push(`${pack}_bad_sample_shortlink`);
+    if (item.shareShortlink !== expectedShare) failures.push(`${pack}_bad_share_shortlink`);
     if (item.bioShortlink !== expectedBio) failures.push(`${pack}_bad_bio_shortlink`);
     if (item.creatorShortlink !== expectedCreator) failures.push(`${pack}_bad_creator_shortlink`);
+    if (item.qrSvg !== `https://fursay.com/images/qr/sample-${pack}.svg`) failures.push(`${pack}_bad_sample_qr`);
+    if (item.shareQrSvg !== `https://fursay.com/images/qr/share-${pack}.svg`) failures.push(`${pack}_bad_share_qr`);
     if (!item.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`${pack}_missing_creator_source`);
     if (!item.trackedLandingUrl?.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`${pack}_missing_campaign`);
     if (item.placementLinks?.youtubeDescription?.shortlink !== expectedYoutubePlacement) failures.push(`${pack}_bad_youtube_placement`);
@@ -254,6 +264,8 @@ async function main() {
     if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
+    if (!creatorKitPage.includes(expectedShare)) failures.push(`${pack}_creator_page_missing_share`);
+    if (!creatorKitPage.includes(`/images/qr/share-${pack}.svg`)) failures.push(`${pack}_creator_page_missing_share_qr`);
     if (!creatorKitPage.includes(expectedBio)) failures.push(`${pack}_creator_page_missing_bio`);
     if (!creatorKitPage.includes(expectedYoutubePlacement)) failures.push(`${pack}_creator_page_missing_youtube_placement`);
     if (!creatorKitPage.includes(expectedSocialPlacement)) failures.push(`${pack}_creator_page_missing_social_placement`);

@@ -2572,6 +2572,11 @@ body.picture-world .creator-qr {
   text-decoration: none !important;
   color: #4a3a2f !important;
 }
+body.picture-world .creator-qr-grid {
+  display: grid !important;
+  gap: 16px !important;
+  justify-items: center !important;
+}
 body.picture-world .creator-qr img {
   width: min(160px, 100%) !important;
   height: auto !important;
