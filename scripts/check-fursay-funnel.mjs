@@ -722,6 +722,7 @@ async function readAssetText(baseUrl, assetUrl) {
 async function checkDiscoveryFiles(baseUrl) {
   const failures = [];
   const sitemap = await readDiscoveryFile(baseUrl, "sitemap.xml");
+  const robots = await readDiscoveryFile(baseUrl, "robots.txt");
   const llms = await readDiscoveryFile(baseUrl, "llms.txt");
   const siteHealthRaw = await readDiscoveryFile(baseUrl, "site-health.json");
   const releaseRaw = await readDiscoveryFile(baseUrl, "release.json");
@@ -771,9 +772,32 @@ async function checkDiscoveryFiles(baseUrl) {
     }
   }
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
+  const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const sitemapAlternateCount = (sitemap.match(/<xhtml:link /g) || []).length;
   const expectedLastmod = taipeiDateString();
+  const expectedSitemapLocs = [
+    "https://fursay.com/",
+    "https://fursay.com/zh/",
+    "https://fursay.com/ar/",
+    "https://fursay.com/koko",
+    "https://fursay.com/zh/koko",
+    "https://fursay.com/ar/koko",
+    "https://fursay.com/arabic",
+    "https://fursay.com/zh/arabic",
+    "https://fursay.com/ar/arabic",
+  ];
+  if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
+  if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);
+  for (const loc of expectedSitemapLocs) {
+    if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
+  }
+  if (sitemapAlternateCount !== expectedSitemapLocs.length * 4) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
   if (lastmods.length !== 9) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
   if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
+  if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
+  if (!llms.includes("https://fursay.com/sitemap.xml") || !llms.includes("https://fursay.com/robots.txt")) {
+    failures.push("llms_missing_sitemap_or_robots");
+  }
   if (!llms.includes("https://fursay.com/koko") || !llms.includes("https://fursay.com/arabic")) {
     failures.push("llms_missing_story_world_routes");
   }
