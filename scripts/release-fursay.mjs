@@ -104,6 +104,7 @@ function writeReleaseManifest() {
       assetsBinding: "ASSETS",
       releaseCommand: "node scripts/release-fursay.mjs",
       campaignManifest: "https://fursay.com/campaigns.json",
+      creatorKitManifest: "https://fursay.com/creator-kit.json",
     },
     funnels: {
       koko: {
@@ -129,7 +130,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 17,
-      cacheHeaderChecks: 15,
+      cacheHeaderChecks: 16,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -155,74 +156,118 @@ function campaignBase(source) {
 }
 
 function writeCampaignManifest(siteDir, source) {
-  const manifest = {
-    ...campaignBase(source),
-    campaigns: {
-      koko: {
-        status: "active",
-        audience: "Mandarin-speaking families learning English",
-        primaryGoal: "weekly_story_pack_subscribe",
-        campaign: "koko_story_funnel",
-        shortlinks: {
-          join: "https://fursay.com/join/koko",
-          sample: "https://fursay.com/sample/koko",
-        },
-        landingPages: {
-          storyWorld: "https://fursay.com/koko",
-          homeSample: "https://fursay.com/koko?subscribe=koko&utm_source=home&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=home_koko_sample_link",
-          sampleSchema: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
-        },
-        copyKit: {
-          version: "2026-06-13",
-          qrLabel: "Koko weekly story pack",
-          shortHeadline: "Get Koko's weekly English story pack",
-          videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
-          familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
-          primaryShortlink: "https://fursay.com/sample/koko",
-          qrSvg: "https://fursay.com/images/qr/sample-koko.svg",
-        },
-        ctaSources: [
-          "home_koko_weekly_pack",
-          "home_weekly_pack_koko",
-          "koko_sample_pack_cta",
-          "koko_story_pack_section",
-          "share_strip_koko_pack",
-        ],
+  const campaigns = {
+    koko: {
+      status: "active",
+      audience: "Mandarin-speaking families learning English",
+      primaryGoal: "weekly_story_pack_subscribe",
+      campaign: "koko_story_funnel",
+      shortlinks: {
+        join: "https://fursay.com/join/koko",
+        sample: "https://fursay.com/sample/koko",
       },
-      noor: {
-        status: "active",
-        audience: "Arabic-speaking families learning Chinese",
-        primaryGoal: "weekly_story_pack_subscribe",
-        campaign: "noor_story_funnel",
-        shortlinks: {
-          join: "https://fursay.com/join/noor",
-          sample: "https://fursay.com/sample/noor",
-        },
-        landingPages: {
-          storyWorld: "https://fursay.com/arabic",
-          homeSample: "https://fursay.com/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
-          sampleSchema: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
-        },
-        copyKit: {
-          version: "2026-06-13",
-          qrLabel: "Noor weekly story pack",
-          shortHeadline: "Get Noor's weekly Chinese story pack",
-          videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
-          familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
-          primaryShortlink: "https://fursay.com/sample/noor",
-          qrSvg: "https://fursay.com/images/qr/sample-noor.svg",
-        },
-        ctaSources: [
-          "home_noor_weekly_pack",
-          "home_weekly_pack_noor",
-          "arabic_sample_pack_cta",
-          "arabic_story_pack_section",
-          "share_strip_noor_pack",
-        ],
+      landingPages: {
+        storyWorld: "https://fursay.com/koko",
+        homeSample: "https://fursay.com/koko?subscribe=koko&utm_source=home&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=home_koko_sample_link",
+        sampleSchema: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
       },
+      copyKit: {
+        version: "2026-06-13",
+        qrLabel: "Koko weekly story pack",
+        shortHeadline: "Get Koko's weekly English story pack",
+        videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
+        familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
+        primaryShortlink: "https://fursay.com/sample/koko",
+        qrSvg: "https://fursay.com/images/qr/sample-koko.svg",
+      },
+      ctaSources: [
+        "home_koko_weekly_pack",
+        "home_weekly_pack_koko",
+        "koko_sample_pack_cta",
+        "koko_story_pack_section",
+        "share_strip_koko_pack",
+      ],
+    },
+    noor: {
+      status: "active",
+      audience: "Arabic-speaking families learning Chinese",
+      primaryGoal: "weekly_story_pack_subscribe",
+      campaign: "noor_story_funnel",
+      shortlinks: {
+        join: "https://fursay.com/join/noor",
+        sample: "https://fursay.com/sample/noor",
+      },
+      landingPages: {
+        storyWorld: "https://fursay.com/arabic",
+        homeSample: "https://fursay.com/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
+        sampleSchema: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+      },
+      copyKit: {
+        version: "2026-06-13",
+        qrLabel: "Noor weekly story pack",
+        shortHeadline: "Get Noor's weekly Chinese story pack",
+        videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
+        familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
+        primaryShortlink: "https://fursay.com/sample/noor",
+        qrSvg: "https://fursay.com/images/qr/sample-noor.svg",
+      },
+      ctaSources: [
+        "home_noor_weekly_pack",
+        "home_weekly_pack_noor",
+        "arabic_sample_pack_cta",
+        "arabic_story_pack_section",
+        "share_strip_noor_pack",
+      ],
     },
   };
+  const manifest = {
+    ...campaignBase(source),
+    creatorKit: "https://fursay.com/creator-kit.json",
+    campaigns,
+  };
   writeFileSync(resolve(siteDir, "campaigns.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeCreatorKit(siteDir, source, campaigns);
+}
+
+function writeCreatorKit(siteDir, source, campaigns) {
+  const kit = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Reusable traffic assets for YouTube descriptions, social captions, newsletter blurbs, QR posters, and creator handoffs.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      linksUseShortlinksWithUtmRedirects: true,
+    },
+    packs: Object.fromEntries(Object.entries(campaigns).map(([pack, campaign]) => {
+      const sample = campaign.shortlinks.sample;
+      const landing = pack === "koko"
+        ? "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample"
+        : "https://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample";
+      return [pack, {
+        audience: campaign.audience,
+        campaign: campaign.campaign,
+        primaryAction: "preview_weekly_story_pack",
+        sampleShortlink: sample,
+        trackedLandingUrl: landing,
+        qrSvg: campaign.copyKit.qrSvg,
+        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${sample}`,
+        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${sample}`,
+        newsletterBlurb: `${campaign.copyKit.familyShareText}`,
+        altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
+        utmContract: {
+          source: "creator_kit",
+          medium: "description",
+          campaign: campaign.campaign,
+          content: "creator_kit_sample",
+        },
+      }];
+    })),
+  };
+  writeFileSync(resolve(siteDir, "creator-kit.json"), JSON.stringify(kit, null, 2) + "\n");
 }
 
 async function main() {

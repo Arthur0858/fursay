@@ -14,6 +14,7 @@ node_modules
 *.bundle
 fursay-optimized-site/release.json
 fursay-optimized-site/campaigns.json
+fursay-optimized-site/creator-kit.json
 transfer/
 output/
 qa-screenshots/

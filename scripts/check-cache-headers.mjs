@@ -65,6 +65,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/creator-kit.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/llms.txt",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],

@@ -37,3 +37,4 @@ Technical discovery:
 - Site health: https://fursay.com/site-health.json
 - Release manifest: https://fursay.com/release.json
 - Campaign manifest: https://fursay.com/campaigns.json
+- Creator kit: https://fursay.com/creator-kit.json

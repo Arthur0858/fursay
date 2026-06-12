@@ -8,7 +8,8 @@
     "assetsBinding": "ASSETS",
     "releaseCommand": "node scripts/release-fursay.mjs",
     "releaseManifest": "https://fursay.com/release.json",
-    "campaignManifest": "https://fursay.com/campaigns.json"
+    "campaignManifest": "https://fursay.com/campaigns.json",
+    "creatorKitManifest": "https://fursay.com/creator-kit.json"
   },
   "routes": {
     "home": [
@@ -97,6 +98,8 @@
     "copy_sample_shortlink",
     "campaign_copy_kit",
     "campaign_qr_asset",
+    "campaign_qr_card",
+    "creator_kit_manifest",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",
