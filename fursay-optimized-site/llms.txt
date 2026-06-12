@@ -1,0 +1,32 @@
+# Fursay
+
+Fursay is a parent-child bilingual story platform for young families. The site helps parents choose one short story, try one phrase together, and receive a weekly story pack by email.
+
+Primary site:
+- https://fursay.com/
+
+Localized home pages:
+- English: https://fursay.com/
+- Traditional Chinese: https://fursay.com/zh/
+- Arabic: https://fursay.com/ar/
+
+Story worlds:
+- Koko's Forest Adventure: English-Chinese stories for Mandarin-speaking families, ages 2-8.
+  - Site: https://fursay.com/koko
+  - Traditional Chinese: https://fursay.com/zh/koko
+  - Arabic: https://fursay.com/ar/koko
+  - YouTube: https://www.youtube.com/@KokosForest
+- Arabic Kids Chinese Picture Book: Arabic-Chinese stories with Pinyin support for Arabic-speaking families, ages 3-6.
+  - Site: https://fursay.com/arabic
+  - Traditional Chinese: https://fursay.com/zh/arabic
+  - Arabic: https://fursay.com/ar/arabic
+  - YouTube: https://www.youtube.com/@ArabicKidsChinese
+
+Useful actions:
+- Choose a story world from the home page.
+- Watch one free story on YouTube.
+- Subscribe to the Koko or Noor weekly story pack.
+
+Technical discovery:
+- Sitemap: https://fursay.com/sitemap.xml
+- Robots: https://fursay.com/robots.txt

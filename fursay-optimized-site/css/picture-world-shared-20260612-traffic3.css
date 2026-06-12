@@ -2126,25 +2126,6 @@ body.picture-world .share-subscribe:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 12px 24px rgba(88, 67, 44, 0.12) !important;
 }
-body.picture-world .share-pack-link {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 44px !important;
-  padding: 10px 16px !important;
-  border: 1px dashed rgba(88, 67, 44, 0.28) !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.62) !important;
-  color: #6f6257 !important;
-  font: inherit !important;
-  font-size: 0.92rem !important;
-  font-weight: 900 !important;
-  cursor: pointer !important;
-}
-body.picture-world .share-pack-link:hover {
-  border-style: solid !important;
-  color: var(--world-accent-dark) !important;
-}
 body.picture-world .share-fallback:hover {
   text-decoration: underline !important;
 }
@@ -2263,7 +2244,6 @@ body.picture-world.world-arabic .cta-sec .cta-bar p {
   }
   body.picture-world .share-actions .btn,
   body.picture-world .share-subscribe,
-  body.picture-world .share-pack-link,
   body.picture-world .share-fallback {
     width: 100% !important;
     max-width: 340px !important;

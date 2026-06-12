@@ -85,13 +85,6 @@
       if (shareButton) {
         event.preventDefault();
         window.shareFursay(shareButton);
-        return;
-      }
-
-      var packLinkButton = event.target.closest('[data-copy-pack-link]');
-      if (packLinkButton) {
-        event.preventDefault();
-        copyPackLink(packLinkButton);
       }
     });
 
@@ -192,11 +185,7 @@
         fallback: '複製連結',
         subscribe: '取得故事包',
         subscribeKoko: '叩叩英文包',
-        subscribeNoor: '努爾中文包',
-        packLink: '複製故事包連結',
-        packLinkKoko: '複製叩叩連結',
-        packLinkNoor: '複製努爾連結',
-        packLinkCopied: '故事包連結已複製'
+        subscribeNoor: '努爾中文包'
       };
     }
     if (lang === 'ar') {
@@ -209,11 +198,7 @@
         fallback: 'نسخ الرابط',
         subscribe: 'احصلوا على الحزمة',
         subscribeKoko: 'حزمة كوكو الإنجليزية',
-        subscribeNoor: 'حزمة نور الصينية',
-        packLink: 'نسخ رابط الحزمة',
-        packLinkKoko: 'نسخ رابط كوكو',
-        packLinkNoor: 'نسخ رابط نور',
-        packLinkCopied: 'تم نسخ رابط الحزمة'
+        subscribeNoor: 'حزمة نور الصينية'
       };
     }
     return {
@@ -225,11 +210,7 @@
       fallback: 'Copy link',
       subscribe: 'Get the pack',
       subscribeKoko: 'Koko English pack',
-      subscribeNoor: 'Noor Chinese pack',
-      packLink: 'Copy pack link',
-      packLinkKoko: 'Copy Koko link',
-      packLinkNoor: 'Copy Noor link',
-      packLinkCopied: 'Pack link copied'
+      subscribeNoor: 'Noor Chinese pack'
     };
   }
 
@@ -247,24 +228,6 @@
     return url.toString();
   }
 
-  function packUrl(pack) {
-    var canonical = document.querySelector('link[rel="canonical"]');
-    var url = new URL(canonical && canonical.href ? canonical.href : window.location.href);
-    url.searchParams.set('subscribe', pack);
-    url.searchParams.set('utm_source', 'family_share');
-    url.searchParams.set('utm_medium', 'share');
-    url.searchParams.set('utm_campaign', pageCampaign());
-    url.searchParams.set('utm_content', pack + '_pack_link');
-    return url.toString();
-  }
-
-  function normalizePack(value) {
-    value = String(value || '').toLowerCase();
-    if (value === 'arabic') return 'noor';
-    if (value === 'koko' || value === 'noor') return value;
-    return '';
-  }
-
   function initShareStrip() {
     if (document.querySelector('.share-strip')) return;
     var footer = document.querySelector('footer');
@@ -273,19 +236,11 @@
     var url = shareUrl();
     var escapedUrl = url.replace(/"/g, '&quot;');
     var pack = pagePack();
-    var packLink = pack ? packUrl(pack) : '';
-    var escapedPackLink = packLink.replace(/"/g, '&quot;');
     var subscribeAction = pack
       ? subscribeActionHtml(text, pack, text.subscribe, 'share_strip_' + pack + '_pack')
       : [
         subscribeActionHtml(text, 'koko', text.subscribeKoko, 'share_strip_home_koko_pack'),
         subscribeActionHtml(text, 'noor', text.subscribeNoor, 'share_strip_home_noor_pack')
-      ].join('');
-    var packLinkAction = pack
-      ? '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + escapedPackLink + '">' + text.packLink + '</button>'
-      : [
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('koko').replace(/"/g, '&quot;') + '">' + text.packLinkKoko + '</button>',
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('noor').replace(/"/g, '&quot;') + '">' + text.packLinkNoor + '</button>'
       ].join('');
     var section = document.createElement('section');
     section.className = 'share-strip';
@@ -300,7 +255,6 @@
       '<div class="share-actions">',
       '<button type="button" class="btn btn-secondary" data-share-fursay data-share-url="' + escapedUrl + '">' + text.share + '</button>',
       subscribeAction,
-      packLinkAction,
       '<a class="share-fallback" href="' + escapedUrl + '">' + text.fallback + '</a>',
       '<span class="share-status" aria-live="polite"></span>',
       '</div>',
@@ -322,22 +276,6 @@
         window.prompt(text.fallback, url);
       }
       if (status) status.textContent = text.copied;
-    } catch (e) {
-      if (status) status.textContent = '';
-    }
-  }
-
-  async function copyPackLink(button) {
-    var text = localeText();
-    var url = button.getAttribute('data-pack-url') || packUrl(pagePack() || 'koko');
-    var status = button.closest('.share-strip')?.querySelector('.share-status');
-    try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-      } else {
-        window.prompt(text.packLink, url);
-      }
-      if (status) status.textContent = text.packLinkCopied;
     } catch (e) {
       if (status) status.textContent = '';
     }
@@ -367,16 +305,12 @@
   function collectSubscribeAttribution() {
     var params = new URLSearchParams(window.location.search || '');
     var overlay = qs('subscribeModal');
-    var subscribeIntent = normalizePack(params.get('subscribe') || params.get('pack') || params.get('group'));
     var attribution = {
       signup_source: overlay && overlay.dataset.signupSource ? overlay.dataset.signupSource : 'site_subscribe_modal',
       landing_path: window.location.pathname || '/',
       landing_locale: document.documentElement.lang || '',
       referrer_host: ''
     };
-    if (subscribeIntent) attribution.subscribe_intent = subscribeIntent;
-    attribution.entry_pack = subscribeIntent || pagePack() || '';
-    if (overlay && overlay.dataset.preselect) attribution.modal_preselect = overlay.dataset.preselect;
 
     if (document.referrer) {
       try { attribution.referrer_host = new URL(document.referrer).host; } catch (e) {}
@@ -394,7 +328,6 @@
     var overlay = qs('subscribeModal');
     if (!overlay) return;
     overlay.dataset.signupSource = signupSource || (preselect ? preselect + '_subscribe_cta' : 'site_subscribe_modal');
-    overlay.dataset.preselect = preselect || '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (preselect) {

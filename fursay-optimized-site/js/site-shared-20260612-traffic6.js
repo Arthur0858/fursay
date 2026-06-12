@@ -194,8 +194,6 @@
         subscribeKoko: '叩叩英文包',
         subscribeNoor: '努爾中文包',
         packLink: '複製故事包連結',
-        packLinkKoko: '複製叩叩連結',
-        packLinkNoor: '複製努爾連結',
         packLinkCopied: '故事包連結已複製'
       };
     }
@@ -211,8 +209,6 @@
         subscribeKoko: 'حزمة كوكو الإنجليزية',
         subscribeNoor: 'حزمة نور الصينية',
         packLink: 'نسخ رابط الحزمة',
-        packLinkKoko: 'نسخ رابط كوكو',
-        packLinkNoor: 'نسخ رابط نور',
         packLinkCopied: 'تم نسخ رابط الحزمة'
       };
     }
@@ -227,8 +223,6 @@
       subscribeKoko: 'Koko English pack',
       subscribeNoor: 'Noor Chinese pack',
       packLink: 'Copy pack link',
-      packLinkKoko: 'Copy Koko link',
-      packLinkNoor: 'Copy Noor link',
       packLinkCopied: 'Pack link copied'
     };
   }
@@ -283,10 +277,7 @@
       ].join('');
     var packLinkAction = pack
       ? '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + escapedPackLink + '">' + text.packLink + '</button>'
-      : [
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('koko').replace(/"/g, '&quot;') + '">' + text.packLinkKoko + '</button>',
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('noor').replace(/"/g, '&quot;') + '">' + text.packLinkNoor + '</button>'
-      ].join('');
+      : '';
     var section = document.createElement('section');
     section.className = 'share-strip';
     section.setAttribute('aria-label', text.kicker);

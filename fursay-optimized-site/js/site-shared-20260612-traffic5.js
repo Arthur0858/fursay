@@ -194,8 +194,6 @@
         subscribeKoko: '叩叩英文包',
         subscribeNoor: '努爾中文包',
         packLink: '複製故事包連結',
-        packLinkKoko: '複製叩叩連結',
-        packLinkNoor: '複製努爾連結',
         packLinkCopied: '故事包連結已複製'
       };
     }
@@ -211,8 +209,6 @@
         subscribeKoko: 'حزمة كوكو الإنجليزية',
         subscribeNoor: 'حزمة نور الصينية',
         packLink: 'نسخ رابط الحزمة',
-        packLinkKoko: 'نسخ رابط كوكو',
-        packLinkNoor: 'نسخ رابط نور',
         packLinkCopied: 'تم نسخ رابط الحزمة'
       };
     }
@@ -227,8 +223,6 @@
       subscribeKoko: 'Koko English pack',
       subscribeNoor: 'Noor Chinese pack',
       packLink: 'Copy pack link',
-      packLinkKoko: 'Copy Koko link',
-      packLinkNoor: 'Copy Noor link',
       packLinkCopied: 'Pack link copied'
     };
   }
@@ -258,13 +252,6 @@
     return url.toString();
   }
 
-  function normalizePack(value) {
-    value = String(value || '').toLowerCase();
-    if (value === 'arabic') return 'noor';
-    if (value === 'koko' || value === 'noor') return value;
-    return '';
-  }
-
   function initShareStrip() {
     if (document.querySelector('.share-strip')) return;
     var footer = document.querySelector('footer');
@@ -283,10 +270,7 @@
       ].join('');
     var packLinkAction = pack
       ? '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + escapedPackLink + '">' + text.packLink + '</button>'
-      : [
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('koko').replace(/"/g, '&quot;') + '">' + text.packLinkKoko + '</button>',
-        '<button type="button" class="share-pack-link" data-copy-pack-link data-pack-url="' + packUrl('noor').replace(/"/g, '&quot;') + '">' + text.packLinkNoor + '</button>'
-      ].join('');
+      : '';
     var section = document.createElement('section');
     section.className = 'share-strip';
     section.setAttribute('aria-label', text.kicker);
@@ -367,16 +351,12 @@
   function collectSubscribeAttribution() {
     var params = new URLSearchParams(window.location.search || '');
     var overlay = qs('subscribeModal');
-    var subscribeIntent = normalizePack(params.get('subscribe') || params.get('pack') || params.get('group'));
     var attribution = {
       signup_source: overlay && overlay.dataset.signupSource ? overlay.dataset.signupSource : 'site_subscribe_modal',
       landing_path: window.location.pathname || '/',
       landing_locale: document.documentElement.lang || '',
       referrer_host: ''
     };
-    if (subscribeIntent) attribution.subscribe_intent = subscribeIntent;
-    attribution.entry_pack = subscribeIntent || pagePack() || '';
-    if (overlay && overlay.dataset.preselect) attribution.modal_preselect = overlay.dataset.preselect;
 
     if (document.referrer) {
       try { attribution.referrer_host = new URL(document.referrer).host; } catch (e) {}
@@ -394,7 +374,6 @@
     var overlay = qs('subscribeModal');
     if (!overlay) return;
     overlay.dataset.signupSource = signupSource || (preselect ? preselect + '_subscribe_cta' : 'site_subscribe_modal');
-    overlay.dataset.preselect = preselect || '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (preselect) {

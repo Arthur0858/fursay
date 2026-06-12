@@ -10,6 +10,11 @@ export default {
       return handleSubscribe(request, env);
     }
 
+    const joinRedirect = joinRedirectUrl(url);
+    if (joinRedirect) {
+      return redirectWithHeaders(joinRedirect, 302);
+    }
+
     if (url.pathname.endsWith(".html")) {
       const cleanPath = url.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
       return withSecurityHeaders(Response.redirect(`${url.origin}${cleanPath}${url.search}`, 301));
@@ -18,6 +23,46 @@ export default {
     return serveAsset(request, env);
   }
 };
+
+function joinRedirectUrl(url) {
+  const path = url.pathname.replace(/\/+$/, "").toLowerCase();
+  const routes = {
+    "/join/koko": {
+      target: "/koko",
+      pack: "koko",
+      campaign: "koko_story_funnel",
+      content: "join_koko"
+    },
+    "/join/noor": {
+      target: "/arabic",
+      pack: "noor",
+      campaign: "noor_story_funnel",
+      content: "join_noor"
+    }
+  };
+  const route = routes[path];
+  if (!route) return null;
+
+  const target = new URL(route.target, url.origin);
+  target.searchParams.set("subscribe", route.pack);
+  target.searchParams.set("utm_source", "shortlink");
+  target.searchParams.set("utm_medium", "direct");
+  target.searchParams.set("utm_campaign", route.campaign);
+  target.searchParams.set("utm_content", route.content);
+  return target.toString();
+}
+
+function redirectWithHeaders(location, status) {
+  const response = Response.redirect(location, status);
+  const next = withSecurityHeaders(response);
+  const headers = new Headers(next.headers);
+  headers.set("Cache-Control", "public, max-age=300, must-revalidate");
+  return new Response(next.body, {
+    status: next.status,
+    statusText: next.statusText,
+    headers
+  });
+}
 
 async function serveAsset(request, env) {
   const first = await env.ASSETS.fetch(request);
@@ -44,7 +89,11 @@ function withAssetHeaders(response, request) {
   if (path === "/" || path.endsWith(".html") || !/\.[^/]+$/.test(path)) {
     headers.set("Cache-Control", "public, max-age=300, must-revalidate");
   } else if (/\.(?:css|js)$/i.test(path)) {
-    headers.set("Cache-Control", "public, max-age=300, must-revalidate");
+    if (url.searchParams.has("v") || /-\d{8}-[a-z0-9-]+\.(?:css|js)$/i.test(path)) {
+      headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    } else {
+      headers.set("Cache-Control", "public, max-age=300, must-revalidate");
+    }
   } else if (/\.(?:avif|webp|png|jpg|jpeg|gif|svg|ico|woff2?)$/i.test(path)) {
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
   } else if (/\.(?:xml|txt|json)$/i.test(path)) {
@@ -167,9 +216,19 @@ function attributionFields(attribution, env) {
     utm_content: env.MAILERLITE_FIELD_UTM_CONTENT || "utm_content",
     utm_term: env.MAILERLITE_FIELD_UTM_TERM || "utm_term"
   };
+  const optionalFieldNames = {
+    subscribe_intent: env.MAILERLITE_FIELD_SUBSCRIBE_INTENT,
+    entry_pack: env.MAILERLITE_FIELD_ENTRY_PACK,
+    modal_preselect: env.MAILERLITE_FIELD_MODAL_PRESELECT
+  };
 
   const fields = {};
   for (const [key, fieldName] of Object.entries(fieldNames)) {
+    const value = cleanAttributionValue(attribution[key]);
+    if (value) fields[fieldName] = value;
+  }
+  for (const [key, fieldName] of Object.entries(optionalFieldNames)) {
+    if (!fieldName) continue;
     const value = cleanAttributionValue(attribution[key]);
     if (value) fields[fieldName] = value;
   }

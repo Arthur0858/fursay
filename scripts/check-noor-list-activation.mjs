@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-noor-list-activation";
-const PAGES = ["/arabic.html", "/zh/arabic.html", "/ar/arabic.html"];
+const PAGES = ["/arabic", "/zh/arabic", "/ar/arabic"];
 const REQUIRED_SOURCES = [
   "arabic_hero_weekly_pack",
   "arabic_episode_story_pack",
@@ -17,9 +17,10 @@ const REQUIRED_SOURCES = [
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const parsed = { outDir: DEFAULT_OUT };
+  const parsed = { outDir: DEFAULT_OUT, baseUrl: "" };
   for (let i = 0; i < args.length; i += 1) {
     if (args[i] === "--out-dir") parsed.outDir = args[++i];
+    if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
   }
   return parsed;
 }
@@ -47,13 +48,16 @@ function startServer() {
       }
       const clean = url.pathname === "/" ? "/index.html" : url.pathname;
       const fullPath = resolve(SITE_DIR, `.${clean}`);
-      if (!fullPath.startsWith(SITE_DIR) || !existsSync(fullPath)) {
+      const htmlPath = resolve(SITE_DIR, `.${clean}.html`);
+      const indexPath = resolve(SITE_DIR, `.${clean}/index.html`);
+      const candidatePath = existsSync(fullPath) ? fullPath : (existsSync(htmlPath) ? htmlPath : indexPath);
+      if (!candidatePath.startsWith(SITE_DIR) || !existsSync(candidatePath)) {
         res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
         res.end("not found");
         return;
       }
-      const body = await readFile(fullPath);
-      res.writeHead(200, { "content-type": contentType(fullPath) });
+      const body = await readFile(candidatePath);
+      res.writeHead(200, { "content-type": contentType(candidatePath) });
       res.end(body);
     } catch (error) {
       res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
@@ -74,7 +78,11 @@ async function checkPage(browser, baseUrl, path) {
   page.on("request", (request) => {
     if (new URL(request.url()).pathname === "/api/subscribe") apiCalls.push(request.url());
   });
-  await page.goto(baseUrl + path, { waitUntil: "domcontentloaded", timeout: 20000 });
+  try {
+    await page.goto(baseUrl + path, { waitUntil: "domcontentloaded", timeout: 45000 });
+  } catch (error) {
+    await page.goto(baseUrl + path, { waitUntil: "load", timeout: 45000 });
+  }
   await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
 
   const staticChecks = await page.evaluate((sources) => {
@@ -90,6 +98,8 @@ async function checkPage(browser, baseUrl, path) {
       dir: document.documentElement.dir || "",
       ctas,
       missingSources: sources.filter((source) => !sourceSet.has(source)),
+      hasNoorLeadMagnet: !!document.querySelector(".noor-lead-magnet"),
+      leadMagnetItems: document.querySelectorAll(".noor-lead-magnet li").length,
       hasNoorCheckbox: !!document.querySelector('#subscribeModal input[name="groups"][value="noor"]'),
       hasSubscribeForm: !!document.querySelector("#subscribeModal form"),
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
@@ -118,6 +128,8 @@ async function checkPage(browser, baseUrl, path) {
   await page.close();
   const failures = [];
   if (staticChecks.missingSources.length) failures.push(`missing_sources:${staticChecks.missingSources.join(",")}`);
+  if (!staticChecks.hasNoorLeadMagnet) failures.push("missing_noor_lead_magnet");
+  if (staticChecks.leadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${staticChecks.leadMagnetItems}`);
   if (!staticChecks.hasNoorCheckbox) failures.push("missing_noor_checkbox");
   if (!staticChecks.hasSubscribeForm) failures.push("missing_subscribe_form");
   if (staticChecks.horizontalOverflow > 2) failures.push(`horizontal_overflow:${staticChecks.horizontalOverflow}`);
@@ -139,21 +151,22 @@ async function checkPage(browser, baseUrl, path) {
       noFormSubmit: true,
       noMailerLiteCall: apiCalls.length === 0,
       noSecretRead: true,
-      localStaticServerOnly: true,
+      baseUrl,
     },
   };
 }
 
 async function main() {
   const args = parseArgs();
-  const { server, baseUrl } = await startServer();
+  const local = args.baseUrl ? { server: null, baseUrl: args.baseUrl } : await startServer();
+  const { server, baseUrl } = local;
   const browser = await chromium.launch({ headless: true });
   const results = [];
   try {
     for (const path of PAGES) results.push(await checkPage(browser, baseUrl, path));
   } finally {
     await browser.close();
-    server.close();
+    if (server) server.close();
   }
   const failed = results.filter((result) => !result.ok);
   const report = {
@@ -173,7 +186,8 @@ async function main() {
       `- Result: ${report.ok ? "PASS" : "FAIL"}`,
       `- Pages: ${report.total}`,
       `- Failed: ${failed.length}`,
-      "- Safety: local static server only; no form submit; no MailerLite call; no secret read.",
+      `- Base URL: ${baseUrl}`,
+      "- Safety: no form submit; no MailerLite call; no secret read.",
       "",
     ].join("\n"))));
   console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: failed.length }, null, 2));

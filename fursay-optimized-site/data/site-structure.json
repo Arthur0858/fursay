@@ -74,10 +74,10 @@
   "sharedAssets": {
     "css": [
       "/css/picture-book-base.css",
-      "/css/picture-world-shared.css"
+      "/css/picture-world-shared-20260612-traffic5.css"
     ],
     "js": [
-      "/js/site-shared.js"
+      "/js/site-shared-20260612-traffic7.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
