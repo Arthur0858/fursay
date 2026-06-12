@@ -26,6 +26,8 @@ Useful actions:
 - Choose a story world from the home page.
 - Watch one free story on YouTube.
 - Subscribe to the Koko or Noor weekly story pack.
+- Join Koko's weekly English story pack: https://fursay.com/join/koko
+- Join Noor's weekly Chinese story pack: https://fursay.com/join/noor
 
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml

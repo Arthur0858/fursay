@@ -16,6 +16,17 @@ const MERGED_TEXT_PATTERNS = [
   /كوكوومغامرة/,
   /العربوكتاب/,
 ];
+
+function taipeiDateString(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
 const JOIN_ROUTES = [
   {
     path: "/join/koko",
@@ -356,19 +367,23 @@ async function checkDiscoveryFiles(baseUrl) {
   const sitemap = await readDiscoveryFile(baseUrl, "sitemap.xml");
   const llms = await readDiscoveryFile(baseUrl, "llms.txt");
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
+  const expectedLastmod = taipeiDateString();
   if (lastmods.length !== 9) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
-  if (lastmods.some((value) => value !== "2026-06-12")) failures.push("sitemap_lastmod_not_current");
+  if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
   if (!llms.includes("https://fursay.com/koko") || !llms.includes("https://fursay.com/arabic")) {
     failures.push("llms_missing_story_world_routes");
   }
   if (!llms.includes("https://www.youtube.com/@KokosForest") || !llms.includes("https://www.youtube.com/@ArabicKidsChinese")) {
     failures.push("llms_missing_youtube_routes");
   }
+  if (!llms.includes("https://fursay.com/join/koko") || !llms.includes("https://fursay.com/join/noor")) {
+    failures.push("llms_missing_join_routes");
+  }
   return {
     path: "discovery-files",
     ok: failures.length === 0,
     failures,
-    data: { lastmodCount: lastmods.length, llmsBytes: Buffer.byteLength(llms) },
+    data: { lastmodCount: lastmods.length, expectedLastmod, llmsBytes: Buffer.byteLength(llms) },
   };
 }
 
