@@ -8,6 +8,7 @@
     "assetsBinding": "ASSETS",
     "releaseCommand": "node scripts/release-fursay.mjs",
     "releaseManifest": "https://fursay.com/release.json",
+    "deployReadinessManifest": "https://fursay.com/deploy-readiness.json",
     "campaignManifest": "https://fursay.com/campaigns.json",
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
@@ -81,6 +82,7 @@
     "discovery": [
       "https://fursay.com/video-discovery.json",
       "https://fursay.com/shortlinks.json",
+      "https://fursay.com/deploy-readiness.json",
       "https://fursay.com/sitemap.xml",
       "https://fursay.com/robots.txt"
     ]
@@ -185,6 +187,7 @@
     "share_kit_page",
     "traffic_launch_manifest",
     "traffic_launch_page",
+    "deploy_readiness_manifest",
     "creator_shortlink",
     "creator_placement_shortlink",
     "story_world_cta",

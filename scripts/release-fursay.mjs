@@ -126,6 +126,7 @@ function writeReleaseManifest() {
       workerName: "fursay",
       assetsBinding: "ASSETS",
       releaseCommand: "node scripts/release-fursay.mjs",
+      deployReadinessManifest: "https://fursay.com/deploy-readiness.json",
       campaignManifest: "https://fursay.com/campaigns.json",
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
@@ -178,18 +179,73 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 39,
+      cacheHeaderChecks: 40,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
   };
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeDeployReadinessManifest(siteDir, source);
   writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
   writeShareKit(siteDir, source);
   writeTrafficLaunchKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
+}
+
+function writeDeployReadinessManifest(siteDir, source) {
+  const remote = gitRemote();
+  const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
+  const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
+  const warnings = [];
+  if (!remote) warnings.push("git_missing_origin_remote");
+  if (!hasCloudflareToken) warnings.push("missing_CLOUDFLARE_API_TOKEN");
+  if (!hasCloudflareAccount) warnings.push("missing_CLOUDFLARE_ACCOUNT_ID");
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    deployment: {
+      workerName: "fursay",
+      assetsBinding: "ASSETS",
+      releaseCommand: "node scripts/release-fursay.mjs",
+      localGateCommand: "npm run check",
+      liveSmokeCommand: "npm run smoke:live",
+      deployReadinessCommand: "npm run deploy:ready",
+      autoDeployWorkflow: ".github/workflows/deploy-worker.yml",
+      runbook: "docs/cloudflare-deploy-runbook.md",
+    },
+    requiredSecrets: [
+      "CLOUDFLARE_API_TOKEN",
+      "CLOUDFLARE_ACCOUNT_ID",
+    ],
+    evidence: {
+      hasOriginRemote: Boolean(remote),
+      hasCloudflareToken,
+      hasCloudflareAccount,
+      tokenValuesPublished: false,
+      accountValuesPublished: false,
+    },
+    strictGates: {
+      requireRemote: "npm run deploy:ready -- --require-remote",
+      requireCloudflare: "npm run deploy:ready -- --require-cloudflare",
+    },
+    safety: {
+      failClosed: true,
+      smokeSubmitsToMailerLite: false,
+      releaseArtifacts: "/tmp/fursay-release-*",
+      artifactRetentionDays: 14,
+    },
+    status: {
+      localDeployReady: true,
+      githubPushDeployProven: Boolean(remote && hasCloudflareToken && hasCloudflareAccount),
+      warnings,
+    },
+  };
+  writeFileSync(resolve(siteDir, "deploy-readiness.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
 function sitemapUrl(loc, alternates, priority) {
@@ -518,8 +574,10 @@ function trafficLaunchChannelRows(channels) {
             <p>${escapeHtml(channel.checkpoint)}</p>
             <dl>
               ${shareKitLinkRow("Tracked link", channel.link)}
+              ${shareKitLinkRow("Source ID example", channel.exampleUrl)}
             </dl>
             <pre>${escapeHtml(channel.copy)}</pre>
+            <pre>${escapeHtml(channel.linkTemplate)}</pre>
           </article>`).join("\n");
 }
 
@@ -531,11 +589,16 @@ function buildTrafficLaunchKit(siteDir, source) {
     const creatorPack = creatorKit.packs?.[pack] || {};
     const sharePack = shareKit.packs?.[pack] || {};
     const channel = pack === "koko" ? "Koko" : "Noor";
+    const sourceIdExample = pack === "koko" ? "koko_ep001" : "noor_ep001";
+    const withSource = (link, placement) => `${link}?source_id=${sourceIdExample}&creator=fursay&placement=${placement}`;
+    const template = (link, placement) => `${link}?source_id={episode_or_post_id}&creator=fursay&placement=${placement}`;
     const channels = [
       {
         channel: "youtube_description",
         label: "YouTube description",
         link: creatorPack.placementLinks?.youtubeDescription?.shortlink || "",
+        linkTemplate: template(creatorPack.placementLinks?.youtubeDescription?.shortlink || "", "youtube_description"),
+        exampleUrl: withSource(creatorPack.placementLinks?.youtubeDescription?.shortlink || "", "youtube_description"),
         copy: creatorPack.youtubeDescription || "",
         checkpoint: "Paste under the episode description and confirm the shortlink opens a preselected signup modal.",
         attribution: {
@@ -549,6 +612,8 @@ function buildTrafficLaunchKit(siteDir, source) {
         channel: "social_profile",
         label: "Social caption or profile",
         link: creatorPack.placementLinks?.socialCaption?.shortlink || "",
+        linkTemplate: template(creatorPack.placementLinks?.socialCaption?.shortlink || "", "social_profile"),
+        exampleUrl: withSource(creatorPack.placementLinks?.socialCaption?.shortlink || "", "social_profile"),
         copy: creatorPack.socialCaption || "",
         checkpoint: "Use for profile copy or a post caption, then verify the redirect keeps the social attribution.",
         attribution: {
@@ -562,6 +627,8 @@ function buildTrafficLaunchKit(siteDir, source) {
         channel: "newsletter_email",
         label: "Newsletter blurb",
         link: creatorPack.placementLinks?.newsletterBlurb?.shortlink || "",
+        linkTemplate: template(creatorPack.placementLinks?.newsletterBlurb?.shortlink || "", "newsletter_email"),
+        exampleUrl: withSource(creatorPack.placementLinks?.newsletterBlurb?.shortlink || "", "newsletter_email"),
         copy: creatorPack.newsletterBlurb || "",
         checkpoint: "Place in MailerLite body copy only after the target group has at least one active subscriber.",
         attribution: {
@@ -575,6 +642,8 @@ function buildTrafficLaunchKit(siteDir, source) {
         channel: "family_share",
         label: "Family share message",
         link: sharePack.familyShareShortlink || "",
+        linkTemplate: template(sharePack.familyShareShortlink || "", "family_share"),
+        exampleUrl: withSource(sharePack.familyShareShortlink || "", "family_share"),
         copy: sharePack.familyShareMessage || "",
         checkpoint: "Use for parent-to-parent forwarding; add ref and placement only at the social share surface.",
         attribution: sharePack.attribution || {},
@@ -583,6 +652,8 @@ function buildTrafficLaunchKit(siteDir, source) {
         channel: "qr_poster",
         label: "QR poster link",
         link: sharePack.shareQrSvg || "",
+        linkTemplate: template(sharePack.familyShareShortlink || "", "qr_poster"),
+        exampleUrl: withSource(sharePack.familyShareShortlink || "", "qr_poster"),
         copy: `${channel} family share QR: ${sharePack.familyShareShortlink || ""}`,
         checkpoint: "Use the QR SVG in printable or community graphics and keep the shortlink visible nearby.",
         attribution: sharePack.attribution || {},
@@ -599,11 +670,13 @@ function buildTrafficLaunchKit(siteDir, source) {
       creatorShortlink: campaign.shortlinks?.creator || "",
       shareKit: "https://fursay.com/share-kit",
       creatorKit: "https://fursay.com/creator-kit",
+      sourceIdExample,
       channels,
       preflightChecklist: [
         "Open the tracked link once and confirm the expected story world loads.",
         `Confirm the modal preselects ${channel}.`,
         "Confirm no smoke test submits to MailerLite.",
+        "Replace {episode_or_post_id} before publishing when the placement has a known video, email, or post ID.",
         "Use one channel-specific link per placement so attribution stays readable.",
       ],
     }];

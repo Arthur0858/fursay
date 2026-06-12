@@ -53,6 +53,7 @@ Technical discovery:
 - Robots: https://fursay.com/robots.txt
 - Site health: https://fursay.com/site-health.json
 - Release manifest: https://fursay.com/release.json
+- Deploy readiness manifest: https://fursay.com/deploy-readiness.json
 - Campaign manifest: https://fursay.com/campaigns.json
 - Creator kit: https://fursay.com/creator-kit.json
 - Share kit: https://fursay.com/share-kit.json
