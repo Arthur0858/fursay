@@ -172,6 +172,14 @@ function writeCampaignManifest(siteDir, source) {
           homeSample: "https://fursay.com/koko?subscribe=koko&utm_source=home&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=home_koko_sample_link",
           sampleSchema: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
         },
+        copyKit: {
+          version: "2026-06-13",
+          qrLabel: "Koko weekly story pack",
+          shortHeadline: "Get Koko's weekly English story pack",
+          videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
+          familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
+          primaryShortlink: "https://fursay.com/sample/koko",
+        },
         ctaSources: [
           "home_koko_weekly_pack",
           "home_weekly_pack_koko",
@@ -193,6 +201,14 @@ function writeCampaignManifest(siteDir, source) {
           storyWorld: "https://fursay.com/arabic",
           homeSample: "https://fursay.com/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
           sampleSchema: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+        },
+        copyKit: {
+          version: "2026-06-13",
+          qrLabel: "Noor weekly story pack",
+          shortHeadline: "Get Noor's weekly Chinese story pack",
+          videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
+          familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
+          primaryShortlink: "https://fursay.com/sample/noor",
         },
         ctaSources: [
           "home_noor_weekly_pack",

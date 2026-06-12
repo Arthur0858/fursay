@@ -95,6 +95,7 @@
     "sample_shortlink",
     "sample_pack_schema",
     "copy_sample_shortlink",
+    "campaign_copy_kit",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",

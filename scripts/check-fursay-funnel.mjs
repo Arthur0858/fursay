@@ -553,6 +553,11 @@ async function checkDiscoveryFiles(baseUrl) {
     if (campaign.shortlinks?.sample !== expectedSample) failures.push(`campaigns_${pack}_sample:${campaign.shortlinks?.sample || "none"}`);
     if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) failures.push(`campaigns_${pack}_home_sample_subscribe`);
     if (!campaign.landingPages?.sampleSchema?.includes("utm_source=structured_data")) failures.push(`campaigns_${pack}_schema_source`);
+    if (campaign.copyKit?.primaryShortlink !== expectedSample) failures.push(`campaigns_${pack}_copy_primary_shortlink:${campaign.copyKit?.primaryShortlink || "none"}`);
+    if (!campaign.copyKit?.qrLabel) failures.push(`campaigns_${pack}_copy_missing_qr_label`);
+    if (!campaign.copyKit?.shortHeadline) failures.push(`campaigns_${pack}_copy_missing_short_headline`);
+    if (!campaign.copyKit?.videoDescription?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_video_missing_sample`);
+    if (!campaign.copyKit?.familyShareText?.includes(expectedSample)) failures.push(`campaigns_${pack}_copy_share_missing_sample`);
     if (!campaign.ctaSources?.length) failures.push(`campaigns_${pack}_missing_cta_sources`);
   }
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
@@ -584,7 +589,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
