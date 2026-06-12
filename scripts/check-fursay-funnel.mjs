@@ -810,6 +810,77 @@ async function checkTrafficLaunchExampleRedirects(baseUrl) {
   return results;
 }
 
+async function checkTrafficLaunchSubscribePayloads(browser, baseUrl) {
+  const raw = await readDiscoveryFile(baseUrl, "traffic-launch.json");
+  const trafficLaunch = JSON.parse(raw);
+  const checks = [];
+  const failures = [];
+  for (const [pack, launchPack] of Object.entries(trafficLaunch.packs || {})) {
+    for (const channel of launchPack.channels || []) {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      let capturedPayload = null;
+      await page.route("**/api/subscribe", async (route) => {
+        try {
+          capturedPayload = JSON.parse(route.request().postData() || "{}");
+        } catch {
+          capturedPayload = {};
+        }
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ success: true, message: "captured by traffic launch smoke" }),
+        });
+      });
+      const example = new URL(channel.exampleUrl || `/${pack}`, "https://fursay.com");
+      const localUrl = new URL(`${example.pathname}${example.search}`, baseUrl).toString();
+      try {
+        const response = await page.goto(localUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+        await page.waitForSelector("#subscribeModal.open", { timeout: 5000 });
+        await page.locator('#subscribeModal.open input[type="email"]:visible').fill(`traffic-${pack}-${channel.channel}@example.test`);
+        await page.evaluate(() => document.querySelector("#subscribeModal form")?.requestSubmit());
+        await page.waitForFunction(() => document.querySelector("#subscribeModal .modal-note")?.textContent.includes("Subscribed"), null, { timeout: 5000 }).catch(() => {});
+        const attribution = capturedPayload?.attribution || {};
+        const groups = capturedPayload?.groups || [];
+        const checkFailures = [];
+        if (response?.status() !== 200) checkFailures.push(`status:${response?.status() || "none"}`);
+        if (!capturedPayload) checkFailures.push("payload_not_captured");
+        if (!groups.includes(pack)) checkFailures.push(`wrong_groups:${groups.join(",") || "none"}`);
+        if (groups.includes(pack === "koko" ? "noor" : "koko")) checkFailures.push(`unexpected_other_group:${groups.join(",") || "none"}`);
+        if (attribution.subscribe_intent !== pack) checkFailures.push(`wrong_subscribe_intent:${attribution.subscribe_intent || "none"}`);
+        if (attribution.entry_pack !== pack) checkFailures.push(`wrong_entry_pack:${attribution.entry_pack || "none"}`);
+        if (attribution.modal_preselect !== pack) checkFailures.push(`wrong_modal_preselect:${attribution.modal_preselect || "none"}`);
+        if (attribution.utm_source !== channel.attribution?.utm_source) checkFailures.push(`wrong_utm_source:${attribution.utm_source || "none"}`);
+        if (attribution.utm_medium !== channel.attribution?.utm_medium) checkFailures.push(`wrong_utm_medium:${attribution.utm_medium || "none"}`);
+        if (attribution.utm_campaign !== channel.attribution?.utm_campaign) checkFailures.push(`wrong_utm_campaign:${attribution.utm_campaign || "none"}`);
+        if (attribution.utm_content !== channel.attribution?.utm_content) checkFailures.push(`wrong_utm_content:${attribution.utm_content || "none"}`);
+        if (attribution.source_id !== `${pack}_ep001`) checkFailures.push(`wrong_source_id:${attribution.source_id || "none"}`);
+        if (attribution.creator !== "fursay") checkFailures.push(`wrong_creator:${attribution.creator || "none"}`);
+        if (attribution.placement !== channel.channel) checkFailures.push(`wrong_placement:${attribution.placement || "none"}`);
+        if (checkFailures.length) failures.push(`${pack}:${channel.channel}:${checkFailures.join("|")}`);
+        checks.push({
+          pack,
+          channel: channel.channel,
+          ok: checkFailures.length === 0,
+          groups,
+          attribution,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        failures.push(`${pack}:${channel.channel}:exception:${message}`);
+        checks.push({ pack, channel: channel.channel, ok: false, error: message });
+      } finally {
+        await page.close();
+      }
+    }
+  }
+  return {
+    path: "traffic-launch subscribe payloads",
+    ok: failures.length === 0,
+    failures,
+    data: { checks },
+  };
+}
+
 async function readDiscoveryFile(baseUrl, fileName) {
   if (baseUrl) {
     const url = new URL(fileName, `${baseUrl}/`);
@@ -1105,7 +1176,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("release_bad_deploy_script");
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
-  if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
+  if (release.liveExpectations?.funnelChecks !== 40) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 41) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (deployReadiness.platform !== "cloudflare-workers-static-assets") failures.push(`deploy_readiness_platform:${deployReadiness.platform || "none"}`);
@@ -1530,10 +1601,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "source_id_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "deploy_readiness_page", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "traffic_launch_example_redirect", "episode_launch_link_template", "tracked_publish_copy", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "source_id_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "deploy_readiness_page", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "traffic_launch_example_redirect", "traffic_launch_subscribe_payload", "episode_launch_link_template", "tracked_publish_copy", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
-  for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "traffic_launch_example_redirect_keeps_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
+  for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "traffic_launch_example_redirect_keeps_attribution", "traffic_launch_payload_keeps_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
@@ -1584,6 +1655,7 @@ async function main() {
     results.push(await checkAttributionPayload(browser, baseUrl));
     results.push(...await checkJoinRedirects(baseUrl));
     results.push(...await checkTrafficLaunchExampleRedirects(baseUrl));
+    results.push(await checkTrafficLaunchSubscribePayloads(browser, baseUrl));
     results.push(await checkDiscoveryFiles(args.baseUrl));
   } finally {
     await browser.close();
