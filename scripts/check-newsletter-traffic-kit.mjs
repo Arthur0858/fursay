@@ -93,6 +93,20 @@ async function checkCreatorKitBrowser(baseUrl) {
 
   const response = await page.goto(`${baseUrl}/creator-kit`, { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+  await page.evaluate(async () => {
+    for (const image of document.querySelectorAll(".creator-qr img")) {
+      image.scrollIntoView({ block: "center" });
+      if (!image.complete) {
+        await new Promise((resolve) => {
+          image.addEventListener("load", resolve, { once: true });
+          image.addEventListener("error", resolve, { once: true });
+          setTimeout(resolve, 2500);
+        });
+      }
+      if (image.decode) await image.decode().catch(() => {});
+    }
+    window.scrollTo(0, 0);
+  });
   const data = await page.evaluate(() => {
     const qa = (selector) => [...document.querySelectorAll(selector)];
     const qrImages = qa(".creator-qr img");
