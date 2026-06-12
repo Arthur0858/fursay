@@ -5,6 +5,7 @@ import { chromium } from "playwright";
 const ROOT = process.cwd();
 const DEFAULT_OUT = "/tmp/fursay-newsletter-traffic-kit";
 const CREATOR_KIT = resolve(ROOT, "fursay-optimized-site/creator-kit.json");
+const SHORTLINKS = resolve(ROOT, "fursay-optimized-site/shortlinks.json");
 const RUNNER = resolve(ROOT, "scripts/newsletter-runner.mjs");
 
 function parseArgs() {
@@ -25,6 +26,13 @@ async function readCreatorKit(baseUrl) {
   if (!baseUrl) return JSON.parse(await readFile(CREATOR_KIT, "utf8"));
   const response = await fetch(`${baseUrl}/creator-kit.json`);
   if (!response.ok) throw new Error(`creator-kit.json status ${response.status}`);
+  return response.json();
+}
+
+async function readShortlinks(baseUrl) {
+  if (!baseUrl) return JSON.parse(await readFile(SHORTLINKS, "utf8"));
+  const response = await fetch(`${baseUrl}/shortlinks.json`);
+  if (!response.ok) throw new Error(`shortlinks.json status ${response.status}`);
   return response.json();
 }
 
@@ -238,6 +246,7 @@ async function checkCreatorKitBrowser(baseUrl) {
 async function main() {
   const args = parseArgs();
   const creatorKit = await readCreatorKit(args.baseUrl);
+  const shortlinks = await readShortlinks(args.baseUrl);
   const creatorKitPage = await readCreatorKitPage(args.baseUrl);
   const runner = await readFile(RUNNER, "utf8");
   const failures = [];
@@ -245,6 +254,17 @@ async function main() {
   if (creatorKit.platform !== "cloudflare-workers-static-assets") failures.push("creator_kit_bad_platform");
   if (creatorKit.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("creator_kit_bad_subscription_endpoint");
   if (creatorKit.safety?.smokeSubmitsToMailerLite !== false) failures.push("creator_kit_bad_smoke_contract");
+  if (creatorKit.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("creator_kit_missing_shortlink_manifest");
+  if (shortlinks.platform !== "cloudflare-workers-static-assets") failures.push("shortlinks_bad_platform");
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) failures.push(`shortlinks_bad_route_count:${shortlinks.routes?.length || 0}`);
+  if (shortlinks.safety?.ownedAttributionCannotBeOverridden !== true) failures.push("shortlinks_missing_owned_attribution_guard");
+  if (!shortlinks.safety?.passthroughParams?.includes("utm_term") || !shortlinks.safety?.passthroughParams?.includes("ref")) {
+    failures.push("shortlinks_missing_passthrough_contract");
+  }
+  if (!shortlinks.safety?.blockedParams?.includes("email") || !shortlinks.safety?.blockedParams?.includes("utm_source")) {
+    failures.push("shortlinks_missing_blocked_contract");
+  }
+  const shortlinkByUrl = new Map((shortlinks.routes || []).map((route) => [route.shortlink, route]));
 
   for (const [pack, expectedCampaign] of Object.entries({ koko: "koko_story_funnel", noor: "noor_story_funnel" })) {
     const item = creatorKit.packs?.[pack] || {};
@@ -261,6 +281,9 @@ async function main() {
     if (item.shareShortlink !== expectedShare) failures.push(`${pack}_bad_share_shortlink`);
     if (item.bioShortlink !== expectedBio) failures.push(`${pack}_bad_bio_shortlink`);
     if (item.creatorShortlink !== expectedCreator) failures.push(`${pack}_bad_creator_shortlink`);
+    for (const shortlink of [expectedSample, expectedShare, expectedBio, expectedCreator, expectedYoutubePlacement, expectedSocialPlacement, expectedNewsletterPlacement]) {
+      if (!shortlinkByUrl.has(shortlink)) failures.push(`${pack}_shortlinks_manifest_missing:${shortlink}`);
+    }
     if (item.directSocialShare?.whatsapp !== expectedWhatsapp) failures.push(`${pack}_bad_whatsapp_share`);
     if (item.directSocialShare?.line !== expectedLine) failures.push(`${pack}_bad_line_share`);
     if (item.qrSvg !== `https://fursay.com/images/qr/sample-${pack}.svg`) failures.push(`${pack}_bad_sample_qr`);

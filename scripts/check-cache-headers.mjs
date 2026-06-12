@@ -89,6 +89,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/shortlinks.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/creator-kit",
     status: 200,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],

@@ -83,6 +83,29 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
+const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
+
+function shortlinkRoutes() {
+  return [
+    { path: "/join/koko", target: "/koko", pack: "koko", campaign: "koko_story_funnel", content: "join_koko" },
+    { path: "/join/noor", target: "/arabic", pack: "noor", campaign: "noor_story_funnel", content: "join_noor" },
+    { path: "/sample/koko", target: "/koko", pack: "koko", campaign: "koko_story_funnel", content: "sample_koko" },
+    { path: "/sample/noor", target: "/arabic", pack: "noor", campaign: "noor_story_funnel", content: "sample_noor" },
+    { path: "/share/koko", target: "/koko", pack: "koko", source: "family_share", medium: "share", campaign: "koko_story_funnel", content: "share_sample_koko" },
+    { path: "/share/noor", target: "/arabic", pack: "noor", source: "family_share", medium: "share", campaign: "noor_story_funnel", content: "share_sample_noor" },
+    { path: "/bio/koko", target: "/koko", pack: "koko", source: "social_profile", medium: "bio", campaign: "koko_story_funnel", content: "bio_koko" },
+    { path: "/bio/noor", target: "/arabic", pack: "noor", source: "social_profile", medium: "bio", campaign: "noor_story_funnel", content: "bio_noor" },
+    { path: "/creator/koko", target: "/koko", pack: "koko", source: "creator_kit", medium: "description", campaign: "koko_story_funnel", content: "creator_kit_sample" },
+    { path: "/creator/koko/youtube", target: "/koko", pack: "koko", source: "youtube", medium: "description", campaign: "koko_story_funnel", content: "creator_kit_youtube" },
+    { path: "/creator/koko/social", target: "/koko", pack: "koko", source: "social", medium: "profile", campaign: "koko_story_funnel", content: "creator_kit_social" },
+    { path: "/creator/koko/newsletter", target: "/koko", pack: "koko", source: "newsletter", medium: "email", campaign: "koko_story_funnel", content: "creator_kit_newsletter" },
+    { path: "/creator/noor", target: "/arabic", pack: "noor", source: "creator_kit", medium: "description", campaign: "noor_story_funnel", content: "creator_kit_sample" },
+    { path: "/creator/noor/youtube", target: "/arabic", pack: "noor", source: "youtube", medium: "description", campaign: "noor_story_funnel", content: "creator_kit_youtube" },
+    { path: "/creator/noor/social", target: "/arabic", pack: "noor", source: "social", medium: "profile", campaign: "noor_story_funnel", content: "creator_kit_social" },
+    { path: "/creator/noor/newsletter", target: "/arabic", pack: "noor", source: "newsletter", medium: "email", campaign: "noor_story_funnel", content: "creator_kit_newsletter" },
+  ];
+}
+
 function writeReleaseManifest() {
   const siteDir = resolve(process.cwd(), "fursay-optimized-site");
   const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
@@ -107,6 +130,7 @@ function writeReleaseManifest() {
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
+      shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
       robots: "https://fursay.com/robots.txt",
       runbook: "docs/cloudflare-deploy-runbook.md",
@@ -150,7 +174,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 32,
+      cacheHeaderChecks: 33,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -159,6 +183,7 @@ function writeReleaseManifest() {
   writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
   writeVideoDiscovery(siteDir, source);
+  writeShortlinkManifest(siteDir, source);
 }
 
 function sitemapUrl(loc, alternates, priority) {
@@ -355,6 +380,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
       subscriptionEndpoint: "/api/subscribe",
       smokeSubmitsToMailerLite: false,
       linksUseShortlinksWithUtmRedirects: true,
+      shortlinkManifest: "https://fursay.com/shortlinks.json",
     },
     packs: Object.fromEntries(Object.entries(campaigns).map(([pack, campaign]) => {
       const sample = campaign.shortlinks.sample;
@@ -516,6 +542,52 @@ function writeVideoDiscovery(siteDir, source) {
     channels: buildVideoDiscoveryChannels(),
   };
   writeFileSync(resolve(siteDir, "video-discovery.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
+function writeShortlinkManifest(siteDir, source) {
+  const routes = shortlinkRoutes().map((route) => {
+    const landing = new URL(route.target, "https://fursay.com");
+    landing.searchParams.set("subscribe", route.pack);
+    landing.searchParams.set("utm_source", route.source || "shortlink");
+    landing.searchParams.set("utm_medium", route.medium || "direct");
+    landing.searchParams.set("utm_campaign", route.campaign);
+    landing.searchParams.set("utm_content", route.content);
+    return {
+      path: route.path,
+      shortlink: `https://fursay.com${route.path}`,
+      target: landing.toString(),
+      targetPath: route.target,
+      pack: route.pack,
+      status: 302,
+      cacheControl: "public, max-age=300, must-revalidate",
+      attribution: {
+        subscribe: route.pack,
+        utm_source: route.source || "shortlink",
+        utm_medium: route.medium || "direct",
+        utm_campaign: route.campaign,
+        utm_content: route.content,
+      },
+      passthroughParams: SHORTLINK_PASSTHROUGH_PARAMS,
+      blockedParams: ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"],
+    };
+  });
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Machine-readable index of Fursay shortlinks, landing targets, owned attribution values, and safe passthrough query parameters for traffic operations.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      ownedAttributionCannotBeOverridden: true,
+      passthroughParams: SHORTLINK_PASSTHROUGH_PARAMS,
+      blockedParams: ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"],
+    },
+    routes,
+  };
+  writeFileSync(resolve(siteDir, "shortlinks.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
 function escapeHtml(value) {

@@ -750,6 +750,7 @@ async function checkDiscoveryFiles(baseUrl) {
   const campaignsRaw = await readDiscoveryFile(baseUrl, "campaigns.json");
   const creatorKitRaw = await readDiscoveryFile(baseUrl, "creator-kit.json");
   const videoDiscoveryRaw = await readDiscoveryFile(baseUrl, "video-discovery.json");
+  const shortlinksRaw = await readDiscoveryFile(baseUrl, "shortlinks.json");
   const creatorKitPage = await readDiscoveryFile(baseUrl, "creator-kit.html");
   const packageRaw = baseUrl ? "" : await readRepoFile("package.json");
   const workflowRaw = baseUrl ? "" : await readRepoFile(".github/workflows/deploy-worker.yml");
@@ -760,6 +761,7 @@ async function checkDiscoveryFiles(baseUrl) {
   let campaigns = {};
   let creatorKit = {};
   let videoDiscovery = {};
+  let shortlinks = {};
   let packageJson = {};
   try {
     siteHealth = JSON.parse(siteHealthRaw);
@@ -785,6 +787,11 @@ async function checkDiscoveryFiles(baseUrl) {
     videoDiscovery = JSON.parse(videoDiscoveryRaw);
   } catch {
     failures.push("video_discovery_invalid_json");
+  }
+  try {
+    shortlinks = JSON.parse(shortlinksRaw);
+  } catch {
+    failures.push("shortlinks_invalid_json");
   }
   if (!baseUrl) {
     try {
@@ -858,6 +865,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
   if (!llms.includes("https://fursay.com/campaigns.json")) failures.push("llms_missing_campaign_manifest");
   if (!llms.includes("https://fursay.com/creator-kit.json")) failures.push("llms_missing_creator_kit");
+  if (!llms.includes("https://fursay.com/shortlinks.json")) failures.push("llms_missing_shortlinks");
   if (siteHealth.platform !== "cloudflare-workers-static-assets") failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
   if (siteHealth.deployment?.workerName !== "fursay") failures.push(`site_health_worker:${siteHealth.deployment?.workerName || "none"}`);
   if (siteHealth.deployment?.assetsBinding !== "ASSETS") failures.push(`site_health_assets_binding:${siteHealth.deployment?.assetsBinding || "none"}`);
@@ -878,6 +886,9 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (siteHealth.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`site_health_video_discovery:${siteHealth.deployment?.videoDiscoveryManifest || "none"}`);
+  }
+  if (siteHealth.deployment?.shortlinkManifest !== "https://fursay.com/shortlinks.json") {
+    failures.push(`site_health_shortlink_manifest:${siteHealth.deployment?.shortlinkManifest || "none"}`);
   }
   if (siteHealth.deployment?.sitemap !== "https://fursay.com/sitemap.xml") {
     failures.push(`site_health_sitemap:${siteHealth.deployment?.sitemap || "none"}`);
@@ -922,6 +933,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.videoDiscoveryManifest !== "https://fursay.com/video-discovery.json") {
     failures.push(`release_video_discovery:${release.deployment?.videoDiscoveryManifest || "none"}`);
   }
+  if (release.deployment?.shortlinkManifest !== "https://fursay.com/shortlinks.json") {
+    failures.push(`release_shortlink_manifest:${release.deployment?.shortlinkManifest || "none"}`);
+  }
   if (release.deployment?.sitemap !== "https://fursay.com/sitemap.xml") failures.push(`release_sitemap:${release.deployment?.sitemap || "none"}`);
   if (release.deployment?.robots !== "https://fursay.com/robots.txt") failures.push(`release_robots:${release.deployment?.robots || "none"}`);
   if (release.deployment?.runbook !== "docs/cloudflare-deploy-runbook.md") failures.push(`release_runbook:${release.deployment?.runbook || "none"}`);
@@ -931,7 +945,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 29) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 32) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 33) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
@@ -1119,6 +1133,49 @@ async function checkDiscoveryFiles(baseUrl) {
     }
     if (!campaign.ctaSources?.length) failures.push(`campaigns_${pack}_missing_cta_sources`);
   }
+  if (shortlinks.platform !== "cloudflare-workers-static-assets") failures.push(`shortlinks_platform:${shortlinks.platform || "none"}`);
+  if (shortlinks.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("shortlinks_bad_subscription_endpoint");
+  if (shortlinks.safety?.smokeSubmitsToMailerLite !== false) failures.push("shortlinks_bad_smoke_contract");
+  if (shortlinks.safety?.ownedAttributionCannotBeOverridden !== true) failures.push("shortlinks_missing_owned_attribution_guard");
+  for (const key of ["utm_term", "ref", "source_id", "creator", "placement"]) {
+    if (!shortlinks.safety?.passthroughParams?.includes(key)) failures.push(`shortlinks_missing_passthrough:${key}`);
+  }
+  for (const key of ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+    if (!shortlinks.safety?.blockedParams?.includes(key)) failures.push(`shortlinks_missing_blocked_param:${key}`);
+  }
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== JOIN_ROUTES.length) {
+    failures.push(`shortlinks_route_count:${shortlinks.routes?.length || 0}`);
+  }
+  const shortlinkByPath = new Map((shortlinks.routes || []).map((route) => [route.path, route]));
+  for (const route of JOIN_ROUTES) {
+    const item = shortlinkByPath.get(route.path);
+    if (!item) {
+      failures.push(`shortlinks_missing_route:${route.path}`);
+      continue;
+    }
+    const expectedShortlink = `https://fursay.com${route.path}`;
+    const expectedSource = route.source || "shortlink";
+    const expectedMedium = route.medium || "direct";
+    if (item.shortlink !== expectedShortlink) failures.push(`shortlinks_bad_shortlink:${route.path}:${item.shortlink || "none"}`);
+    if (item.targetPath !== route.targetPath) failures.push(`shortlinks_bad_target_path:${route.path}:${item.targetPath || "none"}`);
+    if (item.pack !== route.pack) failures.push(`shortlinks_bad_pack:${route.path}:${item.pack || "none"}`);
+    if (item.status !== 302) failures.push(`shortlinks_bad_status:${route.path}:${item.status || "none"}`);
+    if (item.cacheControl !== "public, max-age=300, must-revalidate") failures.push(`shortlinks_bad_cache:${route.path}:${item.cacheControl || "none"}`);
+    if (item.attribution?.subscribe !== route.pack) failures.push(`shortlinks_bad_subscribe:${route.path}`);
+    if (item.attribution?.utm_source !== expectedSource) failures.push(`shortlinks_bad_source:${route.path}:${item.attribution?.utm_source || "none"}`);
+    if (item.attribution?.utm_medium !== expectedMedium) failures.push(`shortlinks_bad_medium:${route.path}:${item.attribution?.utm_medium || "none"}`);
+    if (item.attribution?.utm_campaign !== route.campaign) failures.push(`shortlinks_bad_campaign:${route.path}:${item.attribution?.utm_campaign || "none"}`);
+    if (item.attribution?.utm_content !== route.content) failures.push(`shortlinks_bad_content:${route.path}:${item.attribution?.utm_content || "none"}`);
+    if (!item.target?.includes(`subscribe=${route.pack}`) || !item.target?.includes(`utm_source=${expectedSource}`)) {
+      failures.push(`shortlinks_bad_target:${route.path}:${item.target || "none"}`);
+    }
+    if (!item.passthroughParams?.includes("utm_term") || !item.passthroughParams?.includes("ref")) {
+      failures.push(`shortlinks_bad_passthrough:${route.path}`);
+    }
+    if (!item.blockedParams?.includes("email") || !item.blockedParams?.includes("utm_source")) {
+      failures.push(`shortlinks_bad_blocked_params:${route.path}`);
+    }
+  }
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
     if (!siteHealth.routes?.join?.includes(route)) failures.push(`site_health_missing_join_route:${route}`);
   }
@@ -1147,7 +1204,7 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const route of ["https://fursay.com/creator-kit", "https://fursay.com/creator-kit.json"]) {
     if (!siteHealth.routes?.creatorKit?.includes(route)) failures.push(`site_health_missing_creator_kit_route:${route}`);
   }
-  for (const route of ["https://fursay.com/video-discovery.json", "https://fursay.com/sitemap.xml", "https://fursay.com/robots.txt"]) {
+  for (const route of ["https://fursay.com/video-discovery.json", "https://fursay.com/shortlinks.json", "https://fursay.com/sitemap.xml", "https://fursay.com/robots.txt"]) {
     if (!siteHealth.routes?.discovery?.includes(route)) failures.push(`site_health_missing_discovery_route:${route}`);
   }
   if (siteHealth.funnels?.koko?.join !== "https://fursay.com/join/koko") failures.push("site_health_bad_koko_join");
@@ -1179,7 +1236,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "subscribe_payload_keeps_attribution", "no_console_error"]) {
@@ -1204,6 +1261,7 @@ async function checkDiscoveryFiles(baseUrl) {
       campaignsBytes: Buffer.byteLength(campaignsRaw),
       creatorKitBytes: Buffer.byteLength(creatorKitRaw),
       videoDiscoveryBytes: Buffer.byteLength(videoDiscoveryRaw),
+      shortlinksBytes: Buffer.byteLength(shortlinksRaw),
       packageBytes: Buffer.byteLength(packageRaw),
       workflowBytes: Buffer.byteLength(workflowRaw),
       deployReadinessBytes: Buffer.byteLength(deployReadinessRaw),

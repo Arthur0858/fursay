@@ -12,6 +12,7 @@
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
+    "shortlinkManifest": "https://fursay.com/shortlinks.json",
     "sitemap": "https://fursay.com/sitemap.xml",
     "robots": "https://fursay.com/robots.txt",
     "runbook": "docs/cloudflare-deploy-runbook.md",
@@ -67,6 +68,7 @@
     ],
     "discovery": [
       "https://fursay.com/video-discovery.json",
+      "https://fursay.com/shortlinks.json",
       "https://fursay.com/sitemap.xml",
       "https://fursay.com/robots.txt"
     ]
@@ -145,6 +147,7 @@
     "family_share_message",
     "bio_shortlink",
     "bio_profile_copy",
+    "shortlink_manifest",
     "shortlink_query_passthrough",
     "video_discovery_manifest",
     "sitemap_manifest",
