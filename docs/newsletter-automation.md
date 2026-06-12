@@ -57,6 +57,8 @@ node scripts/newsletter-runner.mjs --mode chrome-handoff --channel arabic --inpu
 
 The handoff writes both JSON and Markdown files under `content/newsletters/browser-handoff/`. These files contain the campaign name, target group, sender, subject, preheader, rich-text body, schedule, MailerLite block-building order, footer QA, post-send Gmail spot-check instructions, and the exact success/failure recording commands.
 
+The handoff also reads `fursay-optimized-site/creator-kit.json` and adds the current tracked landing URL, sample shortlink, QR SVG, and newsletter blurb. Run `node scripts/release-fursay.mjs --check-only` first if the generated creator kit is missing or stale.
+
 After Chrome confirms the campaign is scheduled and visible in MailerLite Outbox, record success:
 
 ```bash

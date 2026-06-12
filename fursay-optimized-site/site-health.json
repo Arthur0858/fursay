@@ -28,6 +28,10 @@
     "sample": [
       "https://fursay.com/sample/koko",
       "https://fursay.com/sample/noor"
+    ],
+    "creator": [
+      "https://fursay.com/creator/koko",
+      "https://fursay.com/creator/noor"
     ]
   },
   "funnels": {
@@ -37,6 +41,7 @@
       "campaign": "koko_story_funnel",
       "join": "https://fursay.com/join/koko",
       "sample": "https://fursay.com/sample/koko",
+      "creator": "https://fursay.com/creator/koko",
       "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       "trackedIntents": [
         "subscribe_intent",
@@ -62,6 +67,7 @@
       "campaign": "noor_story_funnel",
       "join": "https://fursay.com/join/noor",
       "sample": "https://fursay.com/sample/noor",
+      "creator": "https://fursay.com/creator/noor",
       "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       "trackedIntents": [
         "subscribe_intent",
@@ -100,6 +106,7 @@
     "campaign_qr_asset",
     "campaign_qr_card",
     "creator_kit_manifest",
+    "creator_shortlink",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",

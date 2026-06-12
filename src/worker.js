@@ -50,6 +50,22 @@ function joinRedirectUrl(url) {
       pack: "noor",
       campaign: "noor_story_funnel",
       content: "sample_noor"
+    },
+    "/creator/koko": {
+      target: "/koko",
+      pack: "koko",
+      source: "creator_kit",
+      medium: "description",
+      campaign: "koko_story_funnel",
+      content: "creator_kit_sample"
+    },
+    "/creator/noor": {
+      target: "/arabic",
+      pack: "noor",
+      source: "creator_kit",
+      medium: "description",
+      campaign: "noor_story_funnel",
+      content: "creator_kit_sample"
     }
   };
   const route = routes[path];
@@ -57,8 +73,8 @@ function joinRedirectUrl(url) {
 
   const target = new URL(route.target, url.origin);
   target.searchParams.set("subscribe", route.pack);
-  target.searchParams.set("utm_source", "shortlink");
-  target.searchParams.set("utm_medium", "direct");
+  target.searchParams.set("utm_source", route.source || "shortlink");
+  target.searchParams.set("utm_medium", route.medium || "direct");
   target.searchParams.set("utm_campaign", route.campaign);
   target.searchParams.set("utm_content", route.content);
   return target.toString();

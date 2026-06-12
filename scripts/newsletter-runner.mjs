@@ -9,10 +9,15 @@ const STATE_PATH = path.join(ROOT, "content", "newsletters", "state.json");
 const RUNS_DIR = path.join(ROOT, "content", "newsletters", "runs");
 const PENDING_DIR = path.join(ROOT, "content", "newsletters", "pending");
 const BROWSER_HANDOFF_DIR = path.join(ROOT, "content", "newsletters", "browser-handoff");
+const CREATOR_KIT_PATH = path.join(ROOT, "fursay-optimized-site", "creator-kit.json");
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3/playlistItems";
 const OPENAI_API = "https://api.openai.com/v1/responses";
 const MAILERLITE_API = "https://connect.mailerlite.com/api";
 const BLOCKED_COPY_PATTERN = /add your company postal address here|postal address here|lorem ipsum|placeholder|TODO/i;
+const CREATOR_PACK_BY_CHANNEL = {
+  koko: "koko",
+  arabic: "noor"
+};
 
 function projectPath(filePath) {
   return path.relative(ROOT, filePath).replaceAll(path.sep, "/");
@@ -296,6 +301,30 @@ function buildPrompt(channelKey, episode) {
   ].join("\n");
 }
 
+async function loadCreatorKit() {
+  try {
+    return JSON.parse(await fs.readFile(CREATOR_KIT_PATH, "utf8"));
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      throw new Error("Missing fursay-optimized-site/creator-kit.json. Run node scripts/release-fursay.mjs --check-only before newsletter delivery.");
+    }
+    throw error;
+  }
+}
+
+function creatorPackForChannel(channelKey, creatorKit) {
+  const packKey = CREATOR_PACK_BY_CHANNEL[channelKey];
+  const pack = creatorKit?.packs?.[packKey];
+  if (!pack) throw new Error(`creator-kit.json is missing pack: ${packKey}`);
+  for (const field of ["sampleShortlink", "trackedLandingUrl", "qrSvg", "youtubeDescription", "socialCaption", "newsletterBlurb"]) {
+    if (!pack[field]) throw new Error(`creator-kit.json ${packKey}.${field} is required`);
+  }
+  if (!pack.trackedLandingUrl.includes("utm_source=creator_kit")) {
+    throw new Error(`creator-kit.json ${packKey}.trackedLandingUrl must include utm_source=creator_kit`);
+  }
+  return { key: packKey, ...pack };
+}
+
 function buildCodexRequest(channelKey, episode, runId) {
   const config = CHANNELS[channelKey];
   const outputPath = path.join(PENDING_DIR, `${runId}-${channelKey}-ep${String(episode.episodeNo).padStart(3, "0")}.newsletter.json`);
@@ -433,7 +462,7 @@ function validateNewsletter(channelKey, episode, newsletter) {
   return errors;
 }
 
-function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTextBody) {
+function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTextBody, trafficPack) {
   const errors = [];
   const config = CHANNELS[channelKey];
   const bodyText = `${newsletter.preview_text}\n${html}\n${richTextBody}`;
@@ -444,8 +473,14 @@ function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTex
   if (!html.includes(episode.videoUrl) || !richTextBody.includes(episode.videoUrl)) {
     errors.push("rendered email must include the source video URL");
   }
-  if (!html.includes(config.siteUrl) || !richTextBody.includes(config.siteUrl)) {
-    errors.push("rendered email must include the site CTA URL");
+  if (!html.includes(trafficPack.trackedLandingUrl) || !richTextBody.includes(trafficPack.trackedLandingUrl)) {
+    errors.push("rendered email must include the creator-kit tracked site CTA URL");
+  }
+  if (!html.includes(trafficPack.sampleShortlink) || !richTextBody.includes(trafficPack.sampleShortlink)) {
+    errors.push("rendered email must include the creator-kit sample shortlink");
+  }
+  if (!html.includes(trafficPack.newsletterBlurb) || !richTextBody.includes(trafficPack.newsletterBlurb)) {
+    errors.push("rendered email must include the creator-kit newsletter blurb");
   }
   if (!html.includes(escapeHtml(newsletter.video_cta)) || !richTextBody.includes(newsletter.video_cta)) {
     errors.push("rendered email must include the video CTA text");
@@ -469,7 +504,7 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
-function renderHtml(channelKey, episode, newsletter) {
+function renderHtml(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
   const dir = channelKey === "arabic" ? "rtl" : "ltr";
   const align = channelKey === "arabic" ? "right" : "left";
@@ -500,7 +535,11 @@ function renderHtml(channelKey, episode, newsletter) {
               <a href="${escapeHtml(episode.videoUrl)}" style="display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;">${escapeHtml(newsletter.video_cta)}</a>
             </p>
             <p style="margin:0 0 20px;">
-              <a href="${escapeHtml(config.siteUrl)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(newsletter.site_cta)}</a>
+              <a href="${escapeHtml(trafficPack.trackedLandingUrl)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(newsletter.site_cta)}</a>
+            </p>
+            <p style="font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;">
+              ${escapeHtml(trafficPack.newsletterBlurb)}<br>
+              <a href="${escapeHtml(trafficPack.sampleShortlink)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(trafficPack.sampleShortlink)}</a>
             </p>
             <p style="font-size:16px;line-height:1.7;margin:20px 0 0;">${escapeHtml(newsletter.closing)}</p>
           </td>
@@ -512,7 +551,7 @@ function renderHtml(channelKey, episode, newsletter) {
 </html>`;
 }
 
-function renderRichTextBody(channelKey, episode, newsletter) {
+function renderRichTextBody(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
   const words = newsletter.learning_words
     .map((word) => [
@@ -539,13 +578,16 @@ function renderRichTextBody(channelKey, episode, newsletter) {
     episode.videoUrl,
     "",
     newsletter.site_cta,
-    config.siteUrl,
+    trafficPack.trackedLandingUrl,
+    "",
+    trafficPack.newsletterBlurb,
+    trafficPack.sampleShortlink,
     "",
     newsletter.closing
   ].join("\n");
 }
 
-function buildEditorBlocks(channelKey, episode, newsletter) {
+function buildEditorBlocks(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
   return [
     {
@@ -581,7 +623,11 @@ function buildEditorBlocks(channelKey, episode, newsletter) {
     },
     {
       name: "Site CTA",
-      action: `Add a secondary text link labeled "${newsletter.site_cta}" and link it to ${config.siteUrl}.`
+      action: `Add a secondary text link labeled "${newsletter.site_cta}" and link it to ${trafficPack.trackedLandingUrl}.`
+    },
+    {
+      name: "Sample pack CTA",
+      action: `Add a short text block with this sample-pack line and link: ${trafficPack.newsletterBlurb} ${trafficPack.sampleShortlink}.`
     },
     {
       name: "Footer QA",
@@ -590,7 +636,7 @@ function buildEditorBlocks(channelKey, episode, newsletter) {
   ];
 }
 
-function buildPostSendGmailCheck(channelKey) {
+function buildPostSendGmailCheck(channelKey, trafficPack) {
   const config = CHANNELS[channelKey];
   return {
     expectedAfterTaipei: channelKey === "koko" ? "Monday 09:10 Asia/Taipei" : "Wednesday 09:10 Asia/Taipei",
@@ -598,7 +644,8 @@ function buildPostSendGmailCheck(channelKey) {
     checks: [
       "latest matching Gmail message exists after the scheduled send slot",
       "message body does not contain Add your company postal address here, TODO, placeholder, or lorem ipsum",
-      `message body includes ${config.siteUrl}`,
+      `message body includes ${trafficPack.trackedLandingUrl}`,
+      `message body includes ${trafficPack.sampleShortlink}`,
       "message body includes a YouTube CTA link",
       "message did not collapse into a single plain-text paragraph"
     ]
@@ -841,6 +888,13 @@ async function writeBrowserHandoff(handoff) {
     "## Preheader",
     handoff.email.previewText,
     "",
+    "## Creator Kit",
+    `- Pack: ${handoff.creatorKit.pack}`,
+    `- Tracked landing: ${handoff.creatorKit.trackedLandingUrl}`,
+    `- Sample shortlink: ${handoff.creatorKit.sampleShortlink}`,
+    `- QR SVG: ${handoff.creatorKit.qrSvg}`,
+    `- Newsletter blurb: ${handoff.creatorKit.newsletterBlurb}`,
+    "",
     "## MailerLite Editor Order",
     "Use MailerLite built-in rich-text, image, and button blocks. Do not paste the whole body as one plain-text block.",
     "",
@@ -912,18 +966,26 @@ async function prepareNewsletterForDelivery(args, state, run) {
 
   const cleanNewsletter = normalizeNewsletterInput(newsletter);
   const qaErrors = validateNewsletter(args.channel, episode, cleanNewsletter);
+  const creatorKit = await loadCreatorKit();
+  const trafficPack = creatorPackForChannel(args.channel, creatorKit);
 
-  const html = renderHtml(args.channel, episode, cleanNewsletter);
-  const richTextBody = renderRichTextBody(args.channel, episode, cleanNewsletter);
-  qaErrors.push(...validateDeliveryArtifact(args.channel, episode, cleanNewsletter, html, richTextBody));
+  const html = renderHtml(args.channel, episode, cleanNewsletter, trafficPack);
+  const richTextBody = renderRichTextBody(args.channel, episode, cleanNewsletter, trafficPack);
+  qaErrors.push(...validateDeliveryArtifact(args.channel, episode, cleanNewsletter, html, richTextBody, trafficPack));
   run.qaErrors = qaErrors;
   if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
 
   run.newsletter = cleanNewsletter;
   run.htmlPreview = html;
   run.richTextPreview = richTextBody;
+  run.creatorKit = {
+    pack: trafficPack.key,
+    sampleShortlink: trafficPack.sampleShortlink,
+    trackedLandingUrl: trafficPack.trackedLandingUrl,
+    qrSvg: trafficPack.qrSvg
+  };
 
-  return { fullPath, newsletter: cleanNewsletter, episode, html, richTextBody };
+  return { fullPath, newsletter: cleanNewsletter, episode, html, richTextBody, trafficPack };
 }
 
 async function runPrepare(args, state, run) {
@@ -986,7 +1048,7 @@ async function runSend(args, state, run) {
 }
 
 async function runChromeHandoff(args, state, run) {
-  const { newsletter, episode, html, richTextBody } = await prepareNewsletterForDelivery(args, state, run);
+  const { newsletter, episode, html, richTextBody, trafficPack } = await prepareNewsletterForDelivery(args, state, run);
   const schedule = scheduleFor(args.channel, args);
   const target = await resolveMailerLiteTarget(args.channel, schedule);
   const config = CHANNELS[args.channel];
@@ -1020,17 +1082,24 @@ async function runChromeHandoff(args, state, run) {
       richTextBody,
       htmlPreview: html
     },
+    creatorKit: {
+      pack: trafficPack.key,
+      sampleShortlink: trafficPack.sampleShortlink,
+      trackedLandingUrl: trafficPack.trackedLandingUrl,
+      qrSvg: trafficPack.qrSvg,
+      newsletterBlurb: trafficPack.newsletterBlurb
+    },
     browser: {
       requiredLoginUrl: "https://dashboard.mailerlite.com/dashboard",
       campaignUrl: "https://dashboard.mailerlite.com/campaigns",
       campaignType: "Regular campaign",
       editor: "Rich-text editor",
       action: "Create or duplicate a regular campaign, build the email with MailerLite blocks in the listed order, choose the listed group, set the schedule, then confirm it appears in Outbox.",
-      editorBlocks: buildEditorBlocks(args.channel, episode, newsletter),
+      editorBlocks: buildEditorBlocks(args.channel, episode, newsletter, trafficPack),
       successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <outbox-or-campaign-url>${scheduleArgs(args)}`,
       failureCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail "<exact blocker>"`
     },
-    postSendGmailCheck: buildPostSendGmailCheck(args.channel),
+    postSendGmailCheck: buildPostSendGmailCheck(args.channel, trafficPack),
     warnings
   };
 
@@ -1159,15 +1228,23 @@ async function main() {
       const newsletter = await generateNewsletter(args.channel, episode);
       const qaErrors = validateNewsletter(args.channel, episode, newsletter);
 
-      const html = renderHtml(args.channel, episode, newsletter);
-      const richTextBody = renderRichTextBody(args.channel, episode, newsletter);
-      qaErrors.push(...validateDeliveryArtifact(args.channel, episode, newsletter, html, richTextBody));
+      const creatorKit = await loadCreatorKit();
+      const trafficPack = creatorPackForChannel(args.channel, creatorKit);
+      const html = renderHtml(args.channel, episode, newsletter, trafficPack);
+      const richTextBody = renderRichTextBody(args.channel, episode, newsletter, trafficPack);
+      qaErrors.push(...validateDeliveryArtifact(args.channel, episode, newsletter, html, richTextBody, trafficPack));
       run.qaErrors = qaErrors;
       if (qaErrors.length) throw new Error(`QA failed: ${qaErrors.join("; ")}`);
 
       run.newsletter = newsletter;
       run.htmlPreview = html;
       run.richTextPreview = richTextBody;
+      run.creatorKit = {
+        pack: trafficPack.key,
+        sampleShortlink: trafficPack.sampleShortlink,
+        trackedLandingUrl: trafficPack.trackedLandingUrl,
+        qrSvg: trafficPack.qrSvg
+      };
 
       if (args.dryRun) {
         const schedule = scheduleFor(args.channel, args);

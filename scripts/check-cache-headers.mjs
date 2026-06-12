@@ -100,6 +100,18 @@ const CHECKS = [
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     locationIncludes: ["/arabic", "subscribe=noor", "utm_content=sample_noor"],
   },
+  {
+    path: "/creator/koko",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=creator_kit", "utm_medium=description", "utm_content=creator_kit_sample"],
+  },
+  {
+    path: "/creator/noor",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=creator_kit", "utm_medium=description", "utm_content=creator_kit_sample"],
+  },
 ];
 
 function parseArgs() {

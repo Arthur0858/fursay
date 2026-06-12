@@ -111,12 +111,14 @@ function writeReleaseManifest() {
         campaign: "koko_story_funnel",
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
+        creator: "https://fursay.com/creator/koko",
         deepLink: "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko",
       },
       noor: {
         campaign: "noor_story_funnel",
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
+        creator: "https://fursay.com/creator/noor",
         deepLink: "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
       },
     },
@@ -124,13 +126,14 @@ function writeReleaseManifest() {
     qualityGates: [
       "scripts/check-fursay-funnel.mjs",
       "scripts/check-noor-list-activation.mjs",
+      "scripts/check-newsletter-traffic-kit.mjs",
       "scripts/check-cache-headers.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
       pages: 9,
       funnelChecks: 17,
-      cacheHeaderChecks: 16,
+      cacheHeaderChecks: 18,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -165,6 +168,7 @@ function writeCampaignManifest(siteDir, source) {
       shortlinks: {
         join: "https://fursay.com/join/koko",
         sample: "https://fursay.com/sample/koko",
+        creator: "https://fursay.com/creator/koko",
       },
       landingPages: {
         storyWorld: "https://fursay.com/koko",
@@ -196,6 +200,7 @@ function writeCampaignManifest(siteDir, source) {
       shortlinks: {
         join: "https://fursay.com/join/noor",
         sample: "https://fursay.com/sample/noor",
+        creator: "https://fursay.com/creator/noor",
       },
       landingPages: {
         storyWorld: "https://fursay.com/arabic",
@@ -244,6 +249,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
     },
     packs: Object.fromEntries(Object.entries(campaigns).map(([pack, campaign]) => {
       const sample = campaign.shortlinks.sample;
+      const creator = campaign.shortlinks.creator;
       const landing = pack === "koko"
         ? "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample"
         : "https://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample";
@@ -252,10 +258,11 @@ function writeCreatorKit(siteDir, source, campaigns) {
         campaign: campaign.campaign,
         primaryAction: "preview_weekly_story_pack",
         sampleShortlink: sample,
+        creatorShortlink: creator,
         trackedLandingUrl: landing,
         qrSvg: campaign.copyKit.qrSvg,
-        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${sample}`,
-        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${sample}`,
+        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${creator}`,
+        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${creator}`,
         newsletterBlurb: `${campaign.copyKit.familyShareText}`,
         altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
         utmContract: {
@@ -280,10 +287,12 @@ async function main() {
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
+  run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
 
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
+  run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);

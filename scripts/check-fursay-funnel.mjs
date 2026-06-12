@@ -57,6 +57,24 @@ const JOIN_ROUTES = [
     campaign: "noor_story_funnel",
     content: "sample_noor",
   },
+  {
+    path: "/creator/koko",
+    targetPath: "/koko",
+    pack: "koko",
+    source: "creator_kit",
+    medium: "description",
+    campaign: "koko_story_funnel",
+    content: "creator_kit_sample",
+  },
+  {
+    path: "/creator/noor",
+    targetPath: "/arabic",
+    pack: "noor",
+    source: "creator_kit",
+    medium: "description",
+    campaign: "noor_story_funnel",
+    content: "creator_kit_sample",
+  },
 ];
 
 function parseArgs() {
@@ -104,8 +122,8 @@ function startServer() {
       if (joinRoute) {
         const location = new URL(joinRoute.targetPath, `http://${req.headers.host || "127.0.0.1"}`);
         location.searchParams.set("subscribe", joinRoute.pack);
-        location.searchParams.set("utm_source", "shortlink");
-        location.searchParams.set("utm_medium", "direct");
+        location.searchParams.set("utm_source", joinRoute.source || "shortlink");
+        location.searchParams.set("utm_medium", joinRoute.medium || "direct");
         location.searchParams.set("utm_campaign", joinRoute.campaign);
         location.searchParams.set("utm_content", joinRoute.content);
         res.writeHead(302, {
@@ -462,7 +480,7 @@ async function checkJoinRedirects(baseUrl) {
     if (![301, 302, 303, 307, 308].includes(response.status)) failures.push(`status:${response.status}`);
     if (!location.includes(route.targetPath)) failures.push(`wrong_join_target:${location || "none"}`);
     if (!location.includes(`subscribe=${route.pack}`)) failures.push(`missing_join_subscribe:${location || "none"}`);
-    if (!location.includes("utm_source=shortlink") || !location.includes("utm_medium=direct")) {
+    if (!location.includes(`utm_source=${route.source || "shortlink"}`) || !location.includes(`utm_medium=${route.medium || "direct"}`)) {
       failures.push(`missing_join_utm:${location || "none"}`);
     }
     if (!location.includes(`utm_campaign=${route.campaign}`) || !location.includes(`utm_content=${route.content}`)) {
@@ -545,6 +563,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/sample/koko") || !llms.includes("https://fursay.com/sample/noor")) {
     failures.push("llms_missing_sample_routes");
   }
+  if (!llms.includes("https://fursay.com/creator/koko") || !llms.includes("https://fursay.com/creator/noor")) {
+    failures.push("llms_missing_creator_routes");
+  }
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
   if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
   if (!llms.includes("https://fursay.com/campaigns.json")) failures.push("llms_missing_campaign_manifest");
@@ -572,6 +593,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!/^[0-9a-f]{7,40}$/.test(release.source?.commit || "")) failures.push(`release_commit:${release.source?.commit || "none"}`);
   if (release.funnels?.koko?.sample !== "https://fursay.com/sample/koko") failures.push("release_bad_koko_sample");
   if (release.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("release_bad_noor_sample");
+  if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
+  if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260612-traffic10.css") failures.push(`release_css:${release.assets?.css || "none"}`);
   if (release.assets?.js !== "/js/site-shared-20260612-traffic8.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
@@ -581,7 +604,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.creatorKitManifest !== "https://fursay.com/creator-kit.json") {
     failures.push(`release_creator_kit_manifest:${release.deployment?.creatorKitManifest || "none"}`);
   }
-  if (release.liveExpectations?.cacheHeaderChecks !== 16) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 18) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
   if (campaigns.creatorKit !== "https://fursay.com/creator-kit.json") failures.push(`campaigns_creator_kit:${campaigns.creatorKit || "none"}`);
@@ -596,9 +619,11 @@ async function checkDiscoveryFiles(baseUrl) {
     const creatorPack = creatorKit.packs?.[pack] || {};
     const expectedCampaign = pack === "koko" ? "koko_story_funnel" : "noor_story_funnel";
     const expectedSample = `https://fursay.com/sample/${pack}`;
+    const expectedCreator = `https://fursay.com/creator/${pack}`;
     if (campaign.status !== "active") failures.push(`campaigns_${pack}_status:${campaign.status || "none"}`);
     if (campaign.campaign !== expectedCampaign) failures.push(`campaigns_${pack}_campaign:${campaign.campaign || "none"}`);
     if (campaign.shortlinks?.sample !== expectedSample) failures.push(`campaigns_${pack}_sample:${campaign.shortlinks?.sample || "none"}`);
+    if (campaign.shortlinks?.creator !== expectedCreator) failures.push(`campaigns_${pack}_creator:${campaign.shortlinks?.creator || "none"}`);
     if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) failures.push(`campaigns_${pack}_home_sample_subscribe`);
     if (!campaign.landingPages?.sampleSchema?.includes("utm_source=structured_data")) failures.push(`campaigns_${pack}_schema_source`);
     if (campaign.copyKit?.primaryShortlink !== expectedSample) failures.push(`campaigns_${pack}_copy_primary_shortlink:${campaign.copyKit?.primaryShortlink || "none"}`);
@@ -609,12 +634,13 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
     if (campaign.copyKit?.qrSvg !== expectedQr) failures.push(`campaigns_${pack}_qr_svg:${campaign.copyKit?.qrSvg || "none"}`);
     if (creatorPack.sampleShortlink !== expectedSample) failures.push(`creator_kit_${pack}_sample:${creatorPack.sampleShortlink || "none"}`);
+    if (creatorPack.creatorShortlink !== expectedCreator) failures.push(`creator_kit_${pack}_creator:${creatorPack.creatorShortlink || "none"}`);
     if (creatorPack.qrSvg !== expectedQr) failures.push(`creator_kit_${pack}_qr_svg:${creatorPack.qrSvg || "none"}`);
     if (!creatorPack.trackedLandingUrl?.includes(`subscribe=${pack}`)) failures.push(`creator_kit_${pack}_missing_subscribe`);
     if (!creatorPack.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`creator_kit_${pack}_missing_source`);
     if (!creatorPack.trackedLandingUrl?.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`creator_kit_${pack}_missing_campaign`);
-    if (!creatorPack.youtubeDescription?.includes(expectedSample)) failures.push(`creator_kit_${pack}_youtube_missing_sample`);
-    if (!creatorPack.socialCaption?.includes(expectedSample)) failures.push(`creator_kit_${pack}_social_missing_sample`);
+    if (!creatorPack.youtubeDescription?.includes(expectedCreator)) failures.push(`creator_kit_${pack}_youtube_missing_creator`);
+    if (!creatorPack.socialCaption?.includes(expectedCreator)) failures.push(`creator_kit_${pack}_social_missing_creator`);
     if (!creatorPack.newsletterBlurb?.includes(expectedSample)) failures.push(`creator_kit_${pack}_newsletter_missing_sample`);
     if (!creatorPack.altText?.includes(expectedSample)) failures.push(`creator_kit_${pack}_alt_missing_sample`);
     if (creatorPack.utmContract?.source !== "creator_kit") failures.push(`creator_kit_${pack}_utm_source:${creatorPack.utmContract?.source || "none"}`);
@@ -635,10 +661,15 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const route of ["https://fursay.com/sample/koko", "https://fursay.com/sample/noor"]) {
     if (!siteHealth.routes?.sample?.includes(route)) failures.push(`site_health_missing_sample_route:${route}`);
   }
+  for (const route of ["https://fursay.com/creator/koko", "https://fursay.com/creator/noor"]) {
+    if (!siteHealth.routes?.creator?.includes(route)) failures.push(`site_health_missing_creator_route:${route}`);
+  }
   if (siteHealth.funnels?.koko?.join !== "https://fursay.com/join/koko") failures.push("site_health_bad_koko_join");
   if (siteHealth.funnels?.noor?.join !== "https://fursay.com/join/noor") failures.push("site_health_bad_noor_join");
   if (siteHealth.funnels?.koko?.sample !== "https://fursay.com/sample/koko") failures.push("site_health_bad_koko_sample");
   if (siteHealth.funnels?.noor?.sample !== "https://fursay.com/sample/noor") failures.push("site_health_bad_noor_sample");
+  if (siteHealth.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("site_health_bad_koko_creator");
+  if (siteHealth.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("site_health_bad_noor_creator");
   if (siteHealth.funnels?.koko?.status !== "active") failures.push(`site_health_koko_status:${siteHealth.funnels?.koko?.status || "none"}`);
   if (siteHealth.funnels?.noor?.status !== "active") failures.push(`site_health_noor_status:${siteHealth.funnels?.noor?.status || "none"}`);
   if (siteHealth.funnels?.koko?.campaign !== "koko_story_funnel") failures.push(`site_health_koko_campaign:${siteHealth.funnels?.koko?.campaign || "none"}`);
@@ -658,7 +689,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
