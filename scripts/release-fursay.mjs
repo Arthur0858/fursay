@@ -67,6 +67,7 @@ async function main() {
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
+  run("node", ["--check", "scripts/check-cache-headers.mjs"]);
 
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
@@ -78,6 +79,7 @@ async function main() {
   if (!args.skipLive) {
     run("node", ["scripts/check-fursay-funnel.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
+    run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });
     writeFileSync(auditOut, auditJson);

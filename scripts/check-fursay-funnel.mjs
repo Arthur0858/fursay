@@ -159,6 +159,13 @@ async function checkPage(browser, baseUrl, path) {
       h1Text,
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
       homeCtas: homePages.includes(location.pathname) ? homeCtas : [],
+      homeSampleLinks: homePages.includes(location.pathname)
+        ? qa("[data-home-sample-link]").map((anchor) => ({
+          pack: anchor.getAttribute("data-home-sample-link") || "",
+          href: anchor.href,
+          text: anchor.textContent.trim().replace(/\s+/g, " "),
+        }))
+        : [],
       kokoLeadMagnet: !!document.querySelector(".koko-lead-magnet"),
       kokoLeadMagnetVariant: document.querySelector(".koko-lead-magnet")?.getAttribute("data-koko-lead-magnet") || "",
       kokoLeadMagnetText: document.querySelector(".koko-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
@@ -195,6 +202,21 @@ async function checkPage(browser, baseUrl, path) {
     const groups = new Set(data.homeCtas.map((cta) => cta.group).filter(Boolean));
     if (!groups.has("koko")) failures.push("home_missing_koko_preselect");
     if (!groups.has("noor")) failures.push("home_missing_noor_preselect");
+    const sampleLinks = new Map(data.homeSampleLinks.map((link) => [link.pack, link.href]));
+    const expectedSampleLinks = [
+      { pack: "koko", pathNeedle: "/koko", campaign: "koko_story_funnel", content: "home_koko_sample_link" },
+      { pack: "noor", pathNeedle: path === "/" ? "/arabic" : `${path.replace(/\/$/, "")}/arabic`, campaign: "noor_story_funnel", content: "home_noor_sample_link" },
+    ];
+    for (const expected of expectedSampleLinks) {
+      const href = sampleLinks.get(expected.pack) || "";
+      if (!href) failures.push(`home_missing_${expected.pack}_sample_link`);
+      if (!href.includes(expected.pathNeedle)) failures.push(`home_bad_${expected.pack}_sample_path:${href || "none"}`);
+      if (!href.includes(`subscribe=${expected.pack}`)) failures.push(`home_bad_${expected.pack}_sample_subscribe:${href || "none"}`);
+      if (!href.includes("utm_source=home") || !href.includes("utm_medium=site")) failures.push(`home_bad_${expected.pack}_sample_utm_source_medium`);
+      if (!href.includes(`utm_campaign=${expected.campaign}`) || !href.includes(`utm_content=${expected.content}`)) {
+        failures.push(`home_bad_${expected.pack}_sample_campaign:${href || "none"}`);
+      }
+    }
 
     for (const expected of ["koko", "noor"]) {
       const modalState = await page.evaluate((group) => {
@@ -444,13 +466,13 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic9.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
     failures.push("site_health_missing_current_shared_css");
   }
   if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260612-traffic7.js")) {

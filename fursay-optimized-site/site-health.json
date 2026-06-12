@@ -83,6 +83,7 @@
   },
   "trafficSurfaces": [
     "homepage_split_cta",
+    "homepage_sample_deep_link",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",
@@ -103,12 +104,13 @@
   "checks": {
     "funnel": "scripts/check-fursay-funnel.mjs",
     "noor": "scripts/check-noor-list-activation.mjs",
+    "cacheHeaders": "scripts/check-cache-headers.mjs",
     "release": "scripts/release-fursay.mjs"
   },
   "sharedAssets": {
     "css": [
       "/css/picture-book-base.css",
-      "/css/picture-world-shared-20260612-traffic9.css"
+      "/css/picture-world-shared-20260612-traffic10.css"
     ],
     "js": [
       "/js/site-shared-20260612-traffic7.js"

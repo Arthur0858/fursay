@@ -1,0 +1,142 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+
+const DEFAULT_OUT = "/tmp/fursay-cache-headers";
+
+const CHECKS = [
+  {
+    path: "/",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
+    path: "/koko",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
+    path: "/css/picture-world-shared-20260612-traffic10.css",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "text/css",
+  },
+  {
+    path: "/js/site-shared-20260612-traffic7.js",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "text/javascript",
+  },
+  {
+    path: "/images/scenes/story-world-home.webp",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "image/webp",
+  },
+  {
+    path: "/site-health.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
+    path: "/llms.txt",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "text/plain",
+  },
+  {
+    path: "/join/koko",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=shortlink"],
+  },
+  {
+    path: "/join/noor",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=shortlink"],
+  },
+];
+
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const parsed = { outDir: DEFAULT_OUT, baseUrl: "https://fursay.com" };
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--out-dir") parsed.outDir = args[++i];
+    if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
+  }
+  return parsed;
+}
+
+async function checkOne(baseUrl, check) {
+  const url = new URL(check.path, baseUrl);
+  url.searchParams.set("fursay_cache_smoke", String(Date.now()));
+  if (/\.(?:css|js|webp|json|txt)$/i.test(check.path)) {
+    url.searchParams.delete("fursay_cache_smoke");
+  }
+  const response = await fetch(url, { redirect: "manual" });
+  const cacheControl = response.headers.get("cache-control") || "";
+  const contentType = response.headers.get("content-type") || "";
+  const location = response.headers.get("location") || "";
+  const failures = [];
+
+  if (response.status !== check.status) failures.push(`status:${response.status}`);
+  for (const needle of check.cacheIncludes || []) {
+    if (!cacheControl.toLowerCase().includes(needle.toLowerCase())) failures.push(`cache_missing:${needle}`);
+  }
+  if (check.contentTypeIncludes && !contentType.toLowerCase().includes(check.contentTypeIncludes.toLowerCase())) {
+    failures.push(`content_type:${contentType || "none"}`);
+  }
+  for (const needle of check.locationIncludes || []) {
+    if (!location.includes(needle)) failures.push(`location_missing:${needle}`);
+  }
+
+  return {
+    path: check.path,
+    ok: failures.length === 0,
+    failures,
+    data: {
+      status: response.status,
+      cacheControl,
+      contentType,
+      location,
+    },
+  };
+}
+
+async function main() {
+  const args = parseArgs();
+  const results = [];
+  for (const check of CHECKS) results.push(await checkOne(args.baseUrl, check));
+  const failed = results.filter((result) => !result.ok);
+  const report = {
+    generatedAt: new Date().toISOString(),
+    baseUrl: args.baseUrl,
+    ok: failed.length === 0,
+    total: results.length,
+    failed: failed.map((result) => ({ path: result.path, failures: result.failures })),
+    results,
+  };
+
+  await mkdir(args.outDir, { recursive: true });
+  await writeFile(join(args.outDir, "fursay-cache-headers.json"), JSON.stringify(report, null, 2) + "\n");
+  await writeFile(join(args.outDir, "fursay-cache-headers.md"), [
+    "# Fursay Cache Header Check",
+    "",
+    `- Result: ${report.ok ? "PASS" : "FAIL"}`,
+    `- Checks: ${report.total}`,
+    `- Failed: ${failed.length}`,
+    `- Base URL: ${args.baseUrl}`,
+    "",
+  ].join("\n"));
+
+  console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: failed.length }, null, 2));
+  return report.ok ? 0 : 1;
+}
+
+main().then((code) => process.exit(code)).catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
