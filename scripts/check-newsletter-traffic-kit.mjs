@@ -8,9 +8,10 @@ const RUNNER = resolve(ROOT, "scripts/newsletter-runner.mjs");
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const parsed = { outDir: DEFAULT_OUT };
+  const parsed = { outDir: DEFAULT_OUT, baseUrl: "" };
   for (let i = 0; i < args.length; i += 1) {
     if (args[i] === "--out-dir") parsed.outDir = args[++i];
+    if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
   }
   return parsed;
 }
@@ -19,9 +20,46 @@ function hasAll(text, needles) {
   return needles.every((needle) => text.includes(needle));
 }
 
+async function readCreatorKit(baseUrl) {
+  if (!baseUrl) return JSON.parse(await readFile(CREATOR_KIT, "utf8"));
+  const response = await fetch(`${baseUrl}/creator-kit.json`);
+  if (!response.ok) throw new Error(`creator-kit.json status ${response.status}`);
+  return response.json();
+}
+
+async function readCreatorKitPage(baseUrl) {
+  if (baseUrl) {
+    const response = await fetch(`${baseUrl}/creator-kit`);
+    if (!response.ok) throw new Error(`creator-kit page status ${response.status}`);
+    return response.text();
+  }
+  try {
+    return await readFile(resolve(ROOT, "fursay-optimized-site/creator-kit.html"), "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return "";
+    throw error;
+  }
+}
+
+async function checkCreatorRedirect(baseUrl, pack, expectedCampaign) {
+  if (!baseUrl) return [];
+  const response = await fetch(`${baseUrl}/creator/${pack}`, { redirect: "manual" });
+  const location = response.headers.get("location") || "";
+  const failures = [];
+  if (response.status !== 302) failures.push(`${pack}_creator_redirect_status:${response.status}`);
+  if (!location.includes(pack === "koko" ? "/koko" : "/arabic")) failures.push(`${pack}_creator_redirect_target:${location || "none"}`);
+  if (!location.includes(`subscribe=${pack}`)) failures.push(`${pack}_creator_redirect_missing_subscribe`);
+  if (!location.includes("utm_source=creator_kit")) failures.push(`${pack}_creator_redirect_missing_source`);
+  if (!location.includes("utm_medium=description")) failures.push(`${pack}_creator_redirect_missing_medium`);
+  if (!location.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`${pack}_creator_redirect_missing_campaign`);
+  if (!location.includes("utm_content=creator_kit_sample")) failures.push(`${pack}_creator_redirect_missing_content`);
+  return failures;
+}
+
 async function main() {
   const args = parseArgs();
-  const creatorKit = JSON.parse(await readFile(CREATOR_KIT, "utf8"));
+  const creatorKit = await readCreatorKit(args.baseUrl);
+  const creatorKitPage = await readCreatorKitPage(args.baseUrl);
   const runner = await readFile(RUNNER, "utf8");
   const failures = [];
 
@@ -41,6 +79,10 @@ async function main() {
     if (!item.youtubeDescription?.includes(expectedCreator)) failures.push(`${pack}_youtube_missing_creator`);
     if (!item.socialCaption?.includes(expectedCreator)) failures.push(`${pack}_social_missing_creator`);
     if (item.utmContract?.content !== "creator_kit_sample") failures.push(`${pack}_bad_utm_content`);
+    if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
+    if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
+    if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
+    failures.push(...await checkCreatorRedirect(args.baseUrl, pack, expectedCampaign));
   }
 
   const runnerNeedles = [
@@ -62,6 +104,8 @@ async function main() {
     checks: {
       packs: Object.keys(creatorKit.packs || {}),
       runnerHooks: runnerNeedles.length,
+      baseUrl: args.baseUrl || "local",
+      creatorKitPageBytes: Buffer.byteLength(creatorKitPage),
     },
   };
 
@@ -73,6 +117,8 @@ async function main() {
     `- Result: ${report.ok ? "PASS" : "FAIL"}`,
     `- Failed: ${failures.length}`,
     `- Packs: ${report.checks.packs.join(", ")}`,
+    `- Base URL: ${report.checks.baseUrl}`,
+    `- Creator kit page bytes: ${report.checks.creatorKitPageBytes}`,
     "",
   ].join("\n"));
 

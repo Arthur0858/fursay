@@ -32,6 +32,7 @@ Useful actions:
 - Preview Noor's sample story pack: https://fursay.com/sample/noor
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
 - Creator link for Noor descriptions: https://fursay.com/creator/noor
+- Creator kit page: https://fursay.com/creator-kit
 
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml

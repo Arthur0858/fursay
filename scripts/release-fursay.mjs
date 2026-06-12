@@ -105,6 +105,7 @@ function writeReleaseManifest() {
       releaseCommand: "node scripts/release-fursay.mjs",
       campaignManifest: "https://fursay.com/campaigns.json",
       creatorKitManifest: "https://fursay.com/creator-kit.json",
+      creatorKitPage: "https://fursay.com/creator-kit",
     },
     funnels: {
       koko: {
@@ -133,7 +134,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 19,
-      cacheHeaderChecks: 18,
+      cacheHeaderChecks: 19,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -275,6 +276,89 @@ function writeCreatorKit(siteDir, source, campaigns) {
     })),
   };
   writeFileSync(resolve(siteDir, "creator-kit.json"), JSON.stringify(kit, null, 2) + "\n");
+  writeCreatorKitPage(siteDir, kit);
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function campaignName(pack) {
+  return pack === "koko" ? "Koko" : "Noor";
+}
+
+function writeCreatorKitPage(siteDir, kit) {
+  const packCards = Object.entries(kit.packs).map(([pack, item]) => `
+      <section class="creator-pack" data-creator-kit-pack="${escapeHtml(pack)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(item.campaign)}</p>
+          <h2>${escapeHtml(campaignName(pack))} creator kit</h2>
+          <p>${escapeHtml(item.audience)}</p>
+          <dl>
+            <div><dt>Creator shortlink</dt><dd><a href="${escapeHtml(item.creatorShortlink)}">${escapeHtml(item.creatorShortlink)}</a></dd></div>
+            <div><dt>Sample shortlink</dt><dd><a href="${escapeHtml(item.sampleShortlink)}">${escapeHtml(item.sampleShortlink)}</a></dd></div>
+            <div><dt>Tracked landing</dt><dd><a href="${escapeHtml(item.trackedLandingUrl)}">${escapeHtml(item.trackedLandingUrl)}</a></dd></div>
+          </dl>
+        </div>
+        <div class="creator-copy-blocks">
+          <article>
+            <h3>YouTube description</h3>
+            <pre>${escapeHtml(item.youtubeDescription)}</pre>
+          </article>
+          <article>
+            <h3>Social caption</h3>
+            <pre>${escapeHtml(item.socialCaption)}</pre>
+          </article>
+          <article>
+            <h3>Newsletter blurb</h3>
+            <pre>${escapeHtml(item.newsletterBlurb)}</pre>
+          </article>
+        </div>
+        <a class="creator-qr" href="${escapeHtml(item.creatorShortlink)}" aria-label="${escapeHtml(item.altText)}">
+          <img src="${escapeHtml(new URL(item.qrSvg).pathname)}" alt="${escapeHtml(item.altText)}" width="160" height="160" loading="lazy">
+          <span>QR asset</span>
+        </a>
+      </section>`).join("\n");
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Creator Kit</title>
+  <meta name="description" content="Reusable Fursay creator links, QR assets, and copy blocks for YouTube descriptions, social captions, and newsletters.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/creator-kit">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+</head>
+<body class="picture-world creator-kit-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay traffic kit</p>
+      <h1>Creator Kit</h1>
+      <p>Current reusable links and copy for YouTube descriptions, social captions, newsletter handoffs, and QR posters.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(kit.updatedAt)}</span>
+        <span>Commit ${escapeHtml(kit.source.commit)}</span>
+        <a href="/creator-kit.json">JSON manifest</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety">
+      <h2>Safety contract</h2>
+      <p>Smoke checks do not submit to MailerLite. Subscription traffic still flows through <code>${escapeHtml(kit.safety.subscriptionEndpoint)}</code>.</p>
+    </section>
+${packCards}
+  </main>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
 }
 
 async function main() {
@@ -301,6 +385,7 @@ async function main() {
   if (!args.skipLive) {
     run("node", ["scripts/check-fursay-funnel.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
+    run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "newsletter-traffic-kit-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });

@@ -9,7 +9,8 @@
     "releaseCommand": "node scripts/release-fursay.mjs",
     "releaseManifest": "https://fursay.com/release.json",
     "campaignManifest": "https://fursay.com/campaigns.json",
-    "creatorKitManifest": "https://fursay.com/creator-kit.json"
+    "creatorKitManifest": "https://fursay.com/creator-kit.json",
+    "creatorKitPage": "https://fursay.com/creator-kit"
   },
   "routes": {
     "home": [
@@ -32,6 +33,10 @@
     "creator": [
       "https://fursay.com/creator/koko",
       "https://fursay.com/creator/noor"
+    ],
+    "creatorKit": [
+      "https://fursay.com/creator-kit",
+      "https://fursay.com/creator-kit.json"
     ]
   },
   "funnels": {
@@ -106,6 +111,7 @@
     "campaign_qr_asset",
     "campaign_qr_card",
     "creator_kit_manifest",
+    "creator_kit_page",
     "creator_shortlink",
     "story_world_cta",
     "koko_sample_pack_cta",
