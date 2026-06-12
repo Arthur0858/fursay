@@ -109,6 +109,7 @@ function writeReleaseManifest() {
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       sitemap: "https://fursay.com/sitemap.xml",
       robots: "https://fursay.com/robots.txt",
+      runbook: "docs/cloudflare-deploy-runbook.md",
       packageScripts: {
         deployReady: "npm run deploy:ready",
         check: "npm run check",

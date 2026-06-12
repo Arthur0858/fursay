@@ -864,6 +864,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.deployment?.robots !== "https://fursay.com/robots.txt") {
     failures.push(`site_health_robots:${siteHealth.deployment?.robots || "none"}`);
   }
+  if (siteHealth.deployment?.runbook !== "docs/cloudflare-deploy-runbook.md") {
+    failures.push(`site_health_runbook:${siteHealth.deployment?.runbook || "none"}`);
+  }
   if (siteHealth.deployment?.packageScripts?.deployReady !== "npm run deploy:ready") failures.push("site_health_bad_deploy_ready_script");
   if (siteHealth.deployment?.packageScripts?.check !== "npm run check") failures.push("site_health_bad_check_script");
   if (siteHealth.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("site_health_bad_deploy_script");
@@ -900,6 +903,7 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (release.deployment?.sitemap !== "https://fursay.com/sitemap.xml") failures.push(`release_sitemap:${release.deployment?.sitemap || "none"}`);
   if (release.deployment?.robots !== "https://fursay.com/robots.txt") failures.push(`release_robots:${release.deployment?.robots || "none"}`);
+  if (release.deployment?.runbook !== "docs/cloudflare-deploy-runbook.md") failures.push(`release_runbook:${release.deployment?.runbook || "none"}`);
   if (release.deployment?.packageScripts?.deployReady !== "npm run deploy:ready") failures.push("release_bad_deploy_ready_script");
   if (release.deployment?.packageScripts?.check !== "npm run check") failures.push("release_bad_check_script");
   if (release.deployment?.packageScripts?.deploy !== "npm run deploy") failures.push("release_bad_deploy_script");
