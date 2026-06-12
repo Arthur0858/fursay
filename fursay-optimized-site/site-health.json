@@ -12,6 +12,8 @@
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
     "creatorKitPage": "https://fursay.com/creator-kit",
     "videoDiscoveryManifest": "https://fursay.com/video-discovery.json",
+    "sitemap": "https://fursay.com/sitemap.xml",
+    "robots": "https://fursay.com/robots.txt",
     "packageScripts": {
       "deployReady": "npm run deploy:ready",
       "check": "npm run check",
@@ -63,7 +65,9 @@
       "https://fursay.com/creator-kit.json"
     ],
     "discovery": [
-      "https://fursay.com/video-discovery.json"
+      "https://fursay.com/video-discovery.json",
+      "https://fursay.com/sitemap.xml",
+      "https://fursay.com/robots.txt"
     ]
   },
   "funnels": {
@@ -140,6 +144,8 @@
     "family_share_message",
     "bio_shortlink",
     "video_discovery_manifest",
+    "sitemap_manifest",
+    "robots_manifest",
     "video_playlist_manifest",
     "video_subscribe_action",
     "social_preview_metadata",

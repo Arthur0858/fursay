@@ -107,6 +107,8 @@ function writeReleaseManifest() {
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
+      sitemap: "https://fursay.com/sitemap.xml",
+      robots: "https://fursay.com/robots.txt",
       packageScripts: {
         deployReady: "npm run deploy:ready",
         check: "npm run check",
