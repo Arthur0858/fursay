@@ -90,6 +90,8 @@ async function checkCreatorKitBrowser(baseUrl) {
       packCount: qa("[data-creator-kit-pack]").length,
       creatorLinks: qa('.creator-pack a[href*="/creator/"]').map((anchor) => anchor.href),
       jsonManifestLink: document.querySelector('a[href="/creator-kit.json"]')?.href || "",
+      copyButtonCount: qa("[data-copy-creator-kit]").length,
+      copyValues: qa("[data-copy-creator-kit]").map((button) => button.getAttribute("data-copy-value") || ""),
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
       qrImages: qrImages.map((img) => ({
         src: img.currentSrc || img.src,
@@ -97,6 +99,28 @@ async function checkCreatorKitBrowser(baseUrl) {
         complete: img.complete,
         naturalWidth: img.naturalWidth,
       })),
+    };
+  });
+  const copyResult = await page.evaluate(async () => {
+    const button = document.querySelector("[data-copy-creator-kit]");
+    if (!button) return { clicked: false };
+    const writes = [];
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (value) => {
+          writes.push(value);
+        },
+      },
+    });
+    button.click();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: originalClipboard });
+    return {
+      clicked: true,
+      writes,
+      label: button.textContent.trim(),
     };
   });
   await browser.close();
@@ -109,6 +133,12 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
+  if (data.copyButtonCount !== 6) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (!data.copyValues.some((value) => value.includes(`${baseUrl}/creator/koko`))) failures.push("creator_kit_page_copy_missing_koko_creator");
+  if (!data.copyValues.some((value) => value.includes(`${baseUrl}/creator/noor`))) failures.push("creator_kit_page_copy_missing_noor_creator");
+  if (!copyResult.clicked) failures.push("creator_kit_page_copy_not_clickable");
+  if (!copyResult.writes?.[0]) failures.push("creator_kit_page_copy_no_write");
+  if (copyResult.clicked && copyResult.label !== "Copied") failures.push(`creator_kit_page_copy_label:${copyResult.label || "none"}`);
   if (data.horizontalOverflow > 2) failures.push(`creator_kit_page_horizontal_overflow:${data.horizontalOverflow}`);
   if (data.qrImages.length !== 2) failures.push(`creator_kit_page_qr_count:${data.qrImages.length}`);
   for (const image of data.qrImages) {
@@ -118,7 +148,7 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (consoleMessages.some((message) => message.type === "error")) failures.push("creator_kit_page_console_error");
   if (failedRequests.length) failures.push(`creator_kit_page_failed_requests:${failedRequests.length}`);
   if (badStatuses.length) failures.push(`creator_kit_page_bad_statuses:${badStatuses.length}`);
-  return { failures, data: { ...data, consoleMessages, failedRequests, badStatuses } };
+  return { failures, data: { ...data, copyResult, consoleMessages, failedRequests, badStatuses } };
 }
 
 async function main() {
@@ -147,6 +177,7 @@ async function main() {
     if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
+    if (!creatorKitPage.includes("data-copy-creator-kit")) failures.push(`${pack}_creator_page_missing_copy_buttons`);
     failures.push(...await checkCreatorRedirect(args.baseUrl, pack, expectedCampaign));
   }
 

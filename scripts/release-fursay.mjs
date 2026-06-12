@@ -291,6 +291,16 @@ function campaignName(pack) {
   return pack === "koko" ? "Koko" : "Noor";
 }
 
+function creatorCopyBlock(title, value) {
+  return `<article>
+            <div class="creator-copy-heading">
+              <h3>${escapeHtml(title)}</h3>
+              <button type="button" class="creator-copy-button" data-copy-creator-kit data-copy-value="${escapeHtml(value)}">Copy</button>
+            </div>
+            <pre>${escapeHtml(value)}</pre>
+          </article>`;
+}
+
 function writeCreatorKitPage(siteDir, kit) {
   const packCards = Object.entries(kit.packs).map(([pack, item]) => `
       <section class="creator-pack" data-creator-kit-pack="${escapeHtml(pack)}">
@@ -305,18 +315,9 @@ function writeCreatorKitPage(siteDir, kit) {
           </dl>
         </div>
         <div class="creator-copy-blocks">
-          <article>
-            <h3>YouTube description</h3>
-            <pre>${escapeHtml(item.youtubeDescription)}</pre>
-          </article>
-          <article>
-            <h3>Social caption</h3>
-            <pre>${escapeHtml(item.socialCaption)}</pre>
-          </article>
-          <article>
-            <h3>Newsletter blurb</h3>
-            <pre>${escapeHtml(item.newsletterBlurb)}</pre>
-          </article>
+          ${creatorCopyBlock("YouTube description", item.youtubeDescription)}
+          ${creatorCopyBlock("Social caption", item.socialCaption)}
+          ${creatorCopyBlock("Newsletter blurb", item.newsletterBlurb)}
         </div>
         <a class="creator-qr" href="${escapeHtml(item.creatorShortlink)}" aria-label="${escapeHtml(item.altText)}">
           <img src="${escapeHtml(new URL(item.qrSvg).pathname)}" alt="${escapeHtml(item.altText)}" width="160" height="160" loading="lazy">
@@ -356,6 +357,21 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
+  <script>
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy-creator-kit]");
+      if (!button) return;
+      const value = button.getAttribute("data-copy-value") || "";
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = "Copy"; }, 1600);
+      } catch {
+        button.textContent = "Copy failed";
+        setTimeout(() => { button.textContent = "Copy"; }, 1800);
+      }
+    });
+  </script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");

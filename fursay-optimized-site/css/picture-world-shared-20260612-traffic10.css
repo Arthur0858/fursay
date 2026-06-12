@@ -2457,6 +2457,32 @@ body.picture-world .creator-copy-blocks h3 {
   margin: 0 0 8px !important;
   font-size: 0.95rem !important;
 }
+body.picture-world .creator-copy-heading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+}
+body.picture-world .creator-copy-heading h3 {
+  margin: 0 !important;
+}
+body.picture-world .creator-copy-button {
+  min-height: 32px !important;
+  padding: 6px 10px !important;
+  border: 1px solid rgba(114, 83, 44, 0.18) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: #4a3a2f !important;
+  font: inherit !important;
+  font-size: 0.82rem !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+}
+body.picture-world .creator-copy-button:focus-visible {
+  outline: 3px solid rgba(46, 157, 95, 0.28) !important;
+  outline-offset: 2px !important;
+}
 body.picture-world .creator-copy-blocks pre {
   margin: 0 !important;
   white-space: pre-wrap !important;
@@ -2535,5 +2561,8 @@ body.picture-world .creator-qr span {
   body.picture-world .creator-kit-meta span,
   body.picture-world .creator-kit-meta a {
     width: 100% !important;
+  }
+  body.picture-world .creator-copy-heading {
+    align-items: flex-start !important;
   }
 }
