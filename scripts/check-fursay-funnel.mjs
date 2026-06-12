@@ -37,6 +37,11 @@ function urlPath(value) {
   }
 }
 
+function htmlContains(html, value) {
+  if (!value) return false;
+  return html.includes(value) || html.includes(String(value).replace(/&/g, "&amp;"));
+}
+
 function expectedSocialPreview(path) {
   const normalized = path.replace(/\/+$/, "") || "/";
   if (normalized.endsWith("/koko")) {
@@ -1203,16 +1208,17 @@ async function checkDiscoveryFiles(baseUrl) {
     if (launchPack.sampleShortlink !== expectedSample) failures.push(`traffic_launch_${pack}_sample:${launchPack.sampleShortlink || "none"}`);
     if (launchPack.shareShortlink !== expectedShare) failures.push(`traffic_launch_${pack}_share:${launchPack.shareShortlink || "none"}`);
     if (launchPack.creatorShortlink !== expectedCreator) failures.push(`traffic_launch_${pack}_creator:${launchPack.creatorShortlink || "none"}`);
-    if (!Array.isArray(launchPack.preflightChecklist) || launchPack.preflightChecklist.length < 4) failures.push(`traffic_launch_${pack}_short_preflight`);
+    if (!Array.isArray(launchPack.preflightChecklist) || launchPack.preflightChecklist.length < 5) failures.push(`traffic_launch_${pack}_short_preflight`);
+    if (launchPack.sourceIdExample !== `${pack}_ep001`) failures.push(`traffic_launch_${pack}_source_id_example:${launchPack.sourceIdExample || "none"}`);
     const launchChannels = new Map((launchPack.channels || []).map((channel) => [channel.channel, channel]));
     const expectedLaunchChannels = [
-      ["youtube_description", expectedYoutubePlacement, "youtube", "description", "creator_kit_youtube"],
-      ["social_profile", expectedSocialPlacement, "social", "profile", "creator_kit_social"],
-      ["newsletter_email", expectedNewsletterPlacement, "newsletter", "email", "creator_kit_newsletter"],
-      ["family_share", expectedShare, "family_share", "share", `share_sample_${pack}`],
-      ["qr_poster", expectedShareQr, "family_share", "share", `share_sample_${pack}`],
+      ["youtube_description", expectedYoutubePlacement, expectedYoutubePlacement, "youtube", "description", "creator_kit_youtube", "youtube_description"],
+      ["social_profile", expectedSocialPlacement, expectedSocialPlacement, "social", "profile", "creator_kit_social", "social_profile"],
+      ["newsletter_email", expectedNewsletterPlacement, expectedNewsletterPlacement, "newsletter", "email", "creator_kit_newsletter", "newsletter_email"],
+      ["family_share", expectedShare, expectedShare, "family_share", "share", `share_sample_${pack}`, "family_share"],
+      ["qr_poster", expectedShareQr, expectedShare, "family_share", "share", `share_sample_${pack}`, "qr_poster"],
     ];
-    for (const [channel, link, source, medium, content] of expectedLaunchChannels) {
+    for (const [channel, link, trackingLink, source, medium, content, placement] of expectedLaunchChannels) {
       const launchChannel = launchChannels.get(channel);
       if (!launchChannel) {
         failures.push(`traffic_launch_${pack}_missing_channel:${channel}`);
@@ -1222,6 +1228,12 @@ async function checkDiscoveryFiles(baseUrl) {
       if (!launchChannel.copy?.includes(channel === "qr_poster" ? expectedShare : link)) {
         failures.push(`traffic_launch_${pack}_${channel}_copy_missing_link`);
       }
+      if (launchChannel.linkTemplate !== `${trackingLink}?source_id={episode_or_post_id}&creator=fursay&placement=${placement}`) {
+        failures.push(`traffic_launch_${pack}_${channel}_bad_link_template:${launchChannel.linkTemplate || "none"}`);
+      }
+      if (launchChannel.exampleUrl !== `${trackingLink}?source_id=${pack}_ep001&creator=fursay&placement=${placement}`) {
+        failures.push(`traffic_launch_${pack}_${channel}_bad_example_url:${launchChannel.exampleUrl || "none"}`);
+      }
       if (!launchChannel.checkpoint) failures.push(`traffic_launch_${pack}_${channel}_missing_checkpoint`);
       if (launchChannel.attribution?.utm_source !== source || launchChannel.attribution?.utm_medium !== medium) {
         failures.push(`traffic_launch_${pack}_${channel}_bad_source_medium`);
@@ -1229,7 +1241,9 @@ async function checkDiscoveryFiles(baseUrl) {
       if (launchChannel.attribution?.utm_campaign !== expectedCampaign || launchChannel.attribution?.utm_content !== content) {
         failures.push(`traffic_launch_${pack}_${channel}_bad_campaign_content`);
       }
-      if (!trafficLaunchPage.includes(link)) failures.push(`traffic_launch_page_missing_link:${pack}:${channel}`);
+      if (!htmlContains(trafficLaunchPage, link)) failures.push(`traffic_launch_page_missing_link:${pack}:${channel}`);
+      if (!htmlContains(trafficLaunchPage, launchChannel.linkTemplate)) failures.push(`traffic_launch_page_missing_link_template:${pack}:${channel}`);
+      if (!htmlContains(trafficLaunchPage, launchChannel.exampleUrl)) failures.push(`traffic_launch_page_missing_example_url:${pack}:${channel}`);
     }
     if (!trafficLaunchPage.includes(`data-traffic-launch-pack="${pack}"`)) failures.push(`traffic_launch_page_missing_pack:${pack}`);
     if (creatorPack.directSocialShare?.whatsapp !== expectedWhatsapp) failures.push(`creator_kit_${pack}_whatsapp_share:${creatorPack.directSocialShare?.whatsapp || "none"}`);
@@ -1427,7 +1441,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "family_share_shortlink", "family_share_message", "bio_shortlink", "bio_profile_copy", "shortlink_manifest", "shortlink_query_passthrough", "source_id_passthrough", "video_discovery_manifest", "sitemap_manifest", "robots_manifest", "deploy_readiness_manifest", "video_playlist_manifest", "video_subscribe_action", "social_preview_metadata", "story_world_social_preview_image", "sample_pack_schema", "story_world_faq_schema", "public_creator_share_panel", "public_share_kit_entry", "direct_social_share_link", "direct_social_share_manifest", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_share_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "share_kit_manifest", "share_kit_page", "traffic_launch_manifest", "traffic_launch_page", "episode_launch_link_template", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
