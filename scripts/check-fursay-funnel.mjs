@@ -16,6 +16,7 @@ const MERGED_TEXT_PATTERNS = [
   /كوكوومغامرة/,
   /العربوكتاب/,
 ];
+const SMOKE_ID = `smoke_${Date.now()}`;
 
 function taipeiDateString(date = new Date()) {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -133,7 +134,9 @@ async function checkPage(browser, baseUrl, path) {
   page.on("request", (request) => {
     if (new URL(request.url()).pathname === "/api/subscribe") apiCalls.push(request.url());
   });
-  const response = await page.goto(baseUrl + path, { waitUntil: "domcontentloaded", timeout: 20000 });
+  const targetUrl = new URL(path, baseUrl);
+  if (!baseUrl.startsWith("http://127.0.0.1")) targetUrl.searchParams.set("fursay_smoke", SMOKE_ID);
+  const response = await page.goto(targetUrl.toString(), { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
 
   const status = response.status();
@@ -156,6 +159,12 @@ async function checkPage(browser, baseUrl, path) {
       h1Text,
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
       homeCtas: homePages.includes(location.pathname) ? homeCtas : [],
+      kokoLeadMagnet: !!document.querySelector(".koko-lead-magnet"),
+      kokoLeadMagnetVariant: document.querySelector(".koko-lead-magnet")?.getAttribute("data-koko-lead-magnet") || "",
+      kokoLeadMagnetText: document.querySelector(".koko-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
+      kokoLeadMagnetItems: qa(".koko-lead-magnet li").length,
+      kokoSampleCtaSource: document.querySelector(".koko-sample-cta")?.getAttribute("data-signup-source") || "",
+      kokoSampleCtaGroup: document.querySelector(".koko-sample-cta")?.getAttribute("data-open-subscribe") || "",
       noorLeadMagnet: !!document.querySelector(".noor-lead-magnet"),
       noorLeadMagnetVariant: document.querySelector(".noor-lead-magnet")?.getAttribute("data-noor-lead-magnet") || "",
       noorLeadMagnetText: document.querySelector(".noor-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
@@ -218,6 +227,15 @@ async function checkPage(browser, baseUrl, path) {
     if (data.noorSampleCtaGroup !== "noor") failures.push(`bad_noor_sample_cta_group:${data.noorSampleCtaGroup || "none"}`);
     if (!/(sample pack|樣張|نموذج)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_sample_copy");
     if (!/(ready|準備好|جاهزة)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_delivery_copy");
+  }
+  if (path.includes("koko")) {
+    if (!data.kokoLeadMagnet) failures.push("missing_koko_lead_magnet");
+    if (data.kokoLeadMagnetVariant !== "weekly-sample-v1") failures.push(`bad_koko_lead_magnet_variant:${data.kokoLeadMagnetVariant || "none"}`);
+    if (data.kokoLeadMagnetItems < 6) failures.push(`short_koko_lead_magnet:${data.kokoLeadMagnetItems}`);
+    if (data.kokoSampleCtaSource !== "koko_sample_pack_cta") failures.push(`missing_koko_sample_cta_source:${data.kokoSampleCtaSource || "none"}`);
+    if (data.kokoSampleCtaGroup !== "koko") failures.push(`bad_koko_sample_cta_group:${data.kokoSampleCtaGroup || "none"}`);
+    if (!/(sample|樣張|نموذج)/i.test(data.kokoLeadMagnetText)) failures.push("koko_lead_magnet_missing_sample_copy");
+    if (!/(ready|準備好|جاهزة)/i.test(data.kokoLeadMagnetText)) failures.push("koko_lead_magnet_missing_delivery_copy");
   }
   if (data.youtubeLinks.length) {
     const unattributed = data.youtubeLinks.filter((href) => !href.includes("utm_source=fursay") || !href.includes("utm_medium=site"));
@@ -417,7 +435,7 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!siteHealth.funnels?.koko?.trackedIntents?.includes(key)) failures.push(`site_health_koko_missing_tracked_intent:${key}`);
     if (!siteHealth.funnels?.noor?.trackedIntents?.includes(key)) failures.push(`site_health_noor_missing_tracked_intent:${key}`);
   }
-  for (const source of ["home_weekly_pack_koko", "share_strip_koko_pack"]) {
+  for (const source of ["home_weekly_pack_koko", "koko_sample_pack_cta", "share_strip_koko_pack"]) {
     if (!siteHealth.funnels?.koko?.ctaSources?.includes(source)) failures.push(`site_health_koko_missing_cta_source:${source}`);
   }
   for (const source of ["home_weekly_pack_noor", "arabic_sample_pack_cta", "arabic_story_pack_section", "share_strip_noor_pack"]) {
@@ -426,13 +444,13 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic8.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic9.css")) {
     failures.push("site_health_missing_current_shared_css");
   }
   if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260612-traffic7.js")) {

@@ -43,6 +43,7 @@
         "home_koko_weekly_pack",
         "home_weekly_pack_koko",
         "koko_hero_weekly_pack",
+        "koko_sample_pack_cta",
         "koko_story_pack_section",
         "share_strip_koko_pack"
       ]
@@ -83,6 +84,7 @@
   "trafficSurfaces": [
     "homepage_split_cta",
     "story_world_cta",
+    "koko_sample_pack_cta",
     "noor_sample_pack_cta",
     "share_strip",
     "copy_pack_link",
@@ -106,7 +108,7 @@
   "sharedAssets": {
     "css": [
       "/css/picture-book-base.css",
-      "/css/picture-world-shared-20260612-traffic8.css"
+      "/css/picture-world-shared-20260612-traffic9.css"
     ],
     "js": [
       "/js/site-shared-20260612-traffic7.js"
