@@ -189,6 +189,7 @@
     "traffic_launch_manifest",
     "traffic_launch_page",
     "episode_launch_link_template",
+    "tracked_publish_copy",
     "deploy_readiness_manifest",
     "creator_shortlink",
     "creator_placement_shortlink",
