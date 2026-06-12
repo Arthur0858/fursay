@@ -173,6 +173,15 @@ function campaignBase(source) {
   };
 }
 
+function socialShareUrls(pack) {
+  const shareUrl = `https://fursay.com/share/${pack}`;
+  const label = pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack";
+  return {
+    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${label}: ${shareUrl}`)}`,
+    line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`,
+  };
+}
+
 function writeCampaignManifest(siteDir, source) {
   const campaigns = {
     koko: {
@@ -200,6 +209,8 @@ function writeCampaignManifest(siteDir, source) {
         familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
         primaryShortlink: "https://fursay.com/sample/koko",
         shareShortlink: "https://fursay.com/share/koko",
+        whatsappShareUrl: socialShareUrls("koko").whatsapp,
+        lineShareUrl: socialShareUrls("koko").line,
         qrSvg: "https://fursay.com/images/qr/sample-koko.svg",
         shareQrSvg: "https://fursay.com/images/qr/share-koko.svg",
       },
@@ -236,6 +247,8 @@ function writeCampaignManifest(siteDir, source) {
         familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
         primaryShortlink: "https://fursay.com/sample/noor",
         shareShortlink: "https://fursay.com/share/noor",
+        whatsappShareUrl: socialShareUrls("noor").whatsapp,
+        lineShareUrl: socialShareUrls("noor").line,
         qrSvg: "https://fursay.com/images/qr/sample-noor.svg",
         shareQrSvg: "https://fursay.com/images/qr/share-noor.svg",
       },
@@ -304,6 +317,10 @@ function writeCreatorKit(siteDir, source, campaigns) {
         primaryAction: "preview_weekly_story_pack",
         sampleShortlink: sample,
         shareShortlink: campaign.shortlinks.share,
+        directSocialShare: {
+          whatsapp: campaign.copyKit.whatsappShareUrl,
+          line: campaign.copyKit.lineShareUrl,
+        },
         bioShortlink: campaign.shortlinks.bio,
         creatorShortlink: creator,
         placementLinks,
@@ -437,6 +454,11 @@ function videoDiscoveryRows(videoDiscovery) {
               ${creatorLinkRow(key, value)}`).join("");
 }
 
+function directSocialRows(directSocialShare) {
+  return Object.entries(directSocialShare || {}).map(([key, value]) => `
+              ${creatorLinkRow(`${key} share URL`, value)}`).join("");
+}
+
 function writeCreatorKitPage(siteDir, kit) {
   const packCards = Object.entries(kit.packs).map(([pack, item]) => `
       <section class="creator-pack" data-creator-kit-pack="${escapeHtml(pack)}">
@@ -452,6 +474,7 @@ function writeCreatorKitPage(siteDir, kit) {
             ${creatorLinkRow("Tracked landing", item.trackedLandingUrl)}
             ${creatorLinkRow("Sample QR asset", item.qrSvg)}
             ${creatorLinkRow("Share QR asset", item.shareQrSvg)}
+            ${directSocialRows(item.directSocialShare)}
             ${placementRows(item.placementLinks)}
             ${videoDiscoveryRows(item.videoDiscovery)}
           </dl>

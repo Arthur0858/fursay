@@ -144,6 +144,7 @@
     "story_world_faq_schema",
     "public_creator_share_panel",
     "direct_social_share_link",
+    "direct_social_share_manifest",
     "copy_sample_shortlink",
     "campaign_copy_kit",
     "campaign_qr_asset",

@@ -173,7 +173,7 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 36) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  if (data.copyButtonCount !== 40) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
   for (const value of [
     `${baseUrl}/creator/koko`,
     `${baseUrl}/sample/koko`,
@@ -181,6 +181,8 @@ async function checkCreatorKitBrowser(baseUrl) {
     `${baseUrl}/bio/koko`,
     `${baseUrl}/images/qr/sample-koko.svg`,
     `${baseUrl}/images/qr/share-koko.svg`,
+    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Koko weekly story pack: ${baseUrl}/share/koko`)}`,
+    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/koko`)}`,
     `${baseUrl}/creator/koko/youtube`,
     `${baseUrl}/creator/koko/social`,
     `${baseUrl}/creator/koko/newsletter`,
@@ -195,6 +197,8 @@ async function checkCreatorKitBrowser(baseUrl) {
     `${baseUrl}/bio/noor`,
     `${baseUrl}/images/qr/sample-noor.svg`,
     `${baseUrl}/images/qr/share-noor.svg`,
+    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Noor 3-minute story pack: ${baseUrl}/share/noor`)}`,
+    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/noor`)}`,
     `${baseUrl}/creator/noor/youtube`,
     `${baseUrl}/creator/noor/social`,
     `${baseUrl}/creator/noor/newsletter`,
@@ -238,6 +242,8 @@ async function main() {
     const expectedShare = `https://fursay.com/share/${pack}`;
     const expectedBio = `https://fursay.com/bio/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
+    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedShare}`)}`;
+    const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedShare)}`;
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;
     const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
@@ -245,6 +251,8 @@ async function main() {
     if (item.shareShortlink !== expectedShare) failures.push(`${pack}_bad_share_shortlink`);
     if (item.bioShortlink !== expectedBio) failures.push(`${pack}_bad_bio_shortlink`);
     if (item.creatorShortlink !== expectedCreator) failures.push(`${pack}_bad_creator_shortlink`);
+    if (item.directSocialShare?.whatsapp !== expectedWhatsapp) failures.push(`${pack}_bad_whatsapp_share`);
+    if (item.directSocialShare?.line !== expectedLine) failures.push(`${pack}_bad_line_share`);
     if (item.qrSvg !== `https://fursay.com/images/qr/sample-${pack}.svg`) failures.push(`${pack}_bad_sample_qr`);
     if (item.shareQrSvg !== `https://fursay.com/images/qr/share-${pack}.svg`) failures.push(`${pack}_bad_share_qr`);
     if (!item.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`${pack}_missing_creator_source`);
@@ -265,6 +273,8 @@ async function main() {
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
     if (!creatorKitPage.includes(expectedShare)) failures.push(`${pack}_creator_page_missing_share`);
+    if (!creatorKitPage.includes(expectedWhatsapp)) failures.push(`${pack}_creator_page_missing_whatsapp_share`);
+    if (!creatorKitPage.includes(expectedLine)) failures.push(`${pack}_creator_page_missing_line_share`);
     if (!creatorKitPage.includes(`/images/qr/share-${pack}.svg`)) failures.push(`${pack}_creator_page_missing_share_qr`);
     if (!creatorKitPage.includes(expectedBio)) failures.push(`${pack}_creator_page_missing_bio`);
     if (!creatorKitPage.includes(expectedYoutubePlacement)) failures.push(`${pack}_creator_page_missing_youtube_placement`);
