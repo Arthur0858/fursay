@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: fursay-worker-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check-and-deploy:
     runs-on: ubuntu-latest
@@ -50,3 +54,12 @@ jobs:
         run: |
           echo "Local release gate passed."
           echo "Cloudflare deploy skipped unless this is a push with CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID configured."
+
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fursay-release-evidence-${{ github.run_id }}
+          path: /tmp/fursay-release-*
+          if-no-files-found: warn
+          retention-days: 14

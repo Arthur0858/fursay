@@ -903,8 +903,13 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!workflowRaw.includes("CLOUDFLARE_API_TOKEN")) failures.push("workflow_missing_cloudflare_token_gate");
     if (!workflowRaw.includes("CLOUDFLARE_ACCOUNT_ID")) failures.push("workflow_missing_cloudflare_account_gate");
     if (!workflowRaw.includes("npx playwright install --with-deps chromium")) failures.push("workflow_missing_browser_runtime");
+    if (!workflowRaw.includes("concurrency:")) failures.push("workflow_missing_concurrency");
+    if (!workflowRaw.includes("actions/upload-artifact@v4") || !workflowRaw.includes("/tmp/fursay-release-*")) failures.push("workflow_missing_release_artifact_upload");
     if (!deployReadinessRaw.includes("requireCloudflare") || !deployReadinessRaw.includes("missing_CLOUDFLARE_API_TOKEN")) {
       failures.push("deploy_readiness_missing_cloudflare_gate");
+    }
+    if (!deployReadinessRaw.includes("actions/upload-artifact@v4") || !deployReadinessRaw.includes("/tmp/fursay-release-*")) {
+      failures.push("deploy_readiness_missing_artifact_gate");
     }
     if (!deployReadinessRaw.includes("git_missing_origin_remote")) failures.push("deploy_readiness_missing_remote_gate");
   }

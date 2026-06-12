@@ -66,6 +66,10 @@ async function main() {
     "CLOUDFLARE_API_TOKEN",
     "CLOUDFLARE_ACCOUNT_ID",
     "npx playwright install --with-deps chromium",
+    "concurrency:",
+    "actions/upload-artifact@v4",
+    "/tmp/fursay-release-*",
+    "retention-days: 14",
   ]) {
     addIssue(failures, workflow.includes(needle), "workflow_missing", needle);
   }
