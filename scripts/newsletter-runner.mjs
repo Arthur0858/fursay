@@ -319,6 +319,9 @@ function creatorPackForChannel(channelKey, creatorKit) {
   for (const field of ["sampleShortlink", "trackedLandingUrl", "qrSvg", "youtubeDescription", "socialCaption", "newsletterBlurb"]) {
     if (!pack[field]) throw new Error(`creator-kit.json ${packKey}.${field} is required`);
   }
+  if (!pack.placementLinks?.newsletterBlurb?.shortlink) {
+    throw new Error(`creator-kit.json ${packKey}.placementLinks.newsletterBlurb.shortlink is required`);
+  }
   if (!pack.trackedLandingUrl.includes("utm_source=creator_kit")) {
     throw new Error(`creator-kit.json ${packKey}.trackedLandingUrl must include utm_source=creator_kit`);
   }
@@ -476,8 +479,9 @@ function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTex
   if (!html.includes(trafficPack.trackedLandingUrl) || !richTextBody.includes(trafficPack.trackedLandingUrl)) {
     errors.push("rendered email must include the creator-kit tracked site CTA URL");
   }
-  if (!html.includes(trafficPack.sampleShortlink) || !richTextBody.includes(trafficPack.sampleShortlink)) {
-    errors.push("rendered email must include the creator-kit sample shortlink");
+  const newsletterShortlink = trafficPack.placementLinks.newsletterBlurb.shortlink;
+  if (!html.includes(newsletterShortlink) || !richTextBody.includes(newsletterShortlink)) {
+    errors.push("rendered email must include the creator-kit newsletter shortlink");
   }
   if (!html.includes(trafficPack.newsletterBlurb) || !richTextBody.includes(trafficPack.newsletterBlurb)) {
     errors.push("rendered email must include the creator-kit newsletter blurb");
@@ -539,7 +543,7 @@ function renderHtml(channelKey, episode, newsletter, trafficPack) {
             </p>
             <p style="font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;">
               ${escapeHtml(trafficPack.newsletterBlurb)}<br>
-              <a href="${escapeHtml(trafficPack.sampleShortlink)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(trafficPack.sampleShortlink)}</a>
+              <a href="${escapeHtml(trafficPack.placementLinks.newsletterBlurb.shortlink)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(trafficPack.placementLinks.newsletterBlurb.shortlink)}</a>
             </p>
             <p style="font-size:16px;line-height:1.7;margin:20px 0 0;">${escapeHtml(newsletter.closing)}</p>
           </td>
@@ -581,7 +585,7 @@ function renderRichTextBody(channelKey, episode, newsletter, trafficPack) {
     trafficPack.trackedLandingUrl,
     "",
     trafficPack.newsletterBlurb,
-    trafficPack.sampleShortlink,
+    trafficPack.placementLinks.newsletterBlurb.shortlink,
     "",
     newsletter.closing
   ].join("\n");
@@ -627,7 +631,7 @@ function buildEditorBlocks(channelKey, episode, newsletter, trafficPack) {
     },
     {
       name: "Sample pack CTA",
-      action: `Add a short text block with this sample-pack line and link: ${trafficPack.newsletterBlurb} ${trafficPack.sampleShortlink}.`
+      action: `Add a short text block with this sample-pack line and link: ${trafficPack.newsletterBlurb} ${trafficPack.placementLinks.newsletterBlurb.shortlink}.`
     },
     {
       name: "Footer QA",
@@ -645,7 +649,7 @@ function buildPostSendGmailCheck(channelKey, trafficPack) {
       "latest matching Gmail message exists after the scheduled send slot",
       "message body does not contain Add your company postal address here, TODO, placeholder, or lorem ipsum",
       `message body includes ${trafficPack.trackedLandingUrl}`,
-      `message body includes ${trafficPack.sampleShortlink}`,
+      `message body includes ${trafficPack.placementLinks.newsletterBlurb.shortlink}`,
       "message body includes a YouTube CTA link",
       "message did not collapse into a single plain-text paragraph"
     ]
@@ -981,6 +985,7 @@ async function prepareNewsletterForDelivery(args, state, run) {
   run.creatorKit = {
     pack: trafficPack.key,
     sampleShortlink: trafficPack.sampleShortlink,
+    newsletterShortlink: trafficPack.placementLinks.newsletterBlurb.shortlink,
     trackedLandingUrl: trafficPack.trackedLandingUrl,
     qrSvg: trafficPack.qrSvg
   };
@@ -1085,6 +1090,7 @@ async function runChromeHandoff(args, state, run) {
     creatorKit: {
       pack: trafficPack.key,
       sampleShortlink: trafficPack.sampleShortlink,
+      newsletterShortlink: trafficPack.placementLinks.newsletterBlurb.shortlink,
       trackedLandingUrl: trafficPack.trackedLandingUrl,
       qrSvg: trafficPack.qrSvg,
       newsletterBlurb: trafficPack.newsletterBlurb

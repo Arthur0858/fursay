@@ -133,8 +133,8 @@ function writeReleaseManifest() {
     ],
     liveExpectations: {
       pages: 9,
-      funnelChecks: 19,
-      cacheHeaderChecks: 19,
+      funnelChecks: 25,
+      cacheHeaderChecks: 25,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -251,6 +251,26 @@ function writeCreatorKit(siteDir, source, campaigns) {
     packs: Object.fromEntries(Object.entries(campaigns).map(([pack, campaign]) => {
       const sample = campaign.shortlinks.sample;
       const creator = campaign.shortlinks.creator;
+      const placementLinks = {
+        youtubeDescription: {
+          shortlink: `${creator}/youtube`,
+          source: "youtube",
+          medium: "description",
+          content: "creator_kit_youtube",
+        },
+        socialCaption: {
+          shortlink: `${creator}/social`,
+          source: "social",
+          medium: "profile",
+          content: "creator_kit_social",
+        },
+        newsletterBlurb: {
+          shortlink: `${creator}/newsletter`,
+          source: "newsletter",
+          medium: "email",
+          content: "creator_kit_newsletter",
+        },
+      };
       const landing = pack === "koko"
         ? "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample"
         : "https://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample";
@@ -260,11 +280,12 @@ function writeCreatorKit(siteDir, source, campaigns) {
         primaryAction: "preview_weekly_story_pack",
         sampleShortlink: sample,
         creatorShortlink: creator,
+        placementLinks,
         trackedLandingUrl: landing,
         qrSvg: campaign.copyKit.qrSvg,
-        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${creator}`,
-        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${creator}`,
-        newsletterBlurb: `${campaign.copyKit.familyShareText}`,
+        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
+        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`,
+        newsletterBlurb: `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`,
         altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
         utmContract: {
           source: "creator_kit",
@@ -301,6 +322,21 @@ function creatorCopyBlock(title, value) {
           </article>`;
 }
 
+function creatorLinkRow(title, value) {
+  return `<div>
+                <dt>${escapeHtml(title)}</dt>
+                <dd>
+                  <a href="${escapeHtml(value)}">${escapeHtml(value)}</a>
+                  <button type="button" class="creator-link-copy" data-copy-creator-kit data-copy-value="${escapeHtml(value)}">Copy</button>
+                </dd>
+              </div>`;
+}
+
+function placementRows(placementLinks) {
+  return Object.entries(placementLinks).map(([key, link]) => `
+              ${creatorLinkRow(key, link.shortlink)}`).join("");
+}
+
 function writeCreatorKitPage(siteDir, kit) {
   const packCards = Object.entries(kit.packs).map(([pack, item]) => `
       <section class="creator-pack" data-creator-kit-pack="${escapeHtml(pack)}">
@@ -309,9 +345,10 @@ function writeCreatorKitPage(siteDir, kit) {
           <h2>${escapeHtml(campaignName(pack))} creator kit</h2>
           <p>${escapeHtml(item.audience)}</p>
           <dl>
-            <div><dt>Creator shortlink</dt><dd><a href="${escapeHtml(item.creatorShortlink)}">${escapeHtml(item.creatorShortlink)}</a></dd></div>
-            <div><dt>Sample shortlink</dt><dd><a href="${escapeHtml(item.sampleShortlink)}">${escapeHtml(item.sampleShortlink)}</a></dd></div>
-            <div><dt>Tracked landing</dt><dd><a href="${escapeHtml(item.trackedLandingUrl)}">${escapeHtml(item.trackedLandingUrl)}</a></dd></div>
+            ${creatorLinkRow("Creator shortlink", item.creatorShortlink)}
+            ${creatorLinkRow("Sample shortlink", item.sampleShortlink)}
+            ${creatorLinkRow("Tracked landing", item.trackedLandingUrl)}
+            ${placementRows(item.placementLinks)}
           </dl>
         </div>
         <div class="creator-copy-blocks">

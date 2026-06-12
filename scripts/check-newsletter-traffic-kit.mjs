@@ -57,6 +57,21 @@ async function checkCreatorRedirect(baseUrl, pack, expectedCampaign) {
   return failures;
 }
 
+async function checkCreatorPlacementRedirect(baseUrl, pack, placement, expected) {
+  if (!baseUrl) return [];
+  const response = await fetch(`${baseUrl}/creator/${pack}/${placement}`, { redirect: "manual" });
+  const location = response.headers.get("location") || "";
+  const failures = [];
+  if (response.status !== 302) failures.push(`${pack}_${placement}_creator_redirect_status:${response.status}`);
+  if (!location.includes(pack === "koko" ? "/koko" : "/arabic")) failures.push(`${pack}_${placement}_creator_redirect_target:${location || "none"}`);
+  if (!location.includes(`subscribe=${pack}`)) failures.push(`${pack}_${placement}_creator_redirect_missing_subscribe`);
+  if (!location.includes(`utm_source=${expected.source}`)) failures.push(`${pack}_${placement}_creator_redirect_missing_source`);
+  if (!location.includes(`utm_medium=${expected.medium}`)) failures.push(`${pack}_${placement}_creator_redirect_missing_medium`);
+  if (!location.includes(`utm_campaign=${expected.campaign}`)) failures.push(`${pack}_${placement}_creator_redirect_missing_campaign`);
+  if (!location.includes(`utm_content=${expected.content}`)) failures.push(`${pack}_${placement}_creator_redirect_missing_content`);
+  return failures;
+}
+
 async function checkCreatorKitBrowser(baseUrl) {
   if (!baseUrl) {
     return { failures: [], data: { skipped: true, reason: "local content check only" } };
@@ -133,9 +148,21 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/koko`)) failures.push("creator_kit_page_missing_koko_creator_link");
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
-  if (data.copyButtonCount !== 6) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
-  if (!data.copyValues.some((value) => value.includes(`${baseUrl}/creator/koko`))) failures.push("creator_kit_page_copy_missing_koko_creator");
-  if (!data.copyValues.some((value) => value.includes(`${baseUrl}/creator/noor`))) failures.push("creator_kit_page_copy_missing_noor_creator");
+  if (data.copyButtonCount !== 18) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
+  for (const value of [
+    `${baseUrl}/creator/koko`,
+    `${baseUrl}/sample/koko`,
+    `${baseUrl}/creator/koko/youtube`,
+    `${baseUrl}/creator/koko/social`,
+    `${baseUrl}/creator/koko/newsletter`,
+    `${baseUrl}/creator/noor`,
+    `${baseUrl}/sample/noor`,
+    `${baseUrl}/creator/noor/youtube`,
+    `${baseUrl}/creator/noor/social`,
+    `${baseUrl}/creator/noor/newsletter`,
+  ]) {
+    if (!data.copyValues.some((copyValue) => copyValue.includes(value))) failures.push(`creator_kit_page_copy_missing:${value}`);
+  }
   if (!copyResult.clicked) failures.push("creator_kit_page_copy_not_clickable");
   if (!copyResult.writes?.[0]) failures.push("creator_kit_page_copy_no_write");
   if (copyResult.clicked && copyResult.label !== "Copied") failures.push(`creator_kit_page_copy_label:${copyResult.label || "none"}`);
@@ -166,19 +193,46 @@ async function main() {
     const item = creatorKit.packs?.[pack] || {};
     const expectedSample = `https://fursay.com/sample/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
+    const expectedYoutubePlacement = `${expectedCreator}/youtube`;
+    const expectedSocialPlacement = `${expectedCreator}/social`;
+    const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
     if (item.sampleShortlink !== expectedSample) failures.push(`${pack}_bad_sample_shortlink`);
     if (item.creatorShortlink !== expectedCreator) failures.push(`${pack}_bad_creator_shortlink`);
     if (!item.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`${pack}_missing_creator_source`);
     if (!item.trackedLandingUrl?.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`${pack}_missing_campaign`);
-    if (!item.newsletterBlurb?.includes(expectedSample)) failures.push(`${pack}_newsletter_blurb_missing_sample`);
-    if (!item.youtubeDescription?.includes(expectedCreator)) failures.push(`${pack}_youtube_missing_creator`);
-    if (!item.socialCaption?.includes(expectedCreator)) failures.push(`${pack}_social_missing_creator`);
+    if (item.placementLinks?.youtubeDescription?.shortlink !== expectedYoutubePlacement) failures.push(`${pack}_bad_youtube_placement`);
+    if (item.placementLinks?.socialCaption?.shortlink !== expectedSocialPlacement) failures.push(`${pack}_bad_social_placement`);
+    if (item.placementLinks?.newsletterBlurb?.shortlink !== expectedNewsletterPlacement) failures.push(`${pack}_bad_newsletter_placement`);
+    if (!item.newsletterBlurb?.includes(expectedNewsletterPlacement)) failures.push(`${pack}_newsletter_blurb_missing_placement`);
+    if (!item.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`${pack}_youtube_missing_placement`);
+    if (!item.socialCaption?.includes(expectedSocialPlacement)) failures.push(`${pack}_social_missing_placement`);
     if (item.utmContract?.content !== "creator_kit_sample") failures.push(`${pack}_bad_utm_content`);
     if (!creatorKitPage.includes(`data-creator-kit-pack="${pack}"`)) failures.push(`${pack}_creator_page_missing_pack`);
     if (!creatorKitPage.includes(expectedCreator)) failures.push(`${pack}_creator_page_missing_creator`);
     if (!creatorKitPage.includes(expectedSample)) failures.push(`${pack}_creator_page_missing_sample`);
+    if (!creatorKitPage.includes(expectedYoutubePlacement)) failures.push(`${pack}_creator_page_missing_youtube_placement`);
+    if (!creatorKitPage.includes(expectedSocialPlacement)) failures.push(`${pack}_creator_page_missing_social_placement`);
+    if (!creatorKitPage.includes(expectedNewsletterPlacement)) failures.push(`${pack}_creator_page_missing_newsletter_placement`);
     if (!creatorKitPage.includes("data-copy-creator-kit")) failures.push(`${pack}_creator_page_missing_copy_buttons`);
     failures.push(...await checkCreatorRedirect(args.baseUrl, pack, expectedCampaign));
+    failures.push(...await checkCreatorPlacementRedirect(args.baseUrl, pack, "youtube", {
+      source: "youtube",
+      medium: "description",
+      campaign: expectedCampaign,
+      content: "creator_kit_youtube",
+    }));
+    failures.push(...await checkCreatorPlacementRedirect(args.baseUrl, pack, "social", {
+      source: "social",
+      medium: "profile",
+      campaign: expectedCampaign,
+      content: "creator_kit_social",
+    }));
+    failures.push(...await checkCreatorPlacementRedirect(args.baseUrl, pack, "newsletter", {
+      source: "newsletter",
+      medium: "email",
+      campaign: expectedCampaign,
+      content: "creator_kit_newsletter",
+    }));
   }
 
   const runnerNeedles = [
@@ -186,10 +240,11 @@ async function main() {
     "creatorPackForChannel",
     "trafficPack.trackedLandingUrl",
     "trafficPack.sampleShortlink",
+    "trafficPack.placementLinks.newsletterBlurb.shortlink",
     "trafficPack.newsletterBlurb",
     "Creator Kit",
-    "message body includes ${trafficPack.sampleShortlink}",
-    "rendered email must include the creator-kit sample shortlink",
+    "message body includes ${trafficPack.placementLinks.newsletterBlurb.shortlink}",
+    "rendered email must include the creator-kit newsletter shortlink",
   ];
   if (!hasAll(runner, runnerNeedles)) failures.push("newsletter_runner_missing_creator_kit_hooks");
   const browserCheck = await checkCreatorKitBrowser(args.baseUrl);

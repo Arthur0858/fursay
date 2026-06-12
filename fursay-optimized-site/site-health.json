@@ -34,6 +34,14 @@
       "https://fursay.com/creator/koko",
       "https://fursay.com/creator/noor"
     ],
+    "creatorPlacement": [
+      "https://fursay.com/creator/koko/youtube",
+      "https://fursay.com/creator/koko/social",
+      "https://fursay.com/creator/koko/newsletter",
+      "https://fursay.com/creator/noor/youtube",
+      "https://fursay.com/creator/noor/social",
+      "https://fursay.com/creator/noor/newsletter"
+    ],
     "creatorKit": [
       "https://fursay.com/creator-kit",
       "https://fursay.com/creator-kit.json"
@@ -113,6 +121,7 @@
     "creator_kit_manifest",
     "creator_kit_page",
     "creator_shortlink",
+    "creator_placement_shortlink",
     "story_world_cta",
     "koko_sample_pack_cta",
     "noor_sample_pack_cta",

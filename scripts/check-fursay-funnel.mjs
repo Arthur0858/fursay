@@ -67,6 +67,33 @@ const JOIN_ROUTES = [
     content: "creator_kit_sample",
   },
   {
+    path: "/creator/koko/youtube",
+    targetPath: "/koko",
+    pack: "koko",
+    source: "youtube",
+    medium: "description",
+    campaign: "koko_story_funnel",
+    content: "creator_kit_youtube",
+  },
+  {
+    path: "/creator/koko/social",
+    targetPath: "/koko",
+    pack: "koko",
+    source: "social",
+    medium: "profile",
+    campaign: "koko_story_funnel",
+    content: "creator_kit_social",
+  },
+  {
+    path: "/creator/koko/newsletter",
+    targetPath: "/koko",
+    pack: "koko",
+    source: "newsletter",
+    medium: "email",
+    campaign: "koko_story_funnel",
+    content: "creator_kit_newsletter",
+  },
+  {
     path: "/creator/noor",
     targetPath: "/arabic",
     pack: "noor",
@@ -74,6 +101,33 @@ const JOIN_ROUTES = [
     medium: "description",
     campaign: "noor_story_funnel",
     content: "creator_kit_sample",
+  },
+  {
+    path: "/creator/noor/youtube",
+    targetPath: "/arabic",
+    pack: "noor",
+    source: "youtube",
+    medium: "description",
+    campaign: "noor_story_funnel",
+    content: "creator_kit_youtube",
+  },
+  {
+    path: "/creator/noor/social",
+    targetPath: "/arabic",
+    pack: "noor",
+    source: "social",
+    medium: "profile",
+    campaign: "noor_story_funnel",
+    content: "creator_kit_social",
+  },
+  {
+    path: "/creator/noor/newsletter",
+    targetPath: "/arabic",
+    pack: "noor",
+    source: "newsletter",
+    medium: "email",
+    campaign: "noor_story_funnel",
+    content: "creator_kit_newsletter",
   },
 ];
 
@@ -567,6 +621,16 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/creator/koko") || !llms.includes("https://fursay.com/creator/noor")) {
     failures.push("llms_missing_creator_routes");
   }
+  for (const route of [
+    "https://fursay.com/creator/koko/youtube",
+    "https://fursay.com/creator/koko/social",
+    "https://fursay.com/creator/koko/newsletter",
+    "https://fursay.com/creator/noor/youtube",
+    "https://fursay.com/creator/noor/social",
+    "https://fursay.com/creator/noor/newsletter",
+  ]) {
+    if (!llms.includes(route)) failures.push(`llms_missing_creator_placement:${route}`);
+  }
   if (!llms.includes("https://fursay.com/creator-kit")) failures.push("llms_missing_creator_kit_page");
   if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
   if (!llms.includes("https://fursay.com/release.json")) failures.push("llms_missing_release_manifest");
@@ -612,7 +676,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.creatorKitPage !== "https://fursay.com/creator-kit") {
     failures.push(`release_creator_kit_page:${release.deployment?.creatorKitPage || "none"}`);
   }
-  if (release.liveExpectations?.cacheHeaderChecks !== 19) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.funnelChecks !== 25) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 25) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(campaigns.source?.commit || "")) failures.push(`campaigns_commit:${campaigns.source?.commit || "none"}`);
   if (campaigns.creatorKit !== "https://fursay.com/creator-kit.json") failures.push(`campaigns_creator_kit:${campaigns.creatorKit || "none"}`);
@@ -627,7 +692,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!creatorKitPage.includes('data-creator-kit-pack="noor"')) failures.push("creator_kit_page_missing_noor_pack");
   if (!creatorKitPage.includes("https://fursay.com/creator/koko")) failures.push("creator_kit_page_missing_koko_creator");
   if (!creatorKitPage.includes("https://fursay.com/creator/noor")) failures.push("creator_kit_page_missing_noor_creator");
-  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 6) failures.push("creator_kit_page_bad_copy_button_count");
+  if ((creatorKitPage.match(/<button[^>]+data-copy-creator-kit/g) || []).length !== 18) failures.push("creator_kit_page_bad_copy_button_count");
   if (!creatorKitPage.includes("/images/qr/sample-koko.svg") || !creatorKitPage.includes("/images/qr/sample-noor.svg")) {
     failures.push("creator_kit_page_missing_qr_assets");
   }
@@ -638,6 +703,9 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedCampaign = pack === "koko" ? "koko_story_funnel" : "noor_story_funnel";
     const expectedSample = `https://fursay.com/sample/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
+    const expectedYoutubePlacement = `${expectedCreator}/youtube`;
+    const expectedSocialPlacement = `${expectedCreator}/social`;
+    const expectedNewsletterPlacement = `${expectedCreator}/newsletter`;
     if (campaign.status !== "active") failures.push(`campaigns_${pack}_status:${campaign.status || "none"}`);
     if (campaign.campaign !== expectedCampaign) failures.push(`campaigns_${pack}_campaign:${campaign.campaign || "none"}`);
     if (campaign.shortlinks?.sample !== expectedSample) failures.push(`campaigns_${pack}_sample:${campaign.shortlinks?.sample || "none"}`);
@@ -657,9 +725,18 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!creatorPack.trackedLandingUrl?.includes(`subscribe=${pack}`)) failures.push(`creator_kit_${pack}_missing_subscribe`);
     if (!creatorPack.trackedLandingUrl?.includes("utm_source=creator_kit")) failures.push(`creator_kit_${pack}_missing_source`);
     if (!creatorPack.trackedLandingUrl?.includes(`utm_campaign=${expectedCampaign}`)) failures.push(`creator_kit_${pack}_missing_campaign`);
-    if (!creatorPack.youtubeDescription?.includes(expectedCreator)) failures.push(`creator_kit_${pack}_youtube_missing_creator`);
-    if (!creatorPack.socialCaption?.includes(expectedCreator)) failures.push(`creator_kit_${pack}_social_missing_creator`);
-    if (!creatorPack.newsletterBlurb?.includes(expectedSample)) failures.push(`creator_kit_${pack}_newsletter_missing_sample`);
+    if (creatorPack.placementLinks?.youtubeDescription?.shortlink !== expectedYoutubePlacement) {
+      failures.push(`creator_kit_${pack}_youtube_placement:${creatorPack.placementLinks?.youtubeDescription?.shortlink || "none"}`);
+    }
+    if (creatorPack.placementLinks?.socialCaption?.shortlink !== expectedSocialPlacement) {
+      failures.push(`creator_kit_${pack}_social_placement:${creatorPack.placementLinks?.socialCaption?.shortlink || "none"}`);
+    }
+    if (creatorPack.placementLinks?.newsletterBlurb?.shortlink !== expectedNewsletterPlacement) {
+      failures.push(`creator_kit_${pack}_newsletter_placement:${creatorPack.placementLinks?.newsletterBlurb?.shortlink || "none"}`);
+    }
+    if (!creatorPack.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`creator_kit_${pack}_youtube_missing_placement`);
+    if (!creatorPack.socialCaption?.includes(expectedSocialPlacement)) failures.push(`creator_kit_${pack}_social_missing_placement`);
+    if (!creatorPack.newsletterBlurb?.includes(expectedNewsletterPlacement)) failures.push(`creator_kit_${pack}_newsletter_missing_placement`);
     if (!creatorPack.altText?.includes(expectedSample)) failures.push(`creator_kit_${pack}_alt_missing_sample`);
     if (creatorPack.utmContract?.source !== "creator_kit") failures.push(`creator_kit_${pack}_utm_source:${creatorPack.utmContract?.source || "none"}`);
     if (campaign.copyKit?.qrSvg === expectedQr) {
@@ -681,6 +758,16 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   for (const route of ["https://fursay.com/creator/koko", "https://fursay.com/creator/noor"]) {
     if (!siteHealth.routes?.creator?.includes(route)) failures.push(`site_health_missing_creator_route:${route}`);
+  }
+  for (const route of [
+    "https://fursay.com/creator/koko/youtube",
+    "https://fursay.com/creator/koko/social",
+    "https://fursay.com/creator/koko/newsletter",
+    "https://fursay.com/creator/noor/youtube",
+    "https://fursay.com/creator/noor/social",
+    "https://fursay.com/creator/noor/newsletter",
+  ]) {
+    if (!siteHealth.routes?.creatorPlacement?.includes(route)) failures.push(`site_health_missing_creator_placement_route:${route}`);
   }
   for (const route of ["https://fursay.com/creator-kit", "https://fursay.com/creator-kit.json"]) {
     if (!siteHealth.routes?.creatorKit?.includes(route)) failures.push(`site_health_missing_creator_kit_route:${route}`);
@@ -710,7 +797,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.measurement?.subscriptionEndpoint !== "/api/subscribe") failures.push("site_health_bad_subscription_endpoint");
   if (siteHealth.measurement?.failClosed !== true) failures.push("site_health_fail_closed_not_true");
   if (siteHealth.measurement?.liveSmokeCallsMailerLite !== false) failures.push("site_health_live_smoke_mailerlite_not_false");
-  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
+  for (const surface of ["homepage_split_cta", "homepage_sample_deep_link", "sample_shortlink", "sample_pack_schema", "copy_sample_shortlink", "campaign_copy_kit", "campaign_qr_asset", "campaign_qr_card", "creator_kit_manifest", "creator_kit_page", "creator_shortlink", "creator_placement_shortlink", "koko_sample_pack_cta", "noor_sample_pack_cta", "share_strip", "shortlink", "youtube_outbound_utm", "subscribe_deep_link"]) {
     if (!siteHealth.trafficSurfaces?.includes(surface)) failures.push(`site_health_missing_traffic_surface:${surface}`);
   }
   for (const signal of ["modal_preselect_matches_pack", "subscribe_payload_keeps_attribution", "no_console_error"]) {

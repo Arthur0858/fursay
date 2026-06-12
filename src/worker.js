@@ -59,6 +59,30 @@ function joinRedirectUrl(url) {
       campaign: "koko_story_funnel",
       content: "creator_kit_sample"
     },
+    "/creator/koko/youtube": {
+      target: "/koko",
+      pack: "koko",
+      source: "youtube",
+      medium: "description",
+      campaign: "koko_story_funnel",
+      content: "creator_kit_youtube"
+    },
+    "/creator/koko/social": {
+      target: "/koko",
+      pack: "koko",
+      source: "social",
+      medium: "profile",
+      campaign: "koko_story_funnel",
+      content: "creator_kit_social"
+    },
+    "/creator/koko/newsletter": {
+      target: "/koko",
+      pack: "koko",
+      source: "newsletter",
+      medium: "email",
+      campaign: "koko_story_funnel",
+      content: "creator_kit_newsletter"
+    },
     "/creator/noor": {
       target: "/arabic",
       pack: "noor",
@@ -66,6 +90,30 @@ function joinRedirectUrl(url) {
       medium: "description",
       campaign: "noor_story_funnel",
       content: "creator_kit_sample"
+    },
+    "/creator/noor/youtube": {
+      target: "/arabic",
+      pack: "noor",
+      source: "youtube",
+      medium: "description",
+      campaign: "noor_story_funnel",
+      content: "creator_kit_youtube"
+    },
+    "/creator/noor/social": {
+      target: "/arabic",
+      pack: "noor",
+      source: "social",
+      medium: "profile",
+      campaign: "noor_story_funnel",
+      content: "creator_kit_social"
+    },
+    "/creator/noor/newsletter": {
+      target: "/arabic",
+      pack: "noor",
+      source: "newsletter",
+      medium: "email",
+      campaign: "noor_story_funnel",
+      content: "creator_kit_newsletter"
     }
   };
   const route = routes[path];

@@ -2437,6 +2437,9 @@ body.picture-world .creator-pack dt {
   color: #7a6a4a !important;
 }
 body.picture-world .creator-pack dd {
+  display: grid !important;
+  justify-items: start !important;
+  gap: 6px !important;
   margin: 2px 0 0 !important;
   overflow-wrap: anywhere !important;
 }
@@ -2467,7 +2470,8 @@ body.picture-world .creator-copy-heading {
 body.picture-world .creator-copy-heading h3 {
   margin: 0 !important;
 }
-body.picture-world .creator-copy-button {
+body.picture-world .creator-copy-button,
+body.picture-world .creator-link-copy {
   min-height: 32px !important;
   padding: 6px 10px !important;
   border: 1px solid rgba(114, 83, 44, 0.18) !important;
@@ -2479,7 +2483,13 @@ body.picture-world .creator-copy-button {
   font-weight: 900 !important;
   cursor: pointer !important;
 }
-body.picture-world .creator-copy-button:focus-visible {
+body.picture-world .creator-link-copy {
+  min-height: 30px !important;
+  padding: 5px 9px !important;
+  font-size: 0.8rem !important;
+}
+body.picture-world .creator-copy-button:focus-visible,
+body.picture-world .creator-link-copy:focus-visible {
   outline: 3px solid rgba(46, 157, 95, 0.28) !important;
   outline-offset: 2px !important;
 }

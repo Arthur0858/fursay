@@ -113,10 +113,46 @@ const CHECKS = [
     locationIncludes: ["/koko", "subscribe=koko", "utm_source=creator_kit", "utm_medium=description", "utm_content=creator_kit_sample"],
   },
   {
+    path: "/creator/koko/youtube",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=youtube", "utm_medium=description", "utm_content=creator_kit_youtube"],
+  },
+  {
+    path: "/creator/koko/social",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=social", "utm_medium=profile", "utm_content=creator_kit_social"],
+  },
+  {
+    path: "/creator/koko/newsletter",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/koko", "subscribe=koko", "utm_source=newsletter", "utm_medium=email", "utm_content=creator_kit_newsletter"],
+  },
+  {
     path: "/creator/noor",
     status: 302,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     locationIncludes: ["/arabic", "subscribe=noor", "utm_source=creator_kit", "utm_medium=description", "utm_content=creator_kit_sample"],
+  },
+  {
+    path: "/creator/noor/youtube",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=youtube", "utm_medium=description", "utm_content=creator_kit_youtube"],
+  },
+  {
+    path: "/creator/noor/social",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=social", "utm_medium=profile", "utm_content=creator_kit_social"],
+  },
+  {
+    path: "/creator/noor/newsletter",
+    status: 302,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    locationIncludes: ["/arabic", "subscribe=noor", "utm_source=newsletter", "utm_medium=email", "utm_content=creator_kit_newsletter"],
   },
 ];
 
