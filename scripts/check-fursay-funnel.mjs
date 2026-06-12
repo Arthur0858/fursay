@@ -366,6 +366,13 @@ async function checkDiscoveryFiles(baseUrl) {
   const failures = [];
   const sitemap = await readDiscoveryFile(baseUrl, "sitemap.xml");
   const llms = await readDiscoveryFile(baseUrl, "llms.txt");
+  const siteHealthRaw = await readDiscoveryFile(baseUrl, "site-health.json");
+  let siteHealth = {};
+  try {
+    siteHealth = JSON.parse(siteHealthRaw);
+  } catch {
+    failures.push("site_health_invalid_json");
+  }
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
   const expectedLastmod = taipeiDateString();
   if (lastmods.length !== 9) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
@@ -379,11 +386,37 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!llms.includes("https://fursay.com/join/koko") || !llms.includes("https://fursay.com/join/noor")) {
     failures.push("llms_missing_join_routes");
   }
+  if (!llms.includes("https://fursay.com/site-health.json")) failures.push("llms_missing_site_health");
+  if (siteHealth.platform !== "cloudflare-workers-static-assets") failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
+  if (siteHealth.deployment?.workerName !== "fursay") failures.push(`site_health_worker:${siteHealth.deployment?.workerName || "none"}`);
+  if (siteHealth.deployment?.assetsBinding !== "ASSETS") failures.push(`site_health_assets_binding:${siteHealth.deployment?.assetsBinding || "none"}`);
+  if (siteHealth.deployment?.releaseCommand !== "node scripts/release-fursay.mjs") {
+    failures.push(`site_health_release_command:${siteHealth.deployment?.releaseCommand || "none"}`);
+  }
+  for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor"]) {
+    if (!siteHealth.routes?.join?.includes(route)) failures.push(`site_health_missing_join_route:${route}`);
+  }
+  if (siteHealth.funnels?.koko?.join !== "https://fursay.com/join/koko") failures.push("site_health_bad_koko_join");
+  if (siteHealth.funnels?.noor?.join !== "https://fursay.com/join/noor") failures.push("site_health_bad_noor_join");
+  if (!siteHealth.funnels?.koko?.deepLink?.includes("subscribe=koko")) failures.push("site_health_bad_koko_deep_link");
+  if (!siteHealth.funnels?.noor?.deepLink?.includes("subscribe=noor")) failures.push("site_health_bad_noor_deep_link");
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic5.css")) {
+    failures.push("site_health_missing_current_shared_css");
+  }
+  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260612-traffic7.js")) {
+    failures.push("site_health_missing_current_shared_js");
+  }
   return {
     path: "discovery-files",
     ok: failures.length === 0,
     failures,
-    data: { lastmodCount: lastmods.length, expectedLastmod, llmsBytes: Buffer.byteLength(llms) },
+    data: {
+      lastmodCount: lastmods.length,
+      expectedLastmod,
+      llmsBytes: Buffer.byteLength(llms),
+      siteHealthBytes: Buffer.byteLength(siteHealthRaw),
+      platform: siteHealth.platform || "",
+    },
   };
 }
 

@@ -1,0 +1,50 @@
+{
+  "site": "Fursay",
+  "origin": "https://fursay.com",
+  "platform": "cloudflare-workers-static-assets",
+  "updatedAt": "2026-06-13",
+  "deployment": {
+    "workerName": "fursay",
+    "assetsBinding": "ASSETS",
+    "releaseCommand": "node scripts/release-fursay.mjs"
+  },
+  "routes": {
+    "home": [
+      "https://fursay.com/",
+      "https://fursay.com/zh/",
+      "https://fursay.com/ar/"
+    ],
+    "storyWorlds": [
+      "https://fursay.com/koko",
+      "https://fursay.com/arabic"
+    ],
+    "join": [
+      "https://fursay.com/join/koko",
+      "https://fursay.com/join/noor"
+    ]
+  },
+  "funnels": {
+    "koko": {
+      "join": "https://fursay.com/join/koko",
+      "deepLink": "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko"
+    },
+    "noor": {
+      "join": "https://fursay.com/join/noor",
+      "deepLink": "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor"
+    }
+  },
+  "checks": {
+    "funnel": "scripts/check-fursay-funnel.mjs",
+    "noor": "scripts/check-noor-list-activation.mjs",
+    "release": "scripts/release-fursay.mjs"
+  },
+  "sharedAssets": {
+    "css": [
+      "/css/picture-book-base.css",
+      "/css/picture-world-shared-20260612-traffic5.css"
+    ],
+    "js": [
+      "/js/site-shared-20260612-traffic7.js"
+    ]
+  }
+}

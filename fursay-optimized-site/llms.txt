@@ -32,3 +32,4 @@ Useful actions:
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml
 - Robots: https://fursay.com/robots.txt
+- Site health: https://fursay.com/site-health.json
