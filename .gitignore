@@ -12,6 +12,7 @@ node_modules
 # Generated archives and heavy QA outputs
 *.zip
 *.bundle
+fursay-optimized-site/release.json
 transfer/
 output/
 qa-screenshots/
