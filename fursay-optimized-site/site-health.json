@@ -10,7 +10,8 @@
     "releaseManifest": "https://fursay.com/release.json",
     "campaignManifest": "https://fursay.com/campaigns.json",
     "creatorKitManifest": "https://fursay.com/creator-kit.json",
-    "creatorKitPage": "https://fursay.com/creator-kit"
+    "creatorKitPage": "https://fursay.com/creator-kit",
+    "videoDiscoveryManifest": "https://fursay.com/video-discovery.json"
   },
   "routes": {
     "home": [
@@ -53,6 +54,9 @@
     "creatorKit": [
       "https://fursay.com/creator-kit",
       "https://fursay.com/creator-kit.json"
+    ],
+    "discovery": [
+      "https://fursay.com/video-discovery.json"
     ]
   },
   "funnels": {
@@ -127,8 +131,10 @@
     "sample_shortlink",
     "family_share_shortlink",
     "bio_shortlink",
+    "video_discovery_manifest",
     "social_preview_metadata",
     "sample_pack_schema",
+    "story_world_faq_schema",
     "copy_sample_shortlink",
     "campaign_copy_kit",
     "campaign_qr_asset",

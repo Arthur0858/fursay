@@ -106,6 +106,7 @@ function writeReleaseManifest() {
       campaignManifest: "https://fursay.com/campaigns.json",
       creatorKitManifest: "https://fursay.com/creator-kit.json",
       creatorKitPage: "https://fursay.com/creator-kit",
+      videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
     },
     funnels: {
       koko: {
@@ -138,13 +139,14 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 29,
-      cacheHeaderChecks: 31,
+      cacheHeaderChecks: 32,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
   };
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
   writeCampaignManifest(siteDir, source);
+  writeVideoDiscovery(siteDir, source);
 }
 
 function campaignBase(source) {
@@ -241,6 +243,7 @@ function writeCampaignManifest(siteDir, source) {
   const manifest = {
     ...campaignBase(source),
     creatorKit: "https://fursay.com/creator-kit.json",
+    videoDiscovery: "https://fursay.com/video-discovery.json",
     campaigns,
   };
   writeFileSync(resolve(siteDir, "campaigns.json"), JSON.stringify(manifest, null, 2) + "\n");
@@ -311,6 +314,63 @@ function writeCreatorKit(siteDir, source, campaigns) {
   };
   writeFileSync(resolve(siteDir, "creator-kit.json"), JSON.stringify(kit, null, 2) + "\n");
   writeCreatorKitPage(siteDir, kit);
+}
+
+function writeVideoDiscovery(siteDir, source) {
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    purpose: "Search and creator discovery manifest for Fursay story-world video libraries, playlist embeds, and tracked story-pack subscription paths.",
+    safety: {
+      subscriptionEndpoint: "/api/subscribe",
+      smokeSubmitsToMailerLite: false,
+      externalVideoHost: "youtube",
+    },
+    channels: {
+      koko: {
+        title: "Koko's Forest Adventure",
+        audience: "Mandarin-speaking families learning English",
+        languagePair: ["en", "zh"],
+        storyWorld: "https://fursay.com/koko",
+        localizedStoryWorlds: {
+          en: "https://fursay.com/koko",
+          "zh-TW": "https://fursay.com/zh/koko",
+          ar: "https://fursay.com/ar/koko",
+        },
+        youtubeChannel: "https://www.youtube.com/@KokosForest",
+        youtubeVideos: "https://www.youtube.com/@KokosForest/videos",
+        youtubePlaylists: "https://www.youtube.com/@KokosForest/playlists",
+        playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
+        subscribeShortlink: "https://fursay.com/sample/koko",
+        creatorShortlink: "https://fursay.com/creator/koko/youtube",
+        qrSvg: "https://fursay.com/images/qr/share-koko.svg",
+        structuredDataAction: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
+      },
+      noor: {
+        title: "Arabic Kids Chinese Picture Book",
+        audience: "Arabic-speaking families learning Chinese",
+        languagePair: ["ar", "zh"],
+        storyWorld: "https://fursay.com/arabic",
+        localizedStoryWorlds: {
+          en: "https://fursay.com/arabic",
+          "zh-TW": "https://fursay.com/zh/arabic",
+          ar: "https://fursay.com/ar/arabic",
+        },
+        youtubeChannel: "https://www.youtube.com/@ArabicKidsChinese",
+        youtubeVideos: "https://www.youtube.com/@ArabicKidsChinese/videos",
+        youtubePlaylists: "https://www.youtube.com/@ArabicKidsChinese/playlists",
+        playlistEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
+        subscribeShortlink: "https://fursay.com/sample/noor",
+        creatorShortlink: "https://fursay.com/creator/noor/youtube",
+        qrSvg: "https://fursay.com/images/qr/share-noor.svg",
+        structuredDataAction: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
+      },
+    },
+  };
+  writeFileSync(resolve(siteDir, "video-discovery.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
 function escapeHtml(value) {

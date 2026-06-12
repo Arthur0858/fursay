@@ -43,6 +43,7 @@ Useful actions:
 - Noor social creator link: https://fursay.com/creator/noor/social
 - Noor newsletter creator link: https://fursay.com/creator/noor/newsletter
 - Creator kit page: https://fursay.com/creator-kit
+- Video discovery manifest: https://fursay.com/video-discovery.json
 
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml
