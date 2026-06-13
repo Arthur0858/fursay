@@ -106,6 +106,13 @@
       if (publicShareButton) {
         event.preventDefault();
         copyPublicShareLink(publicShareButton);
+        return;
+      }
+
+      var kitCopyButton = event.target.closest('[data-copy-creator-kit], [data-copy-share-kit], [data-copy-traffic-launch]');
+      if (kitCopyButton) {
+        event.preventDefault();
+        copyKitValue(kitCopyButton);
       }
     });
 
@@ -418,6 +425,27 @@
       if (status) status.textContent = text.publicShareCopied;
     } catch (e) {
       if (status) status.textContent = '';
+    }
+  }
+
+  async function copyKitValue(button) {
+    var value = button.getAttribute('data-copy-value') || '';
+    var copyLabel = button.dataset.copyLabel || button.dataset.originalText || button.textContent || 'Copy';
+    var copiedLabel = button.getAttribute('data-copied-label') || 'Copied';
+    var failedLabel = button.getAttribute('data-copy-failed-label') || 'Copy failed';
+    button.dataset.originalText = copyLabel;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        window.prompt(copyLabel, value);
+      }
+      button.textContent = copiedLabel;
+      setTimeout(function () { button.textContent = copyLabel; }, 1600);
+    } catch (e) {
+      button.textContent = failedLabel;
+      setTimeout(function () { button.textContent = copyLabel; }, 1800);
     }
   }
 

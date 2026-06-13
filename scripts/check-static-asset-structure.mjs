@@ -76,8 +76,11 @@ async function main() {
     const relativeFile = file.replace(`${root}/`, "");
     const inlineStyles = [...html.matchAll(/\sstyle=("[^"]*"|'[^']*')/gi)];
     const inlineHandlers = [...html.matchAll(/\son[a-z]+=/gi)];
+    const inlineScripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+      .filter((match) => !/\bsrc=/.test(match[1]) && !/type=["']application\/ld\+json["']/i.test(match[1]));
     if (inlineStyles.length) failures.push(`inline_style_attribute:${relativeFile}:${inlineStyles.length}`);
     if (inlineHandlers.length) failures.push(`inline_event_handler:${relativeFile}:${inlineHandlers.length}`);
+    if (inlineScripts.length) failures.push(`inline_executable_script:${relativeFile}:${inlineScripts.length}`);
     const assets = extractAssets(html);
     referenced.css.push(...assets.css);
     referenced.js.push(...assets.js);

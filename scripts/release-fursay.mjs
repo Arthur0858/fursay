@@ -1030,21 +1030,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script>
-    document.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy-traffic-launch], [data-copy-share-kit]");
-      if (!button) return;
-      const value = button.getAttribute("data-copy-value") || "";
-      try {
-        await navigator.clipboard.writeText(value);
-        button.textContent = "Copied";
-        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy tracked copy" : "Copy"; }, 1600);
-      } catch {
-        button.textContent = "Copy failed";
-        setTimeout(() => { button.textContent = button.matches("[data-copy-traffic-launch]") ? "Copy tracked copy" : "Copy"; }, 1800);
-      }
-    });
-  </script>
+  <script src="/js/site-shared-20260613-attribution1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1311,21 +1297,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script>
-    document.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy-creator-kit]");
-      if (!button) return;
-      const value = button.getAttribute("data-copy-value") || "";
-      try {
-        await navigator.clipboard.writeText(value);
-        button.textContent = "Copied";
-        setTimeout(() => { button.textContent = "Copy"; }, 1600);
-      } catch {
-        button.textContent = "Copy failed";
-        setTimeout(() => { button.textContent = "Copy"; }, 1800);
-      }
-    });
-  </script>
+  <script src="/js/site-shared-20260613-attribution1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -1413,21 +1385,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script>
-    document.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-copy-share-kit]");
-      if (!button) return;
-      const value = button.getAttribute("data-copy-value") || "";
-      try {
-        await navigator.clipboard.writeText(value);
-        button.textContent = "Copied";
-        setTimeout(() => { button.textContent = "Copy"; }, 1600);
-      } catch {
-        button.textContent = "Copy failed";
-        setTimeout(() => { button.textContent = "Copy"; }, 1800);
-      }
-    });
-  </script>
+  <script src="/js/site-shared-20260613-attribution1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
