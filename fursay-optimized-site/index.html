@@ -310,9 +310,9 @@
       <button class="tab-btn tab-arabic" data-tab="arabic">🐪 Arabic Kids Chinese</button>
     </div>
 
-    <div class="videos-grid" id="tab-koko"><div style="text-align:center;padding:40px;color:#7a5a3f;grid-column:1/-1;background:#fff8e9;border:1px dashed rgba(122,82,48,.22);border-radius:14px">Open the story library and choose one story to watch together.</div>
+    <div class="videos-grid" id="tab-koko"><div class="empty-story-note empty-story-note-warm">Open the story library and choose one story to watch together.</div>
     </div>
-    <div class="videos-grid" id="tab-arabic" style="display:none"><div style="text-align:center;padding:40px;color:#7a5a3f;grid-column:1/-1;background:#fff8e9;border:1px dashed rgba(122,82,48,.22);border-radius:14px">Open the story library and choose one story to watch together.</div>
+    <div class="videos-grid is-hidden" id="tab-arabic"><div class="empty-story-note empty-story-note-warm">Open the story library and choose one story to watch together.</div>
     </div>
 
     <div class="view-more">
@@ -376,7 +376,7 @@
 
   <!-- Booklist -->
   <section class="booklist-sec" id="booklist">
-    <div style="text-align:center;max-width:760px;margin:0 auto 40px">
+    <div class="section-intro-block">
       <div class="section-title reveal">📚 Our <span class="hl">Booklist</span></div>
       <p class="section-sub reveal">Handpicked picture books that pair with our story themes across both channels. Watch, then read together — double the learning!</p>
     </div>
@@ -433,7 +433,7 @@
   <!-- Footer -->
   <footer>
     <div class="f-logo">🐾 Fursay</div>
-    <div style="margin-bottom:16px;color:#C8B8A8">Parent-child bilingual stories, ready to read together</div>
+    <div class="footer-kicker">Parent-child bilingual stories, ready to read together</div>
     <div class="f-links">
       <a href="/">Home</a>
       <a href="/koko">Koko's Forest</a>
@@ -471,7 +471,7 @@
           </div>
         </div>
         <button type="submit" class="modal-submit">Send me the weekly pack</button>
-        <p id="sub-msg" class="modal-note" style="display:none"></p>
+        <p id="sub-msg" class="modal-note is-hidden"></p>
       </form>
     </div>
   </div>

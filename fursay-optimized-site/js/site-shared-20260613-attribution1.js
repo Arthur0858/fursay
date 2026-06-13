@@ -423,6 +423,7 @@
 
   window.showTab = function (tab, btn) {
     document.querySelectorAll('.videos-grid').forEach(function (grid) {
+      grid.classList.add('is-hidden');
       grid.style.display = 'none';
     });
     document.querySelectorAll('.tab-btn').forEach(function (button) {
@@ -430,7 +431,10 @@
     });
 
     var target = qs('tab-' + tab);
-    if (target) target.style.display = 'grid';
+    if (target) {
+      target.classList.remove('is-hidden');
+      target.style.display = 'grid';
+    }
     if (btn) btn.classList.add('active');
 
     var viewAllBtn = qs('view-all-btn');
@@ -516,6 +520,7 @@
 
     if (!email) {
       if (msg) {
+        msg.classList.remove('is-hidden');
         msg.style.display = 'block';
         msg.textContent = 'Please enter an email address.';
       }
@@ -542,6 +547,7 @@
       btn.textContent = 'Sending...';
     }
     if (msg) {
+      msg.classList.remove('is-hidden');
       msg.style.display = 'block';
       msg.textContent = 'Sending...';
     }

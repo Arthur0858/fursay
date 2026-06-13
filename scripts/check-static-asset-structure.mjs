@@ -73,6 +73,11 @@ async function main() {
 
   for (const file of htmlFiles) {
     const html = await readFile(file, "utf8");
+    const relativeFile = file.replace(`${root}/`, "");
+    const inlineStyles = [...html.matchAll(/\sstyle=("[^"]*"|'[^']*')/gi)];
+    const inlineHandlers = [...html.matchAll(/\son[a-z]+=/gi)];
+    if (inlineStyles.length) failures.push(`inline_style_attribute:${relativeFile}:${inlineStyles.length}`);
+    if (inlineHandlers.length) failures.push(`inline_event_handler:${relativeFile}:${inlineHandlers.length}`);
     const assets = extractAssets(html);
     referenced.css.push(...assets.css);
     referenced.js.push(...assets.js);
