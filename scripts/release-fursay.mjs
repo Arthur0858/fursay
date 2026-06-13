@@ -188,7 +188,7 @@ function writeReleaseManifest() {
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 12,
       booksAffiliateId: "arthur0858",
-      cacheHeaderChecks: 46,
+      cacheHeaderChecks: 52,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },

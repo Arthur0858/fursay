@@ -4,6 +4,12 @@ import { resolve, join } from "node:path";
 const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const EXPECTED_CSS = [
+  "home-ar-page-20260613-inline1.css",
+  "home-en-page-20260613-inline1.css",
+  "home-zh-page-20260613-inline1.css",
+  "koko-ar-page-20260613-inline1.css",
+  "koko-en-page-20260613-inline1.css",
+  "koko-zh-page-20260613-inline1.css",
   "noor-ltr-page-20260613-inline1.css",
   "noor-rtl-page-20260613-inline1.css",
   "picture-book-base.css",
