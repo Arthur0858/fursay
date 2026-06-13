@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "assets:fingerprints": "node scripts/update-immutable-asset-fingerprints.mjs",
+    "assets:fingerprints:check": "node scripts/update-immutable-asset-fingerprints.mjs --check",
     "check": "node scripts/release-fursay.mjs --check-only",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "deploy": "node scripts/release-fursay.mjs",
