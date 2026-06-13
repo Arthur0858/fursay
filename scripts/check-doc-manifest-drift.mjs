@@ -23,6 +23,7 @@ const PUBLIC_MANIFESTS = [
 ];
 const LIVE_SMOKE_EXCLUDES = new Set([
   "scripts/check-deploy-readiness.mjs",
+  "scripts/check-newsletter-state-contract.mjs",
   "scripts/check-render-jobs.mjs",
   "scripts/check-workspace-hygiene.mjs",
   "scripts/check-static-asset-structure.mjs",

@@ -185,6 +185,7 @@ function writeReleaseManifest() {
       "scripts/check-web-vitals-contract.mjs",
       "scripts/check-internal-links-contract.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
+      "scripts/check-newsletter-state-contract.mjs",
       "scripts/check-public-kit-parity.mjs",
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
@@ -1476,6 +1477,7 @@ async function main() {
   run("node", ["--check", "scripts/check-web-vitals-contract.mjs"]);
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
+  run("node", ["--check", "scripts/check-newsletter-state-contract.mjs"]);
   run("node", ["--check", "scripts/check-public-kit-parity.mjs"]);
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
@@ -1507,6 +1509,7 @@ async function main() {
   run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
+  run("node", ["scripts/check-newsletter-state-contract.mjs", "--out-dir", join(outRoot, "newsletter-state-local")]);
   run("node", ["scripts/check-public-kit-parity.mjs", "--out-dir", join(outRoot, "public-kit-parity-local")]);
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
