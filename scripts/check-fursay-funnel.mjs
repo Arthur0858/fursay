@@ -1398,7 +1398,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!shareKitPage.includes('data-share-kit-pack="koko"')) failures.push("share_kit_page_missing_koko_pack");
   if (!shareKitPage.includes('data-share-kit-pack="noor"')) failures.push("share_kit_page_missing_noor_pack");
   if (!shareKitPage.includes("/share-kit.json")) failures.push("share_kit_page_missing_json_manifest_link");
-  if ((shareKitPage.match(/<button[^>]+data-copy-share-kit/g) || []).length !== 22) failures.push("share_kit_page_bad_copy_button_count");
+  if ((shareKitPage.match(/<button[^>]+data-copy-share-kit/g) || []).length !== 24) failures.push("share_kit_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('<body class="picture-world creator-kit-page traffic-launch-page">')) failures.push("traffic_launch_page_missing_body_class");
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="koko"')) failures.push("traffic_launch_page_missing_koko_pack");
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
