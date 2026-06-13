@@ -178,6 +178,7 @@ function writeReleaseManifest() {
       "scripts/check-event-tracking-contract.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
+      "scripts/check-semantic-funnel-contract.mjs",
       "scripts/check-site-structure-contract.mjs",
       "scripts/check-hero-preload-contract.mjs",
       "scripts/check-visual-layout-contract.mjs",
@@ -481,6 +482,7 @@ function writeCampaignManifest(siteDir, source) {
       ctaSources: [
         "home_koko_weekly_pack",
         "home_weekly_pack_koko",
+        "koko_hero_weekly_pack",
         "koko_sample_pack_cta",
         "koko_story_pack_section",
         "share_strip_koko_pack",
@@ -505,11 +507,11 @@ function writeCampaignManifest(siteDir, source) {
       },
       copyKit: {
         version: "2026-06-13",
-        qrLabel: "Noor weekly story pack",
-        shortHeadline: "Get Noor's weekly Chinese story pack",
-        videoDescription: "Get the free Noor weekly story pack: https://fursay.com/sample/noor",
-        familyShareText: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/sample/noor",
-        familyShareMessage: "Noor's Arabic Kids Chinese weekly pack is ready for family story time: https://fursay.com/share/noor",
+        qrLabel: "Noor 3-minute story pack",
+        shortHeadline: "Get Noor's 3-minute Chinese story pack",
+        videoDescription: "Get the free Noor 3-minute story pack: https://fursay.com/sample/noor",
+        familyShareText: "Noor's Arabic Kids Chinese 3-minute pack is ready for family story time: https://fursay.com/sample/noor",
+        familyShareMessage: "Noor's Arabic Kids Chinese 3-minute pack is ready for family story time: https://fursay.com/share/noor",
         bioProfileCopy: bioProfileCopy("noor"),
         primaryShortlink: "https://fursay.com/sample/noor",
         shareShortlink: "https://fursay.com/share/noor",
@@ -521,6 +523,8 @@ function writeCampaignManifest(siteDir, source) {
       ctaSources: [
         "home_noor_weekly_pack",
         "home_weekly_pack_noor",
+        "arabic_hero_weekly_pack",
+        "arabic_episode_story_pack",
         "arabic_sample_pack_cta",
         "arabic_story_pack_section",
         "share_strip_noor_pack",
@@ -1463,6 +1467,7 @@ async function main() {
   run("node", ["--check", "scripts/check-event-tracking-contract.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
+  run("node", ["--check", "scripts/check-semantic-funnel-contract.mjs"]);
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-hero-preload-contract.mjs"]);
   run("node", ["--check", "scripts/check-visual-layout-contract.mjs"]);
@@ -1492,6 +1497,7 @@ async function main() {
   run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
+  run("node", ["scripts/check-semantic-funnel-contract.mjs", "--out-dir", join(outRoot, "semantic-funnel-local")]);
   run("node", ["scripts/check-site-structure-contract.mjs", "--out-dir", join(outRoot, "site-structure-local")]);
   run("node", ["scripts/check-hero-preload-contract.mjs", "--out-dir", join(outRoot, "hero-preload-local")]);
   run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
@@ -1522,6 +1528,7 @@ async function main() {
     run("node", ["scripts/check-event-tracking-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-tracking-live")]);
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
+    run("node", ["scripts/check-semantic-funnel-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "semantic-funnel-live")]);
     run("node", ["scripts/check-site-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "site-structure-live")]);
     run("node", ["scripts/check-hero-preload-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "hero-preload-live")]);
     run("node", ["scripts/check-visual-layout-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "visual-layout-live")]);
