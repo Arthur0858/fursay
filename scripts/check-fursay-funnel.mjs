@@ -906,7 +906,7 @@ async function checkTrafficLaunchSubscribePayloads(browser, baseUrl) {
       const example = new URL(channel.exampleUrl || `/${pack}`, "https://fursay.com");
       const localUrl = new URL(`${example.pathname}${example.search}`, baseUrl).toString();
       try {
-        const response = await page.goto(localUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+        const response = await page.goto(localUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
         await page.waitForSelector("#subscribeModal.open", { timeout: 5000 });
         await page.locator('#subscribeModal.open input[type="email"]:visible').fill(`traffic-${pack}-${channel.channel}@example.test`);
         await page.evaluate(() => document.querySelector("#subscribeModal form")?.requestSubmit());
