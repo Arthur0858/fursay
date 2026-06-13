@@ -115,6 +115,11 @@
         return;
       }
 
+      var affiliateLink = event.target.closest('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]');
+      if (affiliateLink) {
+        emitFursayEvent('fursay_affiliate_click', affiliateEventDetail(affiliateLink));
+      }
+
       var shareButton = event.target.closest('[data-share-fursay]');
       if (shareButton) {
         event.preventDefault();
@@ -232,6 +237,27 @@
     if (url.pathname.includes('@ArabicKidsChinese')) return 'noor_channel';
     if (url.pathname.includes('@KokosForest')) return 'koko_channel';
     return slugify(anchor.textContent);
+  }
+
+  function affiliateEventDetail(anchor) {
+    var detail = {
+      market: '',
+      product_id: '',
+      outbound_host: '',
+      link_text: slugify(anchor.textContent)
+    };
+    try {
+      var url = new URL(anchor.href);
+      detail.outbound_host = url.hostname.replace(/^www\./, '');
+      if (detail.outbound_host === 'amazon.com') {
+        detail.market = 'amazon';
+        detail.product_id = (url.pathname.match(/\/dp\/([^/?#]+)/) || [])[1] || '';
+      } else if (detail.outbound_host === 'books.com.tw') {
+        detail.market = 'books';
+        detail.product_id = (url.pathname.match(/\/products\/([^/?#]+)/) || [])[1] || '';
+      }
+    } catch (e) {}
+    return detail;
   }
 
   function initOutboundAttribution() {

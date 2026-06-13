@@ -207,6 +207,7 @@ function writeReleaseManifest() {
       booksAffiliateLinks: 12,
       booksAffiliateId: "arthur0858",
       eventTrackingPages: 9,
+      affiliateEventTrackingPages: 9,
       eventTrackingSubmitPages: 3,
       webVitalsChecks: 18,
       cacheHeaderChecks: 53,
@@ -1067,7 +1068,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-events1.js"></script>
+  <script src="/js/site-shared-20260613-commerce1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1339,7 +1340,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-events1.js"></script>
+  <script src="/js/site-shared-20260613-commerce1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -1440,7 +1441,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-events1.js"></script>
+  <script src="/js/site-shared-20260613-commerce1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

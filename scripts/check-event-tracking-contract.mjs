@@ -6,18 +6,21 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20260613-events1.js";
-const LEGACY_JS = "/js/site-shared-20260613-attribution1.js";
+const SHARED_JS = "/js/site-shared-20260613-commerce1.js";
+const LEGACY_JS = [
+  "/js/site-shared-20260613-attribution1.js",
+  "/js/site-shared-20260613-events1.js",
+];
 const PAGES = [
-  { path: "/", lang: "en", campaign: "home_story_funnel" },
-  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel" },
-  { path: "/ar/", lang: "ar", campaign: "home_story_funnel" },
-  { path: "/koko", lang: "en", campaign: "koko_story_funnel", pack: "koko" },
-  { path: "/zh/koko", lang: "zh-TW", campaign: "koko_story_funnel", pack: "koko" },
-  { path: "/ar/koko", lang: "ar", campaign: "koko_story_funnel", pack: "koko" },
-  { path: "/arabic", lang: "en", campaign: "noor_story_funnel", pack: "noor" },
-  { path: "/zh/arabic", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor" },
-  { path: "/ar/arabic", lang: "ar", campaign: "noor_story_funnel", pack: "noor" },
+  { path: "/", lang: "en", campaign: "home_story_funnel", market: "amazon" },
+  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel", market: "books" },
+  { path: "/ar/", lang: "ar", campaign: "home_story_funnel", market: "amazon" },
+  { path: "/koko", lang: "en", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
+  { path: "/zh/koko", lang: "zh-TW", campaign: "koko_story_funnel", pack: "koko", market: "books" },
+  { path: "/ar/koko", lang: "ar", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
+  { path: "/arabic", lang: "en", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
+  { path: "/zh/arabic", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor", market: "books" },
+  { path: "/ar/arabic", lang: "ar", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
 ];
 const SUBMIT_PATHS = new Set(["/", "/koko", "/arabic"]);
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name"];
@@ -132,6 +135,34 @@ async function clickFirstSubscribeCta(page) {
   });
 }
 
+async function clickFirstAffiliateLink(page) {
+  return page.evaluate(() => {
+    window.__fursayAffiliateNavigationBlocked = false;
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]');
+      if (!link) return;
+      event.preventDefault();
+      window.__fursayAffiliateNavigationBlocked = true;
+    }, { capture: true, once: true });
+    const candidates = [...document.querySelectorAll('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]')];
+    const link = candidates.find((el) => {
+      const rect = el.getBoundingClientRect();
+      const style = window.getComputedStyle(el);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+    }) || candidates[0];
+    if (!link) return null;
+    const url = new URL(link.href);
+    link.click();
+    return {
+      href: link.href,
+      host: url.hostname.replace(/^www\./, ""),
+      productId: url.hostname.includes("amazon.com")
+        ? (url.pathname.match(/\/dp\/([^/?#]+)/) || [])[1] || ""
+        : (url.pathname.match(/\/products\/([^/?#]+)/) || [])[1] || "",
+    };
+  });
+}
+
 async function checkPage(browser, baseUrl, spec) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -174,6 +205,28 @@ async function checkPage(browser, baseUrl, spec) {
   }
   if (subscribeApiCalls !== 0) failures.push(`${spec.path}:api_called_before_submit:${subscribeApiCalls}`);
 
+  const affiliateMeta = await clickFirstAffiliateLink(page);
+  await page.waitForTimeout(120);
+  const affiliateState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+    navigationBlocked: window.__fursayAffiliateNavigationBlocked || false,
+  }));
+  if (!affiliateMeta) {
+    failures.push(`${spec.path}:missing_affiliate_link`);
+  } else {
+    const affiliateEvent = affiliateState.events.find((event) => event.event === "fursay_affiliate_click");
+    assertEventShape(failures, `${spec.path}:affiliate_click`, spec, affiliateEvent);
+    if (affiliateEvent?.detail?.market !== spec.market) failures.push(`${spec.path}:affiliate_market:${affiliateEvent?.detail?.market || "none"}`);
+    if (!affiliateEvent?.detail?.product_id) failures.push(`${spec.path}:affiliate_product_id_missing`);
+    if (affiliateEvent?.detail?.product_id !== affiliateMeta.productId) failures.push(`${spec.path}:affiliate_product_id:${affiliateEvent?.detail?.product_id || "none"}`);
+    if (affiliateEvent?.detail?.outbound_host !== affiliateMeta.host) failures.push(`${spec.path}:affiliate_host:${affiliateEvent?.detail?.outbound_host || "none"}`);
+    if (!affiliateState.dataLayer.some((entry) => entry.event === "fursay_affiliate_click")) {
+      failures.push(`${spec.path}:data_layer_missing_affiliate_click`);
+    }
+    if (!affiliateState.navigationBlocked) failures.push(`${spec.path}:affiliate_test_navigation_not_blocked`);
+  }
+
   let submitState = null;
   if (SUBMIT_PATHS.has(spec.path)) {
     await page.fill("#subscribeModal input[type='email']", "event-contract@example.com");
@@ -205,8 +258,9 @@ async function checkPage(browser, baseUrl, spec) {
     ok: failures.length === 0,
     failures,
     clickMeta,
+    affiliateEvent: Boolean(affiliateMeta),
     openEvents: openState.events.map((event) => event.event),
-    dataLayerEvents: openState.dataLayer.map((event) => event.event),
+    dataLayerEvents: affiliateState.dataLayer.map((event) => event.event),
     submitEvents: submitState ? submitState.events.map((event) => event.event) : [],
   };
 }
@@ -225,13 +279,16 @@ async function main() {
   for (const spec of PAGES) {
     const html = await readPageHtml(args.baseUrl ? baseUrl : "", spec.path);
     const hasShared = html.includes(SHARED_JS);
-    const hasLegacy = html.includes(LEGACY_JS);
+    const legacyHits = LEGACY_JS.filter((legacy) => html.includes(legacy));
+    const hasLegacy = legacyHits.length > 0;
     if (!hasShared) failures.push(`${spec.path}:missing_shared_js`);
-    if (hasLegacy) failures.push(`${spec.path}:legacy_js_reference`);
-    htmlChecks.push({ path: spec.path, hasShared, hasLegacy });
+    if (hasLegacy) failures.push(`${spec.path}:legacy_js_reference:${legacyHits.join(",")}`);
+    htmlChecks.push({ path: spec.path, hasShared, hasLegacy, legacyHits });
   }
   if (!existsSync(resolve(SITE_DIR, `.${SHARED_JS}`))) failures.push("shared_js_file_missing");
-  if (existsSync(resolve(SITE_DIR, `.${LEGACY_JS}`))) failures.push("legacy_js_file_still_present");
+  for (const legacy of LEGACY_JS) {
+    if (existsSync(resolve(SITE_DIR, `.${legacy}`))) failures.push(`legacy_js_file_still_present:${legacy}`);
+  }
 
   const browser = await chromium.launch({ headless: true });
   const pages = [];
@@ -253,6 +310,7 @@ async function main() {
     checks: {
       htmlPages: htmlChecks.length,
       openEventPages: pages.length,
+      affiliateEventPages: pages.filter((page) => page.affiliateEvent).length,
       submitEventPages: pages.filter((page) => page.submitEvents.length).length,
     },
     htmlChecks,
