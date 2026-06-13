@@ -1559,6 +1559,7 @@ async function main() {
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);
     run("node", ["scripts/check-doc-manifest-drift.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "doc-manifest-drift-live")]);
+    run("node", ["scripts/update-immutable-asset-fingerprints.mjs", "--check"]);
     run("node", ["scripts/check-image-assets.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "image-assets-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");

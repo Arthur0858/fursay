@@ -90,6 +90,37 @@ async function smokeLiveGateCoverage(release) {
   };
 }
 
+async function releaseScriptGateCoverage(release) {
+  const source = await readFile(resolve(process.cwd(), "scripts/release-fursay.mjs"), "utf8");
+  const qualityGates = Array.isArray(release.qualityGates) ? release.qualityGates : [];
+  const liveStart = source.indexOf("if (!args.skipLive) {");
+  const syntaxChecks = [...source.matchAll(/run\("node", \["--check", "(scripts\/[\w-]+\.mjs|audit-fursay\.mjs)"\]\);/g)]
+    .map((match) => match[1]);
+  const nodeRuns = [...source.matchAll(/run\("node", \["(scripts\/[\w-]+\.mjs|audit-fursay\.mjs)"([^\]]*)\]/g)]
+    .map((match) => ({
+      gate: match[1],
+      args: match[2],
+      index: match.index,
+    }));
+  const localRuns = nodeRuns
+    .filter((run) => liveStart === -1 || run.index < liveStart)
+    .map((run) => run.gate);
+  const liveRuns = nodeRuns
+    .filter((run) => liveStart !== -1 && run.index > liveStart)
+    .map((run) => run.gate);
+  const executableRuns = [...new Set([...localRuns, ...liveRuns])];
+  const expectedLiveGates = qualityGates.filter((gate) => !LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS.has(gate));
+  return {
+    syntaxChecks,
+    localRuns,
+    liveRuns,
+    missingSyntaxChecks: qualityGates.filter((gate) => gate.startsWith("scripts/") && !syntaxChecks.includes(gate)),
+    missingExecutableRuns: qualityGates.filter((gate) => !executableRuns.includes(gate)),
+    missingReleaseLiveRuns: expectedLiveGates.filter((gate) => !liveRuns.includes(gate)),
+    extraExecutableRuns: executableRuns.filter((gate) => !qualityGates.includes(gate)),
+  };
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
@@ -129,10 +160,16 @@ async function main() {
   }
 
   let smokeLive = null;
+  let releaseScript = null;
   if (!args.baseUrl) {
     smokeLive = await smokeLiveGateCoverage(release);
     failures.push(...smokeLive.missing.map((gate) => `smoke_live_missing_gate:${gate}`));
     failures.push(...smokeLive.extra.map((gate) => `smoke_live_extra_gate:${gate}`));
+    releaseScript = await releaseScriptGateCoverage(release);
+    failures.push(...releaseScript.missingSyntaxChecks.map((gate) => `release_script_missing_syntax_check:${gate}`));
+    failures.push(...releaseScript.missingExecutableRuns.map((gate) => `release_script_missing_executable_run:${gate}`));
+    failures.push(...releaseScript.missingReleaseLiveRuns.map((gate) => `release_script_missing_live_run:${gate}`));
+    failures.push(...releaseScript.extraExecutableRuns.map((gate) => `release_script_extra_executable_run:${gate}`));
   }
 
   await mkdir(args.outDir, { recursive: true });
@@ -147,6 +184,7 @@ async function main() {
     manifests,
     badges,
     smokeLive,
+    releaseScript,
   };
   await writeFile(resolve(args.outDir, "release-consistency.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({
