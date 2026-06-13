@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "cbed83c",
-    "summary": "Sync Fursay product browser smoke manifests"
+    "commit": "ac3ea17",
+    "summary": "Add Noor greetings episode landing pages"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
