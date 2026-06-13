@@ -25,6 +25,26 @@ const MAX_MAIN_SHARED_CSS_BYTES = 88_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
 const MAX_TOTAL_JS_BYTES = 35_000;
 const MAX_SINGLE_JS_BYTES = 35_000;
+const MAIN_STORY_HTML = new Set([
+  "index.html",
+  "zh/index.html",
+  "ar/index.html",
+  "koko.html",
+  "zh/koko.html",
+  "ar/koko.html",
+  "arabic.html",
+  "zh/arabic.html",
+  "ar/arabic.html",
+]);
+const OPERATIONS_HTML = new Set([
+  "creator-kit.html",
+  "deploy-readiness.html",
+  "links.html",
+  "share-kit.html",
+  "traffic-launch.html",
+]);
+const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
+const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -76,6 +96,7 @@ async function main() {
   const jsFiles = (await readdir(resolve(root, "js"))).filter((name) => name.endsWith(".js")).sort();
   const htmlFiles = (await walk(root)).filter((file) => file.endsWith(".html"));
   const referenced = { css: [], js: [] };
+  const pageAssets = {};
   const assetSizes = { css: {}, js: {} };
 
   for (const file of htmlFiles) {
@@ -89,8 +110,24 @@ async function main() {
     if (inlineHandlers.length) failures.push(`inline_event_handler:${relativeFile}:${inlineHandlers.length}`);
     if (inlineScripts.length) failures.push(`inline_executable_script:${relativeFile}:${inlineScripts.length}`);
     const assets = extractAssets(html);
+    pageAssets[relativeFile] = assets;
+    if (MAIN_STORY_HTML.has(relativeFile) && assets.css.includes(OPERATIONS_CSS)) {
+      failures.push(`main_story_page_loads_operations_css:${relativeFile}`);
+    }
+    if (OPERATIONS_HTML.has(relativeFile) && !assets.css.includes(OPERATIONS_CSS)) {
+      failures.push(`operations_page_missing_operations_css:${relativeFile}`);
+    }
+    if ((MAIN_STORY_HTML.has(relativeFile) || OPERATIONS_HTML.has(relativeFile)) && !assets.css.includes(MAIN_SHARED_CSS)) {
+      failures.push(`page_missing_main_shared_css:${relativeFile}`);
+    }
     referenced.css.push(...assets.css);
     referenced.js.push(...assets.js);
+  }
+  for (const file of MAIN_STORY_HTML) {
+    if (!pageAssets[file]) failures.push(`missing_main_story_html:${file}`);
+  }
+  for (const file of OPERATIONS_HTML) {
+    if (!pageAssets[file]) failures.push(`missing_operations_html:${file}`);
   }
 
   for (const name of cssFiles) {
@@ -147,6 +184,8 @@ async function main() {
       jsFiles,
       referencedCss: unique(referenced.css),
       referencedJs: unique(referenced.js),
+      mainStoryHtml: [...MAIN_STORY_HTML].sort(),
+      operationsHtml: [...OPERATIONS_HTML].sort(),
       assetSizes,
       totalCssBytes,
       totalJsBytes,
