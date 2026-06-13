@@ -48,6 +48,7 @@ const MAIN_STORY_HTML = new Set([
   "ar/episodes/noor-colors.html",
 ]);
 const OPERATIONS_HTML = new Set([
+  "conversion-health.html",
   "creator-kit.html",
   "deploy-readiness.html",
   "links.html",

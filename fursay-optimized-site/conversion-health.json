@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "018aa02",
-    "summary": "Track Fursay episode conversion events"
+    "commit": "886249b",
+    "summary": "Sync Fursay episode tracking manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

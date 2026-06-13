@@ -222,6 +222,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/conversion-health.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/creator-kit",
     status: 200,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
@@ -241,6 +247,12 @@ const CHECKS = [
   },
   {
     path: "/links",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
+    path: "/conversion-health",
     status: 200,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     contentTypeIncludes: "text/html",

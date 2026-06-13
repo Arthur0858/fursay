@@ -109,6 +109,10 @@
       "https://fursay.com/episodes/noor-colors",
       "https://fursay.com/zh/episodes/noor-colors",
       "https://fursay.com/ar/episodes/noor-colors"
+    ],
+    "conversionHealth": [
+      "https://fursay.com/conversion-health",
+      "https://fursay.com/conversion-health.json"
     ]
   },
   "funnels": {

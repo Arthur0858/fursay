@@ -138,6 +138,7 @@ function writeReleaseManifest() {
       linksManifest: "https://fursay.com/links.json",
       linksPage: "https://fursay.com/links",
       conversionHealthManifest: "https://fursay.com/conversion-health.json",
+      conversionHealthPage: "https://fursay.com/conversion-health",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -178,6 +179,7 @@ function writeReleaseManifest() {
       "scripts/check-localized-cta-contract.mjs",
       "scripts/check-event-tracking-contract.mjs",
       "scripts/check-conversion-health-contract.mjs",
+      "scripts/check-growth-dashboard-contract.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-semantic-funnel-contract.mjs",
@@ -223,6 +225,7 @@ function writeReleaseManifest() {
       affiliateEventTrackingPages: 15,
       eventTrackingSubmitPages: 3,
       anonymousConversionEvents: 13,
+      conversionDashboardSections: 5,
       latestStoryEntries: 12,
       episodeLandingPages: 6,
       noorLeadMagnetPages: 3,
@@ -243,6 +246,7 @@ function writeReleaseManifest() {
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
   writeConversionHealth(siteDir, source);
+  writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
 }
 
@@ -1393,6 +1397,110 @@ function writeConversionHealth(siteDir, source) {
   writeFileSync(resolve(siteDir, "conversion-health.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
+function healthMetric(label, value, note = "") {
+  return `<div>
+                <dt>${escapeHtml(label)}</dt>
+                <dd>${escapeHtml(value)}${note ? ` <span>${escapeHtml(note)}</span>` : ""}</dd>
+              </div>`;
+}
+
+function writeConversionHealthPage(siteDir) {
+  const health = readJson(resolve(siteDir, "conversion-health.json"));
+  const release = readJson(resolve(siteDir, "release.json"));
+  const events = (health.events || [])
+    .map((event) => `<li><code>${escapeHtml(event)}</code></li>`)
+    .join("\n");
+  const ownedProducts = (health.monetization?.ownedProducts?.products || [])
+    .map((product) => `
+            <article class="creator-copy-block">
+              <h3>${escapeHtml(product.label)}</h3>
+              <p>Pack: <code>${escapeHtml(product.pack)}</code>. Checkout is disabled; current goal is interest-list validation only.</p>
+            </article>`)
+    .join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Conversion Health</title>
+  <meta name="description" content="Fursay conversion measurement dashboard for anonymous event coverage, Noor readiness, affiliate tracking, and product interest status.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/conversion-health">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+</head>
+<body class="picture-world creator-kit-page conversion-health-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay growth dashboard</p>
+      <h1>Conversion Health</h1>
+      <p>Anonymous measurement coverage for subscription intent, affiliate clicks, outbound clicks, share actions, Noor readiness, and product interest validation.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(health.updatedAt)}</span>
+        <span>Commit ${escapeHtml(health.source?.commit)}</span>
+        <a href="/conversion-health.json">JSON manifest</a>
+        <a href="/site-health.json">Site health</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-growth-dashboard-section="measurement">
+      <h2>Measurement contract</h2>
+      <p>Events are anonymous and use <code>${escapeHtml(health.measurement?.anonymousEventEndpoint)}</code>. Subscribe payload compatibility remains <code>${escapeHtml(health.measurement?.subscribePayloadCompatibility)}</code>.</p>
+      <dl>
+        ${healthMetric("PII allowed", String(health.measurement?.piiAllowed))}
+        ${healthMetric("External analytics", health.measurement?.externalAnalytics || "optional")}
+        ${healthMetric("Fallback review", health.measurement?.fallbackReviewSurface || "Cloudflare Worker logs")}
+        ${healthMetric("Tracked event types", health.events?.length || 0, `expected ${release.liveExpectations?.anonymousConversionEvents}`)}
+      </dl>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="coverage">
+      <h2>Coverage</h2>
+      <dl>
+        ${healthMetric("Public story pages", health.coverage?.publicStoryPages)}
+        ${healthMetric("Subscribe opens", health.coverage?.subscribeOpenPages, "pages")}
+        ${healthMetric("Affiliate clicks", health.coverage?.affiliateClickPages, "pages")}
+        ${healthMetric("Outbound clicks", health.coverage?.outboundClickPages, "pages")}
+        ${healthMetric("Share or copy actions", health.coverage?.shareOrCopyPages, "pages")}
+        ${healthMetric("Product interest pages", health.coverage?.productInterestPages)}
+        ${healthMetric("Submit attempt pages", health.coverage?.submitAttemptPages)}
+      </dl>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="growth">
+      <h2>Growth readiness</h2>
+      <dl>
+        ${healthMetric("Latest story entries", health.growth?.latestStoryEntries)}
+        ${healthMetric("Episode landing pages", health.growth?.episodeLandingPages)}
+        ${healthMetric("Noor lead magnet pages", health.growth?.noorLeadMagnetPages)}
+        ${healthMetric("Noor readiness", health.growth?.noorReadinessStatus)}
+        ${healthMetric("Product interest links", health.growth?.productInterestLinks)}
+      </dl>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="monetization">
+      <h2>Monetization</h2>
+      <p>${escapeHtml(health.monetization?.affiliate?.localePolicy)}</p>
+      <dl>
+        ${healthMetric("Amazon links", health.monetization?.affiliate?.amazonLinks, health.monetization?.affiliate?.amazonTag)}
+        ${healthMetric("Books links", health.monetization?.affiliate?.booksLinks, health.monetization?.affiliate?.booksAffiliateId)}
+        ${healthMetric("Checkout enabled", String(health.monetization?.ownedProducts?.checkoutEnabled))}
+        ${healthMetric("Interest only", String(health.monetization?.ownedProducts?.interestOnly))}
+      </dl>
+      <div class="creator-copy-blocks">
+        ${ownedProducts}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="events">
+      <h2>Tracked events</h2>
+      <ul>
+${events}
+      </ul>
+    </section>
+  </main>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "conversion-health.html"), html + "\n");
+}
+
 function toOriginUrl(route) {
   return `https://fursay.com${route}`;
 }
@@ -1474,6 +1582,10 @@ function writeSiteHealthManifest(siteDir) {
       bio: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/bio/")),
       creator: shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+$/.test(route.path)),
       creatorPlacement: shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+\/[^/]+$/.test(route.path)),
+      conversionHealth: [
+        "https://fursay.com/conversion-health",
+        "https://fursay.com/conversion-health.json",
+      ],
     },
     funnels: {
       koko: campaignHealth(campaigns, "koko"),
@@ -1736,6 +1848,7 @@ async function main() {
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
   run("node", ["--check", "scripts/check-event-tracking-contract.mjs"]);
   run("node", ["--check", "scripts/check-conversion-health-contract.mjs"]);
+  run("node", ["--check", "scripts/check-growth-dashboard-contract.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-semantic-funnel-contract.mjs"]);
@@ -1776,6 +1889,7 @@ async function main() {
   run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
   run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
   run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
+  run("node", ["scripts/check-growth-dashboard-contract.mjs", "--out-dir", join(outRoot, "growth-dashboard-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
   run("node", ["scripts/check-semantic-funnel-contract.mjs", "--out-dir", join(outRoot, "semantic-funnel-local")]);
@@ -1816,6 +1930,7 @@ async function main() {
     run("node", ["scripts/check-localized-cta-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "localized-cta-live")]);
     run("node", ["scripts/check-event-tracking-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-tracking-live")]);
     run("node", ["scripts/check-conversion-health-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "conversion-health-live")]);
+    run("node", ["scripts/check-growth-dashboard-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "growth-dashboard-live")]);
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-semantic-funnel-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "semantic-funnel-live")]);

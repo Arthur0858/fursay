@@ -65,8 +65,8 @@ Live smoke must keep these invariants:
 
 - 9 public pages pass audit with `badCount 0`
 - `/api/subscribe` smoke remains intercepted-only and does not call MailerLite
-- `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/links`, `/links.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
-- `/creator-kit`, `/share-kit`, and `/traffic-launch` render their public copy/launch kits without calling MailerLite
+- `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/links`, `/links.json`, `/conversion-health`, `/conversion-health.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
+- `/creator-kit`, `/share-kit`, `/traffic-launch`, and `/conversion-health` render their public copy/launch/growth kits without calling MailerLite
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
 - versioned CSS/JS and image assets use long cache headers
 - HTML and clean URL redirects keep short cache headers

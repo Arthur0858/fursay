@@ -21,6 +21,7 @@ const PUBLIC_PAGES = [
   "/creator-kit",
   "/traffic-launch",
   "/deploy-readiness",
+  "/conversion-health",
   "/episodes/koko-feelings",
   "/zh/episodes/koko-feelings",
   "/ar/episodes/koko-feelings",
@@ -53,6 +54,7 @@ const TOOL_PAGES = [
   { page: "/creator-kit", manifest: "/creator-kit.json" },
   { page: "/traffic-launch", manifest: "/traffic-launch.json" },
   { page: "/deploy-readiness", manifest: "/deploy-readiness.json" },
+  { page: "/conversion-health", manifest: "/conversion-health.json" },
 ];
 
 function parseArgs() {
