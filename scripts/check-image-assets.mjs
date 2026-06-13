@@ -11,9 +11,10 @@ const MAX_OG_PNG_BYTES = 400_000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const parsed = { outDir: DEFAULT_OUT };
+  const parsed = { outDir: DEFAULT_OUT, baseUrl: "" };
   for (let i = 0; i < args.length; i += 1) {
     if (args[i] === "--out-dir") parsed.outDir = args[++i];
+    if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
   }
   return parsed;
 }
@@ -46,8 +47,33 @@ function isReferenced(asset, corpus) {
   return checks.some((needle) => corpus.includes(needle));
 }
 
+function expectedContentType(path) {
+  if (path.endsWith(".avif")) return "image/avif";
+  if (path.endsWith(".webp")) return "image/webp";
+  if (path.endsWith(".png")) return "image/png";
+  if (path.endsWith(".svg")) return "image/svg+xml";
+  if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
+  return "image/";
+}
+
+async function checkLiveAsset(baseUrl, asset) {
+  const response = await fetch(`${baseUrl}${asset.path}`, { cache: "no-store" });
+  const contentType = response.headers.get("content-type") || "";
+  const expected = expectedContentType(asset.path);
+  return {
+    path: asset.path,
+    status: response.status,
+    ok: response.ok,
+    contentType,
+    expectedContentType: expected,
+    cacheControl: response.headers.get("cache-control") || "",
+    contentLength: Number(response.headers.get("content-length") || 0),
+  };
+}
+
 async function main() {
   const args = parseArgs();
+  const mode = args.baseUrl ? "live" : "local";
   const root = resolve(process.cwd(), SITE_DIR);
   const files = await walk(root);
   const textFiles = files.filter((file) => TEXT_EXTENSIONS.has(extname(file).toLowerCase()));
@@ -82,9 +108,23 @@ async function main() {
     }
   }
 
+  const liveChecks = [];
+  if (args.baseUrl) {
+    for (const asset of assets) {
+      const result = await checkLiveAsset(args.baseUrl, asset);
+      liveChecks.push(result);
+      if (!result.ok) failures.push(`live_image_bad_status:${asset.path}:${result.status}`);
+      if (!result.contentType.includes(result.expectedContentType)) {
+        failures.push(`live_image_bad_content_type:${asset.path}:${result.contentType || "none"}`);
+      }
+    }
+  }
+
   await mkdir(args.outDir, { recursive: true });
   const report = {
     ok: failures.length === 0,
+    mode,
+    baseUrl: args.baseUrl,
     failures,
     data: {
       imageFiles: assets.length,
@@ -95,16 +135,19 @@ async function main() {
       maxOgPngBytes: MAX_OG_PNG_BYTES,
       largestImages: [...assets].sort((a, b) => b.bytes - a.bytes).slice(0, 20),
       unreferenced,
+      liveChecks,
     },
   };
   await writeFile(resolve(args.outDir, "image-assets.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({
     ok: report.ok,
+    mode: report.mode,
     outDir: args.outDir,
     failed: failures.length,
     imageFiles: assets.length,
     totalBytes,
     unreferencedBytes,
+    liveChecks: liveChecks.length || undefined,
   }, null, 2));
   if (!report.ok) process.exit(1);
 }
