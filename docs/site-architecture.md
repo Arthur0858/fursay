@@ -2,14 +2,14 @@
 
 ## Runtime shape
 
-- Cloudflare Worker serves static assets from `fursay-optimized-site`.
+- Cloudflare Workers Static Assets serves files from `fursay-optimized-site` through the `fursay` Worker.
 - Clean URLs are canonical: `/koko`, `/zh/koko`, `/ar/koko`; legacy `.html` URLs redirect permanently.
-- Shared visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, and `/css/picture-world-shared-20260612-traffic10.css`.
+- Shared visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, and `/css/picture-world-shared-20260613-traffic11.css`.
 - Home page-specific shared styles live in `/css/home-en-page-20260613-inline1.css`, `/css/home-zh-page-20260613-inline1.css`, and `/css/home-ar-page-20260613-inline1.css`.
 - Koko page-specific shared styles live in `/css/koko-en-page-20260613-inline1.css`, `/css/koko-zh-page-20260613-inline1.css`, and `/css/koko-ar-page-20260613-inline1.css`.
 - Noor LTR page-specific shared styles live in `/css/noor-ltr-page-20260613-inline1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific shared styles live in `/css/noor-rtl-page-20260613-inline1.css` for `/ar/arabic`.
-- Shared interactions live in `/js/site-shared-20260613-attribution1.js`; page HTML should not add inline event handlers.
+- Shared interactions live in `/js/site-shared-20260613-commerce1.js`; page HTML should not add inline event handlers.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.
 
