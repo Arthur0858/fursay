@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "c0188b6",
-    "summary": "Add Fursay product interest landing page"
+    "commit": "a0c6a4c",
+    "summary": "Sync Fursay product interest manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

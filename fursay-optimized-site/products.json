@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "c0188b6",
-    "summary": "Add Fursay product interest landing page"
+    "commit": "a0c6a4c",
+    "summary": "Sync Fursay product interest manifest"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
@@ -15,6 +15,9 @@
   "paymentLinksAllowed": false,
   "interestOnly": true,
   "event": "fursay_product_interest_click",
+  "trafficEntryPoints": {
+    "socialProfileLinks": "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest"
+  },
   "subscribePayloadCompatibility": "email/groups/attribution unchanged",
   "checkoutGate": {
     "status": "blocked_until_interest_signal",

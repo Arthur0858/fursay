@@ -84,6 +84,7 @@ function readJson(path) {
 }
 
 const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
+const PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest";
 
 function shortlinkRoutes() {
   return [
@@ -665,6 +666,10 @@ function writeLinksManifest(siteDir, source) {
       ),
     },
     operations: {
+      productInterest: {
+        label: "Printable and worksheet packs",
+        url: PRODUCT_INTEREST_SOCIAL_LINK,
+      },
       shareKit: {
         label: "Share kit",
         url: "https://fursay.com/share-kit",
@@ -1491,6 +1496,7 @@ function writeConversionHealth(siteDir, source) {
 function writeProductsManifest(siteDir, source) {
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
   const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
+  const links = readJson(resolve(siteDir, "links.json"));
   const manifest = {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1504,6 +1510,9 @@ function writeProductsManifest(siteDir, source) {
     paymentLinksAllowed: ownedProducts.checkoutGate?.paymentLinksAllowed === true ? true : false,
     interestOnly: ownedProducts.interestOnly !== false,
     event: "fursay_product_interest_click",
+    trafficEntryPoints: {
+      socialProfileLinks: links.operations?.productInterest?.url || PRODUCT_INTEREST_SOCIAL_LINK,
+    },
     subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
     checkoutGate: ownedProducts.checkoutGate || {},
     products: ownedProducts.products || [],

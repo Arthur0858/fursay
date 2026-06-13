@@ -61,6 +61,8 @@ async function main() {
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
   const conversionHealth = await readJson(args.baseUrl, "/conversion-health.json");
+  const links = await readJson(args.baseUrl, "/links.json");
+  const linksHtml = await readText(args.baseUrl, "/links");
 
   if (!html.includes('<link rel="canonical" href="https://fursay.com/products">')) failures.push("products_page_bad_canonical");
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
@@ -92,6 +94,13 @@ async function main() {
   if (products.interestOnly !== true) failures.push("products_manifest_interest_only_not_true");
   if (products.event !== "fursay_product_interest_click") failures.push(`products_manifest_event:${products.event || "none"}`);
   if (products.subscribePayloadCompatibility !== "email/groups/attribution unchanged") failures.push("products_manifest_payload_contract_changed");
+  if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_manifest_social_entry_mismatch");
+  if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_social_entry_missing_source");
+  if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_social_entry_missing_campaign");
+  if (!linksHtml.includes('href="/links.json"')) failures.push("links_page_missing_manifest_link");
+  if (!linksHtml.includes("Printable and worksheet packs")) failures.push("links_page_missing_product_interest_label");
+  if (!linksHtml.includes("utm_content=links_product_interest")) failures.push("links_page_missing_product_interest_utm");
+  if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_page_missing_product_interest_href");
 
   const productIds = (products.products || []).map((product) => product.id).sort();
   if (productIds.join(",") !== REQUIRED_PRODUCTS.slice().sort().join(",")) failures.push(`products_manifest_product_ids:${productIds.join(",") || "none"}`);
