@@ -168,6 +168,7 @@ async function main() {
     liveChecks: liveChecks.length || undefined,
   }, null, 2));
   if (!report.ok) process.exit(1);
+  process.exit(0);
 }
 
 main().catch((error) => {
