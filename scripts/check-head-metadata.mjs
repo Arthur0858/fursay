@@ -64,6 +64,24 @@ function headValue(head, selector) {
   return "";
 }
 
+function headValues(head, selector) {
+  if (selector.type === "meta-property") {
+    return [...head.matchAll(/<meta\b[^>]*>/gi)]
+      .filter((match) => attr(match[0], "property").toLowerCase() === selector.name.toLowerCase())
+      .map((match) => attr(match[0], "content"))
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function ogLocaleForLang(lang) {
+  return {
+    en: "en_US",
+    "zh-TW": "zh_TW",
+    ar: "ar_SA",
+  }[lang] || "";
+}
+
 function checkTextLength(failures, page, key, value, min, max) {
   const length = [...String(value || "")].length;
   if (length < min || length > max) failures.push(`${page.path}:${key}_length:${length}`);
@@ -126,6 +144,19 @@ function checkPage(page, html, failures) {
     const expected = [...page.alternates].sort();
     if (languages.join(",") !== expected.join(",")) failures.push(`${page.path}:hreflang:${languages.join(",") || "none"}`);
     if (alternates.length !== page.alternates.length) failures.push(`${page.path}:hreflang_count:${alternates.length}`);
+
+    const ogLocale = headValue(head, { type: "meta-property", name: "og:locale" });
+    const expectedOgLocale = ogLocaleForLang(page.lang);
+    if (ogLocale !== expectedOgLocale) failures.push(`${page.path}:og_locale:${ogLocale || "none"}`);
+    const ogLocaleAlternates = headValues(head, { type: "meta-property", name: "og:locale:alternate" }).sort();
+    const expectedOgAlternates = page.alternates
+      .filter((lang) => lang !== page.lang && lang !== "x-default")
+      .map(ogLocaleForLang)
+      .filter(Boolean)
+      .sort();
+    if (ogLocaleAlternates.join(",") !== expectedOgAlternates.join(",")) {
+      failures.push(`${page.path}:og_locale_alternates:${ogLocaleAlternates.join(",") || "none"}`);
+    }
   }
 }
 
