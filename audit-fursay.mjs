@@ -2,8 +2,25 @@ import { chromium } from "playwright";
 
 const base = process.argv[2] || "https://fursay.com";
 const paths = ["/", "/koko.html", "/arabic.html", "/zh/", "/zh/koko.html", "/zh/arabic.html", "/ar/", "/ar/koko.html", "/ar/arabic.html"];
+const NAVIGATION_TIMEOUT_MS = 45000;
+const NAVIGATION_RETRIES = 2;
 const browser = await chromium.launch({ headless: true });
 const results = [];
+
+async function gotoWithRetry(page, url) {
+  let lastError;
+  for (let attempt = 1; attempt <= NAVIGATION_RETRIES; attempt += 1) {
+    try {
+      return await page.goto(url, { waitUntil: "domcontentloaded", timeout: NAVIGATION_TIMEOUT_MS });
+    } catch (error) {
+      lastError = error;
+      if (attempt < NAVIGATION_RETRIES) {
+        await page.waitForTimeout(1000);
+      }
+    }
+  }
+  throw lastError;
+}
 
 for (const path of paths) {
   const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
@@ -21,7 +38,7 @@ for (const path of paths) {
     if (res.status() >= 400) badStatuses.push({ status: res.status(), url: res.url() });
   });
 
-  const response = await page.goto(base + path, { waitUntil: "domcontentloaded", timeout: 30000 });
+  const response = await gotoWithRetry(page, base + path);
   await page.waitForLoadState("networkidle", { timeout: 12000 }).catch(() => {});
   await page.evaluate(async () => {
     const step = Math.max(480, Math.floor(window.innerHeight * 0.75));
