@@ -10,6 +10,7 @@ const EXPECTED_CSS = [
   "home-zh-page-20260613-inline1.css",
   "koko-ar-page-20260613-inline1.css",
   "koko-en-page-20260613-inline1.css",
+  "noor-common-20260613-css1.css",
   "noor-ltr-page-20260613-inline1.css",
   "noor-rtl-page-20260613-inline1.css",
   "picture-book-base-20260613-base1.css",
@@ -46,7 +47,10 @@ const OPERATIONS_HTML = new Set([
 ]);
 const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
 const HOME_COMMON_CSS = "/css/home-common-20260613-css1.css";
+const NOOR_COMMON_CSS = "/css/noor-common-20260613-css1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
+const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
+const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html"]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -122,11 +126,17 @@ async function main() {
     if ((MAIN_STORY_HTML.has(relativeFile) || OPERATIONS_HTML.has(relativeFile)) && !assets.css.includes(MAIN_SHARED_CSS)) {
       failures.push(`page_missing_main_shared_css:${relativeFile}`);
     }
-    if (["index.html", "zh/index.html", "ar/index.html"].includes(relativeFile) && !assets.css.includes(HOME_COMMON_CSS)) {
+    if (HOME_HTML.has(relativeFile) && !assets.css.includes(HOME_COMMON_CSS)) {
       failures.push(`home_page_missing_home_common_css:${relativeFile}`);
     }
-    if (!["index.html", "zh/index.html", "ar/index.html"].includes(relativeFile) && assets.css.includes(HOME_COMMON_CSS)) {
+    if (!HOME_HTML.has(relativeFile) && assets.css.includes(HOME_COMMON_CSS)) {
       failures.push(`non_home_page_loads_home_common_css:${relativeFile}`);
+    }
+    if (NOOR_HTML.has(relativeFile) && !assets.css.includes(NOOR_COMMON_CSS)) {
+      failures.push(`noor_page_missing_noor_common_css:${relativeFile}`);
+    }
+    if (!NOOR_HTML.has(relativeFile) && assets.css.includes(NOOR_COMMON_CSS)) {
+      failures.push(`non_noor_page_loads_noor_common_css:${relativeFile}`);
     }
     referenced.css.push(...assets.css);
     referenced.js.push(...assets.js);

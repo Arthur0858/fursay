@@ -1762,6 +1762,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/noor-ltr-page-20260613-inline1.css")) {
     failures.push("site_health_missing_noor_ltr_css");
   }
+  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-common-20260613-css1.css")) {
+    failures.push("site_health_missing_noor_common_css");
+  }
   if (!siteHealth.sharedAssets?.css?.includes("/css/noor-rtl-page-20260613-inline1.css")) {
     failures.push("site_health_missing_noor_rtl_css");
   }
