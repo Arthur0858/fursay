@@ -217,7 +217,7 @@ function writeReleaseManifest() {
       affiliateEventTrackingPages: 9,
       eventTrackingSubmitPages: 3,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 53,
+      cacheHeaderChecks: 57,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },

@@ -1278,7 +1278,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.eventTrackingPages !== 9) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
   if (release.liveExpectations?.affiliateEventTrackingPages !== 9) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 53) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 57) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/update-immutable-asset-fingerprints.mjs")) failures.push("release_missing_immutable_fingerprint_gate");
