@@ -178,11 +178,39 @@
     "anonymousEventEndpoint": "https://fursay.com/api/event",
     "piiAllowed": false,
     "subscribePayloadCompatibility": "email/groups/attribution unchanged",
-    "externalAnalytics": "optional",
+    "externalAnalytics": "workers_analytics_engine",
     "fallbackReviewSurface": "Cloudflare Worker logs",
     "subscriptionEndpoint": "/api/subscribe",
     "failClosed": true,
-    "liveSmokeCallsMailerLite": false
+    "liveSmokeCallsMailerLite": false,
+    "analyticsSink": {
+      "binding": "FURSAY_EVENTS",
+      "dataset": "fursay_events",
+      "writeMode": "best_effort_non_blocking",
+      "fallbackSink": "Cloudflare Worker logs",
+      "piiAllowed": false,
+      "blobFields": [
+        "event",
+        "path",
+        "locale",
+        "page_pack",
+        "campaign",
+        "pack",
+        "signup_source",
+        "market",
+        "product_id",
+        "outbound_host",
+        "outbound_path",
+        "copy_kind",
+        "product_interest",
+        "interest_stage",
+        "colo"
+      ],
+      "doubleFields": [
+        "event_count"
+      ],
+      "sqlApi": "Cloudflare Analytics Engine SQL API"
+    }
   },
   "trafficSurfaces": [
     "homepage_split_cta",

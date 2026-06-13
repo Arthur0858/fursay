@@ -12,7 +12,7 @@ export default {
     }
 
     if (url.pathname === "/api/event") {
-      if (request.method === "POST") return handleEvent(request);
+      if (request.method === "POST") return handleEvent(request, env);
       return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
     }
 
@@ -322,7 +322,7 @@ async function handleSubscribe(request, env) {
   }
 }
 
-async function handleEvent(request) {
+async function handleEvent(request, env) {
   try {
     let body;
     try {
@@ -332,12 +332,52 @@ async function handleEvent(request) {
     }
     const event = sanitizeEvent(body);
     if (!event.event) return json({ success: false, message: "Invalid event" }, 400, corsHeaders());
+    const sink = writeAnonymousEvent(event, request, env);
     console.log("Fursay anonymous event", JSON.stringify(event));
-    return json({ success: true }, 200, corsHeaders());
+    return json({ success: true, sink }, 200, corsHeaders());
   } catch (error) {
     console.error("Event intake failed", error);
     return json({ success: false, message: "Event intake failed" }, 500, corsHeaders());
   }
+}
+
+function writeAnonymousEvent(event, request, env) {
+  const binding = env?.FURSAY_EVENTS;
+  if (!binding || typeof binding.writeDataPoint !== "function") return "worker_logs";
+
+  try {
+    const detail = event.detail || {};
+    const requestUrl = new URL(request.url);
+    binding.writeDataPoint({
+      indexes: [safeAnalyticsValue(detail.path || requestUrl.pathname, 96)],
+      blobs: [
+        safeAnalyticsValue(event.event),
+        safeAnalyticsValue(detail.path || requestUrl.pathname),
+        safeAnalyticsValue(detail.locale),
+        safeAnalyticsValue(detail.page_pack),
+        safeAnalyticsValue(detail.campaign),
+        safeAnalyticsValue(detail.pack),
+        safeAnalyticsValue(detail.signup_source),
+        safeAnalyticsValue(detail.market),
+        safeAnalyticsValue(detail.product_id),
+        safeAnalyticsValue(detail.outbound_host),
+        safeAnalyticsValue(detail.outbound_path),
+        safeAnalyticsValue(detail.copy_kind),
+        safeAnalyticsValue(detail.product_interest),
+        safeAnalyticsValue(detail.interest_stage),
+        safeAnalyticsValue(request.cf?.colo || ""),
+      ],
+      doubles: [1],
+    });
+    return "analytics_engine";
+  } catch (error) {
+    console.error("Analytics Engine event write failed", error);
+    return "worker_logs";
+  }
+}
+
+function safeAnalyticsValue(value, limit = 180) {
+  return String(value || "").replace(/[\r\n\t]/g, " ").trim().slice(0, limit);
 }
 
 function sanitizeEvent(body) {
@@ -351,7 +391,9 @@ function sanitizeEvent(body) {
     "market",
     "product_id",
     "outbound_host",
+    "outbound_path",
     "link_text",
+    "link_content",
     "share_url",
     "link_url",
     "copy_kind",

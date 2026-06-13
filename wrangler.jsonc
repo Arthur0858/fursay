@@ -9,5 +9,11 @@
     "binding": "ASSETS",
     "html_handling": "none",
     "run_worker_first": true
-  }
+  },
+  "analytics_engine_datasets": [
+    {
+      "binding": "FURSAY_EVENTS",
+      "dataset": "fursay_events"
+    }
+  ]
 }

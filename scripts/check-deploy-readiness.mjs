@@ -65,6 +65,9 @@ async function main() {
   addIssue(failures, wrangler.assets?.directory === "./fursay-optimized-site", "wrangler_bad_assets_directory", wrangler.assets?.directory || "none");
   addIssue(failures, wrangler.assets?.binding === "ASSETS", "wrangler_bad_assets_binding", wrangler.assets?.binding || "none");
   addIssue(failures, wrangler.assets?.run_worker_first === true, "wrangler_must_run_worker_first");
+  const analyticsBinding = (wrangler.analytics_engine_datasets || []).find((item) => item.binding === "FURSAY_EVENTS");
+  addIssue(failures, Boolean(analyticsBinding), "wrangler_missing_event_analytics_binding");
+  addIssue(failures, analyticsBinding?.dataset === "fursay_events", "wrangler_bad_event_analytics_dataset", analyticsBinding?.dataset || "none");
 
   for (const needle of [
     "npm run deploy:ready",
@@ -96,6 +99,8 @@ async function main() {
     "/share-kit.json",
     "/traffic-launch.json",
     "/shortlinks.json",
+    "FURSAY_EVENTS",
+    "fursay_events",
     "never secret values",
   ]) {
     addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);

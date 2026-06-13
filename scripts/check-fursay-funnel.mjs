@@ -1287,6 +1287,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.affiliateEventTrackingPages !== 15) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
   if (release.liveExpectations?.anonymousConversionEvents !== 13) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
+  if (release.liveExpectations?.eventAnalyticsBlobFields !== 15) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
+  if (release.liveExpectations?.eventAnalyticsDoubleFields !== 1) failures.push(`release_event_analytics_double_fields:${release.liveExpectations?.eventAnalyticsDoubleFields || "none"}`);
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
@@ -1294,6 +1296,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");
+  if (!release.qualityGates?.includes("scripts/check-event-analytics-contract.mjs")) failures.push("release_missing_event_analytics_gate");
   if (!release.qualityGates?.includes("scripts/check-content-growth-contract.mjs")) failures.push("release_missing_content_growth_gate");
   if (!release.qualityGates?.includes("scripts/check-monetization-interest-contract.mjs")) failures.push("release_missing_monetization_interest_gate");
   if (!release.qualityGates?.includes("scripts/check-noor-subscriber-readiness.mjs")) failures.push("release_missing_noor_readiness_gate");

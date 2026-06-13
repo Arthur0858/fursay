@@ -68,5 +68,6 @@ Live smoke must keep these invariants:
 - `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/links`, `/links.json`, `/conversion-health`, `/conversion-health.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
 - `/creator-kit`, `/share-kit`, `/traffic-launch`, and `/conversion-health` render their public copy/launch/growth kits without calling MailerLite
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
+- `FURSAY_EVENTS` Analytics Engine dataset `fursay_events` receives anonymous `/api/event` datapoints only; no email, name, token, address, or subscriber payload is written
 - versioned CSS/JS and image assets use long cache headers
 - HTML and clean URL redirects keep short cache headers
