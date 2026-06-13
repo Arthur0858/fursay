@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "217ffbc",
-    "summary": "Sync Fursay deployed episode manifest"
+    "commit": "6637610",
+    "summary": "Localize Fursay episode landing pages"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
