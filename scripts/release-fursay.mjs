@@ -178,6 +178,7 @@ function writeReleaseManifest() {
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
       "scripts/check-structured-data.mjs",
+      "scripts/check-head-metadata.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-static-asset-structure.mjs",
       "scripts/check-image-assets.mjs",
@@ -640,9 +641,14 @@ function writeLinksPage(siteDir, links) {
   <meta name="description" content="Choose a Fursay story pack: Koko English stories or Noor Arabic-Chinese stories, with tracked signup and share links.">
   <meta property="og:title" content="Fursay story pack links">
   <meta property="og:description" content="Choose Koko or Noor and get a free family story pack.">
+  <meta property="og:url" content="https://fursay.com/links">
   <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:alt" content="Fursay story pack chooser preview">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fursay story pack links">
+  <meta name="twitter:description" content="Choose Koko or Noor and get a free family story pack.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:image:alt" content="Fursay story pack chooser preview">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/links">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -1368,6 +1374,16 @@ function writeShareKitPage(siteDir, kit) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Share Kit</title>
   <meta name="description" content="Copy-ready Fursay family share links, social captions, QR assets, and story-pack shortlinks for Koko and Noor.">
+  <meta property="og:title" content="Fursay Share Kit">
+  <meta property="og:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
+  <meta property="og:url" content="https://fursay.com/share-kit">
+  <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:alt" content="Fursay family share kit preview">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fursay Share Kit">
+  <meta name="twitter:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
+  <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:image:alt" content="Fursay family share kit preview">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/share-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -1408,6 +1424,7 @@ async function main() {
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
   run("node", ["--check", "scripts/check-structured-data.mjs"]);
+  run("node", ["--check", "scripts/check-head-metadata.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
@@ -1421,6 +1438,7 @@ async function main() {
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
   run("node", ["scripts/check-structured-data.mjs", "--out-dir", join(outRoot, "structured-data-local")]);
+  run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
@@ -1436,6 +1454,7 @@ async function main() {
     run("node", ["scripts/check-amazon-affiliate-links.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "amazon-affiliate-live")]);
     run("node", ["scripts/check-worker-shortlinks.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "worker-shortlinks-live")]);
     run("node", ["scripts/check-structured-data.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "structured-data-live")]);
+    run("node", ["scripts/check-head-metadata.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "head-metadata-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");
