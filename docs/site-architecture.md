@@ -42,3 +42,4 @@
 - `/conversion-health` renders the anonymous growth dashboard from `/conversion-health.json`; it is `noindex,follow` and must not include real subscriber data or secrets.
 - Event analytics fields are limited to event/page/campaign/pack/affiliate/outbound/interest dimensions plus a numeric `event_count`; email, name, phone, address, token, password, and subscriber payloads are not analytics fields.
 - `npm run report:events` is the local conversion report command for Analytics Engine after account enablement. Without Cloudflare credentials it writes a pending-status report and does not query external APIs.
+- Owned products stay in interest-validation mode until the checkout gate has verified interest clicks, disclosure copy, refund/support copy, and checkout tracking. Payment links are not allowed while `paymentLinksAllowed=false`.

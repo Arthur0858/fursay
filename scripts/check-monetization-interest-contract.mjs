@@ -5,6 +5,12 @@ const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-monetization-interest-contract";
 const PAGES = ["/", "/zh/", "/ar/", "/koko", "/zh/koko", "/ar/koko", "/arabic", "/zh/arabic", "/ar/arabic"];
 const CHECKOUT_NEEDLES = [/gumroad/i, /stripe/i, /ko-fi/i, /checkout/i, /buy now/i, /立即購買/i, /(?:^|\s)اشتر(?:\s|$)/i];
+const REQUIRED_GATE_REQUIREMENTS = [
+  "verified_product_interest_clicks",
+  "disclosure_copy",
+  "refund_support_copy",
+  "checkout_tracking_contract",
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -72,8 +78,32 @@ async function main() {
   if (siteHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("site_health_checkout_enabled");
   if (siteHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("site_health_interest_only_not_true");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
+  if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("conversion_health_interest_only_not_true");
+
+  const ownedProducts = conversionHealth.monetization?.ownedProducts?.products || [];
+  const checkoutGate = conversionHealth.monetization?.ownedProducts?.checkoutGate || {};
+  if (release.liveExpectations?.ownedProductSpecs !== ownedProducts.length) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}!=${ownedProducts.length}`);
+  if (siteHealth.monetization?.ownedProducts?.products?.length !== ownedProducts.length) failures.push("site_health_owned_product_spec_count_mismatch");
+  if (checkoutGate.status !== "blocked_until_interest_signal") failures.push(`checkout_gate_status:${checkoutGate.status || "none"}`);
+  if (checkoutGate.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
+  if (checkoutGate.minimumInterestClicks < 1) failures.push("checkout_gate_missing_interest_threshold");
+  if (checkoutGate.minimumSubscriberSignals < 1) failures.push("checkout_gate_missing_subscriber_threshold");
+  if (!checkoutGate.disclosureCopy?.includes("clearly labeled")) failures.push("checkout_gate_missing_disclosure_copy");
+  if (!checkoutGate.refundSupportCopy?.includes("Refund and support")) failures.push("checkout_gate_missing_refund_support_copy");
+  if (!checkoutGate.trackingGate?.includes("fursay_product_interest_click")) failures.push("checkout_gate_missing_tracking_gate");
+  if (release.liveExpectations?.checkoutGateRequirements !== checkoutGate.requirements?.length) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}!=${checkoutGate.requirements?.length || 0}`);
+  for (const requirement of REQUIRED_GATE_REQUIREMENTS) {
+    if (!checkoutGate.requirements?.includes(requirement)) failures.push(`checkout_gate_missing_requirement:${requirement}`);
+  }
+  for (const product of ownedProducts) {
+    if (!["koko-printable-pack", "noor-worksheet-pack"].includes(product.id)) failures.push(`unknown_owned_product:${product.id || "none"}`);
+    if (!product.format) failures.push(`owned_product_missing_format:${product.id || "none"}`);
+    if (product.checkoutStatus !== "not_enabled") failures.push(`owned_product_checkout_enabled:${product.id || "none"}`);
+    if ((product.plannedIncludes || []).length < 3) failures.push(`owned_product_missing_includes:${product.id || "none"}`);
+  }
+
   await mkdir(args.outDir, { recursive: true });
-  const report = { ok: failures.length === 0, mode: args.baseUrl ? "live" : "local", failures, productInterestLinks, pages };
+  const report = { ok: failures.length === 0, mode: args.baseUrl ? "live" : "local", failures, productInterestLinks, ownedProducts, checkoutGate, pages };
   await writeFile(resolve(args.outDir, "monetization-interest-contract.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({ ok: report.ok, mode: report.mode, outDir: args.outDir, failed: failures.length, productInterestLinks }, null, 2));
   if (!report.ok) process.exit(1);

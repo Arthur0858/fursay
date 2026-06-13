@@ -236,6 +236,8 @@ function writeReleaseManifest() {
       episodeLandingPages: 6,
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
+      ownedProductSpecs: 2,
+      checkoutGateRequirements: 4,
       webVitalsChecks: 18,
       cacheHeaderChecks: 59,
       badAuditCount: 0,
@@ -1438,9 +1440,40 @@ function writeConversionHealth(siteDir, source) {
       ownedProducts: {
         checkoutEnabled: false,
         interestOnly: true,
+        status: "interest_validation",
+        checkoutGate: {
+          status: "blocked_until_interest_signal",
+          provider: "not_selected",
+          requirements: [
+            "verified_product_interest_clicks",
+            "disclosure_copy",
+            "refund_support_copy",
+            "checkout_tracking_contract",
+          ],
+          minimumInterestClicks: 10,
+          minimumSubscriberSignals: 1,
+          paymentLinksAllowed: false,
+          disclosureCopy: "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
+          refundSupportCopy: "Refund and support instructions must be published before any checkout link is enabled.",
+          trackingGate: "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed.",
+        },
         products: [
-          { id: "koko-printable-pack", pack: "koko", label: "Koko printable pack interest list" },
-          { id: "noor-worksheet-pack", pack: "noor", label: "Noor 3-minute worksheet interest list" },
+          {
+            id: "koko-printable-pack",
+            pack: "koko",
+            label: "Koko printable pack interest list",
+            format: "PDF printable pack",
+            plannedIncludes: ["story prompt sheet", "emotion word practice", "parent-child drawing activity"],
+            checkoutStatus: "not_enabled",
+          },
+          {
+            id: "noor-worksheet-pack",
+            pack: "noor",
+            label: "Noor 3-minute worksheet interest list",
+            format: "PDF worksheet pack",
+            plannedIncludes: ["Chinese color words with Pinyin", "Arabic parent prompts", "one 3-minute activity"],
+            checkoutStatus: "not_enabled",
+          },
         ],
       },
     },
@@ -1465,7 +1498,8 @@ function writeConversionHealthPage(siteDir) {
     .map((product) => `
             <article class="creator-copy-block">
               <h3>${escapeHtml(product.label)}</h3>
-              <p>Pack: <code>${escapeHtml(product.pack)}</code>. Checkout is disabled; current goal is interest-list validation only.</p>
+              <p>Pack: <code>${escapeHtml(product.pack)}</code>. ${escapeHtml(product.format || "Product spec")}. Checkout is disabled; current goal is interest-list validation only.</p>
+              <p>Planned contents: ${escapeHtml((product.plannedIncludes || []).join(", "))}</p>
             </article>`)
     .join("\n");
   const html = `<!DOCTYPE html>
@@ -1540,7 +1574,11 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Books links", health.monetization?.affiliate?.booksLinks, health.monetization?.affiliate?.booksAffiliateId)}
         ${healthMetric("Checkout enabled", String(health.monetization?.ownedProducts?.checkoutEnabled))}
         ${healthMetric("Interest only", String(health.monetization?.ownedProducts?.interestOnly))}
+        ${healthMetric("Owned product specs", health.monetization?.ownedProducts?.products?.length || 0, `expected ${release.liveExpectations?.ownedProductSpecs}`)}
+        ${healthMetric("Checkout gate", health.monetization?.ownedProducts?.checkoutGate?.status || "none")}
+        ${healthMetric("Gate requirements", health.monetization?.ownedProducts?.checkoutGate?.requirements?.length || 0, `expected ${release.liveExpectations?.checkoutGateRequirements}`)}
       </dl>
+      <p>${escapeHtml(health.monetization?.ownedProducts?.checkoutGate?.refundSupportCopy || "")}</p>
       <div class="creator-copy-blocks">
         ${ownedProducts}
       </div>

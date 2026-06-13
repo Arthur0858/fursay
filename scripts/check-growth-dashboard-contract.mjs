@@ -141,6 +141,12 @@ async function main() {
   if (conversionHealth.growth?.noorReadinessStatus !== "safe_wait_subscriber_empty") failures.push("bad_noor_readiness_status");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("checkout_enabled_must_be_false");
   if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("interest_only_must_be_true");
+  if (conversionHealth.monetization?.ownedProducts?.status !== "interest_validation") failures.push("owned_products_bad_status");
+  if (conversionHealth.monetization?.ownedProducts?.products?.length !== release.liveExpectations?.ownedProductSpecs) failures.push("owned_product_spec_count_mismatch");
+  if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.status !== "blocked_until_interest_signal") failures.push("checkout_gate_bad_status");
+  if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.requirements?.length !== release.liveExpectations?.checkoutGateRequirements) failures.push("checkout_gate_requirement_count_mismatch");
+  if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
+  if (!html.includes("Checkout gate")) failures.push("dashboard_missing_checkout_gate");
   if (!conversionHealth.monetization?.affiliate?.localePolicy?.includes("zh-TW pages use Books.com.tw")) failures.push("missing_locale_affiliate_policy");
 
   const healthRoutes = siteHealth.routes?.conversionHealth || [];

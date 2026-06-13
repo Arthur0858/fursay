@@ -70,5 +70,6 @@ Live smoke must keep these invariants:
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
 - `/api/event` receives anonymous conversion events and falls back to Cloudflare Worker logs until the account enables the `FURSAY_EVENTS` Analytics Engine dataset `fursay_events`; no email, name, token, address, or subscriber payload is written
 - `npm run report:events` is the post-enablement conversion report path; it queries five 7-day Analytics Engine summaries after `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ANALYTICS_TOKEN` are available
+- owned-product checkout remains disabled until product-interest evidence, disclosure copy, refund/support copy, and checkout tracking are all present in `/conversion-health.json`
 - versioned CSS/JS and image assets use long cache headers
 - HTML and clean URL redirects keep short cache headers
