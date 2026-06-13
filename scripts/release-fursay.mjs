@@ -199,6 +199,7 @@ function writeReleaseManifest() {
       "scripts/check-doc-manifest-drift.mjs",
       "scripts/check-render-jobs.mjs",
       "scripts/check-workspace-hygiene.mjs",
+      "scripts/update-immutable-asset-fingerprints.mjs",
       "scripts/check-static-asset-structure.mjs",
       "scripts/check-image-assets.mjs",
       "scripts/check-cache-headers.mjs",
@@ -1525,6 +1526,7 @@ async function main() {
   run("node", ["scripts/check-doc-manifest-drift.mjs", "--out-dir", join(outRoot, "doc-manifest-drift-local")]);
   run("node", ["scripts/check-render-jobs.mjs", "--out-dir", join(outRoot, "render-jobs-local")]);
   run("node", ["scripts/check-workspace-hygiene.mjs", "--out-dir", join(outRoot, "workspace-hygiene-local")]);
+  run("node", ["scripts/update-immutable-asset-fingerprints.mjs", "--check"]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
 
