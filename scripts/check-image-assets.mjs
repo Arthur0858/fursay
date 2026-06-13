@@ -11,6 +11,7 @@ const MAX_TOTAL_WEBP_BYTES = 1_250_000;
 const MAX_TOTAL_AVIF_BYTES = 600_000;
 const MAX_CHARACTER_PNG_BYTES = 140_000;
 const MAX_OG_PNG_BYTES = 350_000;
+const FETCH_TIMEOUT_MS = 15_000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -60,7 +61,7 @@ function expectedContentType(path) {
 }
 
 async function checkLiveAsset(baseUrl, asset) {
-  const response = await fetch(`${baseUrl}${asset.path}`, { cache: "no-store" });
+  const response = await fetchWithTimeout(`${baseUrl}${asset.path}`, { cache: "no-store" });
   const contentType = response.headers.get("content-type") || "";
   const expected = expectedContentType(asset.path);
   return {
@@ -72,6 +73,16 @@ async function checkLiveAsset(baseUrl, asset) {
     cacheControl: response.headers.get("cache-control") || "",
     contentLength: Number(response.headers.get("content-length") || 0),
   };
+}
+
+async function fetchWithTimeout(url, init = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 async function main() {

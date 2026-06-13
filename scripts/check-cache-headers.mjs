@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const DEFAULT_OUT = "/tmp/fursay-cache-headers";
+const FETCH_TIMEOUT_MS = 15_000;
 
 const CHECKS = [
   {
@@ -364,7 +365,7 @@ async function checkOne(baseUrl, check) {
   if (/\.(?:css|js|webp|json|txt)$/i.test(check.path)) {
     url.searchParams.delete("fursay_cache_smoke");
   }
-  const response = await fetch(url, { redirect: "manual" });
+  const response = await fetchWithTimeout(url, { redirect: "manual" });
   const cacheControl = response.headers.get("cache-control") || "";
   const contentType = response.headers.get("content-type") || "";
   const location = response.headers.get("location") || "";
@@ -392,6 +393,16 @@ async function checkOne(baseUrl, check) {
       location,
     },
   };
+}
+
+async function fetchWithTimeout(url, init = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 async function main() {
