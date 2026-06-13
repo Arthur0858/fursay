@@ -6,8 +6,9 @@ export default {
       return withSecurityHeaders(new Response(null, { headers: corsHeaders() }));
     }
 
-    if (url.pathname === "/api/subscribe" && request.method === "POST") {
-      return handleSubscribe(request, env);
+    if (url.pathname === "/api/subscribe") {
+      if (request.method === "POST") return handleSubscribe(request, env);
+      return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
     }
 
     const joinRedirect = joinRedirectUrl(url);
@@ -250,20 +251,29 @@ async function handleSubscribe(request, env) {
   const headers = corsHeaders();
 
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return json({ success: false, message: "Invalid request" }, 400, headers);
+    }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return json({ success: false, message: "Invalid request" }, 400, headers);
+    }
     const { email, groups, child_age, region, attribution } = body;
+    const normalizedEmail = typeof email === "string" ? email.trim() : "";
 
-    if (!email || !email.includes("@")) {
+    if (!normalizedEmail || !normalizedEmail.includes("@")) {
       return json({ success: false, message: "Invalid email" }, 400, headers);
     }
 
-    const groupIds = [env.MAILERLITE_GROUP_FURSAY_ALL].filter(Boolean);
+    const groupIds = new Set([env.MAILERLITE_GROUP_FURSAY_ALL].filter(Boolean));
     if (Array.isArray(groups)) {
       if (groups.includes("koko") && env.MAILERLITE_GROUP_KOKO) {
-        groupIds.push(env.MAILERLITE_GROUP_KOKO);
+        groupIds.add(env.MAILERLITE_GROUP_KOKO);
       }
       if (groups.includes("noor") && env.MAILERLITE_GROUP_NOOR) {
-        groupIds.push(env.MAILERLITE_GROUP_NOOR);
+        groupIds.add(env.MAILERLITE_GROUP_NOOR);
       }
     }
 
@@ -273,8 +283,8 @@ async function handleSubscribe(request, env) {
     Object.assign(fields, attributionFields(attribution, env));
 
     const payload = {
-      email,
-      ...(groupIds.length ? { groups: groupIds } : {}),
+      email: normalizedEmail,
+      ...(groupIds.size ? { groups: [...groupIds] } : {}),
       ...(Object.keys(fields).length ? { fields } : {})
     };
 
