@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "68e2d23",
-    "summary": "Use deployable Fursay event fallback"
+    "commit": "1f9c7ab",
+    "summary": "Sync Fursay event fallback manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -41,6 +41,27 @@
         "event_count"
       ],
       "sqlApi": "Cloudflare Analytics Engine SQL API after account enablement"
+    },
+    "analyticsReport": {
+      "script": "scripts/query-event-analytics-report.mjs",
+      "packageScript": "npm run report:events",
+      "status": "pending_cloudflare_credentials_or_enablement",
+      "dataset": "fursay_events",
+      "windowDays": 7,
+      "queryCount": 5,
+      "output": "/tmp/fursay-event-analytics-report/event-analytics-report.json",
+      "requiredEnv": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_ANALYTICS_TOKEN"
+      ],
+      "piiAllowed": false,
+      "queries": [
+        "event_totals",
+        "subscribe_funnel_by_pack",
+        "page_intent",
+        "affiliate_interest",
+        "outbound_destinations"
+      ]
     },
     "fallbackReviewSurface": "Cloudflare Worker logs"
   },

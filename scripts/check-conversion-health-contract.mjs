@@ -186,6 +186,11 @@ async function main() {
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsSink?.doubleFields?.length !== release.liveExpectations?.eventAnalyticsDoubleFields) failures.push("analytics_double_field_count_mismatch");
+  if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("bad_report_script");
+  if (conversionHealth.measurement?.analyticsReport?.packageScript !== "npm run report:events") failures.push("bad_report_package_script");
+  if (conversionHealth.measurement?.analyticsReport?.status !== "pending_cloudflare_credentials_or_enablement") failures.push("bad_report_status");
+  if (conversionHealth.measurement?.analyticsReport?.queryCount !== release.liveExpectations?.eventAnalyticsReportQueries) failures.push("report_query_count_mismatch");
+  if (conversionHealth.measurement?.analyticsReport?.windowDays !== release.liveExpectations?.eventAnalyticsReportWindowDays) failures.push("report_window_mismatch");
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
   for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT]) {
     if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);

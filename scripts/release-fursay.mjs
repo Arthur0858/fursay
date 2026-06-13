@@ -181,6 +181,7 @@ function writeReleaseManifest() {
       "scripts/check-conversion-health-contract.mjs",
       "scripts/check-growth-dashboard-contract.mjs",
       "scripts/check-event-analytics-contract.mjs",
+      "scripts/query-event-analytics-report.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-semantic-funnel-contract.mjs",
@@ -229,6 +230,8 @@ function writeReleaseManifest() {
       conversionDashboardSections: 5,
       eventAnalyticsBlobFields: 15,
       eventAnalyticsDoubleFields: 1,
+      eventAnalyticsReportQueries: 5,
+      eventAnalyticsReportWindowDays: 7,
       latestStoryEntries: 12,
       episodeLandingPages: 6,
       noorLeadMagnetPages: 3,
@@ -1373,6 +1376,24 @@ function writeConversionHealth(siteDir, source) {
         doubleFields: ["event_count"],
         sqlApi: "Cloudflare Analytics Engine SQL API after account enablement",
       },
+      analyticsReport: {
+        script: "scripts/query-event-analytics-report.mjs",
+        packageScript: "npm run report:events",
+        status: "pending_cloudflare_credentials_or_enablement",
+        dataset: "fursay_events",
+        windowDays: 7,
+        queryCount: release.liveExpectations.eventAnalyticsReportQueries,
+        output: "/tmp/fursay-event-analytics-report/event-analytics-report.json",
+        requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN"],
+        piiAllowed: false,
+        queries: [
+          "event_totals",
+          "subscribe_funnel_by_pack",
+          "page_intent",
+          "affiliate_interest",
+          "outbound_destinations",
+        ],
+      },
       fallbackReviewSurface: "Cloudflare Worker logs",
     },
     events: [
@@ -1482,9 +1503,11 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("External analytics", health.measurement?.externalAnalytics || "optional")}
         ${healthMetric("Analytics binding", health.measurement?.analyticsSink?.binding || "none", health.measurement?.analyticsSink?.dataset || "")}
         ${healthMetric("Analytics write mode", health.measurement?.analyticsSink?.writeMode || "none")}
+        ${healthMetric("Analytics report", health.measurement?.analyticsReport?.packageScript || "none", health.measurement?.analyticsReport?.status || "")}
         ${healthMetric("Fallback review", health.measurement?.fallbackReviewSurface || "Cloudflare Worker logs")}
         ${healthMetric("Tracked event types", health.events?.length || 0, `expected ${release.liveExpectations?.anonymousConversionEvents}`)}
         ${healthMetric("Analytics blob fields", health.measurement?.analyticsSink?.blobFields?.length || 0, `expected ${release.liveExpectations?.eventAnalyticsBlobFields}`)}
+        ${healthMetric("Report queries", health.measurement?.analyticsReport?.queryCount || 0, `expected ${release.liveExpectations?.eventAnalyticsReportQueries}`)}
       </dl>
     </section>
     <section class="creator-kit-safety" data-growth-dashboard-section="coverage">
@@ -1883,6 +1906,7 @@ async function main() {
   run("node", ["--check", "scripts/check-conversion-health-contract.mjs"]);
   run("node", ["--check", "scripts/check-growth-dashboard-contract.mjs"]);
   run("node", ["--check", "scripts/check-event-analytics-contract.mjs"]);
+  run("node", ["--check", "scripts/query-event-analytics-report.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-semantic-funnel-contract.mjs"]);
@@ -1925,6 +1949,7 @@ async function main() {
   run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
   run("node", ["scripts/check-growth-dashboard-contract.mjs", "--out-dir", join(outRoot, "growth-dashboard-local")]);
   run("node", ["scripts/check-event-analytics-contract.mjs", "--out-dir", join(outRoot, "event-analytics-local")]);
+  run("node", ["scripts/query-event-analytics-report.mjs", "--dry-run", "--out-dir", join(outRoot, "event-analytics-report-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
   run("node", ["scripts/check-semantic-funnel-contract.mjs", "--out-dir", join(outRoot, "semantic-funnel-local")]);
@@ -1967,6 +1992,7 @@ async function main() {
     run("node", ["scripts/check-conversion-health-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "conversion-health-live")]);
     run("node", ["scripts/check-growth-dashboard-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "growth-dashboard-live")]);
     run("node", ["scripts/check-event-analytics-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-analytics-live")]);
+    run("node", ["scripts/query-event-analytics-report.mjs", "--dry-run", "--out-dir", join(outRoot, "event-analytics-report-live")]);
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-semantic-funnel-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "semantic-funnel-live")]);

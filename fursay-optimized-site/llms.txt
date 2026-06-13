@@ -69,6 +69,7 @@ Commerce and affiliate policy:
 - Current expected Amazon affiliate links: 33
 - Affiliate click tracking is expected on all 15 public story and episode pages.
 - Anonymous conversion events post to /api/event and use Worker logs while Cloudflare Analytics Engine enablement is pending; the planned binding is FURSAY_EVENTS, dataset fursay_events, with no PII fields.
+- Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries five 7-day Analytics Engine summaries only after Cloudflare credentials and dataset enablement are available.
 - Event analytics must not include email, name, phone, address, token, password, or subscriber payload fields.
 
 Technical discovery:

@@ -56,6 +56,7 @@ async function main() {
   addIssue(failures, packageJson.scripts?.check === "node scripts/release-fursay.mjs --check-only", "package_bad_check_script");
   addIssue(failures, packageJson.scripts?.deploy === "node scripts/release-fursay.mjs", "package_bad_deploy_script");
   addIssue(failures, packageJson.scripts?.["deploy:ready"] === "node scripts/check-deploy-readiness.mjs", "package_bad_deploy_ready_script");
+  addIssue(failures, packageJson.scripts?.["report:events"] === "node scripts/query-event-analytics-report.mjs", "package_bad_event_report_script");
   addIssue(failures, packageJson.scripts?.["smoke:live"]?.includes("audit-fursay.mjs https://fursay.com"), "package_bad_live_smoke_script");
   addIssue(failures, Boolean(packageJson.devDependencies?.wrangler), "package_missing_wrangler");
   addIssue(failures, Boolean(packageJson.devDependencies?.playwright), "package_missing_playwright");
