@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "799686d",
-    "summary": "Add Fursay conversion health dashboard"
+    "commit": "521e597",
+    "summary": "Sync Fursay conversion dashboard cache gate"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

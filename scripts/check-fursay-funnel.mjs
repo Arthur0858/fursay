@@ -1290,7 +1290,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 57) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 59) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");
