@@ -8,6 +8,25 @@ const EPISODES = [
     path: "/episodes/koko-feelings",
     file: "episodes/koko-feelings.html",
     pack: "koko",
+    lang: "en",
+    campaign: "koko_story_funnel",
+    words: ["happy", "sad", "brave"],
+    schemaSeries: "Koko's Forest Adventure",
+  },
+  {
+    path: "/zh/episodes/koko-feelings",
+    file: "zh/episodes/koko-feelings.html",
+    pack: "koko",
+    lang: "zh-TW",
+    campaign: "koko_story_funnel",
+    words: ["happy", "sad", "brave"],
+    schemaSeries: "Koko's Forest Adventure",
+  },
+  {
+    path: "/ar/episodes/koko-feelings",
+    file: "ar/episodes/koko-feelings.html",
+    pack: "koko",
+    lang: "ar",
     campaign: "koko_story_funnel",
     words: ["happy", "sad", "brave"],
     schemaSeries: "Koko's Forest Adventure",
@@ -16,6 +35,25 @@ const EPISODES = [
     path: "/episodes/noor-colors",
     file: "episodes/noor-colors.html",
     pack: "noor",
+    lang: "en",
+    campaign: "noor_story_funnel",
+    words: ["hong se", "lan se", "lu se"],
+    schemaSeries: "Arabic Kids Chinese Picture Book",
+  },
+  {
+    path: "/zh/episodes/noor-colors",
+    file: "zh/episodes/noor-colors.html",
+    pack: "noor",
+    lang: "zh-TW",
+    campaign: "noor_story_funnel",
+    words: ["hong se", "lan se", "lu se"],
+    schemaSeries: "Arabic Kids Chinese Picture Book",
+  },
+  {
+    path: "/ar/episodes/noor-colors",
+    file: "ar/episodes/noor-colors.html",
+    pack: "noor",
+    lang: "ar",
     campaign: "noor_story_funnel",
     words: ["hong se", "lan se", "lu se"],
     schemaSeries: "Arabic Kids Chinese Picture Book",
@@ -88,8 +126,15 @@ function bookLinks(html) {
 
 function checkEpisode(episode, html) {
   const failures = [];
+  const htmlTag = html.match(/<html\b[^>]*>/i)?.[0] || "";
+  if (attr(htmlTag, "lang") !== episode.lang) failures.push(`${episode.path}:html_lang:${attr(htmlTag, "lang") || "none"}`);
+  if ((attr(htmlTag, "dir") || "ltr") !== (episode.lang === "ar" ? "rtl" : "ltr")) failures.push(`${episode.path}:html_dir:${attr(htmlTag, "dir") || "ltr"}`);
   const canonical = html.match(/<link\b[^>]*rel=["']canonical["'][^>]*>/i)?.[0] || "";
   if (attr(canonical, "href") !== `https://fursay.com${episode.path}`) failures.push(`${episode.path}:canonical`);
+  const alternates = [...html.matchAll(/<link\b[^>]*rel=["']alternate["'][^>]*hreflang=["']([^"']+)["'][^>]*href=["']([^"']+)["'][^>]*>/gi)];
+  for (const lang of ["en", "zh-TW", "ar", "x-default"]) {
+    if (!alternates.some((match) => match[1] === lang)) failures.push(`${episode.path}:missing_hreflang:${lang}`);
+  }
   if (!html.includes(`data-episode-landing="${episode.pack}"`)) failures.push(`${episode.path}:missing_episode_marker`);
   if (!html.includes("youtube-nocookie.com/embed/")) failures.push(`${episode.path}:missing_youtube_embed`);
   if (!html.includes("data-episode-video")) failures.push(`${episode.path}:missing_video_marker`);
@@ -106,7 +151,11 @@ function checkEpisode(episode, html) {
   for (const link of links) {
     const href = attr(link, "href");
     const rel = attr(link, "rel").split(/\s+/).filter(Boolean);
-    if (!href.includes("https://www.amazon.com/dp/") || !href.includes("tag=parenttechche-20")) failures.push(`${episode.path}:bad_affiliate_link:${href || "none"}`);
+    if (episode.lang === "zh-TW") {
+      if (!href.includes("https://www.books.com.tw/exep/assp.php/arthur0858/") || !href.includes("utm_source=arthur0858")) failures.push(`${episode.path}:bad_books_affiliate_link:${href || "none"}`);
+    } else if (!href.includes("https://www.amazon.com/dp/") || !href.includes("tag=parenttechche-20")) {
+      failures.push(`${episode.path}:bad_amazon_affiliate_link:${href || "none"}`);
+    }
     if (!rel.includes("noopener") || !rel.includes("sponsored")) failures.push(`${episode.path}:bad_affiliate_rel:${href || "none"}`);
   }
   if (!/commission|affiliate|sponsored/i.test(html)) failures.push(`${episode.path}:missing_affiliate_disclosure`);

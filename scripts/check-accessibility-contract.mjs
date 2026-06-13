@@ -20,7 +20,11 @@ const PAGES = [
   { path: "/traffic-launch", file: "traffic-launch.html" },
   { path: "/deploy-readiness", file: "deploy-readiness.html" },
   { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html" },
+  { path: "/zh/episodes/koko-feelings", file: "zh/episodes/koko-feelings.html" },
+  { path: "/ar/episodes/koko-feelings", file: "ar/episodes/koko-feelings.html", rtl: true },
   { path: "/episodes/noor-colors", file: "episodes/noor-colors.html" },
+  { path: "/zh/episodes/noor-colors", file: "zh/episodes/noor-colors.html" },
+  { path: "/ar/episodes/noor-colors", file: "ar/episodes/noor-colors.html", rtl: true },
 ];
 
 function parseArgs() {

@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "4bd9898",
-    "summary": "Sync Fursay episode conversion manifest"
+    "commit": "217ffbc",
+    "summary": "Sync Fursay deployed episode manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -39,16 +39,16 @@
   },
   "growth": {
     "latestStoryEntries": 12,
-    "episodeLandingPages": 2,
+    "episodeLandingPages": 6,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "productInterestLinks": 18
   },
   "monetization": {
     "affiliate": {
-      "amazonLinks": 25,
+      "amazonLinks": 33,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 12,
+      "booksLinks": 16,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

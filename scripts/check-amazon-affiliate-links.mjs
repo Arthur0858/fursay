@@ -14,6 +14,12 @@ const PAGES = [
   { path: "/arabic", market: "amazon" },
   { path: "/zh/arabic", market: "books" },
   { path: "/ar/arabic", market: "amazon" },
+  { path: "/episodes/koko-feelings", market: "amazon" },
+  { path: "/zh/episodes/koko-feelings", market: "books" },
+  { path: "/ar/episodes/koko-feelings", market: "amazon" },
+  { path: "/episodes/noor-colors", market: "amazon" },
+  { path: "/zh/episodes/noor-colors", market: "books" },
+  { path: "/ar/episodes/noor-colors", market: "amazon" },
 ];
 
 function parseArgs() {

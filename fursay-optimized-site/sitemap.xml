@@ -106,6 +106,30 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/koko-feelings"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/episodes/koko-feelings</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/koko-feelings"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/episodes/koko-feelings</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/koko-feelings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/koko-feelings"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/koko-feelings"/>
   </url>
 
@@ -115,6 +139,30 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-colors"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/episodes/noor-colors</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-colors"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/episodes/noor-colors</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-colors"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-colors"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-colors"/>
   </url>
 </urlset>

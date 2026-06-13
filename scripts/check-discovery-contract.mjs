@@ -22,7 +22,11 @@ const PUBLIC_PAGES = [
   "/traffic-launch",
   "/deploy-readiness",
   "/episodes/koko-feelings",
+  "/zh/episodes/koko-feelings",
+  "/ar/episodes/koko-feelings",
   "/episodes/noor-colors",
+  "/zh/episodes/noor-colors",
+  "/ar/episodes/noor-colors",
 ];
 const DISCOVERY_FILES = [
   "/sitemap.xml",

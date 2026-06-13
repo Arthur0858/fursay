@@ -60,7 +60,9 @@
       "channel": "koko",
       "type": "episodeLanding",
       "localizedRoutes": {
-        "en": "/episodes/koko-feelings"
+        "en": "/episodes/koko-feelings",
+        "zh-TW": "/zh/episodes/koko-feelings",
+        "ar": "/ar/episodes/koko-feelings"
       }
     },
     {
@@ -69,7 +71,9 @@
       "channel": "noor",
       "type": "episodeLanding",
       "localizedRoutes": {
-        "en": "/episodes/noor-colors"
+        "en": "/episodes/noor-colors",
+        "zh-TW": "/zh/episodes/noor-colors",
+        "ar": "/ar/episodes/noor-colors"
       }
     }
   ],

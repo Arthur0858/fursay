@@ -24,7 +24,11 @@ Story worlds:
 
 Episode landing pages:
 - Koko feelings story pack: https://fursay.com/episodes/koko-feelings
+  - Traditional Chinese: https://fursay.com/zh/episodes/koko-feelings
+  - Arabic: https://fursay.com/ar/episodes/koko-feelings
 - Noor colors story pack: https://fursay.com/episodes/noor-colors
+  - Traditional Chinese: https://fursay.com/zh/episodes/noor-colors
+  - Arabic: https://fursay.com/ar/episodes/noor-colors
 
 Useful actions:
 - Choose a story world from the home page.
@@ -56,12 +60,12 @@ Useful actions:
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
 Commerce and affiliate policy:
-- Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic
+- Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic, https://fursay.com/zh/episodes/koko-feelings, https://fursay.com/zh/episodes/noor-colors
 - Books.com.tw affiliate ID: arthur0858
-- Current expected Books.com.tw affiliate links: 12
-- English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic
+- Current expected Books.com.tw affiliate links: 16
+- English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/episodes/koko-feelings, https://fursay.com/episodes/noor-colors, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic, https://fursay.com/ar/episodes/koko-feelings, https://fursay.com/ar/episodes/noor-colors
 - Amazon Associates Store ID: parenttechche-20
-- Current expected Amazon affiliate links: 25
+- Current expected Amazon affiliate links: 33
 - Affiliate click tracking is expected on all 9 public story pages.
 
 Technical discovery:
