@@ -5,6 +5,8 @@ const DEFAULT_OUT = "/tmp/fursay-image-assets";
 const SITE_DIR = "fursay-optimized-site";
 const IMAGE_EXTENSIONS = new Set([".avif", ".jpg", ".jpeg", ".png", ".svg", ".webp"]);
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"]);
+const MAX_TOTAL_IMAGE_BYTES = 8_500_000;
+const MAX_CHARACTER_PNG_BYTES = 450_000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -69,6 +71,12 @@ async function main() {
   const totalBytes = assets.reduce((sum, asset) => sum + asset.bytes, 0);
   const unreferencedBytes = unreferenced.reduce((sum, asset) => sum + asset.bytes, 0);
   const failures = unreferenced.map((asset) => `unreferenced_image:${asset.path}`);
+  if (totalBytes > MAX_TOTAL_IMAGE_BYTES) failures.push(`image_total_bytes:${totalBytes}`);
+  for (const asset of assets) {
+    if (asset.path.startsWith("/images/chars/") && asset.path.endsWith(".png") && asset.bytes > MAX_CHARACTER_PNG_BYTES) {
+      failures.push(`character_png_too_large:${asset.path}:${asset.bytes}`);
+    }
+  }
 
   await mkdir(args.outDir, { recursive: true });
   const report = {
@@ -77,7 +85,9 @@ async function main() {
     data: {
       imageFiles: assets.length,
       totalBytes,
+      maxTotalBytes: MAX_TOTAL_IMAGE_BYTES,
       unreferencedBytes,
+      maxCharacterPngBytes: MAX_CHARACTER_PNG_BYTES,
       largestImages: [...assets].sort((a, b) => b.bytes - a.bytes).slice(0, 20),
       unreferenced,
     },
