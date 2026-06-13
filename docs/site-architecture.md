@@ -10,7 +10,7 @@
 - Koko common styles live in `/css/koko-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-cache1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-cache1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
-- Shared interactions live in `/js/site-shared-20260613-commerce2.js`; page HTML should not add inline event handlers.
+- Shared interactions live in `/js/site-shared-20260613-commerce3.js`; page HTML should not add inline event handlers.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Immutable CSS/JS fingerprints are recorded in `/data/immutable-asset-fingerprints.json`; after changing any long-cache CSS/JS filename or content, run `npm run assets:fingerprints` and keep `npm run assets:fingerprints:check` clean.
 - Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.

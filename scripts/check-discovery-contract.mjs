@@ -239,7 +239,7 @@ async function main() {
     "English and Arabic pages use Amazon affiliate links only",
     "Amazon Associates Store ID: parenttechche-20",
     `Current expected Amazon affiliate links: ${expectations.amazonAffiliateLinks}`,
-    `Affiliate click tracking is expected on all ${expectations.affiliateEventTrackingPages} public story pages.`,
+    `Affiliate click tracking is expected on all ${expectations.affiliateEventTrackingPages} public story and episode pages.`,
   ];
   for (const needle of commerceNeedles) {
     if (!llms.includes(needle)) failures.push(`llms_missing_commerce_policy:${needle}`);

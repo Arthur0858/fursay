@@ -66,7 +66,7 @@ Commerce and affiliate policy:
 - English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/episodes/koko-feelings, https://fursay.com/episodes/noor-colors, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic, https://fursay.com/ar/episodes/koko-feelings, https://fursay.com/ar/episodes/noor-colors
 - Amazon Associates Store ID: parenttechche-20
 - Current expected Amazon affiliate links: 33
-- Affiliate click tracking is expected on all 9 public story pages.
+- Affiliate click tracking is expected on all 15 public story and episode pages.
 
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml

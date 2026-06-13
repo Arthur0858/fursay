@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20260613-commerce2.js";
+const SHARED_JS = "/js/site-shared-20260613-commerce3.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -21,6 +21,12 @@ const PAGES = [
   { path: "/arabic", lang: "en", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
   { path: "/zh/arabic", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor", market: "books" },
   { path: "/ar/arabic", lang: "ar", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
+  { path: "/episodes/koko-feelings", lang: "en", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
+  { path: "/zh/episodes/koko-feelings", lang: "zh-TW", campaign: "koko_story_funnel", pack: "koko", market: "books" },
+  { path: "/ar/episodes/koko-feelings", lang: "ar", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
+  { path: "/episodes/noor-colors", lang: "en", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
+  { path: "/zh/episodes/noor-colors", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor", market: "books" },
+  { path: "/ar/episodes/noor-colors", lang: "ar", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
 ];
 const SUBMIT_PATHS = new Set(["/", "/koko", "/arabic"]);
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name"];
@@ -169,6 +175,34 @@ async function clickFirstAffiliateLink(page) {
   });
 }
 
+async function clickFirstOutboundLink(page) {
+  return page.evaluate(() => {
+    window.__fursayOutboundNavigationBlocked = false;
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a[data-fursay-outbound]");
+      if (!link) return;
+      event.preventDefault();
+      window.__fursayOutboundNavigationBlocked = true;
+    }, { capture: true, once: true });
+    const candidates = [...document.querySelectorAll("a[data-fursay-outbound]")];
+    const link = candidates.find((el) => {
+      const rect = el.getBoundingClientRect();
+      const style = window.getComputedStyle(el);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+    }) || candidates[0];
+    if (!link) return null;
+    const url = new URL(link.href);
+    link.click();
+    return {
+      href: link.href,
+      kind: link.getAttribute("data-fursay-outbound") || "",
+      host: url.hostname.replace(/^www\./, ""),
+      path: url.pathname,
+      content: url.searchParams.get("utm_content") || "",
+    };
+  });
+}
+
 async function checkPage(browser, baseUrl, spec) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -233,6 +267,28 @@ async function checkPage(browser, baseUrl, spec) {
     if (!affiliateState.navigationBlocked) failures.push(`${spec.path}:affiliate_test_navigation_not_blocked`);
   }
 
+  const outboundMeta = await clickFirstOutboundLink(page);
+  await page.waitForTimeout(120);
+  const outboundState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+    navigationBlocked: window.__fursayOutboundNavigationBlocked || false,
+  }));
+  if (!outboundMeta) {
+    failures.push(`${spec.path}:missing_outbound_link`);
+  } else {
+    const outboundEvent = [...outboundState.events].reverse().find((event) => event.event === "fursay_outbound_click");
+    assertEventShape(failures, `${spec.path}:outbound_click`, spec, outboundEvent);
+    if (outboundEvent?.detail?.outbound_kind !== "youtube") failures.push(`${spec.path}:outbound_kind:${outboundEvent?.detail?.outbound_kind || "none"}`);
+    if (outboundEvent?.detail?.outbound_host !== outboundMeta.host) failures.push(`${spec.path}:outbound_host:${outboundEvent?.detail?.outbound_host || "none"}`);
+    if (outboundEvent?.detail?.outbound_path !== outboundMeta.path) failures.push(`${spec.path}:outbound_path:${outboundEvent?.detail?.outbound_path || "none"}`);
+    if (!outboundEvent?.detail?.link_content) failures.push(`${spec.path}:outbound_content_missing`);
+    if (!outboundState.dataLayer.some((entry) => entry.event === "fursay_outbound_click")) {
+      failures.push(`${spec.path}:data_layer_missing_outbound_click`);
+    }
+    if (!outboundState.navigationBlocked) failures.push(`${spec.path}:outbound_test_navigation_not_blocked`);
+  }
+
   let submitState = null;
   if (SUBMIT_PATHS.has(spec.path)) {
     await page.fill("#subscribeModal input[type='email']", "event-contract@example.com");
@@ -265,8 +321,9 @@ async function checkPage(browser, baseUrl, spec) {
     failures,
     clickMeta,
     affiliateEvent: Boolean(affiliateMeta),
+    outboundEvent: Boolean(outboundMeta),
     openEvents: openState.events.map((event) => event.event),
-    dataLayerEvents: affiliateState.dataLayer.map((event) => event.event),
+    dataLayerEvents: outboundState.dataLayer.map((event) => event.event),
     submitEvents: submitState ? submitState.events.map((event) => event.event) : [],
   };
 }
@@ -312,6 +369,7 @@ async function main() {
     htmlPages: htmlChecks.length,
     openEventPages: pages.length,
     affiliateEventPages: pages.filter((page) => page.affiliateEvent).length,
+    outboundEventPages: pages.filter((page) => page.outboundEvent).length,
     submitEventPages: pages.filter((page) => page.submitEvents.length).length,
   };
   const expectations = await readReleaseExpectations(baseUrl);
@@ -320,6 +378,9 @@ async function main() {
   }
   if (expectations.affiliateEventTrackingPages !== checks.affiliateEventPages) {
     failures.push(`release_affiliate_event_tracking_pages:${expectations.affiliateEventTrackingPages ?? "none"}!=${checks.affiliateEventPages}`);
+  }
+  if (expectations.eventTrackingPages !== checks.outboundEventPages) {
+    failures.push(`release_outbound_event_tracking_pages:${expectations.eventTrackingPages ?? "none"}!=${checks.outboundEventPages}`);
   }
   if (expectations.eventTrackingSubmitPages !== checks.submitEventPages) {
     failures.push(`release_event_tracking_submit_pages:${expectations.eventTrackingSubmitPages ?? "none"}!=${checks.submitEventPages}`);

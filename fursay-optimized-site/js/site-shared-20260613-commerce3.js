@@ -141,6 +141,11 @@
         emitFursayEvent('fursay_affiliate_click', affiliateEventDetail(affiliateLink));
       }
 
+      var outboundLink = event.target.closest('a[data-fursay-outbound]');
+      if (outboundLink) {
+        emitFursayEvent('fursay_outbound_click', outboundEventDetail(outboundLink));
+      }
+
       var shareButton = event.target.closest('[data-share-fursay]');
       if (shareButton) {
         event.preventDefault();
@@ -254,14 +259,14 @@
 
   function pageCampaign() {
     var path = window.location.pathname || '/';
-    if (path.includes('arabic')) return 'noor_story_funnel';
+    if (path.includes('arabic') || path.includes('noor')) return 'noor_story_funnel';
     if (path.includes('koko')) return 'koko_story_funnel';
     return 'home_story_funnel';
   }
 
   function pagePack() {
     var path = window.location.pathname || '/';
-    if (path.includes('arabic')) return 'noor';
+    if (path.includes('arabic') || path.includes('noor')) return 'noor';
     if (path.includes('koko')) return 'koko';
     return '';
   }
@@ -293,6 +298,22 @@
         detail.market = 'books';
         detail.product_id = (url.pathname.match(/\/products\/([^/?#]+)/) || [])[1] || '';
       }
+    } catch (e) {}
+    return detail;
+  }
+
+  function outboundEventDetail(anchor) {
+    var detail = {
+      outbound_kind: anchor.getAttribute('data-fursay-outbound') || '',
+      outbound_host: '',
+      outbound_path: '',
+      link_content: ''
+    };
+    try {
+      var url = new URL(anchor.href);
+      detail.outbound_host = url.hostname.replace(/^www\./, '');
+      detail.outbound_path = url.pathname;
+      detail.link_content = url.searchParams.get('utm_content') || linkContent(anchor, url);
     } catch (e) {}
     return detail;
   }

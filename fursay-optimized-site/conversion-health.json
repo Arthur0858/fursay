@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "6637610",
-    "summary": "Localize Fursay episode landing pages"
+    "commit": "d759f4e",
+    "summary": "Sync Fursay localized episode manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -22,6 +22,7 @@
     "fursay_subscribe_submit_success",
     "fursay_subscribe_submit_failure",
     "fursay_affiliate_click",
+    "fursay_outbound_click",
     "fursay_share_click",
     "fursay_pack_link_copy_click",
     "fursay_sample_link_copy_click",
@@ -31,9 +32,10 @@
   ],
   "coverage": {
     "publicStoryPages": 9,
-    "subscribeOpenPages": 9,
-    "affiliateClickPages": 9,
-    "shareOrCopyPages": 9,
+    "subscribeOpenPages": 15,
+    "affiliateClickPages": 15,
+    "outboundClickPages": 15,
+    "shareOrCopyPages": 15,
     "productInterestPages": 9,
     "submitAttemptPages": 3
   },

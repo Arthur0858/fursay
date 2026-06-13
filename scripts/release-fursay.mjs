@@ -219,10 +219,10 @@ function writeReleaseManifest() {
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 16,
       booksAffiliateId: "arthur0858",
-      eventTrackingPages: 9,
-      affiliateEventTrackingPages: 9,
+      eventTrackingPages: 15,
+      affiliateEventTrackingPages: 15,
       eventTrackingSubmitPages: 3,
-      anonymousConversionEvents: 12,
+      anonymousConversionEvents: 13,
       latestStoryEntries: 12,
       episodeLandingPages: 6,
       noorLeadMagnetPages: 3,
@@ -1109,7 +1109,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce2.js"></script>
+  <script src="/js/site-shared-20260613-commerce3.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1348,6 +1348,7 @@ function writeConversionHealth(siteDir, source) {
       "fursay_subscribe_submit_success",
       "fursay_subscribe_submit_failure",
       "fursay_affiliate_click",
+      "fursay_outbound_click",
       "fursay_share_click",
       "fursay_pack_link_copy_click",
       "fursay_sample_link_copy_click",
@@ -1359,7 +1360,8 @@ function writeConversionHealth(siteDir, source) {
       publicStoryPages: release.liveExpectations.pages,
       subscribeOpenPages: release.liveExpectations.eventTrackingPages,
       affiliateClickPages: release.liveExpectations.affiliateEventTrackingPages,
-      shareOrCopyPages: release.liveExpectations.pages,
+      outboundClickPages: release.liveExpectations.eventTrackingPages,
+      shareOrCopyPages: release.liveExpectations.eventTrackingPages,
       productInterestPages: release.liveExpectations.pages,
       submitAttemptPages: release.liveExpectations.eventTrackingSubmitPages,
     },
@@ -1614,7 +1616,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce2.js"></script>
+  <script src="/js/site-shared-20260613-commerce3.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -1715,7 +1717,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce2.js"></script>
+  <script src="/js/site-shared-20260613-commerce3.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

@@ -23,7 +23,7 @@ const EXPECTED_CSS = [
   "picture-world-tools-20260613-ops2.css",
 ];
 const EXPECTED_JS = [
-  "site-shared-20260613-commerce2.js",
+  "site-shared-20260613-commerce3.js",
 ];
 const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_MAIN_SHARED_CSS_BYTES = 88_000;

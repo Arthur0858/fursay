@@ -6,15 +6,32 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-conversion-health-contract";
-const PAGES = ["/", "/zh/", "/ar/", "/koko", "/zh/koko", "/ar/koko", "/arabic", "/zh/arabic", "/ar/arabic"];
-const REQUIRED_EVENTS = [
+const PAGES = [
+  { path: "/", productInterest: true },
+  { path: "/zh/", productInterest: true },
+  { path: "/ar/", productInterest: true },
+  { path: "/koko", productInterest: true },
+  { path: "/zh/koko", productInterest: true },
+  { path: "/ar/koko", productInterest: true },
+  { path: "/arabic", productInterest: true },
+  { path: "/zh/arabic", productInterest: true },
+  { path: "/ar/arabic", productInterest: true },
+  { path: "/episodes/koko-feelings" },
+  { path: "/zh/episodes/koko-feelings" },
+  { path: "/ar/episodes/koko-feelings" },
+  { path: "/episodes/noor-colors" },
+  { path: "/zh/episodes/noor-colors" },
+  { path: "/ar/episodes/noor-colors" },
+];
+const BASE_REQUIRED_EVENTS = [
   "fursay_subscribe_open_click",
   "fursay_subscribe_modal_open",
   "fursay_affiliate_click",
+  "fursay_outbound_click",
   "fursay_share_click",
   "fursay_sample_link_copy_click",
-  "fursay_product_interest_click",
 ];
+const PRODUCT_INTEREST_EVENT = "fursay_product_interest_click";
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name", "phone", "address"];
 
 function parseArgs() {
@@ -91,6 +108,10 @@ function privateNeedles(events) {
 
 async function clickVisible(page, selector) {
   return page.evaluate((sel) => {
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a.book-link, a[data-fursay-outbound]");
+      if (link) event.preventDefault();
+    }, { capture: true, once: true });
     const candidates = [...document.querySelectorAll(sel)];
     const el = candidates.find((item) => {
       const rect = item.getBoundingClientRect();
@@ -103,7 +124,8 @@ async function clickVisible(page, selector) {
   }, selector);
 }
 
-async function checkPage(browser, baseUrl, pathname) {
+async function checkPage(browser, baseUrl, spec) {
+  const pathname = spec.path;
   const failures = [];
   const events = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -122,20 +144,23 @@ async function checkPage(browser, baseUrl, pathname) {
   await page.goto(`${baseUrl}${pathname}`, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
 
-  for (const selector of [
+  const selectors = [
     "[data-open-subscribe]",
     "a.book-link",
+    "a[data-fursay-outbound]",
     "[data-share-fursay]",
     "[data-copy-sample-link]",
-    "[data-product-interest]",
-  ]) {
+  ];
+  if (spec.productInterest) selectors.push("[data-product-interest]");
+  for (const selector of selectors) {
     const clicked = await clickVisible(page, selector);
     if (!clicked) failures.push(`${pathname}:missing_click_target:${selector}`);
     await page.waitForTimeout(160);
   }
 
   const eventNames = new Set(events.map((event) => event.event));
-  for (const name of REQUIRED_EVENTS) {
+  const requiredEvents = spec.productInterest ? [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT] : BASE_REQUIRED_EVENTS;
+  for (const name of requiredEvents) {
     if (!eventNames.has(name)) failures.push(`${pathname}:missing_event:${name}`);
   }
   const privateValues = privateNeedles(events);
@@ -155,14 +180,14 @@ async function main() {
   if (conversionHealth.measurement?.anonymousEventEndpoint !== "https://fursay.com/api/event") failures.push("bad_event_endpoint");
   if (conversionHealth.measurement?.piiAllowed !== false) failures.push("pii_allowed_not_false");
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
-  for (const name of REQUIRED_EVENTS) {
+  for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT]) {
     if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);
   }
 
   const browser = await chromium.launch({ headless: true });
   const pages = [];
   try {
-    for (const pathname of PAGES) pages.push(await checkPage(browser, effectiveBaseUrl, pathname));
+    for (const spec of PAGES) pages.push(await checkPage(browser, effectiveBaseUrl, spec));
   } finally {
     await browser.close();
     if (localServer) await new Promise((resolveClose) => localServer.server.close(resolveClose));
