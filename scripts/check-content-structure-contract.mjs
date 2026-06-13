@@ -12,6 +12,14 @@ const PAGES = [
     sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
     navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
     h1Needles: ["story", "phrase"],
+    storyCardClass: "video-card",
+    noEmptyStoryNote: true,
+    storyLinks: [
+      "https://www.youtube.com/@KokosForest",
+      "https://www.youtube.com/@KokosForest/playlists",
+      "https://www.youtube.com/@ArabicKidsChinese",
+      "https://www.youtube.com/@ArabicKidsChinese/playlists",
+    ],
   },
   {
     path: "/zh/",
@@ -21,6 +29,14 @@ const PAGES = [
     sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
     navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
     h1Needles: ["故事", "一句話"],
+    storyCardClass: "video-card",
+    noEmptyStoryNote: true,
+    storyLinks: [
+      "https://www.youtube.com/@KokosForest",
+      "https://www.youtube.com/@KokosForest/playlists",
+      "https://www.youtube.com/@ArabicKidsChinese",
+      "https://www.youtube.com/@ArabicKidsChinese/playlists",
+    ],
   },
   {
     path: "/ar/",
