@@ -1,15 +1,21 @@
 import { spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const ROOT = process.cwd();
+const DEFAULT_OUT = "/tmp/fursay-deploy-readiness";
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  return {
+  const parsed = {
     requireRemote: args.includes("--require-remote"),
     requireCloudflare: args.includes("--require-cloudflare"),
+    outDir: DEFAULT_OUT,
   };
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--out-dir") parsed.outDir = args[++i];
+  }
+  return parsed;
 }
 
 async function readJson(path) {
@@ -132,6 +138,8 @@ async function main() {
   };
 
   console.log(JSON.stringify(report, null, 2));
+  await mkdir(args.outDir, { recursive: true });
+  await writeFile(resolve(args.outDir, "deploy-readiness.json"), JSON.stringify(report, null, 2) + "\n");
   if (!report.ok) process.exit(1);
 }
 
