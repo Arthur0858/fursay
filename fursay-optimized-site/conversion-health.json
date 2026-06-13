@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "a0c6a4c",
-    "summary": "Sync Fursay product interest manifest"
+    "commit": "540339f",
+    "summary": "Add Fursay product traffic entry from links"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
