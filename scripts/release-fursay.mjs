@@ -231,7 +231,7 @@ function writeReleaseManifest() {
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 57,
+      cacheHeaderChecks: 59,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
