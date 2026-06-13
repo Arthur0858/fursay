@@ -36,7 +36,23 @@
     "inLanguage": ["en", "zh"],
     "numberOfEpisodes": 1000,
     "publisher": {"@type": "Organization","name": "Fursay","url": "https://fursay.com/"},
-    "sameAs": "https://www.youtube.com/@KokosForest",
+    "sameAs": [
+      "https://fursay.com/koko",
+      "https://www.youtube.com/@KokosForest",
+      "https://www.youtube.com/@KokosForest/videos",
+      "https://www.youtube.com/@KokosForest/playlists"
+    ],
+    "subjectOf": {
+      "@type": "ItemList",
+      "name": "Koko's Forest Adventure uploads",
+      "url": "https://www.youtube.com/@KokosForest/videos",
+      "sameAs": "https://www.youtube.com/@KokosForest/playlists",
+      "identifier": "UU0X4CIwf6KoUMoIHwRxN3jw",
+      "potentialAction": {
+        "@type": "WatchAction",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw"}
+      }
+    },
     "offers": {"@type": "Offer","price": "0","priceCurrency": "USD","availability": "https://schema.org/InStock"}
   }
   </script>
