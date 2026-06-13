@@ -41,6 +41,62 @@ async function readShortlinks(baseUrl) {
   return JSON.parse(await readFile(resolve(ROOT, "fursay-optimized-site/shortlinks.json"), "utf8"));
 }
 
+async function readWorkerRoutes() {
+  const source = await readFile(resolve(ROOT, "src/worker.js"), "utf8");
+  const block = source.match(/const routes = \{([\s\S]*?)\n  \};\n  const route = routes/)?.[1] || "";
+  const passthroughBlock = source.match(/const SHORTLINK_PASSTHROUGH_PARAMS = \[([^\]]+)\]/)?.[1] || "";
+  const passthroughParams = [...passthroughBlock.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+  const routes = [];
+  for (const match of block.matchAll(/"([^"]+)":\s*\{([\s\S]*?)\n    \}/g)) {
+    const body = match[2];
+    const value = (key) => body.match(new RegExp(`${key}:\\s*"([^"]+)"`))?.[1] || "";
+    routes.push({
+      path: match[1],
+      target: value("target"),
+      pack: value("pack"),
+      source: value("source") || "shortlink",
+      medium: value("medium") || "direct",
+      campaign: value("campaign"),
+      content: value("content"),
+    });
+  }
+  return { routes, passthroughParams };
+}
+
+function compareWorkerSourceToManifest(workerData, shortlinks) {
+  const failures = [];
+  const workerRoutes = new Map(workerData.routes.map((route) => [route.path, route]));
+  const manifestRoutes = new Map((shortlinks.routes || []).map((route) => [route.path, route]));
+  const manifestPassthrough = shortlinks.safety?.passthroughParams || [];
+
+  if (workerRoutes.size !== manifestRoutes.size) {
+    failures.push(`worker_route_count:${workerRoutes.size}!=${manifestRoutes.size}`);
+  }
+  for (const key of manifestPassthrough) {
+    if (!workerData.passthroughParams.includes(key)) failures.push(`worker_missing_passthrough_param:${key}`);
+  }
+  for (const key of workerData.passthroughParams) {
+    if (!manifestPassthrough.includes(key)) failures.push(`worker_extra_passthrough_param:${key}`);
+  }
+  for (const [path, manifestRoute] of manifestRoutes.entries()) {
+    const workerRoute = workerRoutes.get(path);
+    if (!workerRoute) {
+      failures.push(`worker_missing_route:${path}`);
+      continue;
+    }
+    if (workerRoute.target !== manifestRoute.targetPath) failures.push(`worker_target_mismatch:${path}:${workerRoute.target || "none"}`);
+    if (workerRoute.pack !== manifestRoute.pack) failures.push(`worker_pack_mismatch:${path}:${workerRoute.pack || "none"}`);
+    if (workerRoute.source !== manifestRoute.attribution?.utm_source) failures.push(`worker_source_mismatch:${path}:${workerRoute.source || "none"}`);
+    if (workerRoute.medium !== manifestRoute.attribution?.utm_medium) failures.push(`worker_medium_mismatch:${path}:${workerRoute.medium || "none"}`);
+    if (workerRoute.campaign !== manifestRoute.attribution?.utm_campaign) failures.push(`worker_campaign_mismatch:${path}:${workerRoute.campaign || "none"}`);
+    if (workerRoute.content !== manifestRoute.attribution?.utm_content) failures.push(`worker_content_mismatch:${path}:${workerRoute.content || "none"}`);
+  }
+  for (const path of workerRoutes.keys()) {
+    if (!manifestRoutes.has(path)) failures.push(`worker_extra_route:${path}`);
+  }
+  return failures;
+}
+
 function probeUrl(origin, path) {
   const url = new URL(path, origin);
   for (const [key, value] of Object.entries({ ...PASSTHROUGH_PROBE, ...BLOCKED_PROBE })) {
@@ -116,6 +172,10 @@ async function main() {
   if (shortlinks.safety?.ownedAttributionCannotBeOverridden !== true) failures.push("missing_owned_attribution_guard");
   if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) {
     failures.push(`bad_route_count:${shortlinks.routes?.length || 0}`);
+  }
+  if (!args.baseUrl) {
+    const workerData = await readWorkerRoutes();
+    failures.push(...compareWorkerSourceToManifest(workerData, shortlinks));
   }
 
   for (const route of shortlinks.routes || []) {
