@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-import { access, readFile, readdir, stat } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
 const jobsRoot = path.join(root, "render-jobs");
+const DEFAULT_OUT = "/tmp/fursay-render-jobs";
 const secretPatterns = [
   /api[_-]?key/i,
   /token/i,
@@ -12,6 +13,19 @@ const secretPatterns = [
   /password/i,
   /bearer\s+[a-z0-9._-]+/i
 ];
+
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const parsed = { outDir: DEFAULT_OUT, jobIds: [] };
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--out-dir") {
+      parsed.outDir = args[++i];
+    } else {
+      parsed.jobIds.push(args[i]);
+    }
+  }
+  return parsed;
+}
 
 function isAbsoluteLike(value) {
   return path.isAbsolute(value) || /^[a-zA-Z]:[\\/]/.test(value);
@@ -116,10 +130,18 @@ async function checkJob(jobId) {
   return { jobId, problems };
 }
 
-const selectedJobIds = process.argv.slice(2);
+const args = parseArgs();
+const selectedJobIds = args.jobIds;
 const jobIds = selectedJobIds.length ? selectedJobIds : await listJobIds();
 
 if (!jobIds.length) {
+  await mkdir(args.outDir, { recursive: true });
+  await writeFile(path.join(args.outDir, "render-jobs.json"), JSON.stringify({
+    ok: true,
+    failed: 0,
+    jobs: 0,
+    results: [],
+  }, null, 2) + "\n");
   console.log("No render jobs found.");
   process.exit(0);
 }
@@ -140,5 +162,12 @@ for (const result of results) {
   }
 }
 
-process.exit(failed ? 1 : 0);
+await mkdir(args.outDir, { recursive: true });
+await writeFile(path.join(args.outDir, "render-jobs.json"), JSON.stringify({
+  ok: !failed,
+  failed: results.filter((result) => result.problems.length).length,
+  jobs: results.length,
+  results,
+}, null, 2) + "\n");
 
+process.exit(failed ? 1 : 0);
