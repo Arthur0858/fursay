@@ -9,7 +9,6 @@ const EXPECTED_CSS = [
   "home-zh-page-20260613-inline1.css",
   "koko-ar-page-20260613-inline1.css",
   "koko-en-page-20260613-inline1.css",
-  "koko-zh-page-20260613-inline1.css",
   "noor-ltr-page-20260613-inline1.css",
   "noor-rtl-page-20260613-inline1.css",
   "picture-book-base-20260613-base1.css",
@@ -20,7 +19,7 @@ const EXPECTED_CSS = [
 const EXPECTED_JS = [
   "site-shared-20260613-commerce1.js",
 ];
-const MAX_TOTAL_CSS_BYTES = 390_000;
+const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
 const MAX_TOTAL_JS_BYTES = 35_000;
 const MAX_SINGLE_JS_BYTES = 35_000;

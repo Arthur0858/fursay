@@ -77,12 +77,6 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/css/koko-zh-page-20260613-inline1.css",
-    status: 200,
-    cacheIncludes: ["public", "max-age=31536000", "immutable"],
-    contentTypeIncludes: "text/css",
-  },
-  {
     path: "/css/koko-ar-page-20260613-inline1.css",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],

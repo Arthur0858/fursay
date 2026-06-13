@@ -1764,7 +1764,6 @@ async function checkDiscoveryFiles(baseUrl) {
     "/css/home-zh-page-20260613-inline1.css",
     "/css/home-ar-page-20260613-inline1.css",
     "/css/koko-en-page-20260613-inline1.css",
-    "/css/koko-zh-page-20260613-inline1.css",
     "/css/koko-ar-page-20260613-inline1.css",
   ]) {
     if (!siteHealth.sharedAssets?.css?.includes(asset)) failures.push(`site_health_missing_page_css:${asset}`);
