@@ -31,6 +31,7 @@ function parseArgs() {
 
 function localPath(pathname) {
   if (pathname === "/") return "fursay-optimized-site/index.html";
+  if (/\.[^/]+$/.test(pathname)) return `fursay-optimized-site${pathname}`;
   if (pathname.endsWith("/")) return `fursay-optimized-site${pathname}index.html`;
   return `fursay-optimized-site${pathname}.html`;
 }
@@ -50,6 +51,11 @@ async function readPage(pathname, baseUrl) {
     html: await readFile(resolve(process.cwd(), localPath(pathname)), "utf8"),
     source: localPath(pathname),
   };
+}
+
+async function readJson(pathname, baseUrl) {
+  const page = await readPage(pathname, baseUrl);
+  return JSON.parse(page.html);
 }
 
 function attr(tag, name) {
@@ -148,14 +154,30 @@ async function main() {
   const failed = results.filter((result) => !result.ok);
   const totalLinks = results.reduce((sum, result) => sum + result.data.amazonLinks, 0);
   const totalBooksLinks = results.reduce((sum, result) => sum + result.data.booksLinks, 0);
+  const release = await readJson("/release.json", args.baseUrl);
+  const expectationFailures = [];
+  const expectations = release.liveExpectations || {};
+  if (expectations.amazonAffiliateLinks !== totalLinks) {
+    expectationFailures.push(`release_amazon_links:${expectations.amazonAffiliateLinks ?? "none"}!=${totalLinks}`);
+  }
+  if (expectations.booksAffiliateLinks !== totalBooksLinks) {
+    expectationFailures.push(`release_books_links:${expectations.booksAffiliateLinks ?? "none"}!=${totalBooksLinks}`);
+  }
+  if (expectations.amazonAffiliateTag !== AMAZON_TAG) {
+    expectationFailures.push(`release_amazon_tag:${expectations.amazonAffiliateTag || "none"}!=${AMAZON_TAG}`);
+  }
+  if (expectations.booksAffiliateId !== BOOKS_AFFILIATE_ID) {
+    expectationFailures.push(`release_books_affiliate_id:${expectations.booksAffiliateId || "none"}!=${BOOKS_AFFILIATE_ID}`);
+  }
   const report = {
-    ok: failed.length === 0,
+    ok: failed.length === 0 && expectationFailures.length === 0,
     outDir: args.outDir,
-    failed: failed.length,
+    failed: failed.length + expectationFailures.length,
     amazonLinks: totalLinks,
     booksLinks: totalBooksLinks,
     amazonTag: AMAZON_TAG,
     booksAffiliateId: BOOKS_AFFILIATE_ID,
+    expectationFailures,
   };
   console.log(JSON.stringify(report, null, 2));
   if (!report.ok) process.exit(1);
