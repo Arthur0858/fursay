@@ -101,9 +101,11 @@ function validateManifestBasics(key, manifest, html, failures) {
 function validateLinks(manifest, html, failures) {
   const pageKey = "links";
   const hrefSet = new Set(hrefValues(html));
+  const copySet = new Set(copyValues(html, "data-copy-share-kit"));
   validateManifestBasics(pageKey, manifest, html, failures);
   if (manifest.primaryRoute !== "https://fursay.com/links") failures.push("links:bad_primary_route");
   if (manifest.safety?.primaryLinksUseTrackedShortlinks !== true) failures.push("links:missing_tracked_shortlink_contract");
+  if (copySet.size !== 6) failures.push(`links:copy_button_count:${copySet.size}`);
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {
     requireText(failures, pageKey, html, `${pack}:title`, item.title);
@@ -111,6 +113,9 @@ function validateLinks(manifest, html, failures) {
     requireHref(failures, pageKey, hrefSet, `${pack}:primary`, item.primaryAction?.url);
     requireHref(failures, pageKey, hrefSet, `${pack}:secondary`, item.secondaryAction?.url);
     requireHref(failures, pageKey, hrefSet, `${pack}:youtube`, item.youtube);
+    requireCopyValue(failures, pageKey, copySet, `${pack}:primary`, item.primaryAction?.url);
+    requireCopyValue(failures, pageKey, copySet, `${pack}:secondary`, item.secondaryAction?.url);
+    requireCopyValue(failures, pageKey, copySet, `${pack}:youtube`, item.youtube);
     requireText(failures, pageKey, html, `${pack}:primary_label`, item.primaryAction?.label);
     requireText(failures, pageKey, html, `${pack}:secondary_label`, item.secondaryAction?.label);
     if (item.primaryAction?.pack !== pack) failures.push(`links:${pack}:bad_primary_pack:${item.primaryAction?.pack || "none"}`);
