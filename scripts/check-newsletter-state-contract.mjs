@@ -8,6 +8,7 @@ const ROOT = process.cwd();
 const NEWSLETTER_DIR = join(ROOT, "content", "newsletters");
 const DEFAULT_OUT = "/tmp/fursay-newsletter-state-contract";
 const CHANNELS = new Set(["koko", "arabic"]);
+const ARCHIVED_REQUEST_DIRS = ["content/newsletters/archive/obsolete-requests"];
 const RUN_STATUSES = new Set([
   "api_preflight_passed",
   "chrome_handoff_ready",
@@ -124,12 +125,24 @@ function checkNewsletter(relativePath, newsletter, failures) {
   }
 }
 
-function checkRequest(relativePath, request, failures, warnings) {
+function checkRequest(relativePath, request, failures) {
   if (!CHANNELS.has(request.channel)) failures.push(`${relativePath}:bad_channel:${request.channel || "none"}`);
   if (!request.runId || !basename(relativePath).startsWith(`${request.runId}-`)) failures.push(`${relativePath}:runId_filename_mismatch`);
   const outputPath = String(request.requiredOutputPath || "");
   if (!outputPath.startsWith("content/newsletters/pending/")) failures.push(`${relativePath}:bad_requiredOutputPath:${outputPath || "none"}`);
-  if (outputPath && !existsSync(join(ROOT, outputPath))) warnings.push(`${relativePath}:required_newsletter_missing:${outputPath}`);
+  if (outputPath && !existsSync(join(ROOT, outputPath))) failures.push(`${relativePath}:required_newsletter_missing:${outputPath}`);
+  const episode = request.episode || {};
+  if (!Number.isInteger(episode.episodeNo) || episode.episodeNo < 0) failures.push(`${relativePath}:bad_episode_episodeNo`);
+  if (!/^[A-Za-z0-9_-]{6,}$/.test(String(episode.videoId || ""))) failures.push(`${relativePath}:bad_episode_videoId`);
+  if (!String(episode.videoUrl || "").startsWith("https://www.youtube.com/watch?v=")) failures.push(`${relativePath}:bad_episode_videoUrl`);
+}
+
+function checkArchivedRequest(relativePath, request, failures) {
+  if (!relativePath.endsWith(".request.json")) failures.push(`${relativePath}:archive_non_request_json`);
+  if (!CHANNELS.has(request.channel)) failures.push(`${relativePath}:bad_channel:${request.channel || "none"}`);
+  if (!request.runId || !basename(relativePath).startsWith(`${request.runId}-`)) failures.push(`${relativePath}:runId_filename_mismatch`);
+  const outputPath = String(request.requiredOutputPath || "");
+  if (!outputPath.startsWith("content/newsletters/pending/")) failures.push(`${relativePath}:bad_requiredOutputPath:${outputPath || "none"}`);
   const episode = request.episode || {};
   if (!Number.isInteger(episode.episodeNo) || episode.episodeNo < 0) failures.push(`${relativePath}:bad_episode_episodeNo`);
   if (!/^[A-Za-z0-9_-]{6,}$/.test(String(episode.videoId || ""))) failures.push(`${relativePath}:bad_episode_videoId`);
@@ -192,6 +205,7 @@ async function main() {
     ...(await listFiles("content/newsletters/pending", ".json")),
     ...(await listFiles("content/newsletters/runs", ".json")),
     ...(await listFiles("content/newsletters/browser-handoff", ".json")),
+    ...(await Promise.all(ARCHIVED_REQUEST_DIRS.map((dir) => listFiles(dir, ".json")))).flat(),
   ];
   const parsed = new Map();
   for (const relativePath of jsonFiles) {
@@ -206,13 +220,15 @@ async function main() {
   const newsletterFiles = [...parsed.keys()].filter((file) => file.includes("/pending/") && file.endsWith(".newsletter.json"));
   const runFiles = [...parsed.keys()].filter((file) => file.includes("/runs/"));
   const handoffFiles = [...parsed.keys()].filter((file) => file.includes("/browser-handoff/"));
+  const archivedRequestFiles = [...parsed.keys()].filter((file) => ARCHIVED_REQUEST_DIRS.some((dir) => file.startsWith(`${dir}/`)));
 
   const requestsByOutput = new Map();
   for (const file of requestFiles) {
     const request = parsed.get(file);
-    checkRequest(file, request, failures, warnings);
+    checkRequest(file, request, failures);
     if (request.requiredOutputPath) requestsByOutput.set(request.requiredOutputPath, { file, request });
   }
+  for (const file of archivedRequestFiles) checkArchivedRequest(file, parsed.get(file), failures);
   for (const file of newsletterFiles) {
     const newsletter = parsed.get(file);
     checkNewsletter(file, newsletter, failures);
@@ -238,6 +254,7 @@ async function main() {
       newsletters: newsletterFiles.length,
       runs: runFiles.length,
       handoffs: handoffFiles.length,
+      archivedRequests: archivedRequestFiles.length,
     },
   };
   await mkdir(args.outDir, { recursive: true });
