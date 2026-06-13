@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "81acaf4",
-    "summary": "Sync Fursay conversion health manifest"
+    "commit": "1609b65",
+    "summary": "Add Fursay episode landing pages"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
