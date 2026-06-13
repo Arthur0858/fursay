@@ -6,6 +6,7 @@ const DEFAULT_OUT = "/tmp/fursay-internal-links";
 const ORIGIN = "https://fursay.com";
 const ATTRIBUTES = new Set(["href", "src", "action"]);
 const EXTERNAL_SCHEMES = /^(mailto:|tel:|javascript:|data:)/i;
+const FETCH_TIMEOUT_MS = 8000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -100,19 +101,31 @@ async function localTargetExists(pathname) {
 }
 
 async function liveTargetExists(baseUrl, pathname) {
-  const response = await fetch(`${baseUrl}${pathname}`, {
-    cache: "no-store",
-    redirect: "manual",
-  });
-  return response.status >= 200 && response.status < 400;
+  try {
+    const response = await fetch(`${baseUrl}${pathname}`, {
+      cache: "no-store",
+      redirect: "manual",
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    return response.status >= 200 && response.status < 400;
+  } catch {
+    return false;
+  }
 }
 
 async function readTargetHtml(baseUrl, pages, pathname) {
   const pageRoute = pathname.endsWith("/") ? pathname : pathname.replace(/\.html$/, "");
   if (!baseUrl) return pages.get(pageRoute)?.html || "";
-  const response = await fetch(`${baseUrl}${pathname}`, { cache: "no-store" });
-  if (!response.ok) return "";
-  return response.text();
+  try {
+    const response = await fetch(`${baseUrl}${pathname}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!response.ok) return "";
+    return response.text();
+  } catch {
+    return "";
+  }
 }
 
 function pageForHash(pages, pathname) {
@@ -120,7 +133,7 @@ function pageForHash(pages, pathname) {
   return pages.get(route);
 }
 
-async function checkReference({ baseUrl, pages, shortlinkPaths, sourceRoute, attrName, rawValue }) {
+async function checkReference({ baseUrl, pages, shortlinkPaths, caches, sourceRoute, attrName, rawValue }) {
   const failures = [];
   if (!rawValue || EXTERNAL_SCHEMES.test(rawValue)) return failures;
 
@@ -136,15 +149,21 @@ async function checkReference({ baseUrl, pages, shortlinkPaths, sourceRoute, att
   if (shortlinkPaths.has(url.pathname)) return failures;
   if (url.pathname === "/api/subscribe") return failures;
 
-  const exists = baseUrl
-    ? await liveTargetExists(baseUrl, url.pathname)
-    : await localTargetExists(url.pathname);
+  if (!caches.targets.has(url.pathname)) {
+    caches.targets.set(url.pathname, baseUrl
+      ? await liveTargetExists(baseUrl, url.pathname)
+      : await localTargetExists(url.pathname));
+  }
+  const exists = caches.targets.get(url.pathname);
   if (!exists) failures.push(`${sourceRoute}:${attrName}:missing_target:${rawValue}:${localPathForUrlPath(url.pathname)}`);
 
   const hash = decodeURIComponent(url.hash.slice(1));
   if (hash) {
     const targetPage = baseUrl ? null : pageForHash(pages, url.pathname);
-    const html = targetPage?.html || await readTargetHtml(baseUrl, pages, url.pathname);
+    if (!targetPage && !caches.html.has(url.pathname)) {
+      caches.html.set(url.pathname, await readTargetHtml(baseUrl, pages, url.pathname));
+    }
+    const html = targetPage?.html || caches.html.get(url.pathname) || "";
     const ids = targetPage?.ids || idsIn(html);
     if (!ids.has(hash)) failures.push(`${sourceRoute}:${attrName}:missing_fragment:${rawValue}`);
   }
@@ -158,6 +177,7 @@ async function main() {
   const shortlinkPaths = await readShortlinkPaths(args.baseUrl);
   const failures = [];
   const checks = [];
+  const caches = { targets: new Map(), html: new Map() };
 
   for (const page of pages.values()) {
     let checked = 0;
@@ -166,6 +186,7 @@ async function main() {
         baseUrl: args.baseUrl,
         pages,
         shortlinkPaths,
+        caches,
         sourceRoute: page.route,
         attrName: link.name,
         rawValue: link.value,
@@ -184,6 +205,7 @@ async function main() {
     failures,
     pages: checks,
     shortlinks: shortlinkPaths.size,
+    uniqueTargets: caches.targets.size,
   };
   await writeFile(resolve(args.outDir, "internal-links-contract.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({
@@ -194,11 +216,14 @@ async function main() {
     pages: checks.length,
     references: checks.reduce((sum, page) => sum + page.references, 0),
     shortlinks: shortlinkPaths.size,
+    uniqueTargets: caches.targets.size,
   }, null, 2));
   if (!report.ok) process.exit(1);
 }
 
-main().catch((error) => {
+main().then(() => {
+  process.exit(0);
+}).catch((error) => {
   console.error(error instanceof Error ? error.stack || error.message : String(error));
   process.exit(1);
 });
