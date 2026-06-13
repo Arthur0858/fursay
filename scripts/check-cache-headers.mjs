@@ -405,17 +405,29 @@ async function fetchWithTimeout(url, init = {}) {
   }
 }
 
+async function readReleaseExpectations(baseUrl) {
+  const response = await fetchWithTimeout(new URL("/release.json", baseUrl), { cache: "no-store" });
+  if (!response.ok) throw new Error(`release.json status ${response.status}`);
+  return (await response.json()).liveExpectations || {};
+}
+
 async function main() {
   const args = parseArgs();
   const results = [];
   for (const check of CHECKS) results.push(await checkOne(args.baseUrl, check));
   const failed = results.filter((result) => !result.ok);
+  const expectations = await readReleaseExpectations(args.baseUrl);
+  const expectationFailures = [];
+  if (expectations.cacheHeaderChecks !== results.length) {
+    expectationFailures.push(`release_cache_header_checks:${expectations.cacheHeaderChecks ?? "none"}!=${results.length}`);
+  }
   const report = {
     generatedAt: new Date().toISOString(),
     baseUrl: args.baseUrl,
-    ok: failed.length === 0,
+    ok: failed.length === 0 && expectationFailures.length === 0,
     total: results.length,
     failed: failed.map((result) => ({ path: result.path, failures: result.failures })),
+    expectationFailures,
     results,
   };
 
@@ -426,12 +438,12 @@ async function main() {
     "",
     `- Result: ${report.ok ? "PASS" : "FAIL"}`,
     `- Checks: ${report.total}`,
-    `- Failed: ${failed.length}`,
+    `- Failed: ${failed.length + expectationFailures.length}`,
     `- Base URL: ${args.baseUrl}`,
     "",
   ].join("\n"));
 
-  console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: failed.length }, null, 2));
+  console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: failed.length + expectationFailures.length }, null, 2));
   return report.ok ? 0 : 1;
 }
 
