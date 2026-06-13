@@ -38,6 +38,9 @@ const EXPECTED_CHANNELS = {
     scene: "/images/scenes/story-world-desert.webp",
   },
 };
+const TOOL_ONLY_CSS = new Set([
+  "/css/picture-world-tools-20260613-ops1.css",
+]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -261,6 +264,7 @@ async function validateHtmlRoutes(structure, context, failures, data) {
   }
 
   for (const asset of sharedCss) {
+    if (TOOL_ONLY_CSS.has(asset)) continue;
     if (!seenCss.has(asset)) failures.push(`shared_css_not_referenced_by_main_routes:${asset}`);
   }
   for (const asset of sharedJs) {

@@ -15,11 +15,13 @@ const EXPECTED_CSS = [
   "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260613-traffic11.css",
+  "picture-world-tools-20260613-ops1.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260613-commerce1.js",
 ];
 const MAX_TOTAL_CSS_BYTES = 370_000;
+const MAX_MAIN_SHARED_CSS_BYTES = 88_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
 const MAX_TOTAL_JS_BYTES = 35_000;
 const MAX_SINGLE_JS_BYTES = 35_000;
@@ -109,6 +111,9 @@ async function main() {
     assetSizes.css[name] = bytes;
     if (bytes > MAX_SINGLE_CSS_BYTES) failures.push(`css_asset_too_large:${name}:${bytes}`);
   }
+  if ((assetSizes.css["picture-world-shared-20260613-traffic11.css"] || 0) > MAX_MAIN_SHARED_CSS_BYTES) {
+    failures.push(`main_shared_css_too_large:picture-world-shared-20260613-traffic11.css:${assetSizes.css["picture-world-shared-20260613-traffic11.css"]}`);
+  }
   for (const name of jsFiles) {
     const bytes = await existsWithBytes(resolve(root, "js", name));
     assetSizes.js[name] = bytes;
@@ -146,6 +151,7 @@ async function main() {
       totalCssBytes,
       totalJsBytes,
       maxTotalCssBytes: MAX_TOTAL_CSS_BYTES,
+      maxMainSharedCssBytes: MAX_MAIN_SHARED_CSS_BYTES,
       maxSingleCssBytes: MAX_SINGLE_CSS_BYTES,
       maxTotalJsBytes: MAX_TOTAL_JS_BYTES,
       maxSingleJsBytes: MAX_SINGLE_JS_BYTES,
