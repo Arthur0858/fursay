@@ -139,6 +139,8 @@ function writeReleaseManifest() {
       linksPage: "https://fursay.com/links",
       conversionHealthManifest: "https://fursay.com/conversion-health.json",
       conversionHealthPage: "https://fursay.com/conversion-health",
+      productsManifest: "https://fursay.com/products.json",
+      productsPage: "https://fursay.com/products",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -203,6 +205,7 @@ function writeReleaseManifest() {
       "scripts/check-content-growth-contract.mjs",
       "scripts/check-episode-landing-contract.mjs",
       "scripts/check-monetization-interest-contract.mjs",
+      "scripts/check-product-readiness-contract.mjs",
       "scripts/check-noor-subscriber-readiness.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
@@ -236,10 +239,11 @@ function writeReleaseManifest() {
       episodeLandingPages: 6,
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
+      productLandingPages: 1,
       ownedProductSpecs: 2,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 59,
+      cacheHeaderChecks: 61,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -254,6 +258,8 @@ function writeReleaseManifest() {
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
   writeConversionHealth(siteDir, source);
+  writeProductsManifest(siteDir, source);
+  writeProductsPage(siteDir);
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
 }
@@ -447,6 +453,7 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/episodes/noor-colors", noorColorsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/zh/episodes/noor-colors", noorColorsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/ar/episodes/noor-colors", noorColorsAlternates, "0.6"),
+    sitemapUrl("https://fursay.com/products", {}, "0.5"),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -1481,6 +1488,146 @@ function writeConversionHealth(siteDir, source) {
   writeFileSync(resolve(siteDir, "conversion-health.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
+function writeProductsManifest(siteDir, source) {
+  const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
+  const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    status: "interest_validation",
+    page: "https://fursay.com/products",
+    conversionHealth: "https://fursay.com/conversion-health.json",
+    checkoutEnabled: ownedProducts.checkoutEnabled === true ? true : false,
+    paymentLinksAllowed: ownedProducts.checkoutGate?.paymentLinksAllowed === true ? true : false,
+    interestOnly: ownedProducts.interestOnly !== false,
+    event: "fursay_product_interest_click",
+    subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
+    checkoutGate: ownedProducts.checkoutGate || {},
+    products: ownedProducts.products || [],
+  };
+  writeFileSync(resolve(siteDir, "products.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
+function productButton(product) {
+  const source = product.pack === "noor" ? "product_page_noor_worksheet" : "product_page_koko_printable";
+  return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} interest list</button>`;
+}
+
+function writeProductsPage(siteDir) {
+  const manifest = readJson(resolve(siteDir, "products.json"));
+  const release = readJson(resolve(siteDir, "release.json"));
+  const products = (manifest.products || [])
+    .map((product) => `
+      <article class="creator-pack" data-product-card="${escapeHtml(product.id)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(product.pack === "noor" ? "Noor Chinese worksheet" : "Koko English printable")}</p>
+          <h2>${escapeHtml(product.label)}</h2>
+          <p>${escapeHtml(product.format)} for families who want a short parent-child activity after a story video.</p>
+          <p><strong>Interest list only.</strong> No payment today. This page measures demand before any paid pack is opened.</p>
+        </div>
+        <div class="creator-copy-blocks">
+          <article>
+            <h3>Planned pack contents</h3>
+            <ul>
+              ${(product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
+            </ul>
+          </article>
+          <article>
+            <h3>Validation path</h3>
+            <p>Clicking the interest button sends the anonymous <code>${escapeHtml(manifest.event)}</code> event, opens the story-pack signup modal, and keeps the subscribe payload unchanged.</p>
+          </article>
+        </div>
+        <div class="public-share-actions">
+          ${productButton(product)}
+          <a href="${escapeHtml(product.pack === "noor" ? "/arabic?subscribe=noor&utm_source=products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample" : "/koko?subscribe=koko&utm_source=products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample")}">Preview story pack</a>
+        </div>
+      </article>`)
+    .join("\n");
+  const gateRequirements = (manifest.checkoutGate?.requirements || [])
+    .map((requirement) => `<li><code>${escapeHtml(requirement)}</code></li>`)
+    .join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Printable and Worksheet Packs</title>
+  <meta name="description" content="Join interest lists for Fursay Koko printable and Noor worksheet packs. No payment today; the page validates demand before paid packs open.">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/products">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Fursay Printable and Worksheet Packs">
+  <meta property="og:description" content="Interest lists for Koko printable and Noor worksheet packs for parent-child bilingual story time.">
+  <meta property="og:url" content="https://fursay.com/products">
+  <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:alt" content="Fursay parent-child bilingual story world">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fursay Printable and Worksheet Packs">
+  <meta name="twitter:description" content="Join interest lists for Koko printable and Noor worksheet packs. No payment today.">
+  <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+</head>
+<body class="picture-world creator-kit-page products-page" data-page-pack="products">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay product validation</p>
+      <h1>Printable and Worksheet Packs</h1>
+      <p>Koko and Noor paid packs are not open yet. This page collects measurable interest so the next product step is based on real family demand, not guesses.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
+        <span>Commit ${escapeHtml(manifest.source?.commit)}</span>
+        <a href="/products.json">JSON manifest</a>
+        <a href="/conversion-health">Conversion health</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-product-readiness-summary>
+      <h2>Current product status</h2>
+      <p>Interest validation is active. Payment links are disabled, and any future paid pack must pass the checkout gate first.</p>
+      <dl>
+        ${healthMetric("Checkout enabled", String(manifest.checkoutEnabled))}
+        ${healthMetric("Payment links allowed", String(manifest.paymentLinksAllowed))}
+        ${healthMetric("Interest only", String(manifest.interestOnly))}
+        ${healthMetric("Minimum interest clicks", manifest.checkoutGate?.minimumInterestClicks || 0)}
+        ${healthMetric("Minimum subscriber signals", manifest.checkoutGate?.minimumSubscriberSignals || 0)}
+      </dl>
+    </section>
+${products}
+    <section class="creator-kit-safety" data-product-readiness-gate>
+      <h2>Before any paid pack opens</h2>
+      <p>${escapeHtml(manifest.checkoutGate?.disclosureCopy || "")}</p>
+      <p>${escapeHtml(manifest.checkoutGate?.refundSupportCopy || "")}</p>
+      <ul>
+${gateRequirements}
+      </ul>
+    </section>
+  </main>
+  <div class="modal-overlay" id="subscribeModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
+      <span class="modal-emoji">📬</span>
+      <div class="modal-title">Join the story pack list</div>
+      <p class="modal-sub">Pick Koko or Noor and get updates when the weekly story pack is ready. No payment today.</p>
+      <form id="subscribeForm">
+        <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
+        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+      </form>
+      <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+    </div>
+  </div>
+  <script src="/js/site-shared-20260613-commerce3.js"></script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "products.html"), html + "\n");
+}
+
 function healthMetric(label, value, note = "") {
   return `<div>
                 <dt>${escapeHtml(label)}</dt>
@@ -1654,6 +1801,7 @@ function writeSiteHealthManifest(siteDir) {
       "/campaigns.json",
       "/shortlinks.json",
       "/conversion-health.json",
+      "/products.json",
     ],
     routes: {
       ...current.routes,
@@ -1679,6 +1827,10 @@ function writeSiteHealthManifest(siteDir) {
       conversionHealth: [
         "https://fursay.com/conversion-health",
         "https://fursay.com/conversion-health.json",
+      ],
+      products: [
+        "https://fursay.com/products",
+        "https://fursay.com/products.json",
       ],
     },
     funnels: {
@@ -1966,6 +2118,7 @@ async function main() {
   run("node", ["--check", "scripts/check-content-growth-contract.mjs"]);
   run("node", ["--check", "scripts/check-episode-landing-contract.mjs"]);
   run("node", ["--check", "scripts/check-monetization-interest-contract.mjs"]);
+  run("node", ["--check", "scripts/check-product-readiness-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
@@ -2008,6 +2161,7 @@ async function main() {
   run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
   run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);
   run("node", ["scripts/check-monetization-interest-contract.mjs", "--out-dir", join(outRoot, "monetization-interest-local")]);
+  run("node", ["scripts/check-product-readiness-contract.mjs", "--out-dir", join(outRoot, "product-readiness-local")]);
   run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
@@ -2051,6 +2205,7 @@ async function main() {
     run("node", ["scripts/check-content-growth-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-growth-live")]);
     run("node", ["scripts/check-episode-landing-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "episode-landing-live")]);
     run("node", ["scripts/check-monetization-interest-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-interest-live")]);
+    run("node", ["scripts/check-product-readiness-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "product-readiness-live")]);
     run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-readiness-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);

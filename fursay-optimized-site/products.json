@@ -1,0 +1,61 @@
+{
+  "site": "Fursay",
+  "origin": "https://fursay.com",
+  "platform": "cloudflare-workers-static-assets",
+  "updatedAt": "2026-06-14",
+  "source": {
+    "branch": "main",
+    "commit": "ebdfec1",
+    "summary": "Sync Fursay owned product gate manifest"
+  },
+  "status": "interest_validation",
+  "page": "https://fursay.com/products",
+  "conversionHealth": "https://fursay.com/conversion-health.json",
+  "checkoutEnabled": false,
+  "paymentLinksAllowed": false,
+  "interestOnly": true,
+  "event": "fursay_product_interest_click",
+  "subscribePayloadCompatibility": "email/groups/attribution unchanged",
+  "checkoutGate": {
+    "status": "blocked_until_interest_signal",
+    "provider": "not_selected",
+    "requirements": [
+      "verified_product_interest_clicks",
+      "disclosure_copy",
+      "refund_support_copy",
+      "checkout_tracking_contract"
+    ],
+    "minimumInterestClicks": 10,
+    "minimumSubscriberSignals": 1,
+    "paymentLinksAllowed": false,
+    "disclosureCopy": "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
+    "refundSupportCopy": "Refund and support instructions must be published before any checkout link is enabled.",
+    "trackingGate": "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed."
+  },
+  "products": [
+    {
+      "id": "koko-printable-pack",
+      "pack": "koko",
+      "label": "Koko printable pack interest list",
+      "format": "PDF printable pack",
+      "plannedIncludes": [
+        "story prompt sheet",
+        "emotion word practice",
+        "parent-child drawing activity"
+      ],
+      "checkoutStatus": "not_enabled"
+    },
+    {
+      "id": "noor-worksheet-pack",
+      "pack": "noor",
+      "label": "Noor 3-minute worksheet interest list",
+      "format": "PDF worksheet pack",
+      "plannedIncludes": [
+        "Chinese color words with Pinyin",
+        "Arabic parent prompts",
+        "one 3-minute activity"
+      ],
+      "checkoutStatus": "not_enabled"
+    }
+  ]
+}

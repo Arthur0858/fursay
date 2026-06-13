@@ -22,6 +22,7 @@ const PUBLIC_PAGES = [
   "/traffic-launch",
   "/deploy-readiness",
   "/conversion-health",
+  "/products",
   "/episodes/koko-feelings",
   "/zh/episodes/koko-feelings",
   "/ar/episodes/koko-feelings",
@@ -42,6 +43,7 @@ const DISCOVERY_FILES = [
   "/traffic-launch.json",
   "/links.json",
   "/conversion-health.json",
+  "/products.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];

@@ -113,6 +113,10 @@
     "conversionHealth": [
       "https://fursay.com/conversion-health",
       "https://fursay.com/conversion-health.json"
+    ],
+    "products": [
+      "https://fursay.com/products",
+      "https://fursay.com/products.json"
     ]
   },
   "funnels": {
@@ -347,7 +351,8 @@
     "/data/site-structure.json",
     "/campaigns.json",
     "/shortlinks.json",
-    "/conversion-health.json"
+    "/conversion-health.json",
+    "/products.json"
   ],
   "growth": {
     "latestStoryEntries": 12,

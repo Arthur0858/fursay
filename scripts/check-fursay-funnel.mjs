@@ -1090,6 +1090,7 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/episodes/noor-colors",
     "https://fursay.com/zh/episodes/noor-colors",
     "https://fursay.com/ar/episodes/noor-colors",
+    "https://fursay.com/products",
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
   if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);
@@ -1296,7 +1297,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 59) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 61) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");
@@ -1304,6 +1305,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!release.qualityGates?.includes("scripts/query-event-analytics-report.mjs")) failures.push("release_missing_event_report_gate");
   if (!release.qualityGates?.includes("scripts/check-content-growth-contract.mjs")) failures.push("release_missing_content_growth_gate");
   if (!release.qualityGates?.includes("scripts/check-monetization-interest-contract.mjs")) failures.push("release_missing_monetization_interest_gate");
+  if (!release.qualityGates?.includes("scripts/check-product-readiness-contract.mjs")) failures.push("release_missing_product_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-noor-subscriber-readiness.mjs")) failures.push("release_missing_noor_readiness_gate");
   if (!release.qualityGates?.includes("scripts/update-immutable-asset-fingerprints.mjs")) failures.push("release_missing_immutable_fingerprint_gate");
   if (!release.qualityGates?.includes("scripts/check-static-asset-structure.mjs")) failures.push("release_missing_static_asset_structure_gate");

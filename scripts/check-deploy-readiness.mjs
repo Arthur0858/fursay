@@ -99,6 +99,7 @@ async function main() {
     "/deploy-readiness.json",
     "/share-kit.json",
     "/traffic-launch.json",
+    "/products.json",
     "/shortlinks.json",
     "FURSAY_EVENTS",
     "fursay_events",

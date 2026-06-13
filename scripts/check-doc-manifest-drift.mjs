@@ -11,6 +11,7 @@ const SITE_HEALTH_GENERATED_FROM = [
   "/campaigns.json",
   "/shortlinks.json",
   "/conversion-health.json",
+  "/products.json",
 ];
 const DOCS = [
   "docs/site-architecture.md",
@@ -26,6 +27,7 @@ const PUBLIC_MANIFESTS = [
   "/traffic-launch.json",
   "/links.json",
   "/conversion-health.json",
+  "/products.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];
@@ -182,6 +184,10 @@ async function checkLocalDocs(failures, details) {
   failures.push(...exactArrayFailures("site_health_bio", shortlinkUrls(shortlinks, (route) => route.path.startsWith("/bio/")), normalizeArray(siteHealth.routes?.bio)));
   failures.push(...exactArrayFailures("site_health_creator", shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+$/.test(route.path)), normalizeArray(siteHealth.routes?.creator)));
   failures.push(...exactArrayFailures("site_health_creator_placement", shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+\/[^/]+$/.test(route.path)), normalizeArray(siteHealth.routes?.creatorPlacement)));
+  failures.push(...exactArrayFailures("site_health_products", [
+    `${ORIGIN}/products`,
+    `${ORIGIN}/products.json`,
+  ], normalizeArray(siteHealth.routes?.products)));
   for (const pack of ["koko", "noor"]) {
     if (siteHealth.funnels?.[pack]?.campaign !== campaigns.campaigns?.[pack]?.campaign) {
       failures.push(`site_health_funnel_campaign:${pack}:${siteHealth.funnels?.[pack]?.campaign || "none"}`);

@@ -165,4 +165,11 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-colors"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-colors"/>
   </url>
+
+  <url>
+    <loc>https://fursay.com/products</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

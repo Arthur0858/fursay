@@ -5,7 +5,7 @@
 - Cloudflare Workers Static Assets serves files from `fursay-optimized-site` through the `fursay` Worker.
 - Clean URLs are canonical: `/koko`, `/zh/koko`, `/ar/koko`; legacy `.html` URLs redirect permanently.
 - Shared story visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, `/css/story-page-common-20260613-css1.css`, and `/css/picture-world-shared-20260613-traffic11.css`.
-- Operations utility page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/links`, `/deploy-readiness`, and `/conversion-health` live in `/css/picture-world-tools-20260613-ops2.css` so the main story pages do not load creator/share/deploy-only rules, and operations pages do not load the 85KB story shared CSS.
+- Operations and product-validation page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/links`, `/deploy-readiness`, `/conversion-health`, and `/products` live in `/css/picture-world-tools-20260613-ops2.css` so the main story pages do not load creator/share/deploy-only rules.
 - Home page common styles live in `/css/home-common-20260613-cache1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-cache1.css`, `/css/home-zh-page-20260613-cache1.css`, and `/css/home-ar-page-20260613-cache1.css`.
 - Koko common styles live in `/css/koko-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-cache1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-cache1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
@@ -40,6 +40,7 @@
 
 - `/links`, `/creator-kit`, `/share-kit`, `/traffic-launch`, `/deploy-readiness`, and `/conversion-health` are utility surfaces.
 - `/conversion-health` renders the anonymous growth dashboard from `/conversion-health.json`; it is `noindex,follow` and must not include real subscriber data or secrets.
+- `/products` renders the public product-interest landing page from `/products.json`; payment links remain disallowed while `paymentLinksAllowed=false`.
 - Event analytics fields are limited to event/page/campaign/pack/affiliate/outbound/interest dimensions plus a numeric `event_count`; email, name, phone, address, token, password, and subscriber payloads are not analytics fields.
 - `npm run report:events` is the local conversion report command for Analytics Engine after account enablement. Without Cloudflare credentials it writes a pending-status report and does not query external APIs.
 - Owned products stay in interest-validation mode until the checkout gate has verified interest clicks, disclosure copy, refund/support copy, and checkout tracking. Payment links are not allowed while `paymentLinksAllowed=false`.

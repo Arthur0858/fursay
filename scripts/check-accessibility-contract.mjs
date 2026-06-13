@@ -20,6 +20,7 @@ const PAGES = [
   { path: "/traffic-launch", file: "traffic-launch.html" },
   { path: "/deploy-readiness", file: "deploy-readiness.html" },
   { path: "/conversion-health", file: "conversion-health.html" },
+  { path: "/products", file: "products.html" },
   { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html" },
   { path: "/zh/episodes/koko-feelings", file: "zh/episodes/koko-feelings.html" },
   { path: "/ar/episodes/koko-feelings", file: "ar/episodes/koko-feelings.html", rtl: true },
