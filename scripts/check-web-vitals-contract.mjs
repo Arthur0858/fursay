@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright";
 
@@ -77,6 +77,16 @@ async function collectMetrics(page) {
   });
 }
 
+async function readReleaseExpectations(baseUrl) {
+  if (baseUrl) {
+    const response = await fetch(`${baseUrl}/release.json`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`release.json status ${response.status}`);
+    return (await response.json()).liveExpectations || {};
+  }
+  const release = JSON.parse(await readFile(resolve(process.cwd(), "fursay-optimized-site/release.json"), "utf8"));
+  return release.liveExpectations || {};
+}
+
 function checkLimits({ path, viewport, metrics }) {
   const failures = [];
   if (!metrics.fcpMs || metrics.fcpMs > LIMITS.fcpMs) failures.push(`${path}:${viewport}:fcp_ms:${metrics.fcpMs}`);
@@ -140,6 +150,7 @@ async function main() {
   const failures = [];
   const warnings = [];
   const checks = [];
+  const releaseExpectations = await readReleaseExpectations(args.baseUrl);
 
   try {
     for (const viewport of VIEWPORTS) {
@@ -172,6 +183,10 @@ async function main() {
     }
   } finally {
     await browser.close();
+  }
+
+  if (releaseExpectations.webVitalsChecks !== checks.length) {
+    failures.push(`release_web_vitals_checks:${releaseExpectations.webVitalsChecks ?? "none"}!=${checks.length}`);
   }
 
   await mkdir(args.outDir, { recursive: true });
