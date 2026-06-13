@@ -266,7 +266,8 @@ async function main() {
       });
       for (const spec of PAGES) {
         const page = await context.newPage();
-        const response = await page.goto(pageUrl(args, spec), { waitUntil: "networkidle", timeout: 30_000 });
+        const response = await page.goto(pageUrl(args, spec), { waitUntil: "domcontentloaded", timeout: 30_000 });
+        await page.waitForLoadState("load", { timeout: 10_000 }).catch(() => {});
         await page.waitForTimeout(250);
         const layout = await collectLayout(page);
         const pageFailures = [];
