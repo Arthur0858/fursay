@@ -180,6 +180,7 @@ function writeReleaseManifest() {
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-site-structure-contract.mjs",
       "scripts/check-hero-preload-contract.mjs",
+      "scripts/check-visual-layout-contract.mjs",
       "scripts/check-web-vitals-contract.mjs",
       "scripts/check-internal-links-contract.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
@@ -1463,6 +1464,7 @@ async function main() {
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-hero-preload-contract.mjs"]);
+  run("node", ["--check", "scripts/check-visual-layout-contract.mjs"]);
   run("node", ["--check", "scripts/check-web-vitals-contract.mjs"]);
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
@@ -1490,6 +1492,7 @@ async function main() {
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
   run("node", ["scripts/check-site-structure-contract.mjs", "--out-dir", join(outRoot, "site-structure-local")]);
   run("node", ["scripts/check-hero-preload-contract.mjs", "--out-dir", join(outRoot, "hero-preload-local")]);
+  run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
   run("node", ["scripts/check-public-kit-parity.mjs", "--out-dir", join(outRoot, "public-kit-parity-local")]);
@@ -1518,6 +1521,7 @@ async function main() {
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-site-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "site-structure-live")]);
     run("node", ["scripts/check-hero-preload-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "hero-preload-live")]);
+    run("node", ["scripts/check-visual-layout-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "visual-layout-live")]);
     run("node", ["scripts/check-web-vitals-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "web-vitals-live")]);
     run("node", ["scripts/check-internal-links-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "internal-links-live")]);
     run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "newsletter-traffic-kit-live")]);
