@@ -54,6 +54,7 @@ Useful actions:
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml
 - Robots: https://fursay.com/robots.txt
+- LLM discovery file: https://fursay.com/llms.txt
 - Site health: https://fursay.com/site-health.json
 - Release manifest: https://fursay.com/release.json
 - Deploy readiness page: https://fursay.com/deploy-readiness
