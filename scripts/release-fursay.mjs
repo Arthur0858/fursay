@@ -309,7 +309,7 @@ function writeDeployReadinessPage(siteDir, manifest) {
   <link rel="canonical" href="https://fursay.com/deploy-readiness">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
 </head>
 <body class="picture-world creator-kit-page deploy-readiness-page">
   <main class="creator-kit-shell">
@@ -682,7 +682,7 @@ function writeLinksPage(siteDir, links) {
   <link rel="canonical" href="https://fursay.com/links">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
 </head>
 <body class="picture-world creator-kit-page social-links-page">
   <main class="creator-kit-shell">
@@ -1048,7 +1048,7 @@ ${trafficLaunchChannelRows(item.channels)}
   <link rel="canonical" href="https://fursay.com/traffic-launch">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
 </head>
 <body class="picture-world creator-kit-page traffic-launch-page">
   <main class="creator-kit-shell">
@@ -1320,7 +1320,7 @@ function writeCreatorKitPage(siteDir, kit) {
   <link rel="canonical" href="https://fursay.com/creator-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
 </head>
 <body class="picture-world creator-kit-page">
   <main class="creator-kit-shell">
@@ -1425,7 +1425,7 @@ function writeShareKitPage(siteDir, kit) {
   <link rel="canonical" href="https://fursay.com/share-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
 </head>
 <body class="picture-world creator-kit-page share-kit-page">
   <main class="creator-kit-shell">

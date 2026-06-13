@@ -2629,6 +2629,22 @@ body.picture-world .empty-story-note-warm {
   border-radius: 14px !important;
 }
 
+/* Reserve the Noor hero artwork footprint before the AVIF/WebP source decodes. */
+body.picture-world.world-arabic .hero-card picture {
+  display: block !important;
+  width: min(356px, 100%) !important;
+  aspect-ratio: 1380 / 752 !important;
+  margin: 12px auto 16px !important;
+}
+body.picture-world.world-arabic .hero-card .hero-card-img {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  aspect-ratio: 1380 / 752 !important;
+  object-fit: contain !important;
+  margin: 0 auto !important;
+}
+
 @media (max-width: 760px) {
   body.picture-world.world-home .hero-content {
     padding-bottom: 20px !important;

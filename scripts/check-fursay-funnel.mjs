@@ -1220,7 +1220,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.noor?.bio !== "https://fursay.com/bio/noor") failures.push("release_bad_noor_bio");
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
-  if (release.assets?.css !== "/css/picture-world-shared-20260612-traffic10.css") failures.push(`release_css:${release.assets?.css || "none"}`);
+  if (release.assets?.css !== "/css/picture-world-shared-20260613-traffic11.css") failures.push(`release_css:${release.assets?.css || "none"}`);
   if (release.assets?.js !== "/js/site-shared-20260613-commerce1.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
@@ -1741,7 +1741,7 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const signal of ["modal_preselect_matches_pack", "social_links_primary_cta_preselects_pack", "amazon_affiliate_links_use_parenttechche_20", "zh_pages_use_books_affiliate", "non_zh_pages_use_amazon_affiliate", "shortlink_redirect_keeps_utm", "shortlink_subscribe_attribution", "traffic_launch_example_redirect_keeps_attribution", "traffic_launch_payload_keeps_attribution", "subscribe_payload_keeps_attribution", "no_console_error"]) {
     if (!siteHealth.successSignals?.includes(signal)) failures.push(`site_health_missing_success_signal:${signal}`);
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260613-traffic11.css")) {
     failures.push("site_health_missing_current_shared_css");
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-book-base-20260613-base1.css")) {

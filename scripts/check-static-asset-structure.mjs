@@ -14,7 +14,7 @@ const EXPECTED_CSS = [
   "noor-rtl-page-20260613-inline1.css",
   "picture-book-base-20260613-base1.css",
   "storybook-skin-20260613-inline1.css",
-  "picture-world-shared-20260612-traffic10.css",
+  "picture-world-shared-20260613-traffic11.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260613-commerce1.js",

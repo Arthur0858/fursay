@@ -17,7 +17,7 @@ const CHECKS = [
     contentTypeIncludes: "text/html",
   },
   {
-    path: "/css/picture-world-shared-20260612-traffic10.css",
+    path: "/css/picture-world-shared-20260613-traffic11.css",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/css",
