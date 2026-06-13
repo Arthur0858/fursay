@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-06-13",
+  "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
+  "assets": [
+    {
+      "path": "/css/home-ar-page-20260613-cache1.css",
+      "bytes": 15061,
+      "sha256": "20cb340bdfe90c681a58096fee301edd38f0505333ff927f3a5327bbb5c4b552"
+    },
+    {
+      "path": "/css/home-common-20260613-cache1.css",
+      "bytes": 19472,
+      "sha256": "3aa87ad1b799e7e3412925682a12488687ec26961d750dd09b867065729910a8"
+    },
+    {
+      "path": "/css/home-en-page-20260613-cache1.css",
+      "bytes": 14938,
+      "sha256": "43838412fe986f0ba2bfefa35cd55ce547d29f4ed6a0c35dcea549f036e6ea07"
+    },
+    {
+      "path": "/css/home-zh-page-20260613-cache1.css",
+      "bytes": 14628,
+      "sha256": "6737c28720fb9d5f7bea9d9c37e18bc8a12416916ee0da5d09126a5d7fdc8e5e"
+    },
+    {
+      "path": "/css/koko-ar-page-20260613-cache1.css",
+      "bytes": 5320,
+      "sha256": "b55aab82e01fd3bf2d01ce6affb783181c84fc4441d8a8f84b845e133db95333"
+    },
+    {
+      "path": "/css/koko-common-20260613-cache1.css",
+      "bytes": 16565,
+      "sha256": "117eda8d0730f213093b10c696347f75cd50bd853e9c03750749ca11f03c558a"
+    },
+    {
+      "path": "/css/koko-en-page-20260613-cache1.css",
+      "bytes": 4976,
+      "sha256": "bebc334657deb76702815280ce4348851a89dfef267861e2e7852b81f3ae98af"
+    },
+    {
+      "path": "/css/noor-common-20260613-cache1.css",
+      "bytes": 21306,
+      "sha256": "84d293dedc9d171806dd29b85fd55eae6b094ca4727d8d10a6d106bcb873b41b"
+    },
+    {
+      "path": "/css/noor-ltr-page-20260613-cache1.css",
+      "bytes": 5103,
+      "sha256": "760df782569c7fdb2f7f89fd710b11c763049753b14b3843e1fc6f67d69af671"
+    },
+    {
+      "path": "/css/noor-rtl-page-20260613-cache1.css",
+      "bytes": 5483,
+      "sha256": "f3b1a39f60c7f1423382fd87224ddd24530001d552ebb20653d9be39477dec71"
+    },
+    {
+      "path": "/css/picture-book-base-20260613-base1.css",
+      "bytes": 7241,
+      "sha256": "f76749469be39fce7a2b0640c8a5e0f36fe8dea8f95b72b2daa886fbc89e1590"
+    },
+    {
+      "path": "/css/picture-world-shared-20260613-traffic11.css",
+      "bytes": 85693,
+      "sha256": "0c8ce71c5fccbf1c05d2723810e211c1acc9cc4285abb037fee3b6f250c0c2d7"
+    },
+    {
+      "path": "/css/picture-world-tools-20260613-ops1.css",
+      "bytes": 6805,
+      "sha256": "bad6943d9e6a1e83f5bcb9fe99c5bcb3f43b952fc0438fadac03521d160f9a55"
+    },
+    {
+      "path": "/css/story-page-common-20260613-css1.css",
+      "bytes": 3878,
+      "sha256": "7fc76f5b5a856e91d4d4c423ef1ed46717f1e59b15479e698aee63b9a62eff1d"
+    },
+    {
+      "path": "/css/storybook-skin-20260613-inline1.css",
+      "bytes": 16771,
+      "sha256": "5a47e687b0ff51f576b2639e8bf94f767d766f63107fc17eefa417d39103b92e"
+    },
+    {
+      "path": "/js/site-shared-20260613-commerce1.js",
+      "bytes": 28179,
+      "sha256": "42ad9f9f4c4a7a95bd97744399bdc33601eadb38ad01050f6a4981ec46fd5484"
+    }
+  ]
+}

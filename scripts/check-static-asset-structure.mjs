@@ -1,8 +1,10 @@
 import { readdir, readFile, stat, writeFile, mkdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { resolve, join } from "node:path";
 
 const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
+const IMMUTABLE_ASSET_MANIFEST = "data/immutable-asset-fingerprints.json";
 const EXPECTED_CSS = [
   "home-common-20260613-cache1.css",
   "home-ar-page-20260613-cache1.css",
@@ -97,6 +99,11 @@ async function existsWithBytes(path) {
   }
 }
 
+async function assetFingerprint(path) {
+  const buffer = await readFile(path);
+  return createHash("sha256").update(buffer).digest("hex");
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
@@ -107,6 +114,13 @@ async function main() {
   const referenced = { css: [], js: [] };
   const pageAssets = {};
   const assetSizes = { css: {}, js: {} };
+  const immutableManifestPath = resolve(root, IMMUTABLE_ASSET_MANIFEST);
+  let immutableManifest = null;
+  try {
+    immutableManifest = JSON.parse(await readFile(immutableManifestPath, "utf8"));
+  } catch (error) {
+    failures.push(`immutable_manifest_unreadable:${IMMUTABLE_ASSET_MANIFEST}:${error instanceof Error ? error.message : String(error)}`);
+  }
 
   for (const file of htmlFiles) {
     const html = await readFile(file, "utf8");
@@ -193,6 +207,32 @@ async function main() {
     if (bytes <= 0) failures.push(`referenced_asset_missing:${asset}`);
   }
 
+  if (immutableManifest) {
+    const expectedImmutableAssets = unique([
+      ...cssFiles.map((name) => `/css/${name}`),
+      ...jsFiles.map((name) => `/js/${name}`),
+    ]);
+    const manifestAssets = Array.isArray(immutableManifest.assets) ? immutableManifest.assets : [];
+    const manifestByPath = new Map(manifestAssets.map((asset) => [asset.path, asset]));
+    const manifestPaths = unique(manifestAssets.map((asset) => asset.path).filter(Boolean));
+
+    for (const assetPath of expectedImmutableAssets) {
+      const entry = manifestByPath.get(assetPath);
+      if (!entry) {
+        failures.push(`immutable_manifest_missing_asset:${assetPath}`);
+        continue;
+      }
+      const fullPath = resolve(root, assetPath.replace(/^\//, ""));
+      const bytes = await existsWithBytes(fullPath);
+      const sha256 = await assetFingerprint(fullPath);
+      if (entry.bytes !== bytes) failures.push(`immutable_manifest_bytes_changed:${assetPath}:${entry.bytes}->${bytes}`);
+      if (entry.sha256 !== sha256) failures.push(`immutable_manifest_sha_changed:${assetPath}`);
+    }
+    for (const assetPath of manifestPaths) {
+      if (!expectedImmutableAssets.includes(assetPath)) failures.push(`immutable_manifest_unexpected_asset:${assetPath}`);
+    }
+  }
+
   const expectedCssRefs = EXPECTED_CSS.map((name) => `/css/${name}`);
   const expectedJsRefs = EXPECTED_JS.map((name) => `/js/${name}`);
   for (const asset of expectedCssRefs) {
@@ -216,6 +256,7 @@ async function main() {
       assetSizes,
       totalCssBytes,
       totalJsBytes,
+      immutableAssetManifest: IMMUTABLE_ASSET_MANIFEST,
       maxTotalCssBytes: MAX_TOTAL_CSS_BYTES,
       maxMainSharedCssBytes: MAX_MAIN_SHARED_CSS_BYTES,
       maxSingleCssBytes: MAX_SINGLE_CSS_BYTES,
