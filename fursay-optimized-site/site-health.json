@@ -40,7 +40,11 @@
     ],
     "storyWorlds": [
       "https://fursay.com/koko",
-      "https://fursay.com/arabic"
+      "https://fursay.com/zh/koko",
+      "https://fursay.com/ar/koko",
+      "https://fursay.com/arabic",
+      "https://fursay.com/zh/arabic",
+      "https://fursay.com/ar/arabic"
     ],
     "join": [
       "https://fursay.com/join/koko",

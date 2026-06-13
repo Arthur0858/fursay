@@ -121,6 +121,12 @@ function collectOwnUrls(value, urls = new Set()) {
   return urls;
 }
 
+function siteHealthRoutePaths(siteHealth) {
+  const paths = new Set();
+  collectOwnUrls(siteHealth.routes || {}).forEach((url) => paths.add(pathKey(url)));
+  return paths;
+}
+
 function pathKey(urlString) {
   const url = new URL(urlString);
   return url.pathname;
@@ -231,6 +237,11 @@ async function main() {
     if (!hasPackSet(json[pathname][rootKey])) failures.push(`${pathname}:bad_pack_set`);
   }
   if (!hasPackSet(json["/video-discovery.json"].channels)) failures.push("/video-discovery.json:bad_channel_set");
+
+  const siteHealthPaths = siteHealthRoutePaths(json["/site-health.json"]);
+  for (const page of PUBLIC_PAGES) {
+    if (!siteHealthPaths.has(page)) failures.push(`site_health_missing_public_page_route:${page}`);
+  }
 
   for (const pack of PACKS) {
     const campaign = json["/campaigns.json"].campaigns?.[pack] || {};
