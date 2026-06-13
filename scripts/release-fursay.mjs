@@ -1345,11 +1345,12 @@ function writeConversionHealth(siteDir, source) {
       anonymousEventEndpoint: "https://fursay.com/api/event",
       piiAllowed: false,
       subscribePayloadCompatibility: "email/groups/attribution unchanged",
-      externalAnalytics: "workers_analytics_engine",
+      externalAnalytics: "worker_event_endpoint",
       analyticsSink: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
-        writeMode: "best_effort_non_blocking",
+        status: "pending_cloudflare_enablement",
+        writeMode: "worker_logs_until_enabled",
         fallbackSink: "Cloudflare Worker logs",
         piiAllowed: false,
         blobFields: [
@@ -1370,7 +1371,7 @@ function writeConversionHealth(siteDir, source) {
           "colo",
         ],
         doubleFields: ["event_count"],
-        sqlApi: "Cloudflare Analytics Engine SQL API",
+        sqlApi: "Cloudflare Analytics Engine SQL API after account enablement",
       },
       fallbackReviewSurface: "Cloudflare Worker logs",
     },

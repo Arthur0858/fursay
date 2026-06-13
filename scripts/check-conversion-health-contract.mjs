@@ -179,9 +179,10 @@ async function main() {
   const failures = [];
   if (conversionHealth.measurement?.anonymousEventEndpoint !== "https://fursay.com/api/event") failures.push("bad_event_endpoint");
   if (conversionHealth.measurement?.piiAllowed !== false) failures.push("pii_allowed_not_false");
-  if (conversionHealth.measurement?.externalAnalytics !== "workers_analytics_engine") failures.push("bad_external_analytics");
+  if (conversionHealth.measurement?.externalAnalytics !== "worker_event_endpoint") failures.push("bad_external_analytics");
   if (conversionHealth.measurement?.analyticsSink?.binding !== "FURSAY_EVENTS") failures.push("bad_analytics_binding");
   if (conversionHealth.measurement?.analyticsSink?.dataset !== "fursay_events") failures.push("bad_analytics_dataset");
+  if (conversionHealth.measurement?.analyticsSink?.status !== "pending_cloudflare_enablement") failures.push("bad_analytics_status");
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsSink?.doubleFields?.length !== release.liveExpectations?.eventAnalyticsDoubleFields) failures.push("analytics_double_field_count_mismatch");

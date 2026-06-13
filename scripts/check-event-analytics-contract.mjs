@@ -134,8 +134,8 @@ async function runLive(baseUrl) {
   const response = await fetch(`${baseUrl}/api/event`, jsonBody(sampleEvent()));
   const body = await readJson(response);
   failures.push(...commonResponseFailures("live_analytics", response, body));
-  if (body.sink !== "analytics_engine") failures.push(`live_analytics:sink:${body.sink || "none"}`);
-  checks.push({ name: "live_analytics_engine", status: response.status, body });
+  if (!["analytics_engine", "worker_logs"].includes(body.sink)) failures.push(`live_analytics:sink:${body.sink || "none"}`);
+  checks.push({ name: "live_anonymous_event_sink", status: response.status, body });
   return { mode: "live", failures, checks };
 }
 
@@ -152,6 +152,7 @@ async function main() {
     analyticsContract: {
       binding: "FURSAY_EVENTS",
       dataset: "fursay_events",
+      liveSinkAllowed: ["analytics_engine", "worker_logs"],
       blobCount: REQUIRED_BLOBS,
       doubleCount: REQUIRED_DOUBLES,
       piiAllowed: false,

@@ -68,7 +68,7 @@ Commerce and affiliate policy:
 - Amazon Associates Store ID: parenttechche-20
 - Current expected Amazon affiliate links: 33
 - Affiliate click tracking is expected on all 15 public story and episode pages.
-- Anonymous conversion events are written to the Cloudflare Analytics Engine binding FURSAY_EVENTS, dataset fursay_events, when available; Worker logs remain the fallback.
+- Anonymous conversion events post to /api/event and use Worker logs while Cloudflare Analytics Engine enablement is pending; the planned binding is FURSAY_EVENTS, dataset fursay_events, with no PII fields.
 - Event analytics must not include email, name, phone, address, token, password, or subscriber payload fields.
 
 Technical discovery:
