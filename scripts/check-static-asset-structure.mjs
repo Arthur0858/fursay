@@ -19,6 +19,10 @@ const EXPECTED_CSS = [
 const EXPECTED_JS = [
   "site-shared-20260613-attribution1.js",
 ];
+const MAX_TOTAL_CSS_BYTES = 390_000;
+const MAX_SINGLE_CSS_BYTES = 100_000;
+const MAX_TOTAL_JS_BYTES = 35_000;
+const MAX_SINGLE_JS_BYTES = 35_000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -70,6 +74,7 @@ async function main() {
   const jsFiles = (await readdir(resolve(root, "js"))).filter((name) => name.endsWith(".js")).sort();
   const htmlFiles = (await walk(root)).filter((file) => file.endsWith(".html"));
   const referenced = { css: [], js: [] };
+  const assetSizes = { css: {}, js: {} };
 
   for (const file of htmlFiles) {
     const html = await readFile(file, "utf8");
@@ -99,6 +104,21 @@ async function main() {
     if (!jsFiles.includes(name)) failures.push(`missing_js_asset:${name}`);
   }
 
+  for (const name of cssFiles) {
+    const bytes = await existsWithBytes(resolve(root, "css", name));
+    assetSizes.css[name] = bytes;
+    if (bytes > MAX_SINGLE_CSS_BYTES) failures.push(`css_asset_too_large:${name}:${bytes}`);
+  }
+  for (const name of jsFiles) {
+    const bytes = await existsWithBytes(resolve(root, "js", name));
+    assetSizes.js[name] = bytes;
+    if (bytes > MAX_SINGLE_JS_BYTES) failures.push(`js_asset_too_large:${name}:${bytes}`);
+  }
+  const totalCssBytes = Object.values(assetSizes.css).reduce((sum, bytes) => sum + bytes, 0);
+  const totalJsBytes = Object.values(assetSizes.js).reduce((sum, bytes) => sum + bytes, 0);
+  if (totalCssBytes > MAX_TOTAL_CSS_BYTES) failures.push(`css_total_bytes:${totalCssBytes}`);
+  if (totalJsBytes > MAX_TOTAL_JS_BYTES) failures.push(`js_total_bytes:${totalJsBytes}`);
+
   for (const asset of unique([...referenced.css, ...referenced.js])) {
     const bytes = await existsWithBytes(resolve(root, asset.replace(/^\//, "")));
     if (bytes <= 0) failures.push(`referenced_asset_missing:${asset}`);
@@ -122,6 +142,13 @@ async function main() {
       jsFiles,
       referencedCss: unique(referenced.css),
       referencedJs: unique(referenced.js),
+      assetSizes,
+      totalCssBytes,
+      totalJsBytes,
+      maxTotalCssBytes: MAX_TOTAL_CSS_BYTES,
+      maxSingleCssBytes: MAX_SINGLE_CSS_BYTES,
+      maxTotalJsBytes: MAX_TOTAL_JS_BYTES,
+      maxSingleJsBytes: MAX_SINGLE_JS_BYTES,
       htmlFiles: htmlFiles.length,
     },
   };
@@ -133,6 +160,8 @@ async function main() {
     cssFiles: cssFiles.length,
     jsFiles: jsFiles.length,
     htmlFiles: htmlFiles.length,
+    totalCssBytes,
+    totalJsBytes,
   }, null, 2));
   if (!report.ok) process.exit(1);
 }
