@@ -205,6 +205,7 @@ async function main() {
   const shortlinks = json["/shortlinks.json"];
   const expectedCommit = release.source?.commit || "";
   const expectedDate = release.releasedAt || "";
+  const expectations = release.liveExpectations || {};
   const shortlinkPaths = new Set((shortlinks.routes || []).map((route) => route.path));
   const shortlinkUrls = new Set((shortlinks.routes || []).map((route) => route.shortlink));
 
@@ -219,6 +220,19 @@ async function main() {
   for (const route of shortlinks.routes || []) {
     if (!llms.includes(route.shortlink)) failures.push(`llms_missing_shortlink:${route.shortlink}`);
     checkShortlinkRoute(route, failures, knownPages);
+  }
+
+  const commerceNeedles = [
+    "Traditional Chinese pages use Books.com.tw affiliate links only",
+    "Books.com.tw affiliate ID: arthur0858",
+    `Current expected Books.com.tw affiliate links: ${expectations.booksAffiliateLinks}`,
+    "English and Arabic pages use Amazon affiliate links only",
+    "Amazon Associates Store ID: parenttechche-20",
+    `Current expected Amazon affiliate links: ${expectations.amazonAffiliateLinks}`,
+    `Affiliate click tracking is expected on all ${expectations.affiliateEventTrackingPages} public story pages.`,
+  ];
+  for (const needle of commerceNeedles) {
+    if (!llms.includes(needle)) failures.push(`llms_missing_commerce_policy:${needle}`);
   }
 
   for (const [pathname, manifest] of Object.entries(json)) {

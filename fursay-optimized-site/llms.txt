@@ -51,6 +51,15 @@ Useful actions:
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
+Commerce and affiliate policy:
+- Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic
+- Books.com.tw affiliate ID: arthur0858
+- Current expected Books.com.tw affiliate links: 12
+- English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic
+- Amazon Associates Store ID: parenttechche-20
+- Current expected Amazon affiliate links: 25
+- Affiliate click tracking is expected on all 9 public story pages.
+
 Technical discovery:
 - Sitemap: https://fursay.com/sitemap.xml
 - Robots: https://fursay.com/robots.txt
