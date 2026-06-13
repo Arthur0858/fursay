@@ -1279,6 +1279,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-static-asset-structure.mjs")) failures.push("release_missing_static_asset_structure_gate");
+  if (!release.qualityGates?.includes("scripts/check-image-assets.mjs")) failures.push("release_missing_image_asset_gate");
   if (deployReadiness.platform !== "cloudflare-workers-static-assets") failures.push(`deploy_readiness_platform:${deployReadiness.platform || "none"}`);
   if (deployReadiness.deployment?.workerName !== "fursay") failures.push(`deploy_readiness_worker:${deployReadiness.deployment?.workerName || "none"}`);
   if (deployReadiness.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("deploy_readiness_bad_workflow");

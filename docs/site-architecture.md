@@ -11,6 +11,7 @@
 - Noor RTL page-specific shared styles live in `/css/noor-rtl-page-20260613-inline1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260613-attribution1.js`; page HTML should not add inline event handlers.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
+- Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.
 
 ## Edit rules
 
@@ -20,6 +21,7 @@
 - Keep internal links on clean routes, not `.html`.
 - Keep sitemap/canonical/hreflang aligned with clean routes.
 - Keep Worker cache headers centralized in `src/worker.js`.
+- Keep scene art in WebP unless a real page references another format.
 
 ## Current public pages
 

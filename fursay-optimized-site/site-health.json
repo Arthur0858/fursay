@@ -243,6 +243,7 @@
     "funnel": "scripts/check-fursay-funnel.mjs",
     "noor": "scripts/check-noor-list-activation.mjs",
     "cacheHeaders": "scripts/check-cache-headers.mjs",
+    "imageAssets": "scripts/check-image-assets.mjs",
     "deployReadiness": "scripts/check-deploy-readiness.mjs",
     "release": "scripts/release-fursay.mjs"
   },

@@ -177,6 +177,7 @@ function writeReleaseManifest() {
       "scripts/check-newsletter-traffic-kit.mjs",
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-static-asset-structure.mjs",
+      "scripts/check-image-assets.mjs",
       "scripts/check-cache-headers.mjs",
       "scripts/check-deploy-readiness.mjs",
       "audit-fursay.mjs",
@@ -1445,6 +1446,7 @@ async function main() {
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
+  run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs"]);
@@ -1454,6 +1456,7 @@ async function main() {
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
+  run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);
