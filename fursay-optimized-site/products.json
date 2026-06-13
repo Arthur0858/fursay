@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "ebdfec1",
-    "summary": "Sync Fursay owned product gate manifest"
+    "commit": "c0188b6",
+    "summary": "Add Fursay product interest landing page"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
