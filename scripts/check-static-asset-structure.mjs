@@ -8,6 +8,7 @@ const EXPECTED_CSS = [
   "home-ar-page-20260613-inline1.css",
   "home-en-page-20260613-inline1.css",
   "home-zh-page-20260613-inline1.css",
+  "koko-common-20260613-css1.css",
   "koko-ar-page-20260613-inline1.css",
   "koko-en-page-20260613-inline1.css",
   "noor-common-20260613-css1.css",
@@ -47,9 +48,11 @@ const OPERATIONS_HTML = new Set([
 ]);
 const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
 const HOME_COMMON_CSS = "/css/home-common-20260613-css1.css";
+const KOKO_COMMON_CSS = "/css/koko-common-20260613-css1.css";
 const NOOR_COMMON_CSS = "/css/noor-common-20260613-css1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
+const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html"]);
 const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html"]);
 
 function parseArgs() {
@@ -131,6 +134,12 @@ async function main() {
     }
     if (!HOME_HTML.has(relativeFile) && assets.css.includes(HOME_COMMON_CSS)) {
       failures.push(`non_home_page_loads_home_common_css:${relativeFile}`);
+    }
+    if (KOKO_HTML.has(relativeFile) && !assets.css.includes(KOKO_COMMON_CSS)) {
+      failures.push(`koko_page_missing_koko_common_css:${relativeFile}`);
+    }
+    if (!KOKO_HTML.has(relativeFile) && assets.css.includes(KOKO_COMMON_CSS)) {
+      failures.push(`non_koko_page_loads_koko_common_css:${relativeFile}`);
     }
     if (NOOR_HTML.has(relativeFile) && !assets.css.includes(NOOR_COMMON_CSS)) {
       failures.push(`noor_page_missing_noor_common_css:${relativeFile}`);

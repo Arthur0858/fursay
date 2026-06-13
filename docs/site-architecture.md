@@ -7,7 +7,7 @@
 - Shared visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, `/css/story-page-common-20260613-css1.css`, and `/css/picture-world-shared-20260613-traffic11.css`.
 - Operations utility page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/links`, and `/deploy-readiness` live in `/css/picture-world-tools-20260613-ops1.css` so the main story pages do not load creator/share/deploy-only rules.
 - Home page common styles live in `/css/home-common-20260613-css1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-inline1.css`, `/css/home-zh-page-20260613-inline1.css`, and `/css/home-ar-page-20260613-inline1.css`.
-- Koko LTR page-specific shared styles live in `/css/koko-en-page-20260613-inline1.css` for `/koko` and `/zh/koko`; Koko RTL page-specific shared styles live in `/css/koko-ar-page-20260613-inline1.css` for `/ar/koko`.
+- Koko common styles live in `/css/koko-common-20260613-css1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-inline1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-inline1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-css1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-inline1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-inline1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260613-commerce1.js`; page HTML should not add inline event handlers.

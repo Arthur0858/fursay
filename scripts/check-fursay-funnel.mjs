@@ -1772,6 +1772,7 @@ async function checkDiscoveryFiles(baseUrl) {
     "/css/home-en-page-20260613-inline1.css",
     "/css/home-zh-page-20260613-inline1.css",
     "/css/home-ar-page-20260613-inline1.css",
+    "/css/koko-common-20260613-css1.css",
     "/css/koko-en-page-20260613-inline1.css",
     "/css/koko-ar-page-20260613-inline1.css",
   ]) {
