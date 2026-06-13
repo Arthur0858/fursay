@@ -10,6 +10,7 @@ const SITE_HEALTH_GENERATED_FROM = [
   "/data/site-structure.json",
   "/campaigns.json",
   "/shortlinks.json",
+  "/conversion-health.json",
 ];
 const DOCS = [
   "docs/site-architecture.md",
@@ -24,6 +25,7 @@ const PUBLIC_MANIFESTS = [
   "/share-kit.json",
   "/traffic-launch.json",
   "/links.json",
+  "/conversion-health.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];

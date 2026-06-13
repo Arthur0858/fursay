@@ -11,6 +11,11 @@ export default {
       return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
     }
 
+    if (url.pathname === "/api/event") {
+      if (request.method === "POST") return handleEvent(request);
+      return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
+    }
+
     const joinRedirect = joinRedirectUrl(url);
     if (joinRedirect) {
       return redirectWithHeaders(joinRedirect, 302);
@@ -315,6 +320,60 @@ async function handleSubscribe(request, env) {
     console.error("Subscribe error", error);
     return json({ success: false, message: "Subscription failed" }, 500, headers);
   }
+}
+
+async function handleEvent(request) {
+  try {
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return json({ success: false, message: "Invalid request" }, 400, corsHeaders());
+    }
+    const event = sanitizeEvent(body);
+    if (!event.event) return json({ success: false, message: "Invalid event" }, 400, corsHeaders());
+    console.log("Fursay anonymous event", JSON.stringify(event));
+    return json({ success: true }, 200, corsHeaders());
+  } catch (error) {
+    console.error("Event intake failed", error);
+    return json({ success: false, message: "Event intake failed" }, 500, corsHeaders());
+  }
+}
+
+function sanitizeEvent(body) {
+  const allowedDetailKeys = new Set([
+    "path",
+    "locale",
+    "page_pack",
+    "campaign",
+    "pack",
+    "signup_source",
+    "market",
+    "product_id",
+    "outbound_host",
+    "link_text",
+    "share_url",
+    "link_url",
+    "copy_kind",
+    "product_interest",
+    "interest_stage"
+  ]);
+  const blocked = /email|name|phone|address|token|secret|password/i;
+  const event = typeof body?.event === "string" ? body.event.replace(/[^a-z0-9_:-]/gi, "").slice(0, 80) : "";
+  const detail = {};
+  if (body?.detail && typeof body.detail === "object" && !Array.isArray(body.detail)) {
+    for (const [key, value] of Object.entries(body.detail)) {
+      if (!allowedDetailKeys.has(key) || blocked.test(key)) continue;
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        detail[key] = String(value).replace(/[\r\n\t]/g, " ").trim().slice(0, 180);
+      }
+    }
+  }
+  return {
+    event,
+    detail,
+    ts: typeof body?.ts === "string" ? body.ts.slice(0, 40) : new Date().toISOString()
+  };
 }
 
 function json(data, status, headers) {

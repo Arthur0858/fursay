@@ -28,7 +28,28 @@
       event: name,
       fursay: event.detail
     });
+    sendAnonymousEvent(event);
     return event;
+  }
+
+  function sendAnonymousEvent(event) {
+    try {
+      var payload = JSON.stringify({
+        event: event.event,
+        detail: event.detail,
+        ts: event.ts
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/event', new Blob([payload], { type: 'application/json' }));
+        return;
+      }
+      fetch('/api/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) {}
   }
 
   function syncChecks() {
@@ -159,6 +180,22 @@
           link_url: publicShareButton.getAttribute('data-public-share-url') || ''
         });
         copyPublicShareLink(publicShareButton);
+        return;
+      }
+
+      var productInterestButton = event.target.closest('[data-product-interest]');
+      if (productInterestButton) {
+        event.preventDefault();
+        var interest = normalizePack(productInterestButton.getAttribute('data-product-interest')) || pagePack() || 'koko';
+        emitFursayEvent('fursay_product_interest_click', {
+          product_interest: interest,
+          interest_stage: productInterestButton.getAttribute('data-interest-stage') || 'waitlist',
+          signup_source: productInterestButton.getAttribute('data-signup-source') || 'product_interest_' + interest
+        });
+        window.openSubscribeModal(
+          interest,
+          productInterestButton.getAttribute('data-signup-source') || 'product_interest_' + interest
+        );
         return;
       }
 

@@ -34,9 +34,13 @@ const DISCOVERY_FILES = [
   "/share-kit.json",
   "/traffic-launch.json",
   "/links.json",
+  "/conversion-health.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];
+const KNOWN_API_ROUTES = new Set([
+  "/api/event",
+]);
 const TOOL_PAGES = [
   { page: "/links", manifest: "/links.json" },
   { page: "/share-kit", manifest: "/share-kit.json" },
@@ -289,6 +293,7 @@ async function main() {
     const known = knownPages.has(pathname)
       || knownFiles.has(pathname)
       || shortlinkPaths.has(pathname)
+      || KNOWN_API_ROUTES.has(pathname)
       || pathname.startsWith("/images/qr/");
     if (!known) unknownOwnUrls.push(url);
   }

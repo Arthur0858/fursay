@@ -1,0 +1,71 @@
+{
+  "site": "Fursay",
+  "origin": "https://fursay.com",
+  "platform": "cloudflare-workers-static-assets",
+  "updatedAt": "2026-06-13",
+  "source": {
+    "branch": "main",
+    "commit": "6652ef5",
+    "summary": "Add Fursay growth health gates"
+  },
+  "measurement": {
+    "anonymousEventEndpoint": "https://fursay.com/api/event",
+    "piiAllowed": false,
+    "subscribePayloadCompatibility": "email/groups/attribution unchanged",
+    "externalAnalytics": "optional",
+    "fallbackReviewSurface": "Cloudflare Worker logs"
+  },
+  "events": [
+    "fursay_subscribe_open_click",
+    "fursay_subscribe_modal_open",
+    "fursay_subscribe_submit_attempt",
+    "fursay_subscribe_submit_success",
+    "fursay_subscribe_submit_failure",
+    "fursay_affiliate_click",
+    "fursay_share_click",
+    "fursay_pack_link_copy_click",
+    "fursay_sample_link_copy_click",
+    "fursay_public_share_copy_click",
+    "fursay_kit_copy_click",
+    "fursay_product_interest_click"
+  ],
+  "coverage": {
+    "publicStoryPages": 9,
+    "subscribeOpenPages": 9,
+    "affiliateClickPages": 9,
+    "shareOrCopyPages": 9,
+    "productInterestPages": 9,
+    "submitAttemptPages": 3
+  },
+  "growth": {
+    "latestStoryEntries": 12,
+    "noorLeadMagnetPages": 3,
+    "noorReadinessStatus": "safe_wait_subscriber_empty",
+    "productInterestLinks": 18
+  },
+  "monetization": {
+    "affiliate": {
+      "amazonLinks": 25,
+      "amazonTag": "parenttechche-20",
+      "booksLinks": 12,
+      "booksAffiliateId": "arthur0858",
+      "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
+    },
+    "ownedProducts": {
+      "checkoutEnabled": false,
+      "interestOnly": true,
+      "products": [
+        {
+          "id": "koko-printable-pack",
+          "pack": "koko",
+          "label": "Koko printable pack interest list"
+        },
+        {
+          "id": "noor-worksheet-pack",
+          "pack": "noor",
+          "label": "Noor 3-minute worksheet interest list"
+        }
+      ]
+    }
+  }
+}

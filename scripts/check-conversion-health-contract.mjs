@@ -1,0 +1,187 @@
+import { createServer } from "node:http";
+import { existsSync, statSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { extname, resolve } from "node:path";
+import { chromium } from "playwright";
+
+const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
+const DEFAULT_OUT = "/tmp/fursay-conversion-health-contract";
+const PAGES = ["/", "/zh/", "/ar/", "/koko", "/zh/koko", "/ar/koko", "/arabic", "/zh/arabic", "/ar/arabic"];
+const REQUIRED_EVENTS = [
+  "fursay_subscribe_open_click",
+  "fursay_subscribe_modal_open",
+  "fursay_affiliate_click",
+  "fursay_share_click",
+  "fursay_sample_link_copy_click",
+  "fursay_product_interest_click",
+];
+const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name", "phone", "address"];
+
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const parsed = { outDir: DEFAULT_OUT, baseUrl: "" };
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === "--out-dir") parsed.outDir = args[++i];
+    if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
+  }
+  return parsed;
+}
+
+function contentType(path) {
+  const ext = extname(path).toLowerCase();
+  if (ext === ".html") return "text/html; charset=utf-8";
+  if (ext === ".js") return "text/javascript; charset=utf-8";
+  if (ext === ".css") return "text/css; charset=utf-8";
+  if (ext === ".json") return "application/json; charset=utf-8";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".avif") return "image/avif";
+  if (ext === ".png") return "image/png";
+  if (ext === ".svg") return "image/svg+xml";
+  return "application/octet-stream";
+}
+
+function resolveAsset(pathname) {
+  const clean = pathname === "/" ? "/index.html" : pathname;
+  const candidates = [
+    resolve(SITE_DIR, `.${clean}/index.html`),
+    resolve(SITE_DIR, `.${clean}.html`),
+    resolve(SITE_DIR, `.${clean}`),
+  ];
+  return candidates.find((candidate) => (
+    candidate.startsWith(SITE_DIR)
+    && existsSync(candidate)
+    && statSync(candidate).isFile()
+  ));
+}
+
+function startServer() {
+  const server = createServer(async (req, res) => {
+    const url = new URL(req.url || "/", "http://127.0.0.1");
+    if (url.pathname === "/api/subscribe" || url.pathname === "/api/event") {
+      res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify({ success: true }));
+      return;
+    }
+    const asset = resolveAsset(url.pathname);
+    if (!asset) {
+      res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+      res.end("not found");
+      return;
+    }
+    res.writeHead(200, { "content-type": contentType(asset) });
+    res.end(await readFile(asset));
+  });
+  return new Promise((resolveServer) => {
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      resolveServer({ server, baseUrl: `http://127.0.0.1:${address.port}` });
+    });
+  });
+}
+
+async function readJson(baseUrl, pathname) {
+  if (baseUrl) return fetch(`${baseUrl}${pathname}`).then((response) => response.json());
+  return JSON.parse(await readFile(resolve(SITE_DIR, pathname.replace(/^\//, "")), "utf8"));
+}
+
+function privateNeedles(events) {
+  const serialized = JSON.stringify(events || []);
+  return PRIVATE_NEEDLES.filter((needle) => serialized.includes(needle));
+}
+
+async function clickVisible(page, selector) {
+  return page.evaluate((sel) => {
+    const candidates = [...document.querySelectorAll(sel)];
+    const el = candidates.find((item) => {
+      const rect = item.getBoundingClientRect();
+      const style = window.getComputedStyle(item);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+    }) || candidates[0];
+    if (!el) return false;
+    el.click();
+    return true;
+  }, selector);
+}
+
+async function checkPage(browser, baseUrl, pathname) {
+  const failures = [];
+  const events = [];
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.route("**/api/event", async (route) => {
+    const data = route.request().postData() || "{}";
+    try {
+      events.push(JSON.parse(data));
+    } catch {
+      failures.push(`${pathname}:event_invalid_json`);
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: true }) });
+  });
+  await page.route("**/api/subscribe", async (route) => {
+    await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ success: false }) });
+  });
+  await page.goto(`${baseUrl}${pathname}`, { waitUntil: "domcontentloaded", timeout: 45000 });
+  await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+
+  for (const selector of [
+    "[data-open-subscribe]",
+    "a.book-link",
+    "[data-share-fursay]",
+    "[data-copy-sample-link]",
+    "[data-product-interest]",
+  ]) {
+    const clicked = await clickVisible(page, selector);
+    if (!clicked) failures.push(`${pathname}:missing_click_target:${selector}`);
+    await page.waitForTimeout(160);
+  }
+
+  const eventNames = new Set(events.map((event) => event.event));
+  for (const name of REQUIRED_EVENTS) {
+    if (!eventNames.has(name)) failures.push(`${pathname}:missing_event:${name}`);
+  }
+  const privateValues = privateNeedles(events);
+  if (privateValues.length) failures.push(`${pathname}:private_value_in_events:${privateValues.join(",")}`);
+  await page.close();
+  return { path: pathname, ok: failures.length === 0, failures, eventCount: events.length, events: [...eventNames] };
+}
+
+async function main() {
+  const args = parseArgs();
+  await mkdir(args.outDir, { recursive: true });
+  const localServer = args.baseUrl ? null : await startServer();
+  const effectiveBaseUrl = args.baseUrl || localServer.baseUrl;
+  const conversionHealth = await readJson(args.baseUrl, "/conversion-health.json");
+  const release = await readJson(args.baseUrl, "/release.json");
+  const failures = [];
+  if (conversionHealth.measurement?.anonymousEventEndpoint !== "https://fursay.com/api/event") failures.push("bad_event_endpoint");
+  if (conversionHealth.measurement?.piiAllowed !== false) failures.push("pii_allowed_not_false");
+  if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
+  for (const name of REQUIRED_EVENTS) {
+    if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);
+  }
+
+  const browser = await chromium.launch({ headless: true });
+  const pages = [];
+  try {
+    for (const pathname of PAGES) pages.push(await checkPage(browser, effectiveBaseUrl, pathname));
+  } finally {
+    await browser.close();
+    if (localServer) await new Promise((resolveClose) => localServer.server.close(resolveClose));
+  }
+  failures.push(...pages.flatMap((page) => page.failures));
+  const report = {
+    ok: failures.length === 0,
+    mode: args.baseUrl ? "live" : "local",
+    baseUrl: args.baseUrl || "",
+    failures,
+    pages,
+    conversionHealth,
+  };
+  await writeFile(resolve(args.outDir, "conversion-health-contract.json"), JSON.stringify(report, null, 2) + "\n");
+  console.log(JSON.stringify({ ok: report.ok, mode: report.mode, outDir: args.outDir, failed: failures.length, pages: pages.length }, null, 2));
+  if (!report.ok) process.exit(1);
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});

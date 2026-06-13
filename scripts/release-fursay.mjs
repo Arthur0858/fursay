@@ -137,6 +137,7 @@ function writeReleaseManifest() {
       trafficLaunchPage: "https://fursay.com/traffic-launch",
       linksManifest: "https://fursay.com/links.json",
       linksPage: "https://fursay.com/links",
+      conversionHealthManifest: "https://fursay.com/conversion-health.json",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -176,6 +177,7 @@ function writeReleaseManifest() {
       "scripts/check-noor-list-activation.mjs",
       "scripts/check-localized-cta-contract.mjs",
       "scripts/check-event-tracking-contract.mjs",
+      "scripts/check-conversion-health-contract.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-semantic-funnel-contract.mjs",
@@ -194,6 +196,9 @@ function writeReleaseManifest() {
       "scripts/check-head-metadata.mjs",
       "scripts/check-accessibility-contract.mjs",
       "scripts/check-discovery-contract.mjs",
+      "scripts/check-content-growth-contract.mjs",
+      "scripts/check-monetization-interest-contract.mjs",
+      "scripts/check-noor-subscriber-readiness.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
       "scripts/check-doc-manifest-drift.mjs",
@@ -216,6 +221,10 @@ function writeReleaseManifest() {
       eventTrackingPages: 9,
       affiliateEventTrackingPages: 9,
       eventTrackingSubmitPages: 3,
+      anonymousConversionEvents: 12,
+      latestStoryEntries: 12,
+      noorLeadMagnetPages: 3,
+      productInterestLinks: 18,
       webVitalsChecks: 18,
       cacheHeaderChecks: 57,
       badAuditCount: 0,
@@ -231,6 +240,7 @@ function writeReleaseManifest() {
   writeTrafficLaunchKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
+  writeConversionHealth(siteDir, source);
   writeSiteHealthManifest(siteDir);
 }
 
@@ -1079,7 +1089,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce1.js"></script>
+  <script src="/js/site-shared-20260613-commerce2.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1228,6 +1238,70 @@ function writeShortlinkManifest(siteDir, source) {
   writeFileSync(resolve(siteDir, "shortlinks.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
+function writeConversionHealth(siteDir, source) {
+  const release = readJson(resolve(siteDir, "release.json"));
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    measurement: {
+      anonymousEventEndpoint: "https://fursay.com/api/event",
+      piiAllowed: false,
+      subscribePayloadCompatibility: "email/groups/attribution unchanged",
+      externalAnalytics: "optional",
+      fallbackReviewSurface: "Cloudflare Worker logs",
+    },
+    events: [
+      "fursay_subscribe_open_click",
+      "fursay_subscribe_modal_open",
+      "fursay_subscribe_submit_attempt",
+      "fursay_subscribe_submit_success",
+      "fursay_subscribe_submit_failure",
+      "fursay_affiliate_click",
+      "fursay_share_click",
+      "fursay_pack_link_copy_click",
+      "fursay_sample_link_copy_click",
+      "fursay_public_share_copy_click",
+      "fursay_kit_copy_click",
+      "fursay_product_interest_click",
+    ],
+    coverage: {
+      publicStoryPages: release.liveExpectations.pages,
+      subscribeOpenPages: release.liveExpectations.eventTrackingPages,
+      affiliateClickPages: release.liveExpectations.affiliateEventTrackingPages,
+      shareOrCopyPages: release.liveExpectations.pages,
+      productInterestPages: release.liveExpectations.pages,
+      submitAttemptPages: release.liveExpectations.eventTrackingSubmitPages,
+    },
+    growth: {
+      latestStoryEntries: release.liveExpectations.latestStoryEntries,
+      noorLeadMagnetPages: release.liveExpectations.noorLeadMagnetPages,
+      noorReadinessStatus: "safe_wait_subscriber_empty",
+      productInterestLinks: release.liveExpectations.productInterestLinks,
+    },
+    monetization: {
+      affiliate: {
+        amazonLinks: release.liveExpectations.amazonAffiliateLinks,
+        amazonTag: release.liveExpectations.amazonAffiliateTag,
+        booksLinks: release.liveExpectations.booksAffiliateLinks,
+        booksAffiliateId: release.liveExpectations.booksAffiliateId,
+        localePolicy: "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon",
+      },
+      ownedProducts: {
+        checkoutEnabled: false,
+        interestOnly: true,
+        products: [
+          { id: "koko-printable-pack", pack: "koko", label: "Koko printable pack interest list" },
+          { id: "noor-worksheet-pack", pack: "noor", label: "Noor 3-minute worksheet interest list" },
+        ],
+      },
+    },
+  };
+  writeFileSync(resolve(siteDir, "conversion-health.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
 function toOriginUrl(route) {
   return `https://fursay.com${route}`;
 }
@@ -1274,6 +1348,7 @@ function writeSiteHealthManifest(siteDir) {
   const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
   const campaigns = readJson(resolve(siteDir, "campaigns.json"));
   const shortlinks = readJson(resolve(siteDir, "shortlinks.json"));
+  const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
   const current = readJson(resolve(siteDir, "site-health.json"));
   const manifest = {
     ...current,
@@ -1284,6 +1359,7 @@ function writeSiteHealthManifest(siteDir) {
       "/data/site-structure.json",
       "/campaigns.json",
       "/shortlinks.json",
+      "/conversion-health.json",
     ],
     routes: {
       ...current.routes,
@@ -1302,6 +1378,15 @@ function writeSiteHealthManifest(siteDir) {
     funnels: {
       koko: campaignHealth(campaigns, "koko"),
       noor: campaignHealth(campaigns, "noor"),
+    },
+    growth: conversionHealth.growth,
+    monetization: conversionHealth.monetization,
+    measurement: {
+      ...(current.measurement || {}),
+      subscriptionEndpoint: "/api/subscribe",
+      failClosed: true,
+      liveSmokeCallsMailerLite: false,
+      ...conversionHealth.measurement,
     },
     sharedAssets: siteStructure.sharedAssets,
   };
@@ -1431,7 +1516,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce1.js"></script>
+  <script src="/js/site-shared-20260613-commerce2.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -1532,7 +1617,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce1.js"></script>
+  <script src="/js/site-shared-20260613-commerce2.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
@@ -1550,6 +1635,7 @@ async function main() {
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
   run("node", ["--check", "scripts/check-event-tracking-contract.mjs"]);
+  run("node", ["--check", "scripts/check-conversion-health-contract.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-semantic-funnel-contract.mjs"]);
@@ -1568,6 +1654,9 @@ async function main() {
   run("node", ["--check", "scripts/check-head-metadata.mjs"]);
   run("node", ["--check", "scripts/check-accessibility-contract.mjs"]);
   run("node", ["--check", "scripts/check-discovery-contract.mjs"]);
+  run("node", ["--check", "scripts/check-content-growth-contract.mjs"]);
+  run("node", ["--check", "scripts/check-monetization-interest-contract.mjs"]);
+  run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
   run("node", ["--check", "scripts/check-doc-manifest-drift.mjs"]);
@@ -1585,6 +1674,7 @@ async function main() {
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
   run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
   run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
+  run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
   run("node", ["scripts/check-semantic-funnel-contract.mjs", "--out-dir", join(outRoot, "semantic-funnel-local")]);
@@ -1602,6 +1692,9 @@ async function main() {
   run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
   run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
+  run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
+  run("node", ["scripts/check-monetization-interest-contract.mjs", "--out-dir", join(outRoot, "monetization-interest-local")]);
+  run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
   run("node", ["scripts/check-doc-manifest-drift.mjs", "--out-dir", join(outRoot, "doc-manifest-drift-local")]);
@@ -1620,6 +1713,7 @@ async function main() {
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
     run("node", ["scripts/check-localized-cta-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "localized-cta-live")]);
     run("node", ["scripts/check-event-tracking-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-tracking-live")]);
+    run("node", ["scripts/check-conversion-health-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "conversion-health-live")]);
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-semantic-funnel-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "semantic-funnel-live")]);
@@ -1637,6 +1731,9 @@ async function main() {
     run("node", ["scripts/check-head-metadata.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "head-metadata-live")]);
     run("node", ["scripts/check-accessibility-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "accessibility-live")]);
     run("node", ["scripts/check-discovery-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "discovery-live")]);
+    run("node", ["scripts/check-content-growth-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-growth-live")]);
+    run("node", ["scripts/check-monetization-interest-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-interest-live")]);
+    run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-readiness-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);
     run("node", ["scripts/check-doc-manifest-drift.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "doc-manifest-drift-live")]);

@@ -12,6 +12,7 @@ const JSON_MANIFESTS = [
   "/share-kit.json",
   "/traffic-launch.json",
   "/links.json",
+  "/conversion-health.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];

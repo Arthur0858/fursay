@@ -73,6 +73,7 @@ Technical discovery:
 - Share kit: https://fursay.com/share-kit.json
 - Traffic launch kit: https://fursay.com/traffic-launch.json
 - Social profile links manifest: https://fursay.com/links.json
+- Conversion health manifest: https://fursay.com/conversion-health.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready
 - Local release gate: npm run check

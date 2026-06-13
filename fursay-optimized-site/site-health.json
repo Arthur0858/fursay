@@ -163,10 +163,13 @@
     }
   },
   "measurement": {
+    "anonymousEventEndpoint": "https://fursay.com/api/event",
+    "piiAllowed": false,
+    "subscribePayloadCompatibility": "email/groups/attribution unchanged",
+    "externalAnalytics": "optional",
+    "fallbackReviewSurface": "Cloudflare Worker logs",
     "subscriptionEndpoint": "/api/subscribe",
-    "payloadCompatibility": "email/groups/attribution",
     "failClosed": true,
-    "submitApiSmoke": "intercepted-only",
     "liveSmokeCallsMailerLite": false
   },
   "trafficSurfaces": [
@@ -270,7 +273,7 @@
       "/css/picture-world-tools-20260613-ops2.css"
     ],
     "js": [
-      "/js/site-shared-20260613-commerce1.js"
+      "/js/site-shared-20260613-commerce2.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
@@ -281,6 +284,38 @@
   "generatedFrom": [
     "/data/site-structure.json",
     "/campaigns.json",
-    "/shortlinks.json"
-  ]
+    "/shortlinks.json",
+    "/conversion-health.json"
+  ],
+  "growth": {
+    "latestStoryEntries": 12,
+    "noorLeadMagnetPages": 3,
+    "noorReadinessStatus": "safe_wait_subscriber_empty",
+    "productInterestLinks": 18
+  },
+  "monetization": {
+    "affiliate": {
+      "amazonLinks": 25,
+      "amazonTag": "parenttechche-20",
+      "booksLinks": 12,
+      "booksAffiliateId": "arthur0858",
+      "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
+    },
+    "ownedProducts": {
+      "checkoutEnabled": false,
+      "interestOnly": true,
+      "products": [
+        {
+          "id": "koko-printable-pack",
+          "pack": "koko",
+          "label": "Koko printable pack interest list"
+        },
+        {
+          "id": "noor-worksheet-pack",
+          "pack": "noor",
+          "label": "Noor 3-minute worksheet interest list"
+        }
+      ]
+    }
+  }
 }
