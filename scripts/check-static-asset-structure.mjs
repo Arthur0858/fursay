@@ -5,6 +5,7 @@ const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const EXPECTED_CSS = [
   "picture-book-base.css",
+  "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260612-traffic10.css",
 ];
 const EXPECTED_JS = [

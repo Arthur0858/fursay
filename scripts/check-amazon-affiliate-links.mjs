@@ -3,16 +3,17 @@ import { resolve } from "node:path";
 
 const DEFAULT_OUT = "/tmp/fursay-amazon-affiliate-links";
 const AMAZON_TAG = "parenttechche-20";
+const BOOKS_AFFILIATE_ID = "arthur0858";
 const PAGES = [
-  "/",
-  "/zh/",
-  "/ar/",
-  "/koko",
-  "/zh/koko",
-  "/ar/koko",
-  "/arabic",
-  "/zh/arabic",
-  "/ar/arabic",
+  { path: "/", market: "amazon" },
+  { path: "/zh/", market: "books" },
+  { path: "/ar/", market: "amazon" },
+  { path: "/koko", market: "amazon" },
+  { path: "/zh/koko", market: "books" },
+  { path: "/ar/koko", market: "amazon" },
+  { path: "/arabic", market: "amazon" },
+  { path: "/zh/arabic", market: "books" },
+  { path: "/ar/arabic", market: "amazon" },
 ];
 
 function parseArgs() {
@@ -60,31 +61,51 @@ function pageDisclosureOk(html) {
   return /commission|affiliate|sponsored|聯盟|回饋|أمازون|تابعة|عمولة/i.test(html);
 }
 
-function checkPage(pathname, html, status) {
+function checkPage(page, html, status) {
   const failures = [];
-  const links = [];
+  const amazonLinks = [];
+  const booksLinks = [];
+  const pathname = page.path;
   if (status !== 200) failures.push(`bad_status:${status}`);
-  const anchors = html.match(/<a\b[^>]*href=["']https:\/\/www\.amazon\.com\/dp\/[^"']+["'][^>]*>/gi) || [];
-  for (const anchor of anchors) {
+  const amazonAnchors = html.match(/<a\b[^>]*href=["']https:\/\/www\.amazon\.com\/dp\/[^"']+["'][^>]*>/gi) || [];
+  const booksAnchors = html.match(/<a\b[^>]*href=["']https:\/\/www\.books\.com\.tw\/exep\/assp\.php\/[^"']+["'][^>]*>/gi) || [];
+  for (const anchor of amazonAnchors) {
     const href = attr(anchor, "href");
     const rel = attr(anchor, "rel").split(/\s+/).filter(Boolean);
     const className = attr(anchor, "class");
     const url = new URL(href);
     const tag = url.searchParams.get("tag") || "";
-    links.push({ href, tag, rel, className });
+    amazonLinks.push({ href, tag, rel, className });
     if (tag !== AMAZON_TAG) failures.push(`amazon_missing_tag:${href}`);
     if (!rel.includes("noopener")) failures.push(`amazon_missing_noopener:${href}`);
     if (!rel.includes("sponsored")) failures.push(`amazon_missing_sponsored:${href}`);
     if (!className.split(/\s+/).includes("book-link")) failures.push(`amazon_missing_book_link_class:${href}`);
   }
-  if (links.length && !pageDisclosureOk(html)) failures.push("amazon_missing_affiliate_disclosure");
+  for (const anchor of booksAnchors) {
+    const href = attr(anchor, "href");
+    const rel = attr(anchor, "rel").split(/\s+/).filter(Boolean);
+    const className = attr(anchor, "class");
+    booksLinks.push({ href, rel, className });
+    if (!href.includes(`/assp.php/${BOOKS_AFFILIATE_ID}/`)) failures.push(`books_missing_affiliate_id:${href}`);
+    if (!href.includes("utm_source=arthur0858")) failures.push(`books_missing_utm_source:${href}`);
+    if (!rel.includes("noopener")) failures.push(`books_missing_noopener:${href}`);
+    if (!rel.includes("sponsored")) failures.push(`books_missing_sponsored:${href}`);
+    if (!className.split(/\s+/).includes("book-link")) failures.push(`books_missing_book_link_class:${href}`);
+  }
+  if (page.market === "books" && amazonLinks.length) failures.push(`zh_page_must_not_use_amazon:${amazonLinks.length}`);
+  if (page.market === "books" && !booksLinks.length) failures.push("zh_page_missing_books_links");
+  if (page.market === "amazon" && booksLinks.length) failures.push(`non_zh_page_must_not_use_books:${booksLinks.length}`);
+  if (page.market === "amazon" && !amazonLinks.length) failures.push("non_zh_page_missing_amazon_links");
+  if ((amazonLinks.length || booksLinks.length) && !pageDisclosureOk(html)) failures.push("affiliate_missing_disclosure");
   return {
     path: pathname,
     ok: failures.length === 0,
     failures,
     data: {
-      amazonLinks: links.length,
-      tags: [...new Set(links.map((link) => link.tag).filter(Boolean))],
+      market: page.market,
+      amazonLinks: amazonLinks.length,
+      booksLinks: booksLinks.length,
+      tags: [...new Set(amazonLinks.map((link) => link.tag).filter(Boolean))],
     },
   };
 }
@@ -92,20 +113,23 @@ function checkPage(pathname, html, status) {
 async function main() {
   const args = parseArgs();
   const results = [];
-  for (const pathname of PAGES) {
-    const page = await readPage(pathname, args.baseUrl);
-    results.push(checkPage(pathname, page.html, page.status));
+  for (const item of PAGES) {
+    const page = await readPage(item.path, args.baseUrl);
+    results.push(checkPage(item, page.html, page.status));
   }
   await mkdir(args.outDir, { recursive: true });
   await writeFile(resolve(args.outDir, "amazon-affiliate-links.json"), JSON.stringify(results, null, 2) + "\n");
   const failed = results.filter((result) => !result.ok);
   const totalLinks = results.reduce((sum, result) => sum + result.data.amazonLinks, 0);
+  const totalBooksLinks = results.reduce((sum, result) => sum + result.data.booksLinks, 0);
   const report = {
     ok: failed.length === 0,
     outDir: args.outDir,
     failed: failed.length,
-    totalLinks,
-    tag: AMAZON_TAG,
+    amazonLinks: totalLinks,
+    booksLinks: totalBooksLinks,
+    amazonTag: AMAZON_TAG,
+    booksAffiliateId: BOOKS_AFFILIATE_ID,
   };
   console.log(JSON.stringify(report, null, 2));
   if (!report.ok) process.exit(1);

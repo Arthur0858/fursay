@@ -174,6 +174,8 @@
     "bio_shortlink",
     "bio_profile_copy",
     "amazon_affiliate_book_links",
+    "books_affiliate_book_links",
+    "locale_market_affiliate_split",
     "amazon_affiliate_disclosure",
     "social_profile_links_page",
     "social_profile_links_manifest",
@@ -226,6 +228,8 @@
     "modal_preselect_matches_pack",
     "social_links_primary_cta_preselects_pack",
     "amazon_affiliate_links_use_parenttechche_20",
+    "zh_pages_use_books_affiliate",
+    "non_zh_pages_use_amazon_affiliate",
     "shortlink_redirect_keeps_utm",
     "shortlink_subscribe_attribution",
     "traffic_launch_example_redirect_keeps_attribution",
@@ -245,6 +249,7 @@
   "sharedAssets": {
     "css": [
       "/css/picture-book-base.css",
+      "/css/storybook-skin-20260613-inline1.css",
       "/css/picture-world-shared-20260612-traffic10.css"
     ],
     "js": [
