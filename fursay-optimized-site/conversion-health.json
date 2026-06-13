@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "1f9c7ab",
-    "summary": "Sync Fursay event fallback manifest"
+    "commit": "1fa17ed",
+    "summary": "Add Fursay event analytics report contract"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
