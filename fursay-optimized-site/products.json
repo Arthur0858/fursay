@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "1891730",
-    "summary": "Sync Noor greetings release manifests"
+    "commit": "7f10907",
+    "summary": "Route latest story cards to episode guides"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
