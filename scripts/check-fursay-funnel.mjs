@@ -1275,7 +1275,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.amazonAffiliateTag !== "parenttechche-20") failures.push(`release_amazon_affiliate_tag:${release.liveExpectations?.amazonAffiliateTag || "none"}`);
   if (release.liveExpectations?.booksAffiliateLinks !== 12) failures.push(`release_books_affiliate_link_expectation:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
   if (release.liveExpectations?.booksAffiliateId !== "arthur0858") failures.push(`release_books_affiliate_id:${release.liveExpectations?.booksAffiliateId || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 52) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 53) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-static-asset-structure.mjs")) failures.push("release_missing_static_asset_structure_gate");
@@ -1739,6 +1739,9 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-shared-20260612-traffic10.css")) {
     failures.push("site_health_missing_current_shared_css");
+  }
+  if (!siteHealth.sharedAssets?.css?.includes("/css/picture-book-base-20260613-base1.css")) {
+    failures.push("site_health_missing_picture_book_base_css");
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/storybook-skin-20260613-inline1.css")) {
     failures.push("site_health_missing_storybook_skin_css");

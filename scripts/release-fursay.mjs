@@ -188,7 +188,7 @@ function writeReleaseManifest() {
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 12,
       booksAffiliateId: "arthur0858",
-      cacheHeaderChecks: 52,
+      cacheHeaderChecks: 53,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -286,7 +286,7 @@ function writeDeployReadinessPage(siteDir, manifest) {
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/deploy-readiness">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
 </head>
 <body class="picture-world creator-kit-page deploy-readiness-page">
@@ -642,7 +642,7 @@ function writeLinksPage(siteDir, links) {
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/links">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
 </head>
 <body class="picture-world creator-kit-page social-links-page">
@@ -1008,7 +1008,7 @@ ${trafficLaunchChannelRows(item.channels)}
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/traffic-launch">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
 </head>
 <body class="picture-world creator-kit-page traffic-launch-page">
@@ -1289,7 +1289,7 @@ function writeCreatorKitPage(siteDir, kit) {
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/creator-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
 </head>
 <body class="picture-world creator-kit-page">
@@ -1395,7 +1395,7 @@ function writeShareKitPage(siteDir, kit) {
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/share-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/picture-book-base.css">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260612-traffic10.css">
 </head>
 <body class="picture-world creator-kit-page share-kit-page">

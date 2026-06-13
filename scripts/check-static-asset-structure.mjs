@@ -12,7 +12,7 @@ const EXPECTED_CSS = [
   "koko-zh-page-20260613-inline1.css",
   "noor-ltr-page-20260613-inline1.css",
   "noor-rtl-page-20260613-inline1.css",
-  "picture-book-base.css",
+  "picture-book-base-20260613-base1.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260612-traffic10.css",
 ];

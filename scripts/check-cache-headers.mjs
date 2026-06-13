@@ -23,6 +23,12 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
+    path: "/css/picture-book-base-20260613-base1.css",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "text/css",
+  },
+  {
     path: "/css/storybook-skin-20260613-inline1.css",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],

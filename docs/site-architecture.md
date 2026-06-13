@@ -4,7 +4,7 @@
 
 - Cloudflare Worker serves static assets from `fursay-optimized-site`.
 - Clean URLs are canonical: `/koko`, `/zh/koko`, `/ar/koko`; legacy `.html` URLs redirect permanently.
-- Shared visual layers live in `/css/picture-book-base.css`, `/css/storybook-skin-20260613-inline1.css`, and `/css/picture-world-shared-20260612-traffic10.css`.
+- Shared visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, and `/css/picture-world-shared-20260612-traffic10.css`.
 - Home page-specific shared styles live in `/css/home-en-page-20260613-inline1.css`, `/css/home-zh-page-20260613-inline1.css`, and `/css/home-ar-page-20260613-inline1.css`.
 - Koko page-specific shared styles live in `/css/koko-en-page-20260613-inline1.css`, `/css/koko-zh-page-20260613-inline1.css`, and `/css/koko-ar-page-20260613-inline1.css`.
 - Noor LTR page-specific shared styles live in `/css/noor-ltr-page-20260613-inline1.css` for `/arabic` and `/zh/arabic`.
