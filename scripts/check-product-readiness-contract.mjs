@@ -1,5 +1,8 @@
+import { createServer } from "node:http";
+import { existsSync, statSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { extname, resolve } from "node:path";
+import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-product-readiness-contract";
@@ -11,6 +14,7 @@ const REQUIRED_GATE_REQUIREMENTS = [
   "refund_support_copy",
   "checkout_tracking_contract",
 ];
+const PRIVATE_NEEDLES = ["@", "email", "name", "phone", "address", "token", "password", "subscriber"];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -27,6 +31,68 @@ function localFile(pathname) {
   if (/\.[^/]+$/.test(pathname)) return pathname.slice(1);
   if (pathname.endsWith("/")) return `${pathname.slice(1)}index.html`;
   return `${pathname.slice(1)}.html`;
+}
+
+function contentType(path) {
+  const ext = extname(path).toLowerCase();
+  if (ext === ".html") return "text/html; charset=utf-8";
+  if (ext === ".js") return "text/javascript; charset=utf-8";
+  if (ext === ".css") return "text/css; charset=utf-8";
+  if (ext === ".json") return "application/json; charset=utf-8";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".avif") return "image/avif";
+  if (ext === ".png") return "image/png";
+  if (ext === ".svg") return "image/svg+xml";
+  return "application/octet-stream";
+}
+
+function resolveAsset(pathname) {
+  const clean = pathname === "/" ? "/index.html" : pathname;
+  const candidates = [
+    resolve(SITE_DIR, `.${clean}/index.html`),
+    resolve(SITE_DIR, `.${clean}.html`),
+    resolve(SITE_DIR, `.${clean}`),
+  ];
+  return candidates.find((candidate) => (
+    candidate.startsWith(SITE_DIR)
+    && existsSync(candidate)
+    && statSync(candidate).isFile()
+  ));
+}
+
+function startServer() {
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url || "/", "http://127.0.0.1");
+      if (url.pathname === "/api/event") {
+        response.writeHead(204, { "content-type": "application/json; charset=utf-8" });
+        response.end("");
+        return;
+      }
+      if (url.pathname === "/api/subscribe") {
+        response.writeHead(503, { "content-type": "application/json; charset=utf-8" });
+        response.end(JSON.stringify({ success: false, message: "contract stub" }));
+        return;
+      }
+      const asset = resolveAsset(url.pathname);
+      if (!asset) {
+        response.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+        response.end("not found");
+        return;
+      }
+      response.writeHead(200, { "content-type": contentType(asset) });
+      response.end(await readFile(asset));
+    } catch (error) {
+      response.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+      response.end(error instanceof Error ? error.message : String(error));
+    }
+  });
+  return new Promise((resolveServer) => {
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      resolveServer({ server, baseUrl: `http://127.0.0.1:${address.port}` });
+    });
+  });
 }
 
 async function readText(baseUrl, pathname) {
@@ -53,9 +119,106 @@ function externalPaymentHrefs(html) {
     .filter((href) => /gumroad|stripe|ko-fi|paypal|buy/i.test(href));
 }
 
+function payloadHasPrivateNeedle(payload) {
+  const text = JSON.stringify(payload || {}).toLowerCase();
+  return PRIVATE_NEEDLES.filter((needle) => text.includes(needle));
+}
+
+async function clickProductInterest(page, pack) {
+  return page.evaluate((targetPack) => {
+    const button = document.querySelector(`[data-product-interest="${targetPack}"]`);
+    if (!button) return null;
+    button.click();
+    return {
+      pack: button.getAttribute("data-product-interest") || "",
+      stage: button.getAttribute("data-interest-stage") || "",
+      signupSource: button.getAttribute("data-signup-source") || "",
+    };
+  }, pack);
+}
+
+async function checkProductInteraction(baseUrl) {
+  const failures = [];
+  const checks = [];
+  const browser = await chromium.launch({ headless: true });
+  try {
+    for (const pack of ["koko", "noor"]) {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      const eventPayloads = [];
+      let subscribeApiCalls = 0;
+      await page.route("**/api/event", async (route) => {
+        try {
+          eventPayloads.push(JSON.parse(route.request().postData() || "{}"));
+        } catch {
+          failures.push(`product_interaction:${pack}:event_payload_invalid_json`);
+        }
+        await route.fulfill({ status: 204, body: "" });
+      });
+      await page.route("**/api/subscribe", async (route) => {
+        subscribeApiCalls += 1;
+        await route.fulfill({
+          status: 503,
+          contentType: "application/json; charset=utf-8",
+          body: JSON.stringify({ success: false, message: "contract stub" }),
+        });
+      });
+      await page.goto(`${baseUrl}/products?utm_source=contract&utm_medium=browser&utm_campaign=product_interest_validation&utm_content=${pack}_interaction`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45000,
+      });
+      await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+      const clickMeta = await clickProductInterest(page, pack);
+      if (!clickMeta) failures.push(`product_interaction:${pack}:missing_button`);
+      await page.waitForTimeout(250);
+      const state = await page.evaluate(() => ({
+        events: window.fursayEvents || [],
+        dataLayer: window.dataLayer || [],
+        modalOpen: document.querySelector("#subscribeModal")?.classList.contains("open") || false,
+        checkedGroups: [...document.querySelectorAll('#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')]
+          .map((input) => input.value === "arabic" ? "noor" : input.value),
+        modalSignupSource: document.querySelector("#subscribeModal")?.dataset.signupSource || "",
+        modalPreselect: document.querySelector("#subscribeModal")?.dataset.preselect || "",
+      }));
+      const productEvent = state.events.find((event) => event.event === "fursay_product_interest_click");
+      const modalEvent = state.events.find((event) => event.event === "fursay_subscribe_modal_open");
+      if (!productEvent) failures.push(`product_interaction:${pack}:missing_product_event`);
+      if (!modalEvent) failures.push(`product_interaction:${pack}:missing_modal_event`);
+      if (!state.dataLayer.some((event) => event.event === "fursay_product_interest_click")) failures.push(`product_interaction:${pack}:data_layer_missing_product_event`);
+      if (!state.modalOpen) failures.push(`product_interaction:${pack}:modal_not_open`);
+      if (!state.checkedGroups.includes(pack)) failures.push(`product_interaction:${pack}:modal_not_preselected`);
+      if (state.modalPreselect !== pack) failures.push(`product_interaction:${pack}:modal_preselect:${state.modalPreselect || "none"}`);
+      if (productEvent?.detail?.path !== "/products") failures.push(`product_interaction:${pack}:event_path:${productEvent?.detail?.path || "none"}`);
+      if (productEvent?.detail?.product_interest !== pack) failures.push(`product_interaction:${pack}:event_interest:${productEvent?.detail?.product_interest || "none"}`);
+      if (productEvent?.detail?.interest_stage !== "waitlist") failures.push(`product_interaction:${pack}:event_stage:${productEvent?.detail?.interest_stage || "none"}`);
+      if (productEvent?.detail?.signup_source !== clickMeta?.signupSource) failures.push(`product_interaction:${pack}:event_source:${productEvent?.detail?.signup_source || "none"}`);
+      if (modalEvent?.detail?.pack !== pack) failures.push(`product_interaction:${pack}:modal_event_pack:${modalEvent?.detail?.pack || "none"}`);
+      if (state.modalSignupSource !== clickMeta?.signupSource) failures.push(`product_interaction:${pack}:modal_source:${state.modalSignupSource || "none"}`);
+      if (subscribeApiCalls !== 0) failures.push(`product_interaction:${pack}:api_called_before_submit:${subscribeApiCalls}`);
+      const privateHits = payloadHasPrivateNeedle(eventPayloads);
+      if (privateHits.length) failures.push(`product_interaction:${pack}:event_payload_private_needles:${privateHits.join(",")}`);
+      if (!eventPayloads.some((payload) => payload.event === "fursay_product_interest_click")) failures.push(`product_interaction:${pack}:api_event_missing_product_interest`);
+      checks.push({
+        pack,
+        clickMeta,
+        modalOpen: state.modalOpen,
+        checkedGroups: state.checkedGroups,
+        events: state.events.map((event) => event.event),
+        apiEvents: eventPayloads.map((payload) => payload.event),
+        subscribeApiCalls,
+      });
+      await page.close();
+    }
+  } finally {
+    await browser.close();
+  }
+  return { failures, checks };
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
+  let localServer = null;
+  let interaction = null;
   const html = await readText(args.baseUrl, "/products");
   const products = await readJson(args.baseUrl, "/products.json");
   const release = await readJson(args.baseUrl, "/release.json");
@@ -127,6 +290,18 @@ async function main() {
   if (siteHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("site_health_checkout_enabled");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
 
+  try {
+    if (args.baseUrl) {
+      interaction = await checkProductInteraction(args.baseUrl);
+    } else {
+      localServer = await startServer();
+      interaction = await checkProductInteraction(localServer.baseUrl);
+    }
+    failures.push(...interaction.failures);
+  } finally {
+    if (localServer) await new Promise((resolveClose) => localServer.server.close(resolveClose));
+  }
+
   await mkdir(args.outDir, { recursive: true });
   const report = {
     ok: failures.length === 0,
@@ -134,6 +309,7 @@ async function main() {
     baseUrl: args.baseUrl || "",
     failures,
     productButtons: productButtons.map((button) => button.pack),
+    interaction: interaction?.checks || [],
     products: products.products || [],
     checkoutGate: products.checkoutGate || {},
   };

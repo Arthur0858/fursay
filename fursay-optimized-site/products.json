@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "540339f",
-    "summary": "Add Fursay product traffic entry from links"
+    "commit": "3b2a819",
+    "summary": "Sync Fursay product traffic manifests"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
