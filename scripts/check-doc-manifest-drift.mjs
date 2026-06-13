@@ -5,6 +5,12 @@ import { resolve } from "node:path";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-doc-manifest-drift";
 const PLATFORM = "cloudflare-workers-static-assets";
+const ORIGIN = "https://fursay.com";
+const SITE_HEALTH_GENERATED_FROM = [
+  "/data/site-structure.json",
+  "/campaigns.json",
+  "/shortlinks.json",
+];
 const DOCS = [
   "docs/site-architecture.md",
   "docs/cloudflare-deploy-runbook.md",
@@ -66,6 +72,25 @@ function arrayDiff(expected, actual) {
   return expected.filter((item) => !actualSet.has(item));
 }
 
+function exactArrayFailures(label, expected, actual) {
+  const failures = [];
+  if (expected.length !== actual.length) failures.push(`${label}_count:${actual.length}!=${expected.length}`);
+  for (const item of arrayDiff(expected, actual)) failures.push(`${label}_missing:${item}`);
+  for (const item of arrayDiff(actual, expected)) failures.push(`${label}_extra:${item}`);
+  return failures;
+}
+
+function localizedRouteUrls(siteStructure, key) {
+  const page = siteStructure.pages?.find((item) => item.key === key);
+  return Object.values(page?.localizedRoutes || {}).map((route) => `${ORIGIN}${route}`);
+}
+
+function shortlinkUrls(shortlinks, matcher) {
+  return normalizeArray(shortlinks.routes)
+    .filter(matcher)
+    .map((route) => route.shortlink);
+}
+
 function findVersionedAssetRefs(text) {
   return [...text.matchAll(/\/(?:css|js)\/[a-z0-9-]+-\d{8}-[a-z0-9]+[a-z0-9-]*\.(?:css|js)/gi)].map((match) => match[0]);
 }
@@ -83,6 +108,8 @@ function releaseScriptQualityGates(source) {
 async function checkLocalDocs(failures, details) {
   const siteStructure = await readWorkspaceJson("fursay-optimized-site/data/site-structure.json");
   const siteHealth = await readWorkspaceJson("fursay-optimized-site/site-health.json");
+  const campaigns = await readWorkspaceJson("fursay-optimized-site/campaigns.json");
+  const shortlinks = await readWorkspaceJson("fursay-optimized-site/shortlinks.json");
   const release = await readWorkspaceJson("fursay-optimized-site/release.json");
   const sharedCss = normalizeArray(siteStructure.sharedAssets?.css);
   const sharedJs = normalizeArray(siteStructure.sharedAssets?.js);
@@ -140,6 +167,30 @@ async function checkLocalDocs(failures, details) {
   if (release.assets?.js !== sharedJs[0]) failures.push(`release_bad_shared_js:${release.assets?.js || "none"}`);
   if (siteHealth.platform !== PLATFORM) failures.push(`site_health_platform:${siteHealth.platform || "none"}`);
   if (release.platform !== PLATFORM) failures.push(`release_platform:${release.platform || "none"}`);
+
+  failures.push(...exactArrayFailures("site_health_generated_from", SITE_HEALTH_GENERATED_FROM, normalizeArray(siteHealth.generatedFrom)));
+  failures.push(...exactArrayFailures("site_health_home", localizedRouteUrls(siteStructure, "home"), normalizeArray(siteHealth.routes?.home)));
+  failures.push(...exactArrayFailures("site_health_story_worlds", [
+    ...localizedRouteUrls(siteStructure, "koko"),
+    ...localizedRouteUrls(siteStructure, "arabic"),
+  ], normalizeArray(siteHealth.routes?.storyWorlds)));
+  failures.push(...exactArrayFailures("site_health_join", shortlinkUrls(shortlinks, (route) => route.path.startsWith("/join/")), normalizeArray(siteHealth.routes?.join)));
+  failures.push(...exactArrayFailures("site_health_sample", shortlinkUrls(shortlinks, (route) => route.path.startsWith("/sample/")), normalizeArray(siteHealth.routes?.sample)));
+  failures.push(...exactArrayFailures("site_health_share", shortlinkUrls(shortlinks, (route) => route.path.startsWith("/share/")), normalizeArray(siteHealth.routes?.share)));
+  failures.push(...exactArrayFailures("site_health_bio", shortlinkUrls(shortlinks, (route) => route.path.startsWith("/bio/")), normalizeArray(siteHealth.routes?.bio)));
+  failures.push(...exactArrayFailures("site_health_creator", shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+$/.test(route.path)), normalizeArray(siteHealth.routes?.creator)));
+  failures.push(...exactArrayFailures("site_health_creator_placement", shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+\/[^/]+$/.test(route.path)), normalizeArray(siteHealth.routes?.creatorPlacement)));
+  for (const pack of ["koko", "noor"]) {
+    if (siteHealth.funnels?.[pack]?.campaign !== campaigns.campaigns?.[pack]?.campaign) {
+      failures.push(`site_health_funnel_campaign:${pack}:${siteHealth.funnels?.[pack]?.campaign || "none"}`);
+    }
+    if (siteHealth.funnels?.[pack]?.sample !== campaigns.campaigns?.[pack]?.shortlinks?.sample) {
+      failures.push(`site_health_funnel_sample:${pack}:${siteHealth.funnels?.[pack]?.sample || "none"}`);
+    }
+    if (siteHealth.funnels?.[pack]?.creator !== campaigns.campaigns?.[pack]?.shortlinks?.creator) {
+      failures.push(`site_health_funnel_creator:${pack}:${siteHealth.funnels?.[pack]?.creator || "none"}`);
+    }
+  }
 
   details.local = {
     docs,

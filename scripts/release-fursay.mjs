@@ -231,6 +231,7 @@ function writeReleaseManifest() {
   writeTrafficLaunchKit(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
+  writeSiteHealthManifest(siteDir);
 }
 
 function writeDeployReadinessManifest(siteDir, source) {
@@ -1225,6 +1226,86 @@ function writeShortlinkManifest(siteDir, source) {
     routes,
   };
   writeFileSync(resolve(siteDir, "shortlinks.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
+function toOriginUrl(route) {
+  return `https://fursay.com${route}`;
+}
+
+function localizedRouteUrls(siteStructure, key) {
+  const page = siteStructure.pages?.find((item) => item.key === key);
+  return Object.values(page?.localizedRoutes || {}).map(toOriginUrl);
+}
+
+function shortlinkUrls(shortlinks, matcher) {
+  return (shortlinks.routes || [])
+    .filter(matcher)
+    .map((route) => route.shortlink);
+}
+
+function campaignHealth(campaigns, pack) {
+  const campaign = campaigns.campaigns?.[pack] || {};
+  return {
+    status: campaign.status || "active",
+    primaryGoal: campaign.primaryGoal || "weekly_story_pack_subscribe",
+    campaign: campaign.campaign || "",
+    join: campaign.shortlinks?.join || "",
+    sample: campaign.shortlinks?.sample || "",
+    share: campaign.shortlinks?.share || "",
+    bio: campaign.shortlinks?.bio || "",
+    creator: campaign.shortlinks?.creator || "",
+    deepLink: pack === "koko"
+      ? "https://fursay.com/koko?subscribe=koko&utm_source=shortlink&utm_medium=direct&utm_campaign=koko_story_funnel&utm_content=join_koko"
+      : "https://fursay.com/arabic?subscribe=noor&utm_source=shortlink&utm_medium=direct&utm_campaign=noor_story_funnel&utm_content=join_noor",
+    trackedIntents: [
+      "subscribe_intent",
+      "entry_pack",
+      "modal_preselect",
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+    ],
+    ctaSources: campaign.ctaSources || [],
+  };
+}
+
+function writeSiteHealthManifest(siteDir) {
+  const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
+  const campaigns = readJson(resolve(siteDir, "campaigns.json"));
+  const shortlinks = readJson(resolve(siteDir, "shortlinks.json"));
+  const current = readJson(resolve(siteDir, "site-health.json"));
+  const manifest = {
+    ...current,
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    generatedFrom: [
+      "/data/site-structure.json",
+      "/campaigns.json",
+      "/shortlinks.json",
+    ],
+    routes: {
+      ...current.routes,
+      home: localizedRouteUrls(siteStructure, "home"),
+      storyWorlds: [
+        ...localizedRouteUrls(siteStructure, "koko"),
+        ...localizedRouteUrls(siteStructure, "arabic"),
+      ],
+      join: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/join/")),
+      sample: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/sample/")),
+      share: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/share/")),
+      bio: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/bio/")),
+      creator: shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+$/.test(route.path)),
+      creatorPlacement: shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+\/[^/]+$/.test(route.path)),
+    },
+    funnels: {
+      koko: campaignHealth(campaigns, "koko"),
+      noor: campaignHealth(campaigns, "noor"),
+    },
+    sharedAssets: siteStructure.sharedAssets,
+  };
+  writeFileSync(resolve(siteDir, "site-health.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
 function escapeHtml(value) {

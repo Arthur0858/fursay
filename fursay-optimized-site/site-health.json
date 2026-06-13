@@ -271,6 +271,16 @@
     ],
     "js": [
       "/js/site-shared-20260613-commerce1.js"
+    ],
+    "scenes": [
+      "/images/scenes/story-world-home.webp",
+      "/images/scenes/story-world-forest.webp",
+      "/images/scenes/story-world-desert.webp"
     ]
-  }
+  },
+  "generatedFrom": [
+    "/data/site-structure.json",
+    "/campaigns.json",
+    "/shortlinks.json"
+  ]
 }
