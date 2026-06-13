@@ -29,6 +29,12 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
+    path: "/css/noor-ltr-page-20260613-inline1.css",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "text/css",
+  },
+  {
     path: "/js/site-shared-20260613-attribution1.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],

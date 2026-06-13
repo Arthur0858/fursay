@@ -73,6 +73,7 @@
   },
   "sharedAssets": {
     "css": [
+      "/css/noor-ltr-page-20260613-inline1.css",
       "/css/picture-book-base.css",
       "/css/storybook-skin-20260613-inline1.css",
       "/css/picture-world-shared-20260612-traffic10.css"

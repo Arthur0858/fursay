@@ -4,6 +4,7 @@ import { resolve, join } from "node:path";
 const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const EXPECTED_CSS = [
+  "noor-ltr-page-20260613-inline1.css",
   "picture-book-base.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260612-traffic10.css",
