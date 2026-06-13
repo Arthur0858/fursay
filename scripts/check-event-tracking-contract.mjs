@@ -101,6 +101,12 @@ async function readPageHtml(baseUrl, path) {
   return readFile(asset, "utf8");
 }
 
+async function readReleaseExpectations(baseUrl) {
+  const response = await fetch(`${baseUrl}/release.json`, { cache: "no-store" });
+  if (!response.ok) throw new Error(`release.json status ${response.status}`);
+  return (await response.json()).liveExpectations || {};
+}
+
 function assertEventShape(failures, label, spec, event) {
   if (!event) {
     failures.push(`${label}:missing_event`);
@@ -302,17 +308,29 @@ async function main() {
     await browser.close();
   }
 
+  const checks = {
+    htmlPages: htmlChecks.length,
+    openEventPages: pages.length,
+    affiliateEventPages: pages.filter((page) => page.affiliateEvent).length,
+    submitEventPages: pages.filter((page) => page.submitEvents.length).length,
+  };
+  const expectations = await readReleaseExpectations(baseUrl);
+  if (expectations.eventTrackingPages !== checks.openEventPages) {
+    failures.push(`release_event_tracking_pages:${expectations.eventTrackingPages ?? "none"}!=${checks.openEventPages}`);
+  }
+  if (expectations.affiliateEventTrackingPages !== checks.affiliateEventPages) {
+    failures.push(`release_affiliate_event_tracking_pages:${expectations.affiliateEventTrackingPages ?? "none"}!=${checks.affiliateEventPages}`);
+  }
+  if (expectations.eventTrackingSubmitPages !== checks.submitEventPages) {
+    failures.push(`release_event_tracking_submit_pages:${expectations.eventTrackingSubmitPages ?? "none"}!=${checks.submitEventPages}`);
+  }
+
   const report = {
     ok: failures.length === 0,
     mode: args.baseUrl ? "live" : "local",
     baseUrl,
     sharedJs: SHARED_JS,
-    checks: {
-      htmlPages: htmlChecks.length,
-      openEventPages: pages.length,
-      affiliateEventPages: pages.filter((page) => page.affiliateEvent).length,
-      submitEventPages: pages.filter((page) => page.submitEvents.length).length,
-    },
+    checks,
     htmlChecks,
     pages,
     failures,
