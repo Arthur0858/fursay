@@ -4,6 +4,10 @@ import { resolve } from "node:path";
 const ROOT = process.cwd();
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-structured-data";
+const ORIGIN = "https://fursay.com/";
+const KOKO_CHANNEL = "https://www.youtube.com/@KokosForest";
+const NOOR_CHANNEL = "https://www.youtube.com/@ArabicKidsChinese";
+const REQUIRED_SITE_LANGUAGES = ["ar", "en", "zh-TW"];
 const HOME_PAGES = [
   { path: "/", file: "index.html" },
   { path: "/zh/", file: "zh/index.html" },
@@ -82,11 +86,51 @@ function requireIncludes(failures, list, value, code) {
 
 function checkHome(page, blocks, failures) {
   if (blocks.length !== 1) failures.push(`home_json_ld_count:${page.path}:${blocks.length}`);
+  if (blocks[0]?.["@context"] !== "https://schema.org") failures.push(`home_context:${page.path}:${blocks[0]?.["@context"] || "none"}`);
+  if (!Array.isArray(blocks[0]?.["@graph"]) || blocks[0]["@graph"].length !== 4) failures.push(`home_graph_count:${page.path}:${blocks[0]?.["@graph"]?.length || 0}`);
   for (const type of ["Organization", "WebSite", "EducationalOrganization", "FAQPage"]) {
     if (!hasType(blocks, type)) failures.push(`home_missing_type:${page.path}:${type}`);
   }
+  const organization = firstType(blocks, "Organization");
+  const website = firstType(blocks, "WebSite");
+  const educationalOrganization = firstType(blocks, "EducationalOrganization");
   const faq = firstType(blocks, "FAQPage");
+
+  if (organization?.["@id"] !== "https://fursay.com/#organization") failures.push(`home_org_id:${page.path}:${organization?.["@id"] || "none"}`);
+  if (organization?.name !== "Fursay") failures.push(`home_org_name:${page.path}:${organization?.name || "none"}`);
+  if (organization?.url !== ORIGIN) failures.push(`home_org_url:${page.path}:${organization?.url || "none"}`);
+  if (organization?.logo?.["@type"] !== "ImageObject") failures.push(`home_org_logo_type:${page.path}:${organization?.logo?.["@type"] || "none"}`);
+  if (organization?.logo?.url !== "https://fursay.com/og-image.png") failures.push(`home_org_logo_url:${page.path}:${organization?.logo?.url || "none"}`);
+  requireIncludes(failures, organization?.sameAs, KOKO_CHANNEL, `home_org_same_as_koko:${page.path}`);
+  requireIncludes(failures, organization?.sameAs, NOOR_CHANNEL, `home_org_same_as_noor:${page.path}`);
+  if (organization?.founder?.["@type"] !== "Person" || !organization?.founder?.name) failures.push(`home_org_founder:${page.path}`);
+
+  if (website?.["@id"] !== "https://fursay.com/#website") failures.push(`home_website_id:${page.path}:${website?.["@id"] || "none"}`);
+  if (website?.url !== ORIGIN) failures.push(`home_website_url:${page.path}:${website?.url || "none"}`);
+  if (website?.publisher?.["@id"] !== organization?.["@id"]) failures.push(`home_website_publisher:${page.path}:${website?.publisher?.["@id"] || "none"}`);
+  const languages = Array.isArray(website?.inLanguage) ? [...website.inLanguage].sort() : [];
+  if (languages.join(",") !== REQUIRED_SITE_LANGUAGES.join(",")) failures.push(`home_website_languages:${page.path}:${languages.join(",") || "none"}`);
+  if (website?.potentialAction?.["@type"] !== "SearchAction") failures.push(`home_website_search_action:${page.path}:${website?.potentialAction?.["@type"] || "none"}`);
+  if (!String(website?.potentialAction?.target || "").includes("{search_term_string}")) failures.push(`home_website_search_target:${page.path}`);
+  if (website?.potentialAction?.["query-input"] !== "required name=search_term_string") failures.push(`home_website_query_input:${page.path}`);
+
+  if (educationalOrganization?.["@id"] !== "https://fursay.com/#edorg") failures.push(`home_edorg_id:${page.path}:${educationalOrganization?.["@id"] || "none"}`);
+  if (educationalOrganization?.name !== "Fursay") failures.push(`home_edorg_name:${page.path}:${educationalOrganization?.name || "none"}`);
+  if (educationalOrganization?.url !== ORIGIN) failures.push(`home_edorg_url:${page.path}:${educationalOrganization?.url || "none"}`);
+  const offers = educationalOrganization?.hasOfferCatalog?.itemListElement;
+  if (!Array.isArray(offers) || offers.length !== 2) failures.push(`home_offer_count:${page.path}:${offers?.length || 0}`);
+  for (const offer of offers || []) {
+    if (offer?.["@type"] !== "Offer") failures.push(`home_offer_type:${page.path}:${offer?.["@type"] || "none"}`);
+    if (offer?.price !== "0") failures.push(`home_offer_price:${page.path}:${offer?.name || "none"}:${offer?.price || "none"}`);
+    if (offer?.priceCurrency !== "USD") failures.push(`home_offer_currency:${page.path}:${offer?.name || "none"}:${offer?.priceCurrency || "none"}`);
+  }
   if (!Array.isArray(faq?.mainEntity) || faq.mainEntity.length < 4) failures.push(`home_faq_too_short:${page.path}`);
+  for (const [index, item] of (faq?.mainEntity || []).entries()) {
+    if (item?.["@type"] !== "Question") failures.push(`home_faq_question_type:${page.path}:${index}`);
+    if (!item?.name) failures.push(`home_faq_question_missing:${page.path}:${index}`);
+    if (item?.acceptedAnswer?.["@type"] !== "Answer") failures.push(`home_faq_answer_type:${page.path}:${index}`);
+    if (!item?.acceptedAnswer?.text) failures.push(`home_faq_answer_missing:${page.path}:${index}`);
+  }
 }
 
 function checkStory(page, blocks, videoDiscovery, failures) {
