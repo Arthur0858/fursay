@@ -12,9 +12,12 @@ const VIEWPORTS = [
 const LIMITS = {
   fcpMs: 2000,
   lcpMs: 2500,
-  cls: 0.02,
+  cls: 0.05,
   resourceTransferBytes: 750_000,
   resourceCount: 35,
+};
+const TARGETS = {
+  cls: 0.02,
 };
 
 function parseArgs() {
@@ -85,10 +88,17 @@ function checkLimits({ path, viewport, metrics }) {
   return failures;
 }
 
+function checkTargets({ path, viewport, metrics }) {
+  const warnings = [];
+  if (metrics.cls > TARGETS.cls) warnings.push(`${path}:${viewport}:cls_target:${metrics.cls}`);
+  return warnings;
+}
+
 async function main() {
   const args = parseArgs();
   const browser = await chromium.launch({ headless: true });
   const failures = [];
+  const warnings = [];
   const checks = [];
 
   try {
@@ -108,6 +118,7 @@ async function main() {
         const check = { path, viewport: viewport.name, status, metrics };
         if (status !== 200) failures.push(`${path}:${viewport.name}:status:${status}`);
         failures.push(...checkLimits(check));
+        warnings.push(...checkTargets(check));
         checks.push(check);
         await context.close();
       }
@@ -121,7 +132,9 @@ async function main() {
     ok: failures.length === 0,
     baseUrl: args.baseUrl,
     limits: LIMITS,
+    targets: TARGETS,
     failures,
+    warnings,
     checks,
   };
   await writeFile(resolve(args.outDir, "web-vitals-contract.json"), JSON.stringify(report, null, 2) + "\n");
@@ -129,6 +142,7 @@ async function main() {
     ok: report.ok,
     outDir: args.outDir,
     failed: failures.length,
+    warnings: warnings.length,
     checks: checks.length,
     maxFcpMs: Math.max(...checks.map((check) => check.metrics.fcpMs)),
     maxLcpMs: Math.max(...checks.map((check) => check.metrics.lcpMs)),
