@@ -1,6 +1,36 @@
 (function () {
   function qs(id) { return document.getElementById(id); }
 
+  function eventContext(extra) {
+    var context = {
+      path: window.location.pathname || '/',
+      locale: document.documentElement.lang || '',
+      page_pack: pagePack() || '',
+      campaign: pageCampaign()
+    };
+    Object.keys(extra || {}).forEach(function (key) {
+      var value = extra[key];
+      if (value !== undefined && value !== null && value !== '') context[key] = value;
+    });
+    return context;
+  }
+
+  function emitFursayEvent(name, detail) {
+    var event = {
+      event: name,
+      detail: eventContext(detail),
+      ts: new Date().toISOString()
+    };
+    window.fursayEvents = window.fursayEvents || [];
+    window.fursayEvents.push(event);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: name,
+      fursay: event.detail
+    });
+    return event;
+  }
+
   function syncChecks() {
     document.querySelectorAll('#subscribeModal .modal-check').forEach(function (check) {
       var input = check.querySelector('input');
@@ -68,6 +98,10 @@
       var opener = event.target.closest('[data-open-subscribe]');
       if (opener) {
         event.preventDefault();
+        emitFursayEvent('fursay_subscribe_open_click', {
+          pack: normalizePack(opener.getAttribute('data-open-subscribe')),
+          signup_source: opener.getAttribute('data-signup-source') || ''
+        });
         window.openSubscribeModal(
           opener.getAttribute('data-open-subscribe') || undefined,
           opener.getAttribute('data-signup-source') || undefined
@@ -84,6 +118,9 @@
       var shareButton = event.target.closest('[data-share-fursay]');
       if (shareButton) {
         event.preventDefault();
+        emitFursayEvent('fursay_share_click', {
+          share_url: shareButton.getAttribute('data-share-url') || ''
+        });
         window.shareFursay(shareButton);
         return;
       }
@@ -91,6 +128,10 @@
       var packLinkButton = event.target.closest('[data-copy-pack-link]');
       if (packLinkButton) {
         event.preventDefault();
+        emitFursayEvent('fursay_pack_link_copy_click', {
+          pack: normalizePack(packLinkButton.getAttribute('data-sample-pack') || pagePack()),
+          link_url: packLinkButton.getAttribute('data-pack-url') || ''
+        });
         copyPackLink(packLinkButton);
         return;
       }
@@ -98,6 +139,10 @@
       var sampleLinkButton = event.target.closest('[data-copy-sample-link]');
       if (sampleLinkButton) {
         event.preventDefault();
+        emitFursayEvent('fursay_sample_link_copy_click', {
+          pack: normalizePack(sampleLinkButton.getAttribute('data-sample-pack') || pagePack()),
+          link_url: sampleLinkButton.getAttribute('data-sample-url') || ''
+        });
         copySampleLink(sampleLinkButton);
         return;
       }
@@ -105,6 +150,9 @@
       var publicShareButton = event.target.closest('[data-copy-public-share-link]');
       if (publicShareButton) {
         event.preventDefault();
+        emitFursayEvent('fursay_public_share_copy_click', {
+          link_url: publicShareButton.getAttribute('data-public-share-url') || ''
+        });
         copyPublicShareLink(publicShareButton);
         return;
       }
@@ -112,6 +160,9 @@
       var kitCopyButton = event.target.closest('[data-copy-creator-kit], [data-copy-share-kit], [data-copy-traffic-launch]');
       if (kitCopyButton) {
         event.preventDefault();
+        emitFursayEvent('fursay_kit_copy_click', {
+          copy_kind: kitCopyButton.hasAttribute('data-copy-traffic-launch') ? 'traffic_launch' : (kitCopyButton.hasAttribute('data-copy-share-kit') ? 'share_kit' : 'creator_kit')
+        });
         copyKitValue(kitCopyButton);
       }
     });
@@ -507,6 +558,10 @@
     overlay.dataset.preselect = preselect || '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    emitFursayEvent('fursay_subscribe_modal_open', {
+      pack: normalizePack(preselect),
+      signup_source: overlay.dataset.signupSource
+    });
     if (preselect) {
       document.querySelectorAll('#subscribeModal input[name="groups"]').forEach(function (input) {
         input.checked = input.value === preselect;
@@ -537,6 +592,7 @@
   };
 
   window.shareFursay = shareFursay;
+  window.emitFursayEvent = emitFursayEvent;
 
   window.handleSubscribe = async function (event) {
     if (event) event.preventDefault();
@@ -568,6 +624,11 @@
       region: qs('modalRegion') ? qs('modalRegion').value : (qs('sub-region') ? qs('sub-region').value : ''),
       attribution: collectSubscribeAttribution()
     };
+    emitFursayEvent('fursay_subscribe_submit_attempt', {
+      groups: groups.join(','),
+      signup_source: payload.attribution.signup_source || '',
+      modal_preselect: payload.attribution.modal_preselect || ''
+    });
 
     if (btn) {
       btn.disabled = true;
@@ -589,11 +650,20 @@
       var data = {};
       try { data = await res.json(); } catch (e) {}
       var ok = res.ok && data.success !== false;
+      emitFursayEvent(ok ? 'fursay_subscribe_submit_success' : 'fursay_subscribe_submit_failure', {
+        groups: groups.join(','),
+        signup_source: payload.attribution.signup_source || '',
+        status: res.status
+      });
       if (msg) msg.textContent = ok ? 'Subscribed successfully.' : (data.message || 'Please try again.');
       if (btn) btn.textContent = ok ? 'Subscribed!' : (btn.dataset.originalText || 'Subscribe');
       if (ok && event && event.target && typeof event.target.reset === 'function') event.target.reset();
       syncChecks();
     } catch (e) {
+      emitFursayEvent('fursay_subscribe_submit_error', {
+        groups: groups.join(','),
+        signup_source: payload.attribution.signup_source || ''
+      });
       if (msg) msg.textContent = 'Could not connect. Please try again later.';
       if (btn) btn.textContent = btn.dataset.originalText || 'Subscribe';
     } finally {

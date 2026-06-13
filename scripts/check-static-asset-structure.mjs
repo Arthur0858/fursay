@@ -17,7 +17,7 @@ const EXPECTED_CSS = [
   "picture-world-shared-20260612-traffic10.css",
 ];
 const EXPECTED_JS = [
-  "site-shared-20260613-attribution1.js",
+  "site-shared-20260613-events1.js",
 ];
 const MAX_TOTAL_CSS_BYTES = 390_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;

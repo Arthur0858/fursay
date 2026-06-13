@@ -175,6 +175,7 @@ function writeReleaseManifest() {
       "scripts/check-fursay-funnel.mjs",
       "scripts/check-noor-list-activation.mjs",
       "scripts/check-localized-cta-contract.mjs",
+      "scripts/check-event-tracking-contract.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-site-structure-contract.mjs",
@@ -205,6 +206,8 @@ function writeReleaseManifest() {
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 12,
       booksAffiliateId: "arthur0858",
+      eventTrackingPages: 9,
+      eventTrackingSubmitPages: 3,
       webVitalsChecks: 18,
       cacheHeaderChecks: 53,
       badAuditCount: 0,
@@ -1064,7 +1067,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-attribution1.js"></script>
+  <script src="/js/site-shared-20260613-events1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1336,7 +1339,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-attribution1.js"></script>
+  <script src="/js/site-shared-20260613-events1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -1437,7 +1440,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-attribution1.js"></script>
+  <script src="/js/site-shared-20260613-events1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
@@ -1454,6 +1457,7 @@ async function main() {
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
+  run("node", ["--check", "scripts/check-event-tracking-contract.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
@@ -1480,6 +1484,7 @@ async function main() {
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
   run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
+  run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);
   run("node", ["scripts/check-site-structure-contract.mjs", "--out-dir", join(outRoot, "site-structure-local")]);
@@ -1507,6 +1512,7 @@ async function main() {
     run("node", ["scripts/check-fursay-funnel.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
     run("node", ["scripts/check-localized-cta-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "localized-cta-live")]);
+    run("node", ["scripts/check-event-tracking-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-tracking-live")]);
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-site-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "site-structure-live")]);
