@@ -20,7 +20,7 @@ const EXPECTED_CSS = [
   "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260613-traffic11.css",
-  "picture-world-tools-20260613-ops1.css",
+  "picture-world-tools-20260613-ops2.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260613-commerce1.js",
@@ -52,7 +52,7 @@ const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
 const HOME_COMMON_CSS = "/css/home-common-20260613-cache1.css";
 const KOKO_COMMON_CSS = "/css/koko-common-20260613-cache1.css";
 const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
-const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
+const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops2.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
 const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html"]);
 const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html"]);
@@ -140,8 +140,11 @@ async function main() {
     if (OPERATIONS_HTML.has(relativeFile) && !assets.css.includes(OPERATIONS_CSS)) {
       failures.push(`operations_page_missing_operations_css:${relativeFile}`);
     }
-    if ((MAIN_STORY_HTML.has(relativeFile) || OPERATIONS_HTML.has(relativeFile)) && !assets.css.includes(MAIN_SHARED_CSS)) {
+    if (MAIN_STORY_HTML.has(relativeFile) && !assets.css.includes(MAIN_SHARED_CSS)) {
       failures.push(`page_missing_main_shared_css:${relativeFile}`);
+    }
+    if (OPERATIONS_HTML.has(relativeFile) && assets.css.includes(MAIN_SHARED_CSS)) {
+      failures.push(`operations_page_loads_main_shared_css:${relativeFile}`);
     }
     if (HOME_HTML.has(relativeFile) && !assets.css.includes(HOME_COMMON_CSS)) {
       failures.push(`home_page_missing_home_common_css:${relativeFile}`);

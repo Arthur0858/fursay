@@ -1,4 +1,7 @@
 /* Operations-kit styles for creator/share/traffic/deploy utility pages. */
+html {
+  background: #f7f1e4 !important;
+}
 body.picture-world.creator-kit-page {
   min-height: 100vh !important;
   margin: 0 !important;
@@ -8,10 +11,16 @@ body.picture-world.creator-kit-page {
     radial-gradient(circle at 90% 18%, rgba(243, 200, 106, 0.16), transparent 13rem),
     #f7f1e4 !important;
   color: #42362d !important;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 body.picture-world.creator-kit-page::before,
 body.picture-world.creator-kit-page::after {
   display: none !important;
+}
+body.picture-world.creator-kit-page > * {
+  position: relative;
+  z-index: 1;
 }
 body.picture-world.creator-kit-page *,
 body.picture-world.creator-kit-page *::before,
@@ -126,6 +135,31 @@ body.picture-world .creator-pack a {
   color: #b55418 !important;
   font-weight: 850 !important;
 }
+body.picture-world .public-share-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+body.picture-world .public-share-actions a,
+body.picture-world .public-share-actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 38px !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(88, 67, 44, 0.16) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: #4a3a2f !important;
+  text-decoration: none !important;
+  font-weight: 900 !important;
+}
+body.picture-world .public-share-actions a:focus-visible,
+body.picture-world .public-share-actions button:focus-visible {
+  outline: 3px solid rgba(46, 157, 95, 0.28) !important;
+  outline-offset: 2px !important;
+}
 body.picture-world .creator-copy-blocks {
   display: grid !important;
   gap: 12px !important;
@@ -220,5 +254,12 @@ body.picture-world .creator-qr span {
   }
   body.picture-world .creator-copy-heading {
     align-items: flex-start !important;
+  }
+  body.picture-world .public-share-actions {
+    justify-content: stretch !important;
+  }
+  body.picture-world .public-share-actions a,
+  body.picture-world .public-share-actions button {
+    flex: 1 1 160px !important;
   }
  }
