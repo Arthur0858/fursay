@@ -91,7 +91,41 @@ async function checkSvgAsset(url) {
   return failures;
 }
 
-async function checkCreatorKitBrowser(baseUrl) {
+function expectedCreatorCopyValues(baseUrl, creatorKit) {
+  const values = [];
+  for (const [pack, item] of Object.entries(creatorKit.packs || {})) {
+    values.push(
+      `${baseUrl}/creator/${pack}`,
+      `${baseUrl}/sample/${pack}`,
+      `${baseUrl}/share/${pack}`,
+      `${baseUrl}/bio/${pack}`,
+      `${baseUrl}/images/qr/sample-${pack}.svg`,
+      `${baseUrl}/images/qr/share-${pack}.svg`,
+      item.directSocialShare?.whatsapp,
+      item.directSocialShare?.line,
+      item.trackedLandingUrl,
+      item.placementLinks?.youtubeDescription?.shortlink,
+      item.placementLinks?.socialCaption?.shortlink,
+      item.placementLinks?.newsletterBlurb?.shortlink,
+      item.videoDiscovery?.manifest,
+      item.videoDiscovery?.channelId,
+      item.videoDiscovery?.uploadsPlaylistId,
+      item.videoDiscovery?.youtubeChannel,
+      item.videoDiscovery?.youtubeVideos,
+      item.videoDiscovery?.youtubePlaylists,
+      item.videoDiscovery?.playlistName,
+      item.videoDiscovery?.playlistEmbed,
+      item.youtubeDescription,
+      item.socialCaption,
+      item.bioProfileCopy,
+      item.familyShareMessage,
+      item.newsletterBlurb,
+    );
+  }
+  return values.filter(Boolean);
+}
+
+async function checkCreatorKitBrowser(baseUrl, creatorKit) {
   if (!baseUrl) {
     return { failures: [], data: { skipped: true, reason: "local content check only" } };
   }
@@ -182,49 +216,7 @@ async function checkCreatorKitBrowser(baseUrl) {
   if (!data.creatorLinks.includes(`${baseUrl}/creator/noor`)) failures.push("creator_kit_page_missing_noor_creator_link");
   if (data.jsonManifestLink !== `${baseUrl}/creator-kit.json`) failures.push(`creator_kit_page_json_link:${data.jsonManifestLink || "none"}`);
   if (data.copyButtonCount !== 50) failures.push(`creator_kit_page_copy_button_count:${data.copyButtonCount}`);
-  for (const value of [
-    `${baseUrl}/creator/koko`,
-    `${baseUrl}/sample/koko`,
-    `${baseUrl}/share/koko`,
-    `${baseUrl}/bio/koko`,
-    `${baseUrl}/images/qr/sample-koko.svg`,
-    `${baseUrl}/images/qr/share-koko.svg`,
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Koko weekly story pack: ${baseUrl}/share/koko?ref=whatsapp&placement=direct_social_share`)}`,
-    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/koko?ref=line&placement=direct_social_share`)}`,
-    `Koko's Forest Adventure weekly pack is ready for family story time: ${baseUrl}/share/koko`,
-    `Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: ${baseUrl}/bio/koko`,
-    "UC0X4CIwf6KoUMoIHwRxN3jw",
-    "UU0X4CIwf6KoUMoIHwRxN3jw",
-    "Koko's Forest Adventure uploads",
-    `${baseUrl}/creator/koko/youtube`,
-    `${baseUrl}/creator/koko/social`,
-    `${baseUrl}/creator/koko/newsletter`,
-    `${baseUrl}/video-discovery.json`,
-    "https://www.youtube.com/@KokosForest",
-    "https://www.youtube.com/@KokosForest/videos",
-    "https://www.youtube.com/@KokosForest/playlists",
-    "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
-    `${baseUrl}/creator/noor`,
-    `${baseUrl}/sample/noor`,
-    `${baseUrl}/share/noor`,
-    `${baseUrl}/bio/noor`,
-    `${baseUrl}/images/qr/sample-noor.svg`,
-    `${baseUrl}/images/qr/share-noor.svg`,
-    `https://api.whatsapp.com/send?text=${encodeURIComponent(`Noor 3-minute story pack: ${baseUrl}/share/noor?ref=whatsapp&placement=direct_social_share`)}`,
-    `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(`${baseUrl}/share/noor?ref=line&placement=direct_social_share`)}`,
-    `Noor's Arabic Kids Chinese weekly pack is ready for family story time: ${baseUrl}/share/noor`,
-    `Noor's Arabic Kids Chinese: 3-minute Chinese story packs for Arabic-speaking families. Start here: ${baseUrl}/bio/noor`,
-    "UCOxmnonpfBvpiV8Vg5LEiYw",
-    "UUOxmnonpfBvpiV8Vg5LEiYw",
-    "Arabic Kids Chinese Picture Book uploads",
-    `${baseUrl}/creator/noor/youtube`,
-    `${baseUrl}/creator/noor/social`,
-    `${baseUrl}/creator/noor/newsletter`,
-    "https://www.youtube.com/@ArabicKidsChinese",
-    "https://www.youtube.com/@ArabicKidsChinese/videos",
-    "https://www.youtube.com/@ArabicKidsChinese/playlists",
-    "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
-  ]) {
+  for (const value of expectedCreatorCopyValues(baseUrl, creatorKit)) {
     if (!data.copyValues.some((copyValue) => copyValue.includes(value))) failures.push(`creator_kit_page_copy_missing:${value}`);
   }
   if (!copyResult.clicked) failures.push("creator_kit_page_copy_not_clickable");
@@ -359,7 +351,7 @@ async function main() {
     "rendered email must include the creator-kit newsletter shortlink",
   ];
   if (!hasAll(runner, runnerNeedles)) failures.push("newsletter_runner_missing_creator_kit_hooks");
-  const browserCheck = await checkCreatorKitBrowser(args.baseUrl);
+  const browserCheck = await checkCreatorKitBrowser(args.baseUrl, creatorKit);
   failures.push(...browserCheck.failures);
 
   const report = {
