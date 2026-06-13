@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "3b2a819",
-    "summary": "Sync Fursay product traffic manifests"
+    "commit": "d9ef589",
+    "summary": "Add product interest browser smoke"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
