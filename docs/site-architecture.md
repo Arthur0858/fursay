@@ -12,6 +12,7 @@
 - Shared interactions live in `/js/site-shared-20260613-commerce1.js`; page HTML should not add inline event handlers.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.
+- Character PNG files are legacy `<picture>` fallbacks. Keep AVIF/WebP as the modern delivery path, and use `scripts/optimize-png-fallbacks.mjs` before release when fallback PNGs are regenerated.
 
 ## Edit rules
 

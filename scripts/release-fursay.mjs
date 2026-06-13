@@ -1491,6 +1491,7 @@ async function main() {
   run("node", ["--check", "scripts/check-doc-manifest-drift.mjs"]);
   run("node", ["--check", "scripts/check-render-jobs.mjs"]);
   run("node", ["--check", "scripts/check-workspace-hygiene.mjs"]);
+  run("node", ["--check", "scripts/optimize-png-fallbacks.mjs"]);
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);

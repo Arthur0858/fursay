@@ -5,11 +5,11 @@ const DEFAULT_OUT = "/tmp/fursay-image-assets";
 const SITE_DIR = "fursay-optimized-site";
 const IMAGE_EXTENSIONS = new Set([".avif", ".jpg", ".jpeg", ".png", ".svg", ".webp"]);
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"]);
-const MAX_TOTAL_IMAGE_BYTES = 6_600_000;
-const MAX_TOTAL_PNG_BYTES = 4_850_000;
+const MAX_TOTAL_IMAGE_BYTES = 4_100_000;
+const MAX_TOTAL_PNG_BYTES = 2_300_000;
 const MAX_TOTAL_WEBP_BYTES = 1_250_000;
 const MAX_TOTAL_AVIF_BYTES = 600_000;
-const MAX_CHARACTER_PNG_BYTES = 390_000;
+const MAX_CHARACTER_PNG_BYTES = 140_000;
 const MAX_OG_PNG_BYTES = 350_000;
 
 function parseArgs() {
