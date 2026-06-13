@@ -56,6 +56,22 @@ const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops2.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
 const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html"]);
 const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html"]);
+const VOID_HTML_TAGS = new Set([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
+]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -88,6 +104,35 @@ function extractAssets(html) {
     css: stylesheetMatches.map((match) => match[1]).filter((href) => href.startsWith("/css/")),
     js: scriptMatches.map((match) => match[1]).filter((src) => src.startsWith("/js/")),
   };
+}
+
+function checkHtmlTagBalance(html, relativeFile) {
+  const failures = [];
+  const stack = [];
+  for (const match of html.matchAll(/<\/?([a-zA-Z][\w:-]*)(\s[^<>]*?)?>/g)) {
+    const rawTag = match[0];
+    const tagName = match[1].toLowerCase();
+    if (rawTag.startsWith("<!") || rawTag.startsWith("<?") || rawTag.endsWith("/>") || VOID_HTML_TAGS.has(tagName)) continue;
+    if (!rawTag.startsWith("</")) {
+      stack.push({ tagName, index: match.index });
+      continue;
+    }
+    const openIndex = stack.findLastIndex((item) => item.tagName === tagName);
+    if (openIndex === -1) {
+      failures.push(`html_unexpected_close_tag:${relativeFile}:${tagName}:${match.index}`);
+      continue;
+    }
+    if (openIndex !== stack.length - 1) {
+      failures.push(`html_misnested_close_tag:${relativeFile}:${tagName}:${match.index}:top_${stack.at(-1)?.tagName || "none"}`);
+      stack.splice(openIndex, 1);
+      continue;
+    }
+    stack.pop();
+  }
+  for (const item of stack.filter((entry) => !["html", "body"].includes(entry.tagName))) {
+    failures.push(`html_unclosed_tag:${relativeFile}:${item.tagName}:${item.index}`);
+  }
+  return failures;
 }
 
 async function existsWithBytes(path) {
@@ -125,6 +170,7 @@ async function main() {
   for (const file of htmlFiles) {
     const html = await readFile(file, "utf8");
     const relativeFile = file.replace(`${root}/`, "");
+    failures.push(...checkHtmlTagBalance(html, relativeFile));
     const inlineStyles = [...html.matchAll(/\sstyle=("[^"]*"|'[^']*')/gi)];
     const inlineHandlers = [...html.matchAll(/\son[a-z]+=/gi)];
     const inlineScripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
