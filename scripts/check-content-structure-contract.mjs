@@ -31,6 +31,14 @@ const PAGES = [
     sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
     navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
     h1Needles: ["قصة", "عبارة"],
+    storyCardClass: "video-card",
+    noEmptyStoryNote: true,
+    storyLinks: [
+      "https://www.youtube.com/@KokosForest",
+      "https://www.youtube.com/@KokosForest/playlists",
+      "https://www.youtube.com/@ArabicKidsChinese",
+      "https://www.youtube.com/@ArabicKidsChinese/playlists",
+    ],
   },
   {
     path: "/koko",
@@ -71,6 +79,13 @@ const PAGES = [
     leadVariant: "weekly-sample-v1",
     sharePack: "koko",
     h1Needles: ["كوكو", "الغابة"],
+    storyCardClass: "vid-card",
+    noEmptyStoryNote: true,
+    storyLinks: [
+      "https://www.youtube.com/@KokosForest",
+      "https://www.youtube.com/@KokosForest/videos",
+      "https://www.youtube.com/@KokosForest/playlists",
+    ],
   },
   {
     path: "/arabic",
@@ -111,6 +126,13 @@ const PAGES = [
     leadVariant: "weekly-sample-v2",
     sharePack: "noor",
     h1Needles: ["العرب", "الصيني"],
+    storyCardClass: "ep-card",
+    noEmptyStoryNote: true,
+    storyLinks: [
+      "https://www.youtube.com/@ArabicKidsChinese",
+      "https://www.youtube.com/@ArabicKidsChinese/videos",
+      "https://www.youtube.com/@ArabicKidsChinese/playlists",
+    ],
   },
 ];
 const MERGED_TEXT_PATTERNS = [
@@ -234,6 +256,29 @@ function checkPage(page, html) {
     if (!panel.includes(`/share/${page.sharePack}`)) failures.push(`share_panel_missing_family_link:${page.sharePack}`);
     if (!panel.includes(`/creator/${page.sharePack}/youtube`)) failures.push(`share_panel_missing_creator_link:${page.sharePack}`);
     if (!panel.includes('rel="noopener"')) failures.push(`share_panel_missing_noopener:${page.sharePack}`);
+  }
+
+  if (page.noEmptyStoryNote && /empty-story-note/.test(html)) failures.push("unexpected_empty_story_note");
+  if (page.storyLinks?.length) {
+    const pageHrefs = hrefs(html);
+    for (const link of page.storyLinks) {
+      if (!pageHrefs.includes(link)) failures.push(`missing_story_link:${link}`);
+    }
+    const storyCardClass = page.storyCardClass || "unstyled-card-link";
+    const storyCardCount = (html.match(new RegExp(`class=(["'])[^"']*\\b${storyCardClass}\\b[^"']*\\1`, "gi")) || []).length;
+    if (storyCardCount < page.storyLinks.length) failures.push(`short_story_cards:${storyCardCount}`);
+    const storyAnchors = tags(html, "a").filter((tag) => {
+      const classList = attr(tag, "class").split(/\s+/).filter(Boolean);
+      return page.storyLinks.includes(attr(tag, "href")) && classList.includes(storyCardClass);
+    });
+    for (const tag of storyAnchors) {
+      const href = attr(tag, "href");
+      const rel = attr(tag, "rel").split(/\s+/).filter(Boolean);
+      const classList = attr(tag, "class").split(/\s+/).filter(Boolean);
+      if (attr(tag, "target") !== "_blank") failures.push(`story_link_missing_blank:${href}`);
+      if (!rel.includes("noopener")) failures.push(`story_link_missing_noopener:${href}`);
+      if (!classList.includes("unstyled-card-link")) failures.push(`story_link_missing_card_class:${href}`);
+    }
   }
 
   return {
