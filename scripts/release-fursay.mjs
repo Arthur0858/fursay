@@ -179,6 +179,7 @@ function writeReleaseManifest() {
       "scripts/check-worker-shortlinks.mjs",
       "scripts/check-structured-data.mjs",
       "scripts/check-head-metadata.mjs",
+      "scripts/check-accessibility-contract.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
       "scripts/check-static-asset-structure.mjs",
@@ -1426,6 +1427,7 @@ async function main() {
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
   run("node", ["--check", "scripts/check-structured-data.mjs"]);
   run("node", ["--check", "scripts/check-head-metadata.mjs"]);
+  run("node", ["--check", "scripts/check-accessibility-contract.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
@@ -1441,6 +1443,7 @@ async function main() {
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
   run("node", ["scripts/check-structured-data.mjs", "--out-dir", join(outRoot, "structured-data-local")]);
   run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
+  run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
@@ -1458,6 +1461,7 @@ async function main() {
     run("node", ["scripts/check-worker-shortlinks.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "worker-shortlinks-live")]);
     run("node", ["scripts/check-structured-data.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "structured-data-live")]);
     run("node", ["scripts/check-head-metadata.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "head-metadata-live")]);
+    run("node", ["scripts/check-accessibility-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "accessibility-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
