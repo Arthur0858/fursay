@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "c69c67a",
-    "summary": "Add Fursay Analytics Engine event sink"
+    "commit": "68e2d23",
+    "summary": "Use deployable Fursay event fallback"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
