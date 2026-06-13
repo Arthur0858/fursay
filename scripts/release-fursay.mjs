@@ -179,6 +179,7 @@ function writeReleaseManifest() {
       "scripts/check-content-structure-contract.mjs",
       "scripts/check-site-structure-contract.mjs",
       "scripts/check-hero-preload-contract.mjs",
+      "scripts/check-web-vitals-contract.mjs",
       "scripts/check-internal-links-contract.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
       "scripts/check-public-kit-parity.mjs",
@@ -204,6 +205,7 @@ function writeReleaseManifest() {
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 12,
       booksAffiliateId: "arthur0858",
+      webVitalsChecks: 18,
       cacheHeaderChecks: 53,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
@@ -1456,6 +1458,7 @@ async function main() {
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-hero-preload-contract.mjs"]);
+  run("node", ["--check", "scripts/check-web-vitals-contract.mjs"]);
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-public-kit-parity.mjs"]);
@@ -1508,6 +1511,7 @@ async function main() {
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-site-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "site-structure-live")]);
     run("node", ["scripts/check-hero-preload-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "hero-preload-live")]);
+    run("node", ["scripts/check-web-vitals-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "web-vitals-live")]);
     run("node", ["scripts/check-internal-links-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "internal-links-live")]);
     run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "newsletter-traffic-kit-live")]);
     run("node", ["scripts/check-public-kit-parity.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "public-kit-parity-live")]);
