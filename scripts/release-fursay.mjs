@@ -178,6 +178,7 @@ function writeReleaseManifest() {
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
       "scripts/check-structured-data.mjs",
+      "scripts/check-security-headers.mjs",
       "scripts/check-static-asset-structure.mjs",
       "scripts/check-image-assets.mjs",
       "scripts/check-cache-headers.mjs",
@@ -1407,6 +1408,7 @@ async function main() {
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
   run("node", ["--check", "scripts/check-structured-data.mjs"]);
+  run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
@@ -1419,6 +1421,7 @@ async function main() {
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
   run("node", ["scripts/check-structured-data.mjs", "--out-dir", join(outRoot, "structured-data-local")]);
+  run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
 
@@ -1433,6 +1436,7 @@ async function main() {
     run("node", ["scripts/check-amazon-affiliate-links.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "amazon-affiliate-live")]);
     run("node", ["scripts/check-worker-shortlinks.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "worker-shortlinks-live")]);
     run("node", ["scripts/check-structured-data.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "structured-data-live")]);
+    run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });

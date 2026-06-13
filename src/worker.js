@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS" && url.pathname.startsWith("/api/")) {
-      return new Response(null, { headers: corsHeaders() });
+      return withSecurityHeaders(new Response(null, { headers: corsHeaders() }));
     }
 
     if (url.pathname === "/api/subscribe" && request.method === "POST") {
