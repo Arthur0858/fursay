@@ -4,15 +4,15 @@ import { resolve } from "node:path";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-content-growth-contract";
 const PAGES = [
-  { path: "/", file: "index.html", minLatest: 2 },
-  { path: "/zh/", file: "zh/index.html", minLatest: 2 },
-  { path: "/ar/", file: "ar/index.html", minLatest: 2 },
-  { path: "/koko", file: "koko.html", minLatest: 1 },
-  { path: "/zh/koko", file: "zh/koko.html", minLatest: 1 },
-  { path: "/ar/koko", file: "ar/koko.html", minLatest: 1 },
-  { path: "/arabic", file: "arabic.html", minLatest: 1 },
-  { path: "/zh/arabic", file: "zh/arabic.html", minLatest: 1 },
-  { path: "/ar/arabic", file: "ar/arabic.html", minLatest: 1 },
+  { path: "/", file: "index.html", minLatest: 2, targets: { koko: "/episodes/koko-feelings", noor: "/episodes/noor-greetings" } },
+  { path: "/zh/", file: "zh/index.html", minLatest: 2, targets: { koko: "/zh/episodes/koko-feelings", noor: "/zh/episodes/noor-greetings" } },
+  { path: "/ar/", file: "ar/index.html", minLatest: 2, targets: { koko: "/ar/episodes/koko-feelings", noor: "/ar/episodes/noor-greetings" } },
+  { path: "/koko", file: "koko.html", minLatest: 1, targets: { koko: "/episodes/koko-feelings" } },
+  { path: "/zh/koko", file: "zh/koko.html", minLatest: 1, targets: { koko: "/zh/episodes/koko-feelings" } },
+  { path: "/ar/koko", file: "ar/koko.html", minLatest: 1, targets: { koko: "/ar/episodes/koko-feelings" } },
+  { path: "/arabic", file: "arabic.html", minLatest: 1, targets: { noor: "/episodes/noor-greetings" } },
+  { path: "/zh/arabic", file: "zh/arabic.html", minLatest: 1, targets: { noor: "/zh/episodes/noor-greetings" } },
+  { path: "/ar/arabic", file: "ar/arabic.html", minLatest: 1, targets: { noor: "/ar/episodes/noor-greetings" } },
 ];
 
 function parseArgs() {
@@ -43,6 +43,15 @@ async function readJson(baseUrl, pathname) {
   return JSON.parse(await readFile(resolve(SITE_DIR, pathname.replace(/^\//, "")), "utf8"));
 }
 
+function attr(tag, name) {
+  return tag.match(new RegExp(`\\s${name}=(["'])(.*?)\\1`, "i"))?.[2] || "";
+}
+
+function latestStoryLinks(html) {
+  return [...html.matchAll(/<a\b[^>]*\sdata-latest-story=["'](koko|noor)["'][^>]*>/gi)]
+    .map((match) => ({ pack: match[1], href: attr(match[0], "href"), tag: match[0] }));
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
@@ -50,11 +59,22 @@ async function main() {
   let totalLatest = 0;
   for (const page of PAGES) {
     const html = await readText(args.baseUrl, page);
-    const latest = [...html.matchAll(/data-latest-story=["'](koko|noor)["']/g)].map((match) => match[1]);
+    const links = latestStoryLinks(html);
+    const latest = links.map((link) => link.pack);
     totalLatest += latest.length;
     if (latest.length < page.minLatest) failures.push(`${page.path}:latest_story_entries:${latest.length}<${page.minLatest}`);
     if (!/youtube\.com\/@(?:KokosForest|ArabicKidsChinese)/.test(html)) failures.push(`${page.path}:missing_youtube_story_link`);
-    pages.push({ path: page.path, latestStories: latest.length, packs: latest });
+    for (const [pack, expectedHref] of Object.entries(page.targets || {})) {
+      const link = links.find((item) => item.pack === pack);
+      if (!link) {
+        failures.push(`${page.path}:missing_latest_story_pack:${pack}`);
+        continue;
+      }
+      if (link.href !== expectedHref) failures.push(`${page.path}:latest_story_href:${pack}:${link.href || "none"}!=${expectedHref}`);
+      if (/^https?:\/\//i.test(link.href)) failures.push(`${page.path}:latest_story_external:${pack}:${link.href}`);
+      if (/target=["']_blank["']/i.test(link.tag)) failures.push(`${page.path}:latest_story_external_target:${pack}`);
+    }
+    pages.push({ path: page.path, latestStories: latest.length, packs: latest, links: links.map(({ pack, href }) => ({ pack, href })) });
   }
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");

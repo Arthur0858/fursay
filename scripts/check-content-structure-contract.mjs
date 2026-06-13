@@ -15,9 +15,9 @@ const PAGES = [
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
     storyLinks: [
-      "https://www.youtube.com/@KokosForest",
+      "/episodes/koko-feelings",
       "https://www.youtube.com/@KokosForest/playlists",
-      "https://www.youtube.com/@ArabicKidsChinese",
+      "/episodes/noor-greetings",
       "https://www.youtube.com/@ArabicKidsChinese/playlists",
     ],
   },
@@ -32,9 +32,9 @@ const PAGES = [
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
     storyLinks: [
-      "https://www.youtube.com/@KokosForest",
+      "/zh/episodes/koko-feelings",
       "https://www.youtube.com/@KokosForest/playlists",
-      "https://www.youtube.com/@ArabicKidsChinese",
+      "/zh/episodes/noor-greetings",
       "https://www.youtube.com/@ArabicKidsChinese/playlists",
     ],
   },
@@ -50,9 +50,9 @@ const PAGES = [
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
     storyLinks: [
-      "https://www.youtube.com/@KokosForest",
+      "/ar/episodes/koko-feelings",
       "https://www.youtube.com/@KokosForest/playlists",
-      "https://www.youtube.com/@ArabicKidsChinese",
+      "/ar/episodes/noor-greetings",
       "https://www.youtube.com/@ArabicKidsChinese/playlists",
     ],
   },
@@ -99,7 +99,7 @@ const PAGES = [
     noEmptyStoryNote: true,
     storyLinks: [
       "https://www.youtube.com/@KokosForest",
-      "https://www.youtube.com/@KokosForest/videos",
+      "/ar/episodes/koko-feelings",
       "https://www.youtube.com/@KokosForest/playlists",
     ],
   },
@@ -146,7 +146,7 @@ const PAGES = [
     noEmptyStoryNote: true,
     storyLinks: [
       "https://www.youtube.com/@ArabicKidsChinese",
-      "https://www.youtube.com/@ArabicKidsChinese/videos",
+      "/ar/episodes/noor-greetings",
       "https://www.youtube.com/@ArabicKidsChinese/playlists",
     ],
   },
@@ -291,8 +291,10 @@ function checkPage(page, html) {
       const href = attr(tag, "href");
       const rel = attr(tag, "rel").split(/\s+/).filter(Boolean);
       const classList = attr(tag, "class").split(/\s+/).filter(Boolean);
-      if (attr(tag, "target") !== "_blank") failures.push(`story_link_missing_blank:${href}`);
-      if (!rel.includes("noopener")) failures.push(`story_link_missing_noopener:${href}`);
+      if (/^https?:\/\//i.test(href)) {
+        if (attr(tag, "target") !== "_blank") failures.push(`story_link_missing_blank:${href}`);
+        if (!rel.includes("noopener")) failures.push(`story_link_missing_noopener:${href}`);
+      }
       if (!classList.includes("unstyled-card-link")) failures.push(`story_link_missing_card_class:${href}`);
     }
   }

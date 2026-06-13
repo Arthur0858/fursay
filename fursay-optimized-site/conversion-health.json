@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "ac3ea17",
-    "summary": "Add Noor greetings episode landing pages"
+    "commit": "1891730",
+    "summary": "Sync Noor greetings release manifests"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
