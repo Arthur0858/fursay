@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "9372505",
-    "summary": "Sync Fursay event report manifest"
+    "commit": "01ac02f",
+    "summary": "Add Fursay owned product checkout gate"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
