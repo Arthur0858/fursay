@@ -1747,6 +1747,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-tools-20260613-ops1.css")) {
     failures.push("site_health_missing_ops_tools_css");
   }
+  if (!siteHealth.sharedAssets?.css?.includes("/css/home-common-20260613-css1.css")) {
+    failures.push("site_health_missing_home_common_css");
+  }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-book-base-20260613-base1.css")) {
     failures.push("site_health_missing_picture_book_base_css");
   }

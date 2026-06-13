@@ -4,6 +4,7 @@ import { resolve, join } from "node:path";
 const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const EXPECTED_CSS = [
+  "home-common-20260613-css1.css",
   "home-ar-page-20260613-inline1.css",
   "home-en-page-20260613-inline1.css",
   "home-zh-page-20260613-inline1.css",
@@ -44,6 +45,7 @@ const OPERATIONS_HTML = new Set([
   "traffic-launch.html",
 ]);
 const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
+const HOME_COMMON_CSS = "/css/home-common-20260613-css1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
 
 function parseArgs() {
@@ -119,6 +121,12 @@ async function main() {
     }
     if ((MAIN_STORY_HTML.has(relativeFile) || OPERATIONS_HTML.has(relativeFile)) && !assets.css.includes(MAIN_SHARED_CSS)) {
       failures.push(`page_missing_main_shared_css:${relativeFile}`);
+    }
+    if (["index.html", "zh/index.html", "ar/index.html"].includes(relativeFile) && !assets.css.includes(HOME_COMMON_CSS)) {
+      failures.push(`home_page_missing_home_common_css:${relativeFile}`);
+    }
+    if (!["index.html", "zh/index.html", "ar/index.html"].includes(relativeFile) && assets.css.includes(HOME_COMMON_CSS)) {
+      failures.push(`non_home_page_loads_home_common_css:${relativeFile}`);
     }
     referenced.css.push(...assets.css);
     referenced.js.push(...assets.js);

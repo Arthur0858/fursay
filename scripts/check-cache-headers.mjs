@@ -29,6 +29,12 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
+    path: "/css/home-common-20260613-css1.css",
+    status: 200,
+    cacheIncludes: ["public", "max-age=31536000", "immutable"],
+    contentTypeIncludes: "text/css",
+  },
+  {
     path: "/css/picture-book-base-20260613-base1.css",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
