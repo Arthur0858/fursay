@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "521e597",
-    "summary": "Sync Fursay conversion dashboard cache gate"
+    "commit": "865dbbe",
+    "summary": "Align Fursay funnel cache expectation"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
