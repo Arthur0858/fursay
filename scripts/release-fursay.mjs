@@ -183,6 +183,7 @@ function writeReleaseManifest() {
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
       "scripts/check-structured-data.mjs",
+      "scripts/check-social-preview-contract.mjs",
       "scripts/check-head-metadata.mjs",
       "scripts/check-accessibility-contract.mjs",
       "scripts/check-discovery-contract.mjs",
@@ -661,6 +662,8 @@ function writeLinksPage(siteDir, links) {
   <meta property="og:description" content="Choose Koko or Noor and get a free family story pack.">
   <meta property="og:url" content="https://fursay.com/links">
   <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Fursay story pack chooser preview">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay story pack links">
@@ -1397,6 +1400,8 @@ function writeShareKitPage(siteDir, kit) {
   <meta property="og:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
   <meta property="og:url" content="https://fursay.com/share-kit">
   <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Fursay family share kit preview">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay Share Kit">
@@ -1448,6 +1453,7 @@ async function main() {
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
   run("node", ["--check", "scripts/check-structured-data.mjs"]);
+  run("node", ["--check", "scripts/check-social-preview-contract.mjs"]);
   run("node", ["--check", "scripts/check-head-metadata.mjs"]);
   run("node", ["--check", "scripts/check-accessibility-contract.mjs"]);
   run("node", ["--check", "scripts/check-discovery-contract.mjs"]);
@@ -1470,6 +1476,7 @@ async function main() {
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
   run("node", ["scripts/check-structured-data.mjs", "--out-dir", join(outRoot, "structured-data-local")]);
+  run("node", ["scripts/check-social-preview-contract.mjs", "--out-dir", join(outRoot, "social-preview-local")]);
   run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
   run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
@@ -1494,6 +1501,7 @@ async function main() {
     run("node", ["scripts/check-amazon-affiliate-links.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "amazon-affiliate-live")]);
     run("node", ["scripts/check-worker-shortlinks.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "worker-shortlinks-live")]);
     run("node", ["scripts/check-structured-data.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "structured-data-live")]);
+    run("node", ["scripts/check-social-preview-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "social-preview-live")]);
     run("node", ["scripts/check-head-metadata.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "head-metadata-live")]);
     run("node", ["scripts/check-accessibility-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "accessibility-live")]);
     run("node", ["scripts/check-discovery-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "discovery-live")]);
