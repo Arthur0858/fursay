@@ -22,6 +22,10 @@ Story worlds:
   - Arabic: https://fursay.com/ar/arabic
   - YouTube: https://www.youtube.com/@ArabicKidsChinese
 
+Episode landing pages:
+- Koko feelings story pack: https://fursay.com/episodes/koko-feelings
+- Noor colors story pack: https://fursay.com/episodes/noor-colors
+
 Useful actions:
 - Choose a story world from the home page.
 - Watch one free story on YouTube.

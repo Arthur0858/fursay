@@ -220,6 +220,22 @@ body.picture-world .modal-submit {
   box-shadow: 0 8px 18px rgba(69, 126, 92, 0.16) !important;
   border: 0 !important;
 }
+body.picture-world .video-embed {
+  width: min(960px, calc(100% - 32px)) !important;
+  aspect-ratio: 16 / 9 !important;
+  margin: 0 auto !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(86, 72, 52, 0.12) !important;
+  box-shadow: var(--world-shadow) !important;
+  background: rgba(255, 253, 247, 0.84) !important;
+}
+body.picture-world .video-embed iframe {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
 body.picture-world .nav-cta {
   background: var(--world-green) !important;
   color: white !important;

@@ -18,6 +18,8 @@ const PAGES = [
   { path: "/creator-kit", file: "creator-kit.html", lang: "en", canonical: "https://fursay.com/creator-kit", robots: "noindex,follow" },
   { path: "/traffic-launch", file: "traffic-launch.html", lang: "en", canonical: "https://fursay.com/traffic-launch", robots: "noindex,follow" },
   { path: "/deploy-readiness", file: "deploy-readiness.html", lang: "en", canonical: "https://fursay.com/deploy-readiness", robots: "noindex,follow" },
+  { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html", lang: "en", canonical: "https://fursay.com/episodes/koko-feelings", ogImage: "https://fursay.com/og-koko.png" },
+  { path: "/episodes/noor-colors", file: "episodes/noor-colors.html", lang: "en", canonical: "https://fursay.com/episodes/noor-colors", ogImage: "https://fursay.com/og-noor.png" },
 ];
 
 function parseArgs() {

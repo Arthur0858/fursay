@@ -21,6 +21,8 @@ const PUBLIC_PAGES = [
   "/creator-kit",
   "/traffic-launch",
   "/deploy-readiness",
+  "/episodes/koko-feelings",
+  "/episodes/noor-colors",
 ];
 const DISCOVERY_FILES = [
   "/sitemap.xml",

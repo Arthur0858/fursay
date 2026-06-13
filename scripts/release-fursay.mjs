@@ -197,6 +197,7 @@ function writeReleaseManifest() {
       "scripts/check-accessibility-contract.mjs",
       "scripts/check-discovery-contract.mjs",
       "scripts/check-content-growth-contract.mjs",
+      "scripts/check-episode-landing-contract.mjs",
       "scripts/check-monetization-interest-contract.mjs",
       "scripts/check-noor-subscriber-readiness.mjs",
       "scripts/check-security-headers.mjs",
@@ -223,6 +224,7 @@ function writeReleaseManifest() {
       eventTrackingSubmitPages: 3,
       anonymousConversionEvents: 12,
       latestStoryEntries: 12,
+      episodeLandingPages: 2,
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
       webVitalsChecks: 18,
@@ -415,6 +417,8 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/arabic", noorAlternates, "0.7"),
     sitemapUrl("https://fursay.com/zh/arabic", noorAlternates, "0.7"),
     sitemapUrl("https://fursay.com/ar/arabic", noorAlternates, "0.7"),
+    sitemapUrl("https://fursay.com/episodes/koko-feelings", { en: "https://fursay.com/episodes/koko-feelings", "x-default": "https://fursay.com/episodes/koko-feelings" }, "0.6"),
+    sitemapUrl("https://fursay.com/episodes/noor-colors", { en: "https://fursay.com/episodes/noor-colors", "x-default": "https://fursay.com/episodes/noor-colors" }, "0.6"),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -1188,6 +1192,28 @@ function writeVideoDiscovery(siteDir, source) {
       externalVideoHost: "youtube",
     },
     channels: buildVideoDiscoveryChannels(),
+    episodeLandings: [
+      {
+        path: "/episodes/koko-feelings",
+        url: "https://fursay.com/episodes/koko-feelings",
+        pack: "koko",
+        title: "Koko Feelings Story Pack",
+        channel: "Koko's Forest Adventure",
+        watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UU0X4CIwf6KoUMoIHwRxN3jw",
+        words: ["happy", "sad", "brave"],
+        storyPackCta: "episode_koko_feelings_pack",
+      },
+      {
+        path: "/episodes/noor-colors",
+        url: "https://fursay.com/episodes/noor-colors",
+        pack: "noor",
+        title: "Noor Colors Story Pack",
+        channel: "Arabic Kids Chinese Picture Book",
+        watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
+        words: ["hong se", "lan se", "lu se"],
+        storyPackCta: "episode_noor_colors_pack",
+      },
+    ],
   };
   writeFileSync(resolve(siteDir, "video-discovery.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
@@ -1277,6 +1303,7 @@ function writeConversionHealth(siteDir, source) {
     },
     growth: {
       latestStoryEntries: release.liveExpectations.latestStoryEntries,
+      episodeLandingPages: release.liveExpectations.episodeLandingPages,
       noorLeadMagnetPages: release.liveExpectations.noorLeadMagnetPages,
       noorReadinessStatus: "safe_wait_subscriber_empty",
       productInterestLinks: release.liveExpectations.productInterestLinks,
@@ -1355,6 +1382,7 @@ function writeSiteHealthManifest(siteDir) {
     site: "Fursay",
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
     generatedFrom: [
       "/data/site-structure.json",
       "/campaigns.json",
@@ -1367,6 +1395,10 @@ function writeSiteHealthManifest(siteDir) {
       storyWorlds: [
         ...localizedRouteUrls(siteStructure, "koko"),
         ...localizedRouteUrls(siteStructure, "arabic"),
+      ],
+      episodeLandings: [
+        "https://fursay.com/episodes/koko-feelings",
+        "https://fursay.com/episodes/noor-colors",
       ],
       join: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/join/")),
       sample: shortlinkUrls(shortlinks, (route) => route.path.startsWith("/sample/")),
@@ -1655,6 +1687,7 @@ async function main() {
   run("node", ["--check", "scripts/check-accessibility-contract.mjs"]);
   run("node", ["--check", "scripts/check-discovery-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-growth-contract.mjs"]);
+  run("node", ["--check", "scripts/check-episode-landing-contract.mjs"]);
   run("node", ["--check", "scripts/check-monetization-interest-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
@@ -1693,6 +1726,7 @@ async function main() {
   run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
   run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
+  run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);
   run("node", ["scripts/check-monetization-interest-contract.mjs", "--out-dir", join(outRoot, "monetization-interest-local")]);
   run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
@@ -1732,6 +1766,7 @@ async function main() {
     run("node", ["scripts/check-accessibility-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "accessibility-live")]);
     run("node", ["scripts/check-discovery-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "discovery-live")]);
     run("node", ["scripts/check-content-growth-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-growth-live")]);
+    run("node", ["scripts/check-episode-landing-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "episode-landing-live")]);
     run("node", ["scripts/check-monetization-interest-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-interest-live")]);
     run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-readiness-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);

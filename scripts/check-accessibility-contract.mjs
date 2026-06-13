@@ -19,6 +19,8 @@ const PAGES = [
   { path: "/creator-kit", file: "creator-kit.html" },
   { path: "/traffic-launch", file: "traffic-launch.html" },
   { path: "/deploy-readiness", file: "deploy-readiness.html" },
+  { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html" },
+  { path: "/episodes/noor-colors", file: "episodes/noor-colors.html" },
 ];
 
 function parseArgs() {

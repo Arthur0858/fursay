@@ -1084,14 +1084,16 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/arabic",
     "https://fursay.com/zh/arabic",
     "https://fursay.com/ar/arabic",
+    "https://fursay.com/episodes/koko-feelings",
+    "https://fursay.com/episodes/noor-colors",
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
   if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);
   for (const loc of expectedSitemapLocs) {
     if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
   }
-  if (sitemapAlternateCount !== expectedSitemapLocs.length * 4) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
-  if (lastmods.length !== 9) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
+  if (sitemapAlternateCount !== 40) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  if (lastmods.length !== expectedSitemapLocs.length) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
   if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
   if (!llms.includes("https://fursay.com/sitemap.xml") || !llms.includes("https://fursay.com/robots.txt")) {

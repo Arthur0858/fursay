@@ -23,6 +23,16 @@ const EXPECTED_PAGES = {
     channel: "noor",
     localizedRoutes: { en: "/arabic", "zh-TW": "/zh/arabic", ar: "/ar/arabic" },
   },
+  "episode-koko-feelings": {
+    route: "/episodes/koko-feelings",
+    channel: "koko",
+    localizedRoutes: { en: "/episodes/koko-feelings" },
+  },
+  "episode-noor-colors": {
+    route: "/episodes/noor-colors",
+    channel: "noor",
+    localizedRoutes: { en: "/episodes/noor-colors" },
+  },
 };
 const EXPECTED_CHANNELS = {
   koko: {
@@ -280,7 +290,7 @@ async function validateLocalHtmlInventory(context, failures, data) {
     .map((file) => relative(context.root, file).split("\\").join("/"))
     .sort();
   data.htmlFiles = htmlFiles;
-  if (htmlFiles.length !== 14) failures.push(`html_file_count:${htmlFiles.length}`);
+  if (htmlFiles.length !== 16) failures.push(`html_file_count:${htmlFiles.length}`);
   for (const file of htmlFiles) {
     const html = await readLocalText(context.root, file);
     for (const href of [...stylesheetHrefs(html), ...scriptSrcs(html)]) {

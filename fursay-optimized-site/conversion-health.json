@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-06-13",
+  "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "b648aee",
-    "summary": "Add Fursay growth health gates"
+    "commit": "81acaf4",
+    "summary": "Sync Fursay conversion health manifest"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -39,6 +39,7 @@
   },
   "growth": {
     "latestStoryEntries": 12,
+    "episodeLandingPages": 2,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "productInterestLinks": 18

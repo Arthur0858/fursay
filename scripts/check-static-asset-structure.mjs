@@ -40,6 +40,8 @@ const MAIN_STORY_HTML = new Set([
   "arabic.html",
   "zh/arabic.html",
   "ar/arabic.html",
+  "episodes/koko-feelings.html",
+  "episodes/noor-colors.html",
 ]);
 const OPERATIONS_HTML = new Set([
   "creator-kit.html",
@@ -54,8 +56,8 @@ const KOKO_COMMON_CSS = "/css/koko-common-20260613-cache1.css";
 const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops2.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
-const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html"]);
-const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html"]);
+const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html", "episodes/koko-feelings.html"]);
+const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html", "episodes/noor-colors.html"]);
 const VOID_HTML_TAGS = new Set([
   "area",
   "base",
