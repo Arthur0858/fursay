@@ -29,6 +29,9 @@ const PUBLIC_PAGES = [
   "/episodes/noor-colors",
   "/zh/episodes/noor-colors",
   "/ar/episodes/noor-colors",
+  "/episodes/noor-greetings",
+  "/zh/episodes/noor-greetings",
+  "/ar/episodes/noor-greetings",
 ];
 const DISCOVERY_FILES = [
   "/sitemap.xml",

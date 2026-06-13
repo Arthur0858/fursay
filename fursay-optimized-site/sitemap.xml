@@ -167,6 +167,39 @@
   </url>
 
   <url>
+    <loc>https://fursay.com/episodes/noor-greetings</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-greetings"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/zh/episodes/noor-greetings</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-greetings"/>
+  </url>
+
+  <url>
+    <loc>https://fursay.com/ar/episodes/noor-greetings</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/episodes/noor-greetings"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/episodes/noor-greetings"/>
+  </url>
+
+  <url>
     <loc>https://fursay.com/products</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>

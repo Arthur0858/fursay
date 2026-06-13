@@ -20,6 +20,9 @@ const PAGES = [
   { path: "/episodes/noor-colors", market: "amazon" },
   { path: "/zh/episodes/noor-colors", market: "books" },
   { path: "/ar/episodes/noor-colors", market: "amazon" },
+  { path: "/episodes/noor-greetings", market: "amazon" },
+  { path: "/zh/episodes/noor-greetings", market: "books" },
+  { path: "/ar/episodes/noor-greetings", market: "amazon" },
 ];
 
 function parseArgs() {

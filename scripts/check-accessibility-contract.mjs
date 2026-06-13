@@ -27,6 +27,9 @@ const PAGES = [
   { path: "/episodes/noor-colors", file: "episodes/noor-colors.html" },
   { path: "/zh/episodes/noor-colors", file: "zh/episodes/noor-colors.html" },
   { path: "/ar/episodes/noor-colors", file: "ar/episodes/noor-colors.html", rtl: true },
+  { path: "/episodes/noor-greetings", file: "episodes/noor-greetings.html" },
+  { path: "/zh/episodes/noor-greetings", file: "zh/episodes/noor-greetings.html" },
+  { path: "/ar/episodes/noor-greetings", file: "ar/episodes/noor-greetings.html", rtl: true },
 ];
 
 function parseArgs() {

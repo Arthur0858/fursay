@@ -27,6 +27,9 @@ const PAGES = [
   { path: "/episodes/noor-colors", lang: "en", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
   { path: "/zh/episodes/noor-colors", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor", market: "books" },
   { path: "/ar/episodes/noor-colors", lang: "ar", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
+  { path: "/episodes/noor-greetings", lang: "en", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
+  { path: "/zh/episodes/noor-greetings", lang: "zh-TW", campaign: "noor_story_funnel", pack: "noor", market: "books" },
+  { path: "/ar/episodes/noor-greetings", lang: "ar", campaign: "noor_story_funnel", pack: "noor", market: "amazon" },
 ];
 const SUBMIT_PATHS = new Set(["/", "/koko", "/arabic"]);
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name"];

@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "d9ef589",
-    "summary": "Add product interest browser smoke"
+    "commit": "cbed83c",
+    "summary": "Sync Fursay product browser smoke manifests"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -82,25 +82,25 @@
   ],
   "coverage": {
     "publicStoryPages": 9,
-    "subscribeOpenPages": 15,
-    "affiliateClickPages": 15,
-    "outboundClickPages": 15,
-    "shareOrCopyPages": 15,
+    "subscribeOpenPages": 18,
+    "affiliateClickPages": 18,
+    "outboundClickPages": 18,
+    "shareOrCopyPages": 18,
     "productInterestPages": 9,
     "submitAttemptPages": 3
   },
   "growth": {
     "latestStoryEntries": 12,
-    "episodeLandingPages": 6,
+    "episodeLandingPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "productInterestLinks": 18
   },
   "monetization": {
     "affiliate": {
-      "amazonLinks": 33,
+      "amazonLinks": 37,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 16,
+      "booksLinks": 18,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

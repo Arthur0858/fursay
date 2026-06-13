@@ -26,6 +26,9 @@ const PAGES = [
   { path: "/episodes/noor-colors", file: "episodes/noor-colors.html", lang: "en", canonical: "https://fursay.com/episodes/noor-colors", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/episodes/noor-colors", file: "zh/episodes/noor-colors.html", lang: "zh-TW", canonical: "https://fursay.com/zh/episodes/noor-colors", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/ar/episodes/noor-colors", file: "ar/episodes/noor-colors.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/episodes/noor-colors", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/episodes/noor-greetings", file: "episodes/noor-greetings.html", lang: "en", canonical: "https://fursay.com/episodes/noor-greetings", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/zh/episodes/noor-greetings", file: "zh/episodes/noor-greetings.html", lang: "zh-TW", canonical: "https://fursay.com/zh/episodes/noor-greetings", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/ar/episodes/noor-greetings", file: "ar/episodes/noor-greetings.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/episodes/noor-greetings", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
 ];
 
 function parseArgs() {

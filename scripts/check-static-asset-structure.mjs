@@ -46,6 +46,9 @@ const MAIN_STORY_HTML = new Set([
   "episodes/noor-colors.html",
   "zh/episodes/noor-colors.html",
   "ar/episodes/noor-colors.html",
+  "episodes/noor-greetings.html",
+  "zh/episodes/noor-greetings.html",
+  "ar/episodes/noor-greetings.html",
 ]);
 const OPERATIONS_HTML = new Set([
   "conversion-health.html",
@@ -62,7 +65,7 @@ const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops2.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
 const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html", "episodes/koko-feelings.html", "zh/episodes/koko-feelings.html", "ar/episodes/koko-feelings.html"]);
-const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html", "episodes/noor-colors.html", "zh/episodes/noor-colors.html", "ar/episodes/noor-colors.html"]);
+const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html", "episodes/noor-colors.html", "zh/episodes/noor-colors.html", "ar/episodes/noor-colors.html", "episodes/noor-greetings.html", "zh/episodes/noor-greetings.html", "ar/episodes/noor-greetings.html"]);
 const VOID_HTML_TAGS = new Set([
   "area",
   "base",

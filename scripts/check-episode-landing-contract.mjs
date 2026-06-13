@@ -58,6 +58,33 @@ const EPISODES = [
     words: ["hong se", "lan se", "lu se"],
     schemaSeries: "Arabic Kids Chinese Picture Book",
   },
+  {
+    path: "/episodes/noor-greetings",
+    file: "episodes/noor-greetings.html",
+    pack: "noor",
+    lang: "en",
+    campaign: "noor_story_funnel",
+    words: ["ni hao", "zai jian", "xie xie"],
+    schemaSeries: "Arabic Kids Chinese Picture Book",
+  },
+  {
+    path: "/zh/episodes/noor-greetings",
+    file: "zh/episodes/noor-greetings.html",
+    pack: "noor",
+    lang: "zh-TW",
+    campaign: "noor_story_funnel",
+    words: ["ni hao", "zai jian", "xie xie"],
+    schemaSeries: "Arabic Kids Chinese Picture Book",
+  },
+  {
+    path: "/ar/episodes/noor-greetings",
+    file: "ar/episodes/noor-greetings.html",
+    pack: "noor",
+    lang: "ar",
+    campaign: "noor_story_funnel",
+    words: ["ni hao", "zai jian", "xie xie"],
+    schemaSeries: "Arabic Kids Chinese Picture Book",
+  },
 ];
 
 function parseArgs() {

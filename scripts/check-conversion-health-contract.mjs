@@ -22,6 +22,9 @@ const PAGES = [
   { path: "/episodes/noor-colors" },
   { path: "/zh/episodes/noor-colors" },
   { path: "/ar/episodes/noor-colors" },
+  { path: "/episodes/noor-greetings" },
+  { path: "/zh/episodes/noor-greetings" },
+  { path: "/ar/episodes/noor-greetings" },
 ];
 const BASE_REQUIRED_EVENTS = [
   "fursay_subscribe_open_click",

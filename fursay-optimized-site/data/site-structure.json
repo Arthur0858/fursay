@@ -75,6 +75,17 @@
         "zh-TW": "/zh/episodes/noor-colors",
         "ar": "/ar/episodes/noor-colors"
       }
+    },
+    {
+      "key": "episode-noor-greetings",
+      "route": "/episodes/noor-greetings",
+      "channel": "noor",
+      "type": "episodeLanding",
+      "localizedRoutes": {
+        "en": "/episodes/noor-greetings",
+        "zh-TW": "/zh/episodes/noor-greetings",
+        "ar": "/ar/episodes/noor-greetings"
+      }
     }
   ],
   "channels": {

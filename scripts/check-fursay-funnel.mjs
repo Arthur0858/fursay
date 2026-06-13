@@ -1090,6 +1090,9 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/episodes/noor-colors",
     "https://fursay.com/zh/episodes/noor-colors",
     "https://fursay.com/ar/episodes/noor-colors",
+    "https://fursay.com/episodes/noor-greetings",
+    "https://fursay.com/zh/episodes/noor-greetings",
+    "https://fursay.com/ar/episodes/noor-greetings",
     "https://fursay.com/products",
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
@@ -1097,7 +1100,7 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const loc of expectedSitemapLocs) {
     if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
   }
-  if (sitemapAlternateCount !== 60) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  if (sitemapAlternateCount !== 72) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
   if (lastmods.length !== expectedSitemapLocs.length) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
   if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
@@ -1278,14 +1281,14 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 41) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
-  if (release.liveExpectations?.amazonAffiliateLinks !== 33) failures.push(`release_amazon_affiliate_link_expectation:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.amazonAffiliateLinks !== 37) failures.push(`release_amazon_affiliate_link_expectation:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
   if (release.liveExpectations?.amazonAffiliateTag !== "parenttechche-20") failures.push(`release_amazon_affiliate_tag:${release.liveExpectations?.amazonAffiliateTag || "none"}`);
-  if (release.liveExpectations?.booksAffiliateLinks !== 16) failures.push(`release_books_affiliate_link_expectation:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.booksAffiliateLinks !== 18) failures.push(`release_books_affiliate_link_expectation:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
   if (release.liveExpectations?.booksAffiliateId !== "arthur0858") failures.push(`release_books_affiliate_id:${release.liveExpectations?.booksAffiliateId || "none"}`);
-  if (release.liveExpectations?.amazonAffiliateLinks !== 33) failures.push(`release_amazon_affiliate_links:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
-  if (release.liveExpectations?.booksAffiliateLinks !== 16) failures.push(`release_books_affiliate_links:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
-  if (release.liveExpectations?.eventTrackingPages !== 15) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
-  if (release.liveExpectations?.affiliateEventTrackingPages !== 15) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
+  if (release.liveExpectations?.amazonAffiliateLinks !== 37) failures.push(`release_amazon_affiliate_links:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.booksAffiliateLinks !== 18) failures.push(`release_books_affiliate_links:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.eventTrackingPages !== 18) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
+  if (release.liveExpectations?.affiliateEventTrackingPages !== 18) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
   if (release.liveExpectations?.anonymousConversionEvents !== 13) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
   if (release.liveExpectations?.eventAnalyticsBlobFields !== 15) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);

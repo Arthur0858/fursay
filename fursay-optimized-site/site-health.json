@@ -108,7 +108,10 @@
       "https://fursay.com/ar/episodes/koko-feelings",
       "https://fursay.com/episodes/noor-colors",
       "https://fursay.com/zh/episodes/noor-colors",
-      "https://fursay.com/ar/episodes/noor-colors"
+      "https://fursay.com/ar/episodes/noor-colors",
+      "https://fursay.com/episodes/noor-greetings",
+      "https://fursay.com/zh/episodes/noor-greetings",
+      "https://fursay.com/ar/episodes/noor-greetings"
     ],
     "conversionHealth": [
       "https://fursay.com/conversion-health",
@@ -356,16 +359,16 @@
   ],
   "growth": {
     "latestStoryEntries": 12,
-    "episodeLandingPages": 6,
+    "episodeLandingPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "productInterestLinks": 18
   },
   "monetization": {
     "affiliate": {
-      "amazonLinks": 33,
+      "amazonLinks": 37,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 16,
+      "booksLinks": 18,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

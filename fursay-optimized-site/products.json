@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "d9ef589",
-    "summary": "Add product interest browser smoke"
+    "commit": "cbed83c",
+    "summary": "Sync Fursay product browser smoke manifests"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",

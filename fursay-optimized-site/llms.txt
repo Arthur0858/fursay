@@ -29,6 +29,9 @@ Episode landing pages:
 - Noor colors story pack: https://fursay.com/episodes/noor-colors
   - Traditional Chinese: https://fursay.com/zh/episodes/noor-colors
   - Arabic: https://fursay.com/ar/episodes/noor-colors
+- Noor greetings story pack: https://fursay.com/episodes/noor-greetings
+  - Traditional Chinese: https://fursay.com/zh/episodes/noor-greetings
+  - Arabic: https://fursay.com/ar/episodes/noor-greetings
 
 Useful actions:
 - Choose a story world from the home page.
@@ -63,13 +66,13 @@ Useful actions:
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
 Commerce and affiliate policy:
-- Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic, https://fursay.com/zh/episodes/koko-feelings, https://fursay.com/zh/episodes/noor-colors
+- Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic, https://fursay.com/zh/episodes/koko-feelings, https://fursay.com/zh/episodes/noor-colors, https://fursay.com/zh/episodes/noor-greetings
 - Books.com.tw affiliate ID: arthur0858
-- Current expected Books.com.tw affiliate links: 16
-- English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/episodes/koko-feelings, https://fursay.com/episodes/noor-colors, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic, https://fursay.com/ar/episodes/koko-feelings, https://fursay.com/ar/episodes/noor-colors
+- Current expected Books.com.tw affiliate links: 18
+- English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/episodes/koko-feelings, https://fursay.com/episodes/noor-colors, https://fursay.com/episodes/noor-greetings, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic, https://fursay.com/ar/episodes/koko-feelings, https://fursay.com/ar/episodes/noor-colors, https://fursay.com/ar/episodes/noor-greetings
 - Amazon Associates Store ID: parenttechche-20
-- Current expected Amazon affiliate links: 33
-- Affiliate click tracking is expected on all 15 public story and episode pages.
+- Current expected Amazon affiliate links: 37
+- Affiliate click tracking is expected on all 18 public story and episode pages.
 - Anonymous conversion events post to /api/event and use Worker logs while Cloudflare Analytics Engine enablement is pending; the planned binding is FURSAY_EVENTS, dataset fursay_events, with no PII fields.
 - Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries five 7-day Analytics Engine summaries only after Cloudflare credentials and dataset enablement are available.
 - Owned products are interest-validation only: Koko printable pack and Noor 3-minute worksheet pack. The public interest page is listed above. Payment links are disabled until the checkout gate requirements are met.
