@@ -61,6 +61,26 @@ function pageDisclosureOk(html) {
   return /commission|affiliate|sponsored|聯盟|回饋|أمازون|تابعة|عمولة/i.test(html);
 }
 
+function isbn13ToIsbn10(value) {
+  if (!/^978\d{10}$/.test(value)) return value;
+  const body = value.slice(3, 12);
+  let sum = 0;
+  for (let i = 0; i < body.length; i += 1) sum += (10 - i) * Number(body[i]);
+  const check = (11 - (sum % 11)) % 11;
+  return `${body}${check === 10 ? "X" : check}`;
+}
+
+function amazonProductKey(href) {
+  const url = new URL(href);
+  const asin = url.pathname.split("/").filter(Boolean)[1] || "";
+  return `amazon:${isbn13ToIsbn10(asin.toUpperCase())}`;
+}
+
+function booksProductKey(href) {
+  const url = new URL(href);
+  return `books:${url.pathname.split("/").filter(Boolean).at(-1) || ""}`;
+}
+
 function checkPage(page, html, status) {
   const failures = [];
   const amazonLinks = [];
@@ -75,7 +95,8 @@ function checkPage(page, html, status) {
     const className = attr(anchor, "class");
     const url = new URL(href);
     const tag = url.searchParams.get("tag") || "";
-    amazonLinks.push({ href, tag, rel, className });
+    const productKey = amazonProductKey(href);
+    amazonLinks.push({ href, tag, rel, className, productKey });
     if (tag !== AMAZON_TAG) failures.push(`amazon_missing_tag:${href}`);
     if (!rel.includes("noopener")) failures.push(`amazon_missing_noopener:${href}`);
     if (!rel.includes("sponsored")) failures.push(`amazon_missing_sponsored:${href}`);
@@ -85,7 +106,8 @@ function checkPage(page, html, status) {
     const href = attr(anchor, "href");
     const rel = attr(anchor, "rel").split(/\s+/).filter(Boolean);
     const className = attr(anchor, "class");
-    booksLinks.push({ href, rel, className });
+    const productKey = booksProductKey(href);
+    booksLinks.push({ href, rel, className, productKey });
     if (!href.includes(`/assp.php/${BOOKS_AFFILIATE_ID}/`)) failures.push(`books_missing_affiliate_id:${href}`);
     if (!href.includes("utm_source=arthur0858")) failures.push(`books_missing_utm_source:${href}`);
     if (!rel.includes("noopener")) failures.push(`books_missing_noopener:${href}`);
@@ -96,6 +118,9 @@ function checkPage(page, html, status) {
   if (page.market === "books" && !booksLinks.length) failures.push("zh_page_missing_books_links");
   if (page.market === "amazon" && booksLinks.length) failures.push(`non_zh_page_must_not_use_books:${booksLinks.length}`);
   if (page.market === "amazon" && !amazonLinks.length) failures.push("non_zh_page_missing_amazon_links");
+  const productKeys = [...amazonLinks, ...booksLinks].map((link) => link.productKey);
+  const duplicateProductKeys = [...new Set(productKeys.filter((key, index) => productKeys.indexOf(key) !== index))];
+  if (duplicateProductKeys.length) failures.push(`duplicate_affiliate_products:${duplicateProductKeys.join(",")}`);
   if ((amazonLinks.length || booksLinks.length) && !pageDisclosureOk(html)) failures.push("affiliate_missing_disclosure");
   return {
     path: pathname,
@@ -106,6 +131,7 @@ function checkPage(page, html, status) {
       amazonLinks: amazonLinks.length,
       booksLinks: booksLinks.length,
       tags: [...new Set(amazonLinks.map((link) => link.tag).filter(Boolean))],
+      productKeys,
     },
   };
 }
