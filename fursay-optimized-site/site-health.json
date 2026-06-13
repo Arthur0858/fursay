@@ -173,6 +173,8 @@
     "family_share_message",
     "bio_shortlink",
     "bio_profile_copy",
+    "amazon_affiliate_book_links",
+    "amazon_affiliate_disclosure",
     "social_profile_links_page",
     "social_profile_links_manifest",
     "social_profile_primary_pack_choice",
@@ -223,6 +225,7 @@
   "successSignals": [
     "modal_preselect_matches_pack",
     "social_links_primary_cta_preselects_pack",
+    "amazon_affiliate_links_use_parenttechche_20",
     "shortlink_redirect_keeps_utm",
     "shortlink_subscribe_attribution",
     "traffic_launch_example_redirect_keeps_attribution",

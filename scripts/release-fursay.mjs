@@ -175,6 +175,7 @@ function writeReleaseManifest() {
       "scripts/check-fursay-funnel.mjs",
       "scripts/check-noor-list-activation.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
+      "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-cache-headers.mjs",
       "scripts/check-deploy-readiness.mjs",
       "audit-fursay.mjs",
@@ -182,6 +183,8 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 41,
+      amazonAffiliateLinks: 27,
+      amazonAffiliateTag: "parenttechche-20",
       cacheHeaderChecks: 43,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
@@ -1437,6 +1440,7 @@ async function main() {
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
+  run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs"]);
@@ -1444,6 +1448,7 @@ async function main() {
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
+  run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);
@@ -1453,6 +1458,7 @@ async function main() {
     run("node", ["scripts/check-fursay-funnel.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
     run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "newsletter-traffic-kit-live")]);
+    run("node", ["scripts/check-amazon-affiliate-links.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "amazon-affiliate-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });
