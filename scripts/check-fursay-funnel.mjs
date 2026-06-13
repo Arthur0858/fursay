@@ -1747,7 +1747,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-world-tools-20260613-ops1.css")) {
     failures.push("site_health_missing_ops_tools_css");
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/home-common-20260613-css1.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/home-common-20260613-cache1.css")) {
     failures.push("site_health_missing_home_common_css");
   }
   if (!siteHealth.sharedAssets?.css?.includes("/css/picture-book-base-20260613-base1.css")) {
@@ -1759,22 +1759,22 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/story-page-common-20260613-css1.css")) {
     failures.push("site_health_missing_story_page_common_css");
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-ltr-page-20260613-inline1.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-ltr-page-20260613-cache1.css")) {
     failures.push("site_health_missing_noor_ltr_css");
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-common-20260613-css1.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-common-20260613-cache1.css")) {
     failures.push("site_health_missing_noor_common_css");
   }
-  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-rtl-page-20260613-inline1.css")) {
+  if (!siteHealth.sharedAssets?.css?.includes("/css/noor-rtl-page-20260613-cache1.css")) {
     failures.push("site_health_missing_noor_rtl_css");
   }
   for (const asset of [
-    "/css/home-en-page-20260613-inline1.css",
-    "/css/home-zh-page-20260613-inline1.css",
-    "/css/home-ar-page-20260613-inline1.css",
-    "/css/koko-common-20260613-css1.css",
-    "/css/koko-en-page-20260613-inline1.css",
-    "/css/koko-ar-page-20260613-inline1.css",
+    "/css/home-en-page-20260613-cache1.css",
+    "/css/home-zh-page-20260613-cache1.css",
+    "/css/home-ar-page-20260613-cache1.css",
+    "/css/koko-common-20260613-cache1.css",
+    "/css/koko-en-page-20260613-cache1.css",
+    "/css/koko-ar-page-20260613-cache1.css",
   ]) {
     if (!siteHealth.sharedAssets?.css?.includes(asset)) failures.push(`site_health_missing_page_css:${asset}`);
   }

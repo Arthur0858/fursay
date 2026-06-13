@@ -4,16 +4,16 @@ import { resolve, join } from "node:path";
 const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const EXPECTED_CSS = [
-  "home-common-20260613-css1.css",
-  "home-ar-page-20260613-inline1.css",
-  "home-en-page-20260613-inline1.css",
-  "home-zh-page-20260613-inline1.css",
-  "koko-common-20260613-css1.css",
-  "koko-ar-page-20260613-inline1.css",
-  "koko-en-page-20260613-inline1.css",
-  "noor-common-20260613-css1.css",
-  "noor-ltr-page-20260613-inline1.css",
-  "noor-rtl-page-20260613-inline1.css",
+  "home-common-20260613-cache1.css",
+  "home-ar-page-20260613-cache1.css",
+  "home-en-page-20260613-cache1.css",
+  "home-zh-page-20260613-cache1.css",
+  "koko-common-20260613-cache1.css",
+  "koko-ar-page-20260613-cache1.css",
+  "koko-en-page-20260613-cache1.css",
+  "noor-common-20260613-cache1.css",
+  "noor-ltr-page-20260613-cache1.css",
+  "noor-rtl-page-20260613-cache1.css",
   "picture-book-base-20260613-base1.css",
   "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
@@ -47,9 +47,9 @@ const OPERATIONS_HTML = new Set([
   "traffic-launch.html",
 ]);
 const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
-const HOME_COMMON_CSS = "/css/home-common-20260613-css1.css";
-const KOKO_COMMON_CSS = "/css/koko-common-20260613-css1.css";
-const NOOR_COMMON_CSS = "/css/noor-common-20260613-css1.css";
+const HOME_COMMON_CSS = "/css/home-common-20260613-cache1.css";
+const KOKO_COMMON_CSS = "/css/koko-common-20260613-cache1.css";
+const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
 const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops1.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
 const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html"]);
