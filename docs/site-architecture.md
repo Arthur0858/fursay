@@ -4,14 +4,14 @@
 
 - Cloudflare Worker serves static assets from `fursay-optimized-site`.
 - Clean URLs are canonical: `/koko`, `/zh/koko`, `/ar/koko`; legacy `.html` URLs redirect permanently.
-- Shared visual layers live in `/css/picture-book-base.css` and `/css/picture-world-shared.css`.
-- Shared interactions live in `/js/site-shared.js`; page HTML should not add inline event handlers.
+- Shared visual layers live in `/css/picture-book-base.css` and `/css/picture-world-shared-20260612-traffic10.css`.
+- Shared interactions live in `/js/site-shared-20260613-attribution1.js`; page HTML should not add inline event handlers.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 
 ## Edit rules
 
-- Update shared CSS for global picture-world styling instead of editing all 9 pages.
-- Update shared JS for nav, tabs, reveal effects, and subscribe modal behavior.
+- Update the current versioned shared CSS for global picture-world styling instead of editing all 9 pages.
+- Update the current versioned shared JS for nav, tabs, reveal effects, and subscribe modal behavior.
 - Keep internal links on clean routes, not `.html`.
 - Keep sitemap/canonical/hreflang aligned with clean routes.
 - Keep Worker cache headers centralized in `src/worker.js`.
