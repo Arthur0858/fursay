@@ -7,6 +7,7 @@ const IMAGE_EXTENSIONS = new Set([".avif", ".jpg", ".jpeg", ".png", ".svg", ".we
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".svg", ".txt", ".xml"]);
 const MAX_TOTAL_IMAGE_BYTES = 8_500_000;
 const MAX_CHARACTER_PNG_BYTES = 450_000;
+const MAX_OG_PNG_BYTES = 400_000;
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -76,6 +77,9 @@ async function main() {
     if (asset.path.startsWith("/images/chars/") && asset.path.endsWith(".png") && asset.bytes > MAX_CHARACTER_PNG_BYTES) {
       failures.push(`character_png_too_large:${asset.path}:${asset.bytes}`);
     }
+    if (/^\/og-[a-z-]+\.png$/.test(asset.path) && asset.bytes > MAX_OG_PNG_BYTES) {
+      failures.push(`og_png_too_large:${asset.path}:${asset.bytes}`);
+    }
   }
 
   await mkdir(args.outDir, { recursive: true });
@@ -88,6 +92,7 @@ async function main() {
       maxTotalBytes: MAX_TOTAL_IMAGE_BYTES,
       unreferencedBytes,
       maxCharacterPngBytes: MAX_CHARACTER_PNG_BYTES,
+      maxOgPngBytes: MAX_OG_PNG_BYTES,
       largestImages: [...assets].sort((a, b) => b.bytes - a.bytes).slice(0, 20),
       unreferenced,
     },
