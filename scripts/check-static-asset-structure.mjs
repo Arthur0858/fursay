@@ -13,6 +13,7 @@ const EXPECTED_CSS = [
   "noor-ltr-page-20260613-inline1.css",
   "noor-rtl-page-20260613-inline1.css",
   "picture-book-base-20260613-base1.css",
+  "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260613-traffic11.css",
 ];

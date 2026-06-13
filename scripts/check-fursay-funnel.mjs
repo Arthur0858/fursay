@@ -1750,6 +1750,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!siteHealth.sharedAssets?.css?.includes("/css/storybook-skin-20260613-inline1.css")) {
     failures.push("site_health_missing_storybook_skin_css");
   }
+  if (!siteHealth.sharedAssets?.css?.includes("/css/story-page-common-20260613-css1.css")) {
+    failures.push("site_health_missing_story_page_common_css");
+  }
   if (!siteHealth.sharedAssets?.css?.includes("/css/noor-ltr-page-20260613-inline1.css")) {
     failures.push("site_health_missing_noor_ltr_css");
   }
