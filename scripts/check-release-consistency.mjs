@@ -22,6 +22,13 @@ const BADGE_PAGES = [
   "/links",
   "/deploy-readiness",
 ];
+const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
+  "scripts/check-newsletter-state-contract.mjs",
+  "scripts/check-render-jobs.mjs",
+  "scripts/check-workspace-hygiene.mjs",
+  "scripts/check-static-asset-structure.mjs",
+  "scripts/check-deploy-readiness.mjs",
+]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -66,6 +73,23 @@ function commitBadge(html) {
   return html.match(/<span>Commit ([0-9a-f]{7,40})<\/span>/i)?.[1] || "";
 }
 
+async function smokeLiveGateCoverage(release) {
+  const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
+  const smokeScript = packageJson.scripts?.["smoke:live"] || "";
+  const smokeGates = [...smokeScript.matchAll(/node (scripts\/[\w-]+\.mjs|audit-fursay\.mjs)\b/g)]
+    .map((match) => match[1]);
+  const qualityGates = Array.isArray(release.qualityGates) ? release.qualityGates : [];
+  const expectedLiveGates = qualityGates.filter((gate) => !LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS.has(gate));
+  const missing = expectedLiveGates.filter((gate) => !smokeGates.includes(gate));
+  const extra = smokeGates.filter((gate) => !qualityGates.includes(gate));
+  return {
+    smokeGates,
+    expectedLiveGates,
+    missing,
+    extra,
+  };
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
@@ -104,6 +128,13 @@ async function main() {
     badges.push({ path: pathname, commit: badge, failed: itemFailures.length });
   }
 
+  let smokeLive = null;
+  if (!args.baseUrl) {
+    smokeLive = await smokeLiveGateCoverage(release);
+    failures.push(...smokeLive.missing.map((gate) => `smoke_live_missing_gate:${gate}`));
+    failures.push(...smokeLive.extra.map((gate) => `smoke_live_extra_gate:${gate}`));
+  }
+
   await mkdir(args.outDir, { recursive: true });
   const report = {
     ok: failures.length === 0,
@@ -115,6 +146,7 @@ async function main() {
     failures,
     manifests,
     badges,
+    smokeLive,
   };
   await writeFile(resolve(args.outDir, "release-consistency.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({
