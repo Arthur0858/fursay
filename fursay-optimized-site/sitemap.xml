@@ -204,6 +204,9 @@
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>
   </url>
 
   <url>
@@ -211,5 +214,8 @@
     <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>
   </url>
 </urlset>

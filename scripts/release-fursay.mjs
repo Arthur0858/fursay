@@ -449,6 +449,11 @@ function writeSitemap(siteDir) {
     ar: "https://fursay.com/ar/episodes/noor-greetings",
     "x-default": "https://fursay.com/episodes/noor-greetings",
   };
+  const productAlternates = {
+    en: "https://fursay.com/products",
+    "zh-TW": "https://fursay.com/zh/products",
+    "x-default": "https://fursay.com/products",
+  };
   const entries = [
     sitemapUrl("https://fursay.com/", homeAlternates, "1.0"),
     sitemapUrl("https://fursay.com/zh/", homeAlternates, "0.8"),
@@ -468,8 +473,8 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/zh/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/ar/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
-    sitemapUrl("https://fursay.com/products", {}, "0.5"),
-    sitemapUrl("https://fursay.com/zh/products", {}, "0.5"),
+    sitemapUrl("https://fursay.com/products", productAlternates, "0.5"),
+    sitemapUrl("https://fursay.com/zh/products", productAlternates, "0.5"),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -1801,6 +1806,9 @@ function writeProductsPage(siteDir) {
   <meta name="twitter:description" content="Join the Koko or Noor printable pack waitlist. Free story pack first, no payment today.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
+  <link rel="alternate" hreflang="en" href="https://fursay.com/products">
+  <link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products">
+  <link rel="alternate" hreflang="x-default" href="https://fursay.com/products">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
@@ -1987,6 +1995,9 @@ function writeZhProductsPage(siteDir) {
   <meta name="twitter:description" content="加入叩叩或努爾可列印包等候名單。先領免費故事包，今天不會收費。">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay 親子雙語故事世界">
+  <link rel="alternate" hreflang="en" href="https://fursay.com/products">
+  <link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products">
+  <link rel="alternate" hreflang="x-default" href="https://fursay.com/products">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">

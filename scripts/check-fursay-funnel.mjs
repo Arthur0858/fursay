@@ -1101,7 +1101,18 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const loc of expectedSitemapLocs) {
     if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
   }
-  if (sitemapAlternateCount !== 72) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  if (sitemapAlternateCount !== 78) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  for (const productLoc of ["https://fursay.com/products", "https://fursay.com/zh/products"]) {
+    const start = sitemap.indexOf(`<loc>${productLoc}</loc>`);
+    const block = start >= 0 ? sitemap.slice(start, sitemap.indexOf("</url>", start)) : "";
+    for (const alternate of [
+      '<xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>',
+      '<xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>',
+      '<xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>',
+    ]) {
+      if (!block.includes(alternate)) failures.push(`sitemap_product_alternate_missing:${productLoc}:${alternate}`);
+    }
+  }
   if (lastmods.length !== expectedSitemapLocs.length) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
   if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");

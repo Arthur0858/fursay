@@ -143,6 +143,54 @@ function attr(tag, name) {
   return match?.[2] || "";
 }
 
+function alternateMap(html) {
+  const alternates = {};
+  for (const match of html.matchAll(/<link\b[^>]*>/gi)) {
+    const tag = match[0];
+    if (attr(tag, "rel").toLowerCase() !== "alternate") continue;
+    alternates[attr(tag, "hreflang")] = attr(tag, "href");
+  }
+  return alternates;
+}
+
+function checkProductAlternates(html, pagePath, failures) {
+  const alternates = alternateMap(html);
+  const expected = {
+    en: "https://fursay.com/products",
+    "zh-TW": "https://fursay.com/zh/products",
+    "x-default": "https://fursay.com/products",
+  };
+  for (const [hreflang, href] of Object.entries(expected)) {
+    if (alternates[hreflang] !== href) {
+      failures.push(`product_page_bad_hreflang:${pagePath}:${hreflang}:${alternates[hreflang] || "none"}`);
+    }
+  }
+}
+
+function checkProductSitemapAlternates(sitemap, failures) {
+  const productEntries = [
+    "https://fursay.com/products",
+    "https://fursay.com/zh/products",
+  ];
+  const expectedAlternates = [
+    '<xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>',
+    '<xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>',
+    '<xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>',
+  ];
+  for (const entry of productEntries) {
+    const start = sitemap.indexOf(`<loc>${entry}</loc>`);
+    if (start === -1) {
+      failures.push(`product_sitemap_missing_loc:${entry}`);
+      continue;
+    }
+    const end = sitemap.indexOf("</url>", start);
+    const block = sitemap.slice(start, end);
+    for (const alternate of expectedAlternates) {
+      if (!block.includes(alternate)) failures.push(`product_sitemap_missing_hreflang:${entry}:${alternate}`);
+    }
+  }
+}
+
 function structuredDataBlocks(html, pagePath, failures) {
   const blocks = [];
   const matches = [...html.matchAll(/<script\b([^>]*)type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
@@ -308,10 +356,14 @@ async function main() {
   const conversionHealth = await readJson(args.baseUrl, "/conversion-health.json");
   const links = await readJson(args.baseUrl, "/links.json");
   const linksHtml = await readText(args.baseUrl, "/links");
+  const sitemap = await readText(args.baseUrl, "/sitemap.xml");
 
   if (!html.includes('<link rel="canonical" href="https://fursay.com/products">')) failures.push("products_page_bad_canonical");
   if (!zhHtml.includes('<link rel="canonical" href="https://fursay.com/zh/products">')) failures.push("zh_products_page_bad_canonical");
   if (!zhHtml.includes('<html lang="zh-TW">')) failures.push("zh_products_page_bad_lang");
+  checkProductAlternates(html, "/products", failures);
+  checkProductAlternates(zhHtml, "/zh/products", failures);
+  checkProductSitemapAlternates(sitemap, failures);
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
