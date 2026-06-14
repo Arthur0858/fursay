@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-15",
   "source": {
     "branch": "main",
-    "commit": "92046a5",
-    "summary": "Cover product sample previews visually"
+    "commit": "bcb5c0a",
+    "summary": "Add growth reporting windows and printable samples"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

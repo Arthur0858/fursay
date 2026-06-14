@@ -107,7 +107,11 @@ function checkTargets({ path, viewport, metrics }) {
 
 function shouldRetry({ status, failures }) {
   if (status !== 200) return true;
-  return failures.some((failure) => failure.includes(":fcp_ms:") || failure.includes(":lcp_ms:"));
+  return failures.some((failure) => (
+    failure.includes(":goto:")
+    || failure.includes(":fcp_ms:")
+    || failure.includes(":lcp_ms:")
+  ));
 }
 
 function chooseBetterCheck(current, candidate) {
@@ -130,15 +134,22 @@ async function measurePage(browser, args, viewport, path, attempt) {
   const page = await context.newPage();
   try {
     await installVitalsObserver(page);
-    const response = await page.goto(`${args.baseUrl}${path}`, { waitUntil: "load", timeout: 30_000 });
+    let response;
+    let navigationError = "";
+    try {
+      response = await page.goto(`${args.baseUrl}${path}`, { waitUntil: "load", timeout: 30_000 });
+    } catch (error) {
+      navigationError = error instanceof Error ? error.message.split("\n")[0] : String(error);
+    }
     await page.waitForTimeout(2_000);
     const metrics = await collectMetrics(page);
     const status = response?.status() || 0;
     const baseCheck = { path, viewport: viewport.name, status, metrics, attempt };
     const failures = [];
+    if (navigationError) failures.push(`${path}:${viewport.name}:goto:${navigationError}`);
     if (status !== 200) failures.push(`${path}:${viewport.name}:status:${status}`);
     failures.push(...checkLimits(baseCheck));
-    return { ...baseCheck, failures, warnings: checkTargets(baseCheck) };
+    return { ...baseCheck, navigationError, failures, warnings: checkTargets(baseCheck) };
   } finally {
     await context.close();
   }
@@ -163,6 +174,7 @@ async function main() {
             attempt,
             status: measured.status,
             metrics: measured.metrics,
+            navigationError: measured.navigationError,
             failures: measured.failures,
           });
           bestCheck = chooseBetterCheck(bestCheck, measured);
@@ -177,6 +189,7 @@ async function main() {
           metrics: bestCheck.metrics,
           attempt: bestCheck.attempt,
         };
+        if (bestCheck.navigationError) check.navigationError = bestCheck.navigationError;
         if (attempts.length > 1) check.attempts = attempts;
         checks.push(check);
       }
