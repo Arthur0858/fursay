@@ -257,7 +257,7 @@ function writeReleaseManifest() {
       productSamplePreviewPages: 2,
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
-      visualLayoutChecks: 24,
+      visualLayoutChecks: 28,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
       cacheHeaderChecks: 67,
@@ -2625,6 +2625,9 @@ function writeProductSamplePages(siteDir) {
         <span>Sample preview only</span>
         <span>Interest validation</span>
       </div>
+      <div class="public-share-actions">
+        <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
+      </div>
     </header>
     <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
       <h2>What the sample would include</h2>
@@ -2638,7 +2641,6 @@ ${cards}
       <p>${escapeHtml(spec.activity)}</p>
       <p>This preview is here to validate interest before a paid product exists. There is no price, purchase button, or payment link on this page.</p>
       <div class="public-share-actions">
-        <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
         <a href="${escapeHtml(spec.storyCta)}">${escapeHtml(spec.storyCtaLabel)}</a>
         <a href="/products?utm_source=sample_preview&utm_medium=site&utm_campaign=product_interest_validation&utm_content=${escapeHtml(spec.waitlistPack)}_sample_back_to_products">Back to product waitlists</a>
       </div>

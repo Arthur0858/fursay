@@ -18,6 +18,8 @@ const PAGES = [
   { path: "/products", file: "products.html", lang: "en", product: true },
   { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", product: true },
   { path: "/ar/products", file: "ar/products.html", lang: "ar", rtl: true, product: true },
+  { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", sample: true },
+  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "en", sample: true },
 ];
 const VIEWPORTS = [
   { name: "desktop", width: 1366, height: 900, isMobile: false, deviceScaleFactor: 1 },
@@ -156,6 +158,11 @@ async function collectLayout(page) {
     const productCards = [...document.querySelectorAll(".product-waitlist-card")].filter(isVisible);
     const productButtons = [...document.querySelectorAll("[data-product-interest]")].filter(isVisible);
     const productBridgeLinks = [...document.querySelectorAll(".product-waitlist-card .public-share-actions a")].filter(isVisible);
+    const sampleHero = document.querySelector("[data-product-sample-preview-page]");
+    const samplePreview = document.querySelector("[data-product-sample-preview]");
+    const sampleActivity = document.querySelector("[data-product-sample-activity]");
+    const samplePack = sampleHero?.getAttribute("data-product-sample-preview-page") || "";
+    const sampleLinks = [...document.querySelectorAll(".product-sample-preview-page .public-share-actions a")].filter(isVisible);
     const h1Style = h1 ? getComputedStyle(h1) : null;
     return {
       title: document.title,
@@ -227,6 +234,37 @@ async function collectLayout(page) {
           overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
         })),
       } : null,
+      sample: sampleHero ? {
+        pack: samplePack,
+        hero: rectFor(sampleHero),
+        trust: productTrust ? {
+          rect: rectFor(productTrust),
+          itemCount: [...productTrust.children].filter(isVisible).length,
+          overflowX: productTrust.scrollWidth > Math.ceil(productTrust.clientWidth) + 1,
+        } : null,
+        preview: samplePreview ? {
+          rect: rectFor(samplePreview),
+          overflowX: samplePreview.scrollWidth > Math.ceil(samplePreview.clientWidth) + 1,
+        } : null,
+        activity: sampleActivity ? {
+          rect: rectFor(sampleActivity),
+          overflowX: sampleActivity.scrollWidth > Math.ceil(sampleActivity.clientWidth) + 1,
+        } : null,
+        buttons: productButtons.map((element) => ({
+          pack: element.getAttribute("data-product-interest") || "",
+          source: element.getAttribute("data-signup-source") || "",
+          stage: element.getAttribute("data-interest-stage") || "",
+          text: labelFor(element),
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+        links: sampleLinks.map((element) => ({
+          text: labelFor(element),
+          href: element.getAttribute("href") || "",
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+      } : null,
     };
   });
 }
@@ -245,7 +283,7 @@ function checkLayout(spec, viewport, layout) {
   if (layout.lang !== spec.lang) failures.push(`${prefix}:lang:${layout.lang || "none"}`);
   if (spec.rtl && layout.dir !== "rtl") failures.push(`${prefix}:html_dir:${layout.dir || "none"}`);
   if (!spec.rtl && layout.dir === "rtl") failures.push(`${prefix}:unexpected_rtl_dir`);
-  const expectedHero = spec.product ? layout.product?.hero : layout.hero;
+  const expectedHero = spec.sample ? layout.sample?.hero : spec.product ? layout.product?.hero : layout.hero;
   if (!expectedHero) failures.push(`${prefix}:missing_hero`);
   if (!layout.h1) {
     failures.push(`${prefix}:missing_h1`);
@@ -260,7 +298,7 @@ function checkLayout(spec, viewport, layout) {
   if (layout.h1.letterSpacing.startsWith("-")) failures.push(`${prefix}:h1_negative_letter_spacing:${layout.h1.letterSpacing}`);
   if (spec.rtl && layout.h1.direction !== "rtl") failures.push(`${prefix}:h1_direction:${layout.h1.direction}`);
 
-  const heroCtas = spec.product ? layout.product?.buttons || [] : layout.primaryCtas;
+  const heroCtas = spec.sample ? layout.sample?.buttons || [] : spec.product ? layout.product?.buttons || [] : layout.primaryCtas;
   if (!heroCtas.length) failures.push(`${prefix}:hero_subscribe_cta_missing`);
   for (const cta of heroCtas) {
     checkRectInsideViewport(failures, `${prefix}:cta_${cta.pack || cta.index}`, cta.rect, viewport, 8);
@@ -269,6 +307,46 @@ function checkLayout(spec, viewport, layout) {
     if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
     if (spec.product && cta.stage !== "waitlist") failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.product && cta.overflowX) failures.push(`${prefix}:product_cta_text_overflow:${cta.pack || cta.index}`);
+    if (spec.sample && cta.stage !== "sample_preview_waitlist") failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.sample && cta.overflowX) failures.push(`${prefix}:sample_cta_text_overflow:${cta.pack || cta.index}`);
+  }
+
+  if (spec.sample) {
+    const sample = layout.sample;
+    if (!sample) {
+      failures.push(`${prefix}:missing_sample_layout`);
+      return failures;
+    }
+    checkRectInsideViewport(failures, `${prefix}:sample_hero`, sample.hero, viewport, 8);
+    if (!sample.trust) {
+      failures.push(`${prefix}:sample_trust_missing`);
+    } else {
+      checkRectInsideViewport(failures, `${prefix}:sample_trust`, sample.trust.rect, viewport, 8);
+      if (sample.trust.itemCount < 3) failures.push(`${prefix}:sample_trust_item_count:${sample.trust.itemCount}`);
+      if (sample.trust.overflowX) failures.push(`${prefix}:sample_trust_overflow`);
+    }
+    if (!sample.preview) {
+      failures.push(`${prefix}:sample_preview_missing`);
+    } else {
+      checkRectInsideViewport(failures, `${prefix}:sample_preview`, sample.preview.rect, viewport, 8);
+      if (sample.preview.overflowX) failures.push(`${prefix}:sample_preview_overflow`);
+    }
+    if (!sample.activity) {
+      failures.push(`${prefix}:sample_activity_missing`);
+    } else {
+      checkRectInsideViewport(failures, `${prefix}:sample_activity`, sample.activity.rect, viewport, 8);
+      if (sample.activity.overflowX) failures.push(`${prefix}:sample_activity_overflow`);
+    }
+    if (sample.buttons.length !== 1) failures.push(`${prefix}:sample_button_count:${sample.buttons.length}`);
+    for (const button of sample.buttons) {
+      if (button.pack !== sample.pack) failures.push(`${prefix}:sample_button_pack:${button.pack || "none"}!=${sample.pack || "none"}`);
+    }
+    if (sample.links.length < 2) failures.push(`${prefix}:sample_link_count:${sample.links.length}`);
+    for (const link of sample.links) {
+      checkRectInsideViewport(failures, `${prefix}:sample_link`, link.rect, viewport, 8);
+      if (link.rect.width < 44 || link.rect.height < 36) failures.push(`${prefix}:sample_link_touch_target:${Math.round(link.rect.width)}x${Math.round(link.rect.height)}`);
+      if (link.overflowX) failures.push(`${prefix}:sample_link_text_overflow:${link.text.slice(0, 24)}`);
+    }
   }
 
   if (spec.product) {
@@ -334,7 +412,7 @@ function checkLayout(spec, viewport, layout) {
     }
   }
 
-  if (spec.product) {
+  if (spec.product || spec.sample) {
     return failures;
   }
 
@@ -405,6 +483,14 @@ async function main() {
             cards: layout.product.cards.map((card) => ({ id: card.id, rect: roundedRect(card.rect), overflowX: card.overflowX })),
             buttons: layout.product.buttons.map((button) => ({ pack: button.pack, source: button.source, stage: button.stage, rect: roundedRect(button.rect), overflowX: button.overflowX })),
             bridgeLinks: layout.product.bridgeLinks.map((link) => ({ text: link.text, href: link.href, rect: roundedRect(link.rect), overflowX: link.overflowX })),
+          } : null,
+          sample: layout.sample ? {
+            pack: layout.sample.pack,
+            trust: layout.sample.trust ? { rect: roundedRect(layout.sample.trust.rect), itemCount: layout.sample.trust.itemCount, overflowX: layout.sample.trust.overflowX } : null,
+            preview: layout.sample.preview ? { rect: roundedRect(layout.sample.preview.rect), overflowX: layout.sample.preview.overflowX } : null,
+            activity: layout.sample.activity ? { rect: roundedRect(layout.sample.activity.rect), overflowX: layout.sample.activity.overflowX } : null,
+            buttons: layout.sample.buttons.map((button) => ({ pack: button.pack, source: button.source, stage: button.stage, rect: roundedRect(button.rect), overflowX: button.overflowX })),
+            links: layout.sample.links.map((link) => ({ text: link.text, href: link.href, rect: roundedRect(link.rect), overflowX: link.overflowX })),
           } : null,
           share: layout.share ? {
             copy: roundedRect(layout.share.copy),
