@@ -71,10 +71,20 @@ function startServer() {
 
 async function main() {
   mkdirSync(DOWNLOAD_DIR, { recursive: true });
+  const pending = SAMPLES.filter((sample) => !existsSync(resolve(DOWNLOAD_DIR, sample.output)));
+  if (!pending.length) {
+    console.log(JSON.stringify({
+      ok: true,
+      outputDir: "fursay-optimized-site/downloads",
+      generated: [],
+      existing: SAMPLES.map((sample) => sample.output),
+    }, null, 2));
+    return;
+  }
   const localServer = await startServer();
   const browser = await chromium.launch({ headless: true });
   try {
-    for (const sample of SAMPLES) {
+    for (const sample of pending) {
       const page = await browser.newPage({ viewport: { width: 816, height: 1056 } });
       await page.goto(`${localServer.baseUrl}${sample.path}?print=1`, {
         waitUntil: "networkidle",
@@ -100,7 +110,8 @@ async function main() {
   console.log(JSON.stringify({
     ok: true,
     outputDir: "fursay-optimized-site/downloads",
-    files: SAMPLES.map((sample) => sample.output),
+    generated: pending.map((sample) => sample.output),
+    existing: SAMPLES.filter((sample) => !pending.includes(sample)).map((sample) => sample.output),
   }, null, 2));
 }
 
