@@ -12,6 +12,11 @@ const PAGE_INTENT_EVENTS = [
   "fursay_product_interest_click",
   "fursay_product_sample_download_click",
 ];
+const PRODUCT_SIGNAL_EVENTS = {
+  productInfoClicks: "fursay_product_info_click",
+  productInterestClicks: "fursay_product_interest_click",
+  subscriberSignals: "fursay_subscribe_submit_success",
+};
 
 function windowQueries(days) {
   return [
@@ -102,6 +107,139 @@ async function runSql(accountId, token, sql) {
   };
 }
 
+function resultRows(result) {
+  const body = result?.body;
+  if (!body) return [];
+  if (Array.isArray(body)) return body;
+  if (Array.isArray(body.data)) return body.data;
+  if (Array.isArray(body.result?.data)) return body.result.data;
+  if (typeof body === "string") {
+    try {
+      const parsed = JSON.parse(body);
+      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed.data)) return parsed.data;
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function rowEvents(row) {
+  const value = Number(row?.events ?? row?.event_count ?? row?.count ?? 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
+function rowsFor(queryReports, windowDays, family = "") {
+  return queryReports
+    .filter((query) => query.windowDays === windowDays && (!family || query.family === family))
+    .flatMap((query) => resultRows(query.result));
+}
+
+function signalCount(queryReports, windowDays, pack, eventName) {
+  return rowsFor(queryReports, windowDays)
+    .filter((row) => {
+      if (row?.event !== eventName) return false;
+      if (row?.pack === pack) return true;
+      if (row?.product_interest === pack) return true;
+      return false;
+    })
+    .reduce((total, row) => total + rowEvents(row), 0);
+}
+
+function sourceIdCount(queryReports, windowDays, sourceIds) {
+  const ids = new Set(sourceIds.filter(Boolean));
+  if (!ids.size) return 0;
+  return rowsFor(queryReports, windowDays, "noor_growth_signals")
+    .filter((row) => ids.has(row?.source_id))
+    .reduce((total, row) => total + rowEvents(row), 0);
+}
+
+function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
+  const products = conversionHealth.monetization?.ownedProducts?.products || [];
+  const windows = COMPARISON_WINDOWS_DAYS;
+  const pending = !canQuery;
+  const productScorecards = products.map((product) => {
+    const thresholds = product.validationPlan?.minimumSignals || {};
+    const countsByWindow = Object.fromEntries(windows.map((days) => {
+      const counts = pending ? {
+        productInfoClicks: null,
+        productInterestClicks: null,
+        subscriberSignals: null,
+      } : {
+        productInfoClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInfoClicks),
+        productInterestClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInterestClicks),
+        subscriberSignals: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.subscriberSignals),
+      };
+      const thresholdMet = !pending
+        && counts.productInfoClicks >= (thresholds.productInfoClicks || 0)
+        && counts.productInterestClicks >= (thresholds.productInterestClicks || 0)
+        && counts.subscriberSignals >= (thresholds.subscriberSignals || 0);
+      return [String(days), {
+        ...counts,
+        status: pending ? "pending_analytics_query" : thresholdMet ? "threshold_met" : "below_threshold",
+      }];
+    }));
+    return {
+      id: product.id,
+      pack: product.pack,
+      label: product.label,
+      thresholds: {
+        productInfoClicks: thresholds.productInfoClicks || 0,
+        productInterestClicks: thresholds.productInterestClicks || 0,
+        subscriberSignals: thresholds.subscriberSignals || 0,
+      },
+      countsByWindow,
+      reportQueries: ["page_intent", "subscribe_funnel_by_pack", "noor_growth_signals"],
+      nextDecision: product.validationPlan?.nextDecision || "",
+    };
+  });
+
+  const noorVariants = conversionHealth.growth?.noorSprintVariants || [];
+  const noorCountsByWindow = Object.fromEntries(windows.map((days) => {
+    const subscriberSignals = pending
+      ? null
+      : signalCount(queryReports, days, "noor", PRODUCT_SIGNAL_EVENTS.subscriberSignals);
+    return [String(days), {
+      subscriberSignals,
+      status: pending
+        ? "pending_analytics_query"
+        : subscriberSignals >= (conversionHealth.growth?.noorSubscriberSignalGoal || 1)
+          ? "subscriber_signal_received"
+          : "waiting_for_first_real_subscriber_signal",
+    }];
+  }));
+  const noorSprintVariants = noorVariants.map((variant) => ({
+    id: variant.id,
+    label: variant.label,
+    placement: variant.placement,
+    sourceId: variant.sourceId,
+    storySourceId: variant.storySourceId || "",
+    link: variant.link,
+    storyLink: variant.storyLink || "",
+    countsByWindow: Object.fromEntries(windows.map((days) => [String(days), {
+      events: pending ? null : sourceIdCount(queryReports, days, [variant.sourceId, variant.storySourceId]),
+      status: pending ? "pending_analytics_query" : "queried",
+    }])),
+  }));
+
+  return {
+    status: pending ? "pending_analytics_query" : "queried",
+    piiAllowed: false,
+    windows,
+    unlockPolicy: conversionHealth.monetization?.ownedProducts?.validationDashboard?.unlockPolicy || "",
+    productSignalEvents: PRODUCT_SIGNAL_EVENTS,
+    products: productScorecards,
+    noorFirstSubscriber: {
+      goal: conversionHealth.growth?.noorSubscriberSignalGoal || 1,
+      readinessStatus: conversionHealth.growth?.noorReadinessStatus || "",
+      countsByWindow: noorCountsByWindow,
+      reportQuery: "noor_growth_signals",
+    },
+    noorSprintVariants,
+  };
+}
+
 async function main() {
   const args = parseArgs();
   const release = await readJson("release.json");
@@ -144,6 +282,20 @@ async function main() {
     queryReports.push(...QUERIES.map((query) => ({ ...query, result: null })));
   }
 
+  const decisionScoreboard = buildDecisionScoreboard(conversionHealth, queryReports, canQuery);
+  if (decisionScoreboard.piiAllowed !== false) failures.push("decision_scoreboard_pii_allowed");
+  if (decisionScoreboard.products.length !== (conversionHealth.monetization?.ownedProducts?.products || []).length) failures.push("decision_scoreboard_product_count_mismatch");
+  if (decisionScoreboard.noorSprintVariants.length !== (conversionHealth.growth?.noorSprintVariants || []).length) failures.push("decision_scoreboard_noor_variant_count_mismatch");
+  for (const product of decisionScoreboard.products) {
+    if (!product.thresholds.productInfoClicks) failures.push(`decision_scoreboard_missing_info_threshold:${product.id}`);
+    if (!product.thresholds.productInterestClicks) failures.push(`decision_scoreboard_missing_interest_threshold:${product.id}`);
+    if (!product.thresholds.subscriberSignals) failures.push(`decision_scoreboard_missing_subscriber_threshold:${product.id}`);
+    for (const eventName of Object.values(PRODUCT_SIGNAL_EVENTS)) {
+      if (!conversionHealth.events?.includes(eventName)) failures.push(`decision_scoreboard_unknown_signal_event:${eventName}`);
+    }
+  }
+  if (!decisionScoreboard.noorFirstSubscriber.goal) failures.push("decision_scoreboard_missing_noor_goal");
+
   const status = canQuery ? "queried" : "pending_cloudflare_credentials_or_enablement";
   const report = {
     ok: failures.length === 0,
@@ -161,6 +313,7 @@ async function main() {
     note: canQuery
       ? "Queried Cloudflare Analytics Engine SQL API."
       : "No Analytics Engine query was attempted; provide CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_ANALYTICS_TOKEN after enabling the dataset.",
+    decisionScoreboard,
     failures,
     queries: queryReports,
   };
