@@ -70,6 +70,14 @@ function validateNoorSprintVariantLinks(noorSprint, failures, prefix) {
       storySourceId: "noor_first_subscriber_sprint_worksheet_followup_story",
       storyPlacement: "worksheet_followup_story",
     },
+    pdf_sample_followup: {
+      linkPath: "/downloads/noor-worksheet-sample.pdf",
+      sourceId: "noor_first_subscriber_sprint_pdf_sample_followup",
+      placement: "pdf_sample_followup",
+      storyLinkPath: "/share/noor",
+      storySourceId: "noor_first_subscriber_sprint_pdf_sample_story",
+      storyPlacement: "pdf_sample_story",
+    },
   };
   for (const variant of noorSprint.copyVariants || []) {
     const spec = expected[variant.id];
@@ -1405,7 +1413,7 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
-  if (release.liveExpectations?.noorSprintCopyVariants !== 3) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
+  if (release.liveExpectations?.noorSprintCopyVariants !== 4) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
@@ -1492,11 +1500,11 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprint.copy?.includes("Free Noor 3-minute story pack") || !noorSprint.copy?.includes(noorSprint.primaryLink || "missing")) {
     failures.push("traffic_launch_noor_sprint_copy_missing_primary_link");
   }
-  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 3) {
+  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 4) {
     failures.push(`traffic_launch_noor_sprint_variant_count:${noorSprint.copyVariants?.length || 0}`);
   }
   const variantIds = new Set((noorSprint.copyVariants || []).map((variant) => variant.id));
-  for (const id of ["parent_group", "direct_dm", "worksheet_followup"]) {
+  for (const id of ["parent_group", "direct_dm", "worksheet_followup", "pdf_sample_followup"]) {
     if (!variantIds.has(id)) failures.push(`traffic_launch_noor_sprint_missing_variant:${id}`);
   }
   for (const variant of noorSprint.copyVariants || []) {
@@ -1585,9 +1593,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
   if (!trafficLaunchPage.includes("/traffic-launch.json")) failures.push("traffic_launch_page_missing_json_manifest_link");
   if ((trafficLaunchPage.match(/data-traffic-launch-channel=/g) || []).length !== 10) failures.push("traffic_launch_page_bad_channel_count");
-  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 14) failures.push("traffic_launch_page_bad_copy_button_count");
+  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 15) failures.push("traffic_launch_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('data-noor-subscriber-sprint="subscriber_signal_needed"')) failures.push("traffic_launch_page_missing_noor_sprint");
-  if ((trafficLaunchPage.match(/data-noor-sprint-copy-variant=/g) || []).length !== 3) failures.push("traffic_launch_page_bad_noor_sprint_variant_count");
+  if ((trafficLaunchPage.match(/data-noor-sprint-copy-variant=/g) || []).length !== 4) failures.push("traffic_launch_page_bad_noor_sprint_variant_count");
   if (!htmlContains(trafficLaunchPage, noorSprint.primaryLink || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_primary_link");
   if (!htmlContains(trafficLaunchPage, noorSprint.copy || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_copy");
   for (const variant of noorSprint.copyVariants || []) {

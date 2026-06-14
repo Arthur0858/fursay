@@ -166,6 +166,7 @@ async function main() {
     "noor_first_subscriber_sprint_parent_group",
     "noor_first_subscriber_sprint_direct_dm",
     "noor_first_subscriber_sprint_worksheet_followup",
+    "noor_first_subscriber_sprint_pdf_sample_followup",
   ];
   const noorVariantSourceIds = new Set((conversionHealth.growth?.noorSprintVariants || []).map((variant) => variant.sourceId));
   for (const sourceId of expectedNoorVariantSourceIds) {

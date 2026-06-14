@@ -208,7 +208,7 @@ async function main() {
     failures.push(`noor_sprint_variant_count:${conversionHealth.growth?.noorSprintVariantCount || 0}`);
   }
   const noorVariantSourceIds = new Set((conversionHealth.growth?.noorSprintVariants || []).map((variant) => variant.sourceId));
-  for (const sourceId of ["noor_first_subscriber_sprint_parent_group", "noor_first_subscriber_sprint_direct_dm", "noor_first_subscriber_sprint_worksheet_followup"]) {
+  for (const sourceId of ["noor_first_subscriber_sprint_parent_group", "noor_first_subscriber_sprint_direct_dm", "noor_first_subscriber_sprint_worksheet_followup", "noor_first_subscriber_sprint_pdf_sample_followup"]) {
     if (!noorVariantSourceIds.has(sourceId)) failures.push(`missing_noor_variant_source_id:${sourceId}`);
   }
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");

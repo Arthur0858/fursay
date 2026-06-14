@@ -108,6 +108,14 @@ function validateNoorSprintVariantLink(failures, pageKey, variant) {
       storySourceId: "noor_first_subscriber_sprint_worksheet_followup_story",
       storyPlacement: "worksheet_followup_story",
     },
+    pdf_sample_followup: {
+      linkPath: "/downloads/noor-worksheet-sample.pdf",
+      sourceId: "noor_first_subscriber_sprint_pdf_sample_followup",
+      placement: "pdf_sample_followup",
+      storyLinkPath: "/share/noor",
+      storySourceId: "noor_first_subscriber_sprint_pdf_sample_story",
+      storyPlacement: "pdf_sample_story",
+    },
   }[variant.id];
   if (!expected) return;
   if (!variant.link?.includes(`${expected.linkPath}?source_id=${expected.sourceId}`)) {
@@ -217,7 +225,7 @@ function validateTrafficLaunch(manifest, html, failures) {
   if (manifest.safety?.creatorKitManifest !== "https://fursay.com/creator-kit.json") failures.push("traffic-launch:bad_creator_manifest");
   if (manifest.safety?.shareKitManifest !== "https://fursay.com/share-kit.json") failures.push("traffic-launch:bad_share_manifest");
   if (manifest.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("traffic-launch:bad_shortlink_manifest");
-  if (copySet.size !== 14) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
+  if (copySet.size !== 15) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
 
   const noorSprint = manifest.activationSprints?.noorFirstSubscriber || {};
   for (const [label, value] of Object.entries({
@@ -237,7 +245,7 @@ function validateTrafficLaunch(manifest, html, failures) {
   requireCopyValue(failures, pageKey, copySet, "noor_sprint:copy", noorSprint.copy);
   if (noorSprint.pack !== "noor") failures.push(`traffic-launch:noor_sprint_bad_pack:${noorSprint.pack || "none"}`);
   if (noorSprint.windowDays !== 7) failures.push(`traffic-launch:noor_sprint_bad_window:${noorSprint.windowDays || "none"}`);
-  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 3) {
+  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 4) {
     failures.push(`traffic-launch:noor_sprint_variant_count:${noorSprint.copyVariants?.length || 0}`);
   }
   for (const variant of noorSprint.copyVariants || []) {
@@ -246,7 +254,7 @@ function validateTrafficLaunch(manifest, html, failures) {
     requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
     requireHref(failures, pageKey, hrefSet, `noor_sprint:variant:${variant.id}:link`, variant.link);
     requireCopyValue(failures, pageKey, copySet, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
-    if (!["parent_group", "direct_dm", "worksheet_followup"].includes(variant.id)) {
+    if (!["parent_group", "direct_dm", "worksheet_followup", "pdf_sample_followup"].includes(variant.id)) {
       failures.push(`traffic-launch:noor_sprint_unknown_variant:${variant.id || "none"}`);
     }
     validateNoorSprintVariantLink(failures, pageKey, variant);

@@ -395,7 +395,7 @@
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "noorSubscriberSignalGoal": 1,
     "noorSubscriberSignalStatus": "waiting_for_first_real_subscriber_signal",
-    "noorSprintVariantCount": 3,
+    "noorSprintVariantCount": 4,
     "noorSprintVariants": [
       {
         "id": "parent_group",
@@ -428,6 +428,17 @@
         "link": "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint_worksheet_followup&creator=fursay&placement=worksheet_followup",
         "storySourceId": "noor_first_subscriber_sprint_worksheet_followup_story",
         "storyLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_worksheet_followup_story&creator=fursay&placement=worksheet_followup_story",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "pdf_sample_followup",
+        "label": "PDF sample follow-up",
+        "placement": "pdf_sample_followup",
+        "sourceId": "noor_first_subscriber_sprint_pdf_sample_followup",
+        "creator": "fursay",
+        "link": "https://fursay.com/downloads/noor-worksheet-sample.pdf?source_id=noor_first_subscriber_sprint_pdf_sample_followup&creator=fursay&placement=pdf_sample_followup",
+        "storySourceId": "noor_first_subscriber_sprint_pdf_sample_story",
+        "storyLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_pdf_sample_story&creator=fursay&placement=pdf_sample_story",
         "reportFamily": "noor_growth_signals"
       }
     ],

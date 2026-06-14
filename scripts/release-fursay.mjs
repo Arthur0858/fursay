@@ -254,7 +254,7 @@ function writeReleaseManifest() {
       latestStoryEntries: 12,
       episodeLandingPages: 9,
       noorLeadMagnetPages: 3,
-      noorSprintCopyVariants: 3,
+      noorSprintCopyVariants: 4,
       productInterestLinks: 18,
       productInfoLinks: 18,
       productLandingPages: 3,
@@ -1007,11 +1007,14 @@ function buildNoorSubscriberSprint() {
   const sampleLink = "https://fursay.com/sample/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=sample_followup";
   const worksheetPreview = "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint&creator=fursay&placement=worksheet_preview";
   const sprintLink = (path, sourceId, placement) => `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
+  const pdfSampleLink = (sourceId, placement) => `https://fursay.com/downloads/noor-worksheet-sample.pdf?source_id=${sourceId}&creator=fursay&placement=${placement}`;
   const variantLinks = {
     parentGroup: sprintLink("/share/noor", "noor_first_subscriber_sprint_parent_group", "parent_group"),
     directDm: sprintLink("/share/noor", "noor_first_subscriber_sprint_direct_dm", "direct_dm"),
     worksheetFollowup: sprintLink("/product-samples/noor-worksheet", "noor_first_subscriber_sprint_worksheet_followup", "worksheet_followup"),
     worksheetFollowupStory: sprintLink("/share/noor", "noor_first_subscriber_sprint_worksheet_followup_story", "worksheet_followup_story"),
+    pdfSampleFollowup: pdfSampleLink("noor_first_subscriber_sprint_pdf_sample_followup", "pdf_sample_followup"),
+    pdfSampleStory: sprintLink("/share/noor", "noor_first_subscriber_sprint_pdf_sample_story", "pdf_sample_story"),
   };
   return {
     pack: "noor",
@@ -1062,10 +1065,23 @@ function buildNoorSubscriberSprint() {
           `If it feels useful, the free story pack starts here: ${variantLinks.worksheetFollowupStory}`,
         ].join("\n"),
       },
+      {
+        id: "pdf_sample_followup",
+        label: "PDF sample follow-up",
+        placement: "pdf_sample_followup",
+        link: variantLinks.pdfSampleFollowup,
+        storyLink: variantLinks.pdfSampleStory,
+        copy: [
+          "Here is the printable Noor PDF sample.",
+          `Download: ${variantLinks.pdfSampleFollowup}`,
+          `If the 3-minute activity feels useful, the free Noor story pack starts here: ${variantLinks.pdfSampleStory}`,
+        ].join("\n"),
+      },
     ],
     checklist: [
       "Share the family link with 3 Arabic-speaking parent groups or families.",
       "Use the sample link only as a follow-up when someone asks what is inside.",
+      "Use the PDF sample link when a parent asks for something printable or offline.",
       "Keep the worksheet preview interest-only; do not mention payment or price.",
       "Review noor_growth_signals_7d after Cloudflare Analytics credentials are enabled.",
     ],
