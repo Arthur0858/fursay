@@ -111,6 +111,10 @@ async function main() {
   for (const stageId of REQUIRED_STAGE_IDS) {
     if (!stageIds.includes(stageId)) failures.push(`missing_stage:${stageId}`);
   }
+  const validationStage = (roadmap.stages || []).find((stage) => stage.id === "validate_interest") || {};
+  if (validationStage.status !== "active") failures.push(`validation_stage_status:${validationStage.status || "none"}`);
+  if (validationStage.unlocks !== "publish_precheckout_disclosure") failures.push(`validation_stage_unlocks:${validationStage.unlocks || "none"}`);
+  if (!html.includes("Unlocks: publish_precheckout_disclosure")) failures.push("html_missing_validation_unlocks");
   const checkoutStage = (roadmap.stages || []).find((stage) => stage.id === "choose_checkout_provider") || {};
   if (checkoutStage.status !== "locked") failures.push(`checkout_stage_status:${checkoutStage.status || "none"}`);
   if (checkoutStage.provider !== "not_selected") failures.push(`checkout_provider:${checkoutStage.provider || "none"}`);
@@ -128,6 +132,8 @@ async function main() {
     if (!sampleStage.completedAt) failures.push("sample_stage_missing_completed_at");
     if (!(sampleStage.evidenceSources || []).includes("sample PDF downloads")) failures.push("sample_stage_missing_download_evidence");
     if (!sampleStage.nextGate?.includes("checkout locked")) failures.push("sample_stage_missing_next_gate");
+    if (!html.includes(`Completed: ${sampleStage.completedAt}`)) failures.push("html_missing_sample_completed_at");
+    if (!html.includes("Next gate: Keep checkout locked")) failures.push("html_missing_sample_next_gate");
   }
   const disclosureStage = (roadmap.stages || []).find((stage) => stage.id === "publish_precheckout_disclosure") || {};
   if ((disclosureStage.requirements || []).length !== release.liveExpectations?.checkoutGateRequirements) failures.push("disclosure_requirement_count_mismatch");

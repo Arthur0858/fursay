@@ -1885,7 +1885,7 @@ function writeMonetizationRoadmap(siteDir, source) {
         status: "active",
         requiredSignals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
         evidenceSources: ["products.json", "conversion-health.json"],
-        unlocks: "draft_sample_pack",
+        unlocks: "publish_precheckout_disclosure",
       },
       {
         id: "draft_sample_pack",
@@ -3061,9 +3061,12 @@ ${events}
 
 function roadmapStageCard(stage) {
   const details = [
+    stage.completedAt ? `Completed: ${stage.completedAt}` : "",
     stage.requiredSignals?.length ? `Signals: ${stage.requiredSignals.join(", ")}` : "",
     stage.evidenceSources?.length ? `Evidence: ${stage.evidenceSources.join(", ")}` : "",
+    stage.unlocks ? `Unlocks: ${stage.unlocks}` : "",
     stage.unlockCriteria || "",
+    stage.nextGate ? `Next gate: ${stage.nextGate}` : "",
     stage.deliverables?.length ? `Deliverables: ${stage.deliverables.join(", ")}` : "",
     stage.requirements?.length ? `Requirements: ${stage.requirements.join(", ")}` : "",
     stage.provider ? `Provider: ${stage.provider}` : "",
