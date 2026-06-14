@@ -62,6 +62,7 @@ Useful actions:
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
+- Arabic product waitlist page for families: https://fursay.com/ar/products
 - Product interest manifest: https://fursay.com/products.json
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
@@ -96,6 +97,7 @@ Technical discovery:
 - Conversion health manifest: https://fursay.com/conversion-health.json
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
+- Arabic product waitlist page for families: https://fursay.com/ar/products
 - Product interest manifest: https://fursay.com/products.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready

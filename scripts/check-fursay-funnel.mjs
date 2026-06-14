@@ -1095,19 +1095,21 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/ar/episodes/noor-greetings",
     "https://fursay.com/products",
     "https://fursay.com/zh/products",
+    "https://fursay.com/ar/products",
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
   if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);
   for (const loc of expectedSitemapLocs) {
     if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
   }
-  if (sitemapAlternateCount !== 78) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
-  for (const productLoc of ["https://fursay.com/products", "https://fursay.com/zh/products"]) {
+  if (sitemapAlternateCount !== 84) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  for (const productLoc of ["https://fursay.com/products", "https://fursay.com/zh/products", "https://fursay.com/ar/products"]) {
     const start = sitemap.indexOf(`<loc>${productLoc}</loc>`);
     const block = start >= 0 ? sitemap.slice(start, sitemap.indexOf("</url>", start)) : "";
     for (const alternate of [
       '<xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>',
       '<xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>',
+      '<xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/products"/>',
       '<xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>',
     ]) {
       if (!block.includes(alternate)) failures.push(`sitemap_product_alternate_missing:${productLoc}:${alternate}`);
@@ -1312,11 +1314,11 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
-  if (release.liveExpectations?.productLandingPages !== 2) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
+  if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
   if (release.liveExpectations?.productValidationPlans !== 2) failures.push(`release_product_validation_plans:${release.liveExpectations?.productValidationPlans || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 62) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 63) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");

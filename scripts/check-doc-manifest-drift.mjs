@@ -187,6 +187,7 @@ async function checkLocalDocs(failures, details) {
   failures.push(...exactArrayFailures("site_health_products", [
     `${ORIGIN}/products`,
     `${ORIGIN}/zh/products`,
+    `${ORIGIN}/ar/products`,
     `${ORIGIN}/products.json`,
   ], normalizeArray(siteHealth.routes?.products)));
   for (const pack of ["koko", "noor"]) {

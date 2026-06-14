@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "c83235c",
-    "summary": "Add product validation plans"
+    "commit": "047f00f",
+    "summary": "Add product page hreflang"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
@@ -16,7 +16,9 @@
   "interestOnly": true,
   "event": "fursay_product_interest_click",
   "trafficEntryPoints": {
-    "socialProfileLinks": "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest"
+    "socialProfileLinks": "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest",
+    "zhSocialProfileLinks": "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest",
+    "arSocialProfileLinks": "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest"
   },
   "subscribePayloadCompatibility": "email/groups/attribution unchanged",
   "checkoutGate": {

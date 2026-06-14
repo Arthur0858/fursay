@@ -22,6 +22,7 @@ const PAGES = [
   { path: "/conversion-health", file: "conversion-health.html" },
   { path: "/products", file: "products.html" },
   { path: "/zh/products", file: "zh/products.html" },
+  { path: "/ar/products", file: "ar/products.html", rtl: true },
   { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html" },
   { path: "/zh/episodes/koko-feelings", file: "zh/episodes/koko-feelings.html" },
   { path: "/ar/episodes/koko-feelings", file: "ar/episodes/koko-feelings.html", rtl: true },

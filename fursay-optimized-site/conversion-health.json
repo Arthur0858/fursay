@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "c83235c",
-    "summary": "Add product validation plans"
+    "commit": "047f00f",
+    "summary": "Add product page hreflang"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

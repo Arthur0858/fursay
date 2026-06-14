@@ -45,6 +45,18 @@ const ZH_PRODUCT_ENGLISH_REGRESSIONS = [
   "Draft a 3-page",
   "Draft a 3-minute",
 ];
+const AR_PRODUCT_REQUIRED_COPY = [
+  "لا دفع اليوم",
+  "الحزمة المجانية أولا",
+  "قائمة اهتمام فقط",
+  "كلمات صينية مع البينيين",
+  "توجيهات عربية للوالدين",
+  "نشاط عائلي في 3 دقائق",
+  "كيف تستخدمها العائلة؟",
+  "أسئلة شائعة",
+  "هل سأدفع اليوم؟",
+  "هل يمكنني الإلغاء لاحقا؟",
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -158,6 +170,7 @@ function checkProductAlternates(html, pagePath, failures) {
   const expected = {
     en: "https://fursay.com/products",
     "zh-TW": "https://fursay.com/zh/products",
+    ar: "https://fursay.com/ar/products",
     "x-default": "https://fursay.com/products",
   };
   for (const [hreflang, href] of Object.entries(expected)) {
@@ -171,10 +184,12 @@ function checkProductSitemapAlternates(sitemap, failures) {
   const productEntries = [
     "https://fursay.com/products",
     "https://fursay.com/zh/products",
+    "https://fursay.com/ar/products",
   ];
   const expectedAlternates = [
     '<xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>',
     '<xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products"/>',
+    '<xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/products"/>',
     '<xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/products"/>',
   ];
   for (const entry of productEntries) {
@@ -224,6 +239,7 @@ function checkProductSchema(html, pagePath, expectedUrl, expectedNames, localize
   if (blocks.length < 1) failures.push(`product_schema_missing_json_ld:${pagePath}`);
   if (webpage?.url !== expectedUrl) failures.push(`product_schema_webpage_url:${pagePath}:${webpage?.url || "none"}`);
   if (pagePath === "/zh/products" && webpage?.inLanguage !== "zh-TW") failures.push(`product_schema_zh_language:${webpage?.inLanguage || "none"}`);
+  if (pagePath === "/ar/products" && webpage?.inLanguage !== "ar") failures.push(`product_schema_ar_language:${webpage?.inLanguage || "none"}`);
   if (products.length !== expectedNames.length) failures.push(`product_schema_product_count:${pagePath}:${products.length}`);
   for (const name of expectedNames) {
     if (!products.some((product) => product.name === name)) failures.push(`product_schema_missing_name:${pagePath}:${name}`);
@@ -350,6 +366,7 @@ async function main() {
   let interaction = null;
   const html = await readText(args.baseUrl, "/products");
   const zhHtml = await readText(args.baseUrl, "/zh/products");
+  const arHtml = await readText(args.baseUrl, "/ar/products");
   const products = await readJson(args.baseUrl, "/products.json");
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
@@ -360,27 +377,37 @@ async function main() {
 
   if (!html.includes('<link rel="canonical" href="https://fursay.com/products">')) failures.push("products_page_bad_canonical");
   if (!zhHtml.includes('<link rel="canonical" href="https://fursay.com/zh/products">')) failures.push("zh_products_page_bad_canonical");
+  if (!arHtml.includes('<link rel="canonical" href="https://fursay.com/ar/products">')) failures.push("ar_products_page_bad_canonical");
   if (!zhHtml.includes('<html lang="zh-TW">')) failures.push("zh_products_page_bad_lang");
+  if (!arHtml.includes('<html lang="ar" dir="rtl">')) failures.push("ar_products_page_bad_lang_or_dir");
   checkProductAlternates(html, "/products", failures);
   checkProductAlternates(zhHtml, "/zh/products", failures);
+  checkProductAlternates(arHtml, "/ar/products", failures);
   checkProductSitemapAlternates(sitemap, failures);
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
   if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
   if (!zhHtml.includes("data-product-faq")) failures.push("zh_products_page_missing_faq");
+  if (!arHtml.includes("data-product-faq")) failures.push("ar_products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
   if (!html.includes("site-shared-20260613-commerce4.js")) failures.push("products_page_missing_shared_js");
   if (!zhHtml.includes("site-shared-20260613-commerce4.js")) failures.push("zh_products_page_missing_shared_js");
+  if (!arHtml.includes("site-shared-20260613-commerce4.js")) failures.push("ar_products_page_missing_shared_js");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
   if (!zhHtml.includes("今天不會收費")) failures.push("zh_products_page_missing_no_payment_copy");
   if (!zhHtml.includes("先領免費故事包")) failures.push("zh_products_page_missing_free_pack_copy");
+  if (!arHtml.includes("لا دفع اليوم")) failures.push("ar_products_page_missing_no_payment_copy");
+  if (!arHtml.includes("الحزمة المجانية أولا")) failures.push("ar_products_page_missing_free_pack_copy");
   for (const needle of ZH_PRODUCT_REQUIRED_COPY) {
     if (!zhHtml.includes(needle)) failures.push(`zh_products_page_missing_localized_copy:${needle}`);
   }
   for (const needle of ZH_PRODUCT_ENGLISH_REGRESSIONS) {
     if (zhHtml.includes(needle)) failures.push(`zh_products_page_english_copy_regression:${needle}`);
+  }
+  for (const needle of AR_PRODUCT_REQUIRED_COPY) {
+    if (!arHtml.includes(needle)) failures.push(`ar_products_page_missing_localized_copy:${needle}`);
   }
   if (/<div class="creator-kit-meta">/i.test(html)) failures.push("products_page_exposes_ops_meta");
   for (const needle of [/Commit\s+[a-f0-9]{7,}/i, /JSON manifest/i, /Conversion health/i]) {
@@ -402,22 +429,36 @@ async function main() {
     "興趣",
     failures,
   );
+  checkProductSchema(
+    arHtml,
+    "/ar/products",
+    "https://fursay.com/ar/products",
+    ["قائمة انتظار حزمة كوكو القابلة للطباعة", "قائمة انتظار ورقة نور في 3 دقائق"],
+    "اهتمام",
+    failures,
+  );
 
   for (const needle of CHECKOUT_NEEDLES) {
     if (needle.test(html)) failures.push(`products_page_checkout_language_or_link:${needle}`);
     if (needle.test(zhHtml)) failures.push(`zh_products_page_checkout_language_or_link:${needle}`);
+    if (needle.test(arHtml)) failures.push(`ar_products_page_checkout_language_or_link:${needle}`);
   }
   const paymentHrefs = externalPaymentHrefs(html);
   const zhPaymentHrefs = externalPaymentHrefs(zhHtml);
+  const arPaymentHrefs = externalPaymentHrefs(arHtml);
   if (paymentHrefs.length) failures.push(`products_page_payment_hrefs:${paymentHrefs.join(",")}`);
   if (zhPaymentHrefs.length) failures.push(`zh_products_page_payment_hrefs:${zhPaymentHrefs.join(",")}`);
+  if (arPaymentHrefs.length) failures.push(`ar_products_page_payment_hrefs:${arPaymentHrefs.join(",")}`);
 
   const productButtons = [...html.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
     .map((match) => ({ pack: match[2], tag: match[0] }));
   const zhProductButtons = [...zhHtml.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
     .map((match) => ({ pack: match[2], tag: match[0] }));
+  const arProductButtons = [...arHtml.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
+    .map((match) => ({ pack: match[2], tag: match[0] }));
   if (productButtons.length !== 2) failures.push(`products_page_product_interest_buttons:${productButtons.length}`);
   if (zhProductButtons.length !== 2) failures.push(`zh_products_page_product_interest_buttons:${zhProductButtons.length}`);
+  if (arProductButtons.length !== 2) failures.push(`ar_products_page_product_interest_buttons:${arProductButtons.length}`);
   for (const button of productButtons) {
     if (attr(button.tag, "data-interest-stage") !== "waitlist") failures.push(`product_button_bad_stage:${button.pack}`);
     if (!attr(button.tag, "data-signup-source").startsWith(`product_page_${button.pack}`)) failures.push(`product_button_bad_source:${button.pack}`);
@@ -432,18 +473,25 @@ async function main() {
   if (products.subscribePayloadCompatibility !== "email/groups/attribution unchanged") failures.push("products_manifest_payload_contract_changed");
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_manifest_social_entry_mismatch");
   if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_manifest_zh_social_entry_mismatch");
+  if (products.trafficEntryPoints?.arSocialProfileLinks !== links.operations?.arProductInterest?.url) failures.push("products_manifest_ar_social_entry_mismatch");
   if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_social_entry_missing_source");
   if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_social_entry_missing_campaign");
   if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_zh_social_entry_missing_source");
   if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_zh_social_entry_missing_campaign");
   if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_content=links_zh_product_interest")) failures.push("products_manifest_zh_social_entry_missing_content");
+  if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_ar_social_entry_missing_source");
+  if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_ar_social_entry_missing_campaign");
+  if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_content=links_ar_product_interest")) failures.push("products_manifest_ar_social_entry_missing_content");
   if (!linksHtml.includes('href="/links.json"')) failures.push("links_page_missing_manifest_link");
   if (!linksHtml.includes("Printable and worksheet packs")) failures.push("links_page_missing_product_interest_label");
   if (!linksHtml.includes("繁中產品等候名單")) failures.push("links_page_missing_zh_product_interest_label");
+  if (!linksHtml.includes("قائمة انتظار حزم Fursay")) failures.push("links_page_missing_ar_product_interest_label");
   if (!linksHtml.includes("utm_content=links_product_interest")) failures.push("links_page_missing_product_interest_utm");
   if (!linksHtml.includes("utm_content=links_zh_product_interest")) failures.push("links_page_missing_zh_product_interest_utm");
+  if (!linksHtml.includes("utm_content=links_ar_product_interest")) failures.push("links_page_missing_ar_product_interest_utm");
   if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_page_missing_product_interest_href");
   if (!linksHtml.includes("https://fursay.com/zh/products?utm_source=links")) failures.push("links_page_missing_zh_product_interest_href");
+  if (!linksHtml.includes("https://fursay.com/ar/products?utm_source=links")) failures.push("links_page_missing_ar_product_interest_href");
 
   const productIds = (products.products || []).map((product) => product.id).sort();
   if (productIds.join(",") !== REQUIRED_PRODUCTS.slice().sort().join(",")) failures.push(`products_manifest_product_ids:${productIds.join(",") || "none"}`);
@@ -453,6 +501,7 @@ async function main() {
     const plan = product.validationPlan || {};
     if (!html.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`products_page_missing_validation_plan:${product.id}`);
     if (!zhHtml.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`zh_products_page_missing_validation_plan:${product.id}`);
+    if (!arHtml.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`ar_products_page_missing_validation_plan:${product.id}`);
     if (!plan.audience || plan.audience.length < 40) failures.push(`product_validation_missing_audience:${product.id}`);
     if (!plan.freeBridge?.startsWith("/")) failures.push(`product_validation_missing_free_bridge:${product.id}`);
     if (!plan.nextDecision || plan.nextDecision.length < 60) failures.push(`product_validation_missing_next_decision:${product.id}`);
@@ -474,12 +523,13 @@ async function main() {
 
   if (release.deployment?.productsPage !== "https://fursay.com/products") failures.push("release_missing_products_page");
   if (release.deployment?.productsManifest !== "https://fursay.com/products.json") failures.push("release_missing_products_manifest");
-  if (release.liveExpectations?.productLandingPages !== 2) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
+  if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== products.products?.length) failures.push("release_owned_product_spec_mismatch");
   if (release.liveExpectations?.productValidationPlans !== products.products?.filter((product) => product.validationPlan).length) failures.push("release_product_validation_plan_mismatch");
   if (!release.qualityGates?.includes("scripts/check-product-readiness-contract.mjs")) failures.push("release_missing_product_readiness_gate");
   if (!siteHealth.routes?.products?.includes("https://fursay.com/products")) failures.push("site_health_missing_products_route");
   if (!siteHealth.routes?.products?.includes("https://fursay.com/zh/products")) failures.push("site_health_missing_zh_products_route");
+  if (!siteHealth.routes?.products?.includes("https://fursay.com/ar/products")) failures.push("site_health_missing_ar_products_route");
   if (!siteHealth.generatedFrom?.includes("/products.json")) failures.push("site_health_missing_products_generated_from");
   if (siteHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("site_health_checkout_enabled");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
@@ -488,12 +538,14 @@ async function main() {
     if (args.baseUrl) {
       const enInteraction = await checkProductInteraction(args.baseUrl, "/products");
       const zhInteraction = await checkProductInteraction(args.baseUrl, "/zh/products");
-      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks] };
+      const arInteraction = await checkProductInteraction(args.baseUrl, "/ar/products");
+      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures, ...arInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks, ...arInteraction.checks] };
     } else {
       localServer = await startServer();
       const enInteraction = await checkProductInteraction(localServer.baseUrl, "/products");
       const zhInteraction = await checkProductInteraction(localServer.baseUrl, "/zh/products");
-      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks] };
+      const arInteraction = await checkProductInteraction(localServer.baseUrl, "/ar/products");
+      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures, ...arInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks, ...arInteraction.checks] };
     }
     failures.push(...interaction.failures);
   } finally {

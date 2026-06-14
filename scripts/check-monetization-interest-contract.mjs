@@ -58,6 +58,12 @@ function attr(tag, name) {
   return tag.match(new RegExp(`${name}=(["'])(.*?)\\1`, "i"))?.[2] || "";
 }
 
+function expectedProductPath(pathname) {
+  if (pathname.startsWith("/zh/")) return "/zh/products?";
+  if (pathname.startsWith("/ar/")) return "/ar/products?";
+  return "/products?";
+}
+
 async function readText(baseUrl, pathname) {
   if (baseUrl) {
     const response = await fetch(`${baseUrl}${pathname}`);
@@ -102,8 +108,8 @@ async function main() {
     if (infoLinks.length < 1) failures.push(`${pathname}:missing_product_info_link`);
     for (const link of infoLinks) {
       if (!link.href.includes("/products?")) failures.push(`${pathname}:product_info_link_bad_target`);
-      if (pathname.startsWith("/zh/") && !link.href.startsWith("/zh/products?")) failures.push(`${pathname}:product_info_link_not_localized:${link.href}`);
-      if (!pathname.startsWith("/zh/") && link.href.startsWith("/zh/products?")) failures.push(`${pathname}:product_info_link_unexpected_zh_target:${link.href}`);
+      const expectedPath = expectedProductPath(pathname);
+      if (!link.href.startsWith(expectedPath)) failures.push(`${pathname}:product_info_link_not_localized:${link.href}`);
       if (!link.href.includes("utm_campaign=product_interest_validation")) failures.push(`${pathname}:product_info_link_missing_campaign`);
       if (!link.href.includes("utm_content=")) failures.push(`${pathname}:product_info_link_missing_content`);
     }
@@ -124,9 +130,12 @@ async function main() {
   if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("conversion_health_interest_only_not_true");
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_social_entry_mismatch");
   if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_zh_social_entry_mismatch");
+  if (products.trafficEntryPoints?.arSocialProfileLinks !== links.operations?.arProductInterest?.url) failures.push("products_ar_social_entry_mismatch");
   if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_missing_product_social_entry");
   if (!linksHtml.includes("https://fursay.com/zh/products?utm_source=links")) failures.push("links_missing_zh_product_social_entry");
+  if (!linksHtml.includes("https://fursay.com/ar/products?utm_source=links")) failures.push("links_missing_ar_product_social_entry");
   if (!linksHtml.includes("utm_content=links_zh_product_interest")) failures.push("links_missing_zh_product_social_utm");
+  if (!linksHtml.includes("utm_content=links_ar_product_interest")) failures.push("links_missing_ar_product_social_utm");
 
   const ownedProducts = conversionHealth.monetization?.ownedProducts?.products || [];
   const checkoutGate = conversionHealth.monetization?.ownedProducts?.checkoutGate || {};

@@ -18,7 +18,9 @@ const PAGES = [
   { path: "/ar/arabic", file: "ar/arabic.html", image: "https://fursay.com/og-noor.png" },
   { path: "/links", file: "links.html", image: "https://fursay.com/og-image.png" },
   { path: "/share-kit", file: "share-kit.html", image: "https://fursay.com/og-image.png" },
+  { path: "/products", file: "products.html", image: "https://fursay.com/og-image.png" },
   { path: "/zh/products", file: "zh/products.html", image: "https://fursay.com/og-image.png" },
+  { path: "/ar/products", file: "ar/products.html", image: "https://fursay.com/og-image.png" },
 ];
 
 function parseArgs() {

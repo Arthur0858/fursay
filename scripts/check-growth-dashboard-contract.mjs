@@ -158,6 +158,7 @@ async function main() {
   if (!html.includes("Product validation scoreboard")) failures.push("dashboard_missing_product_validation_scoreboard");
   if (!htmlIncludesValue(html, products.trafficEntryPoints?.socialProfileLinks || "missing")) failures.push("dashboard_missing_product_social_entry");
   if (!htmlIncludesValue(html, products.trafficEntryPoints?.zhSocialProfileLinks || "missing")) failures.push("dashboard_missing_zh_product_social_entry");
+  if (!htmlIncludesValue(html, products.trafficEntryPoints?.arSocialProfileLinks || "missing")) failures.push("dashboard_missing_ar_product_social_entry");
   if (!html.includes("Checkout links allowed")) failures.push("dashboard_missing_checkout_links_allowed");
   for (const product of conversionHealth.monetization?.ownedProducts?.products || []) {
     const minimumSignals = product.validationPlan?.minimumSignals || {};

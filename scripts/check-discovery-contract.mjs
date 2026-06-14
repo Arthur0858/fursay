@@ -24,6 +24,7 @@ const PUBLIC_PAGES = [
   "/conversion-health",
   "/products",
   "/zh/products",
+  "/ar/products",
   "/episodes/koko-feelings",
   "/zh/episodes/koko-feelings",
   "/ar/episodes/koko-feelings",

@@ -86,6 +86,7 @@ function readJson(path) {
 const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
 const PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest";
 const ZH_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest";
+const AR_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest";
 
 function shortlinkRoutes() {
   return [
@@ -243,12 +244,12 @@ function writeReleaseManifest() {
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
       productInfoLinks: 18,
-      productLandingPages: 2,
+      productLandingPages: 3,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 62,
+      cacheHeaderChecks: 63,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -266,6 +267,7 @@ function writeReleaseManifest() {
   writeProductsManifest(siteDir, source);
   writeProductsPage(siteDir);
   writeZhProductsPage(siteDir);
+  writeArProductsPage(siteDir);
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
 }
@@ -452,6 +454,7 @@ function writeSitemap(siteDir) {
   const productAlternates = {
     en: "https://fursay.com/products",
     "zh-TW": "https://fursay.com/zh/products",
+    ar: "https://fursay.com/ar/products",
     "x-default": "https://fursay.com/products",
   };
   const entries = [
@@ -475,6 +478,7 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/ar/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/products", productAlternates, "0.5"),
     sitemapUrl("https://fursay.com/zh/products", productAlternates, "0.5"),
+    sitemapUrl("https://fursay.com/ar/products", productAlternates, "0.5"),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -693,6 +697,10 @@ function writeLinksManifest(siteDir, source) {
       zhProductInterest: {
         label: "繁中產品等候名單",
         url: ZH_PRODUCT_INTEREST_SOCIAL_LINK,
+      },
+      arProductInterest: {
+        label: "قائمة انتظار حزم Fursay",
+        url: AR_PRODUCT_INTEREST_SOCIAL_LINK,
       },
       shareKit: {
         label: "Share kit",
@@ -1594,6 +1602,7 @@ function writeProductsManifest(siteDir, source) {
     trafficEntryPoints: {
       socialProfileLinks: links.operations?.productInterest?.url || PRODUCT_INTEREST_SOCIAL_LINK,
       zhSocialProfileLinks: links.operations?.zhProductInterest?.url || ZH_PRODUCT_INTEREST_SOCIAL_LINK,
+      arSocialProfileLinks: links.operations?.arProductInterest?.url || AR_PRODUCT_INTEREST_SOCIAL_LINK,
     },
     subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
     checkoutGate: ownedProducts.checkoutGate || {},
@@ -1747,6 +1756,104 @@ function zhProductsJsonLd(manifest) {
   });
 }
 
+function arProductCopy(product) {
+  if (product.pack === "noor") {
+    return {
+      eyebrow: "ورقة نور الصينية في 3 دقائق",
+      label: "قائمة انتظار ورقة نور في 3 دقائق",
+      audience: "للعائلات العربية التي تريد عادة قصيرة جدا لتجربة الصينية مع توجيه للوالدين بالعربية.",
+      outcome: "ابدؤوا من لحظة قصة قصيرة، تمرنوا على ثلاث كلمات صينية مع البينيين، وأنهوا نشاطا صغيرا قبل أن يتعب انتباه الطفل.",
+      format: "ورقة PDF قابلة للطباعة مع كلمات صينية وبينيين، توجيهات عربية للوالدين، ونشاط لمدة 3 دقائق.",
+      plannedIncludes: [
+        "كلمات صينية مع البينيين",
+        "توجيهات عربية للوالدين",
+        "نشاط عائلي في 3 دقائق",
+      ],
+      validationAudience: "عائلات عربية تريد تجربة صينية قصيرة جدا مع توجيه واضح للوالدين.",
+      validationNextDecision: "سنجهز عينة ورقة نور فقط بعد ظهور نقرات حقيقية على قائمة الانتظار وإشارة اشتراك واحدة على الأقل.",
+      bridge: "/ar/arabic?subscribe=noor&utm_source=ar_products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
+      bridgeLabel: "احصلوا على حزمة نور المجانية",
+      button: "انضموا لقائمة نور",
+    };
+  }
+  return {
+    eyebrow: "حزمة كوكو الإنجليزية",
+    label: "قائمة انتظار حزمة كوكو القابلة للطباعة",
+    audience: "للعائلات الناطقة بالصينية التي تريد تدريب كلمات المشاعر بالإنجليزية بعد قصة قصيرة.",
+    outcome: "حوّلوا قصة كوكو إلى صفحة هادئة: كلمة شعور، سؤال صغير، ومساحة رسم للطفل.",
+    format: "صفحات PDF قابلة للطباعة مع أسئلة قصة، تدريب كلمات المشاعر، ونشاط رسم عائلي.",
+    plannedIncludes: [
+      "ورقة تذكير بالقصة",
+      "تدريب كلمات المشاعر بالإنجليزية",
+      "نشاط رسم للوالد والطفل",
+    ],
+    validationAudience: "عائلات ناطقة بالصينية تريد متابعة قصيرة بعد قصة كوكو الإنجليزية.",
+    validationNextDecision: "سنجهز عينة حزمة كوكو فقط بعد ظهور نقرات حقيقية على قائمة الانتظار وإشارة اشتراك واحدة على الأقل.",
+    bridge: "/ar/koko?subscribe=koko&utm_source=ar_products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
+    bridgeLabel: "احصلوا على حزمة كوكو المجانية",
+    button: "انضموا لقائمة كوكو",
+  };
+}
+
+function arProductsJsonLd(manifest) {
+  const products = (manifest.products || []).map((product) => {
+    const copy = arProductCopy(product);
+    return {
+      "@type": "Product",
+      name: copy.label,
+      description: `${copy.format} قائمة اهتمام فقط؛ لا دفع اليوم.`,
+      brand: {
+        "@type": "Brand",
+        name: "Fursay",
+      },
+      audience: {
+        "@type": "PeopleAudience",
+        audienceType: copy.audience,
+      },
+      offers: {
+        "@type": "Offer",
+        availability: "https://schema.org/PreOrder",
+        price: "0",
+        priceCurrency: "USD",
+        description: "مرحلة انتظار وقياس اهتمام فقط. النسخة المدفوعة غير مفتوحة، ولا يتم تحصيل أي مبلغ من هذه الصفحة.",
+        url: "https://fursay.com/ar/products",
+      },
+      potentialAction: {
+        "@type": "RegisterAction",
+        target: "https://fursay.com/ar/products",
+        name: copy.button,
+      },
+    };
+  });
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://fursay.com/ar/products#webpage",
+        url: "https://fursay.com/ar/products",
+        name: "قائمة انتظار حزم Fursay القابلة للطباعة",
+        description: "انضموا إلى قائمة انتظار حزمة كوكو القابلة للطباعة أو ورقة نور في 3 دقائق. الحزمة المجانية أولا، ولا دفع اليوم.",
+        inLanguage: "ar",
+        isPartOf: {
+          "@type": "WebSite",
+          name: "Fursay",
+          url: "https://fursay.com/",
+        },
+      },
+      {
+        "@type": "ItemList",
+        name: "قوائم انتظار منتجات Fursay",
+        itemListElement: products.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item,
+        })),
+      },
+    ],
+  });
+}
+
 function writeProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
   const products = (manifest.products || [])
@@ -1800,7 +1907,12 @@ function writeProductsPage(siteDir) {
   <meta property="og:description" content="Join interest lists for parent-child printable packs based on Koko and Noor story worlds. No payment today.">
   <meta property="og:url" content="https://fursay.com/products">
   <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Fursay parent-child bilingual story world">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_TW">
+  <meta property="og:locale:alternate" content="ar_SA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay Printable Story Pack Waitlist">
   <meta name="twitter:description" content="Join the Koko or Noor printable pack waitlist. Free story pack first, no payment today.">
@@ -1808,6 +1920,7 @@ function writeProductsPage(siteDir) {
   <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
   <link rel="alternate" hreflang="en" href="https://fursay.com/products">
   <link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products">
+  <link rel="alternate" hreflang="ar" href="https://fursay.com/ar/products">
   <link rel="alternate" hreflang="x-default" href="https://fursay.com/products">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
@@ -1990,6 +2103,8 @@ function writeZhProductsPage(siteDir) {
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Fursay 親子雙語故事世界">
   <meta property="og:locale" content="zh_TW">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="ar_SA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay 親子可列印故事包等候名單">
   <meta name="twitter:description" content="加入叩叩或努爾可列印包等候名單。先領免費故事包，今天不會收費。">
@@ -1997,6 +2112,7 @@ function writeZhProductsPage(siteDir) {
   <meta name="twitter:image:alt" content="Fursay 親子雙語故事世界">
   <link rel="alternate" hreflang="en" href="https://fursay.com/products">
   <link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products">
+  <link rel="alternate" hreflang="ar" href="https://fursay.com/ar/products">
   <link rel="alternate" hreflang="x-default" href="https://fursay.com/products">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
@@ -2080,6 +2196,159 @@ ${products}
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
+}
+
+function writeArProductsPage(siteDir) {
+  const manifest = readJson(resolve(siteDir, "products.json"));
+  const products = (manifest.products || [])
+    .map((product) => {
+      const copy = arProductCopy(product);
+      const source = product.pack === "noor" ? "ar_product_page_noor_worksheet" : "ar_product_page_koko_printable";
+      return `
+      <article class="creator-pack product-waitlist-card" data-product-card="${escapeHtml(product.id)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(copy.eyebrow)}</p>
+          <h2>${escapeHtml(copy.label)}</h2>
+          <p>${escapeHtml(copy.audience)}</p>
+          <p>${escapeHtml(copy.outcome)}</p>
+          <p><strong>لا دفع اليوم.</strong> انضموا فقط إذا أردتم إشعارا عند جاهزية نسخة اختبارية.</p>
+        </div>
+        <div class="creator-copy-blocks">
+          <article>
+            <h3>ما الذي قد تتضمنه الحزمة؟</h3>
+            <ul>
+              ${(copy.plannedIncludes || product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
+            </ul>
+          </article>
+          <article>
+            <h3>كيف تستخدمها العائلة؟</h3>
+            <p>${escapeHtml(copy.format)} ابدؤوا بالحزمة المجانية، ثم استخدموا الورقة القابلة للطباعة كخطوة صغيرة بعد القصة.</p>
+          </article>
+          <article data-product-validation-plan="${escapeHtml(product.id)}">
+            <h3>ما الذي نقيسه أولا؟</h3>
+            <p>${escapeHtml(copy.validationAudience || product.validationPlan?.audience || copy.audience)}</p>
+            <p>قبل فتح أي نسخة مدفوعة، نراقب زيارات صفحة المنتج، نقرات قائمة الانتظار، وإشارات الاشتراك الحقيقية.</p>
+            <p>${escapeHtml(copy.validationNextDecision || product.validationPlan?.nextDecision || "لن نجهز عينة اختبارية إلا بعد ظهور اهتمام حقيقي من العائلات.")}</p>
+          </article>
+        </div>
+        <div class="public-share-actions">
+          <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
+          <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
+        </div>
+      </article>`;
+    })
+    .join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة انتظار حزم Fursay القابلة للطباعة</title>
+  <meta name="description" content="انضموا إلى قائمة انتظار حزمة كوكو القابلة للطباعة أو ورقة نور في 3 دقائق. ابدؤوا بالحزمة المجانية أولا؛ النسخة المدفوعة غير مفتوحة ولا دفع اليوم.">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/ar/products">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="قائمة انتظار حزم Fursay القابلة للطباعة">
+  <meta property="og:description" content="ابدؤوا بالحزمة المجانية، ثم انضموا إلى قائمة انتظار كوكو أو نور. لا دفع اليوم.">
+  <meta property="og:url" content="https://fursay.com/ar/products">
+  <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="عالم قصص Fursay للعائلات">
+  <meta property="og:locale" content="ar_SA">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="قائمة انتظار حزم Fursay القابلة للطباعة">
+  <meta name="twitter:description" content="انضموا إلى قائمة انتظار كوكو أو نور. الحزمة المجانية أولا، ولا دفع اليوم.">
+  <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:image:alt" content="عالم قصص Fursay للعائلات">
+  <link rel="alternate" hreflang="en" href="https://fursay.com/products">
+  <link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/products">
+  <link rel="alternate" hreflang="ar" href="https://fursay.com/ar/products">
+  <link rel="alternate" hreflang="x-default" href="https://fursay.com/products">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+  <script type="application/ld+json">${arProductsJsonLd(manifest)}</script>
+</head>
+<body class="picture-world creator-kit-page products-page product-waitlist-page" data-page-pack="products">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero product-waitlist-hero" data-product-hero>
+      <p class="creator-eyebrow">حزم Fursay القابلة للطباعة</p>
+      <h1>ابدؤوا بالحزمة المجانية، ثم قرروا إن كنتم تريدون ورقة قابلة للطباعة</h1>
+      <p>كوكو مناسب لتدريب كلمات المشاعر بالإنجليزية، ونور مناسب لعائلات عربية تريد تجربة صينية قصيرة. النسخة المدفوعة غير مفتوحة، وهذه الصفحة لا تجمع أي دفع.</p>
+      <div class="product-trust-strip" aria-label="حالة قائمة انتظار المنتج">
+        <span>لا دفع اليوم</span>
+        <span>الحزمة المجانية أولا</span>
+        <span>قائمة اهتمام فقط</span>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-product-readiness-summary>
+      <h2>كيف تعمل قائمة الانتظار؟</h2>
+      <div class="product-step-grid">
+        <article>
+          <h3>1. اختاروا عالم القصة</h3>
+          <p>كوكو يركز على كلمات المشاعر بالإنجليزية. نور يركز على كلمات صينية مع توجيه عربي للوالدين.</p>
+        </article>
+        <article>
+          <h3>2. جربوا الحزمة المجانية أولا</h3>
+          <p>الأزرار تفتح نموذج حزمة القصة الحالي حتى تجرّب العائلة الإيقاع قبل وجود أي منتج مدفوع.</p>
+        </article>
+        <article>
+          <h3>3. نخبركم فقط إذا أصبحت جاهزة</h3>
+          <p>إذا ظهر اهتمام كاف، ستعرض Fursay السعر والدعم والاسترجاع بوضوح قبل أي خطوة دفع.</p>
+        </article>
+      </div>
+    </section>
+${products}
+    <section class="creator-kit-safety" data-product-readiness-gate>
+      <h2>قبل فتح أي حزمة مدفوعة</h2>
+      <p>أي ورقة أو حزمة مدفوعة ستكون موضحة بوضوح قبل الدفع؛ قوائم الكتب التابعة ومنتجات Fursay الخاصة ستبقى منفصلة.</p>
+      <p>سيتم نشر طريقة الدعم والاسترجاع قبل تفعيل أي رابط دفع.</p>
+      <p>الهدف الحالي هو معرفة هل تريد العائلات نشاطا قابلا للطباعة بعد القصة المجانية. لا يوجد سعر أو زر دفع أو رابط دفع في هذه الصفحة.</p>
+    </section>
+    <section class="creator-kit-safety product-faq" data-product-faq>
+      <h2>أسئلة شائعة</h2>
+      <div class="creator-copy-blocks">
+        <article>
+          <h3>هل سأدفع اليوم؟</h3>
+          <p>لا. قائمة الانتظار تسجل الاهتمام فقط وتفتح نموذج حزمة القصة المجانية.</p>
+        </article>
+        <article>
+          <h3>ماذا سأحصل الآن؟</h3>
+          <p>يمكنكم الانضمام إلى قائمة حزمة القصص الأسبوعية واختيار كوكو أو نور أو كليهما داخل النموذج.</p>
+        </article>
+        <article>
+          <h3>متى تفتح الحزم المدفوعة؟</h3>
+          <p>فقط بعد ظهور اهتمام حقيقي من العائلات. قد تبقى الصفحة قائمة انتظار إذا كان الطلب منخفضا.</p>
+        </article>
+        <article>
+          <h3>هل يمكنني الإلغاء لاحقا؟</h3>
+          <p>نعم. رسائل البريد تتضمن خيار إلغاء الاشتراك، وأي منتج مدفوع مستقبلي سيعرض الدعم والاسترجاع قبل الدفع.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div class="modal-overlay" id="subscribeModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close-subscribe aria-label="إغلاق">&times;</button>
+      <span class="modal-emoji">📬</span>
+      <div class="modal-title">انضموا إلى قائمة حزمة القصة</div>
+      <p class="modal-sub">اختاروا كوكو أو نور لتلقي تحديثات حزمة القصة الأسبوعية. لا دفع اليوم.</p>
+      <form id="subscribeForm">
+        <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
+        <div class="modal-field"><label>أنا مهتم بـ</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>كوكو الإنجليزية</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>نور العربية الصينية</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي الحزمة الأسبوعية</button>
+      </form>
+      <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
+    </div>
+  </div>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
 }
 
 function healthMetric(label, value, note = "") {
@@ -2209,6 +2478,7 @@ function writeConversionHealthPage(siteDir) {
       <dl>
         ${healthMetric("English social product entry", socialEntries.socialProfileLinks || "none")}
         ${healthMetric("Traditional Chinese social product entry", socialEntries.zhSocialProfileLinks || "none")}
+        ${healthMetric("Arabic social product entry", socialEntries.arSocialProfileLinks || "none")}
         ${healthMetric("Checkout links allowed", String(productsManifest.paymentLinksAllowed === true))}
         ${healthMetric("Interest status", productsManifest.status || "unknown")}
       </dl>
@@ -2320,6 +2590,7 @@ function writeSiteHealthManifest(siteDir) {
       products: [
         "https://fursay.com/products",
         "https://fursay.com/zh/products",
+        "https://fursay.com/ar/products",
         "https://fursay.com/products.json",
       ],
     },
