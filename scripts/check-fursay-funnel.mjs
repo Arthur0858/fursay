@@ -1381,6 +1381,26 @@ async function checkDiscoveryFiles(baseUrl) {
   if (trafficLaunch.safety?.creatorKitManifest !== "https://fursay.com/creator-kit.json") failures.push("traffic_launch_missing_creator_kit_manifest");
   if (trafficLaunch.safety?.shareKitManifest !== "https://fursay.com/share-kit.json") failures.push("traffic_launch_missing_share_kit_manifest");
   if (trafficLaunch.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("traffic_launch_missing_shortlink_manifest");
+  const noorSprint = trafficLaunch.activationSprints?.noorFirstSubscriber || {};
+  if (noorSprint.pack !== "noor") failures.push(`traffic_launch_noor_sprint_pack:${noorSprint.pack || "none"}`);
+  if (noorSprint.status !== "subscriber_signal_needed") failures.push(`traffic_launch_noor_sprint_status:${noorSprint.status || "none"}`);
+  if (noorSprint.windowDays !== 7) failures.push(`traffic_launch_noor_sprint_window:${noorSprint.windowDays || "none"}`);
+  if (noorSprint.successMetric !== "at_least_one_noor_subscribe_submit_success") {
+    failures.push(`traffic_launch_noor_sprint_success_metric:${noorSprint.successMetric || "none"}`);
+  }
+  if (!noorSprint.primaryLink?.includes("/share/noor?source_id=noor_first_subscriber_sprint")) {
+    failures.push(`traffic_launch_noor_sprint_primary_link:${noorSprint.primaryLink || "none"}`);
+  }
+  if (!noorSprint.sampleLink?.includes("/sample/noor?source_id=noor_first_subscriber_sprint")) {
+    failures.push(`traffic_launch_noor_sprint_sample_link:${noorSprint.sampleLink || "none"}`);
+  }
+  if (!noorSprint.worksheetPreview?.includes("/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint")) {
+    failures.push(`traffic_launch_noor_sprint_worksheet_link:${noorSprint.worksheetPreview || "none"}`);
+  }
+  if (!noorSprint.copy?.includes("Free Noor 3-minute story pack") || !noorSprint.copy?.includes(noorSprint.primaryLink || "missing")) {
+    failures.push("traffic_launch_noor_sprint_copy_missing_primary_link");
+  }
+  if (!Array.isArray(noorSprint.checklist) || noorSprint.checklist.length < 4) failures.push("traffic_launch_noor_sprint_short_checklist");
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
   if (links.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("links_bad_subscription_endpoint");
@@ -1462,7 +1482,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
   if (!trafficLaunchPage.includes("/traffic-launch.json")) failures.push("traffic_launch_page_missing_json_manifest_link");
   if ((trafficLaunchPage.match(/data-traffic-launch-channel=/g) || []).length !== 10) failures.push("traffic_launch_page_bad_channel_count");
-  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 10) failures.push("traffic_launch_page_bad_copy_button_count");
+  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 11) failures.push("traffic_launch_page_bad_copy_button_count");
+  if (!trafficLaunchPage.includes('data-noor-subscriber-sprint="subscriber_signal_needed"')) failures.push("traffic_launch_page_missing_noor_sprint");
+  if (!htmlContains(trafficLaunchPage, noorSprint.primaryLink || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_primary_link");
+  if (!htmlContains(trafficLaunchPage, noorSprint.copy || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_copy");
   if (!linksPage.includes('<body class="picture-world creator-kit-page social-links-page">')) failures.push("links_page_missing_body_class");
   if (!linksPage.includes("<h1>Choose Your Story Pack</h1>")) failures.push("links_page_missing_h1");
   if (!linksPage.includes("/links.json")) failures.push("links_page_missing_json_manifest_link");

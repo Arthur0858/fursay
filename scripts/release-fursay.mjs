@@ -982,6 +982,61 @@ function trafficLaunchChannelRows(channels) {
           </article>`).join("\n");
 }
 
+function buildNoorSubscriberSprint() {
+  const primaryLink = "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=family_share";
+  const sampleLink = "https://fursay.com/sample/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=sample_followup";
+  const worksheetPreview = "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint&creator=fursay&placement=worksheet_preview";
+  return {
+    pack: "noor",
+    status: "subscriber_signal_needed",
+    windowDays: 7,
+    goal: "Get the first real Noor subscriber signal without sending a newsletter or enabling checkout.",
+    successMetric: "at_least_one_noor_subscribe_submit_success",
+    primaryLink,
+    sampleLink,
+    worksheetPreview,
+    copy: [
+      "Trying a tiny Arabic-Chinese routine with kids this week.",
+      `Free Noor 3-minute story pack: ${primaryLink}`,
+      "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
+    ].join("\n"),
+    checklist: [
+      "Share the family link with 3 Arabic-speaking parent groups or families.",
+      "Use the sample link only as a follow-up when someone asks what is inside.",
+      "Keep the worksheet preview interest-only; do not mention payment or price.",
+      "Review noor_growth_signals_7d after Cloudflare Analytics credentials are enabled.",
+    ],
+  };
+}
+
+function trafficLaunchSprintSection(sprint) {
+  return `
+    <section class="creator-kit-safety noor-subscriber-sprint" data-noor-subscriber-sprint="${escapeHtml(sprint.status)}">
+      <p class="creator-eyebrow">Noor subscriber sprint</p>
+      <h2>7-day Noor first-subscriber sprint</h2>
+      <p>${escapeHtml(sprint.goal)}</p>
+      <dl>
+        <div>
+          <dt>Success metric</dt>
+          <dd>${escapeHtml(sprint.successMetric)}</dd>
+        </div>
+        ${shareKitLinkRow("Primary family link", sprint.primaryLink)}
+        ${shareKitLinkRow("Sample follow-up", sprint.sampleLink)}
+        ${shareKitLinkRow("Worksheet preview", sprint.worksheetPreview)}
+      </dl>
+      <div class="creator-copy-block">
+        <div class="creator-copy-heading">
+          <h3>Parent-to-parent copy</h3>
+          <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(sprint.copy)}">Copy sprint copy</button>
+        </div>
+        <pre>${escapeHtml(sprint.copy)}</pre>
+      </div>
+      <ol>
+        ${sprint.checklist.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("\n        ")}
+      </ol>
+    </section>`;
+}
+
 function buildTrafficLaunchKit(siteDir, source) {
   const campaignManifest = readJson(resolve(siteDir, "campaigns.json"));
   const creatorKit = readJson(resolve(siteDir, "creator-kit.json"));
@@ -1122,6 +1177,9 @@ function buildTrafficLaunchKit(siteDir, source) {
       shareKitManifest: "https://fursay.com/share-kit.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
     },
+    activationSprints: {
+      noorFirstSubscriber: buildNoorSubscriberSprint(),
+    },
     packs,
   };
 }
@@ -1178,6 +1236,7 @@ ${trafficLaunchChannelRows(item.channels)}
       <h2>Safety contract</h2>
       <p>Smoke checks do not submit to MailerLite. Subscription traffic still flows through <code>${escapeHtml(kit.safety.subscriptionEndpoint)}</code>.</p>
     </section>
+${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
   <script src="/js/site-shared-20260613-commerce4.js"></script>

@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-15",
   "source": {
     "branch": "main",
-    "commit": "bcb5c0a",
-    "summary": "Add growth reporting windows and printable samples"
+    "commit": "3f260f2",
+    "summary": "Retry transient web vitals navigation timeouts"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/monetization-roadmap",

@@ -179,7 +179,27 @@ function validateTrafficLaunch(manifest, html, failures) {
   if (manifest.safety?.creatorKitManifest !== "https://fursay.com/creator-kit.json") failures.push("traffic-launch:bad_creator_manifest");
   if (manifest.safety?.shareKitManifest !== "https://fursay.com/share-kit.json") failures.push("traffic-launch:bad_share_manifest");
   if (manifest.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("traffic-launch:bad_shortlink_manifest");
-  if (copySet.size !== 10) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
+  if (copySet.size !== 11) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
+
+  const noorSprint = manifest.activationSprints?.noorFirstSubscriber || {};
+  for (const [label, value] of Object.entries({
+    status: noorSprint.status,
+    goal: noorSprint.goal,
+    successMetric: noorSprint.successMetric,
+    primaryLink: noorSprint.primaryLink,
+    sampleLink: noorSprint.sampleLink,
+    worksheetPreview: noorSprint.worksheetPreview,
+    copy: noorSprint.copy,
+  })) {
+    requireText(failures, pageKey, html, `noor_sprint:${label}`, value);
+  }
+  for (const label of ["primaryLink", "sampleLink", "worksheetPreview"]) {
+    requireHref(failures, pageKey, hrefSet, `noor_sprint:${label}`, noorSprint[label]);
+  }
+  requireCopyValue(failures, pageKey, copySet, "noor_sprint:copy", noorSprint.copy);
+  if (noorSprint.pack !== "noor") failures.push(`traffic-launch:noor_sprint_bad_pack:${noorSprint.pack || "none"}`);
+  if (noorSprint.windowDays !== 7) failures.push(`traffic-launch:noor_sprint_bad_window:${noorSprint.windowDays || "none"}`);
+  for (const checkpoint of noorSprint.checklist || []) requireText(failures, pageKey, html, "noor_sprint:checklist", checkpoint);
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {
     for (const [label, value] of Object.entries({
