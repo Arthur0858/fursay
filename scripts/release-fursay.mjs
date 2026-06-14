@@ -1084,6 +1084,66 @@ function buildNoorSubscriberSprint() {
         ].join("\n"),
       },
     ],
+    dailyPlan: [
+      {
+        day: 1,
+        label: "Parent group seed",
+        action: "Post the parent-group copy in one warm Arabic-speaking parent group.",
+        link: variantLinks.parentGroup,
+        reportQuery: "noor_growth_signals_7d",
+        expectedSignal: "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
+      },
+      {
+        day: 2,
+        label: "Direct family DM",
+        action: "Send the direct DM copy to two families who already know the project.",
+        link: variantLinks.directDm,
+        reportQuery: "noor_growth_signals_7d",
+        expectedSignal: "A noor direct_dm open, modal open, or submit success signal.",
+      },
+      {
+        day: 3,
+        label: "Worksheet preview follow-up",
+        action: "Use the worksheet preview only with families who ask what is inside.",
+        link: variantLinks.worksheetFollowup,
+        followupLink: variantLinks.worksheetFollowupStory,
+        reportQuery: "page_intent_7d",
+        expectedSignal: "A sample preview or product info click before the story-pack link.",
+      },
+      {
+        day: 4,
+        label: "Printable PDF follow-up",
+        action: "Share the PDF sample when a parent asks for printable or offline material.",
+        link: variantLinks.pdfSampleFollowup,
+        followupLink: variantLinks.pdfSampleStory,
+        reportQuery: "noor_growth_signals_7d",
+        expectedSignal: "A pdf_sample_followup event followed by a story-pack visit.",
+      },
+      {
+        day: 5,
+        label: "Repeat best response",
+        action: "Repeat the highest-response placement once; do not add price or checkout copy.",
+        link: primaryLink,
+        reportQuery: "event_totals_7d",
+        expectedSignal: "More Noor subscribe opens without payment-link exposure.",
+      },
+      {
+        day: 6,
+        label: "Check first signal",
+        action: "Run the event report and look for one Noor submit success or clear product-interest signal.",
+        link: "https://fursay.com/conversion-health",
+        reportQuery: "noor_growth_signals_7d",
+        expectedSignal: "at_least_one_noor_subscribe_submit_success or a clear follow-up request.",
+      },
+      {
+        day: 7,
+        label: "Decision checkpoint",
+        action: "Keep Noor in safe wait if there is no subscriber signal; otherwise prepare newsletter readiness review.",
+        link: "https://fursay.com/traffic-launch",
+        reportQuery: "subscribe_funnel_by_pack_7d",
+        expectedSignal: "subscriber_signal_received or safe_wait_subscriber_empty remains explicit.",
+      },
+    ],
     checklist: [
       "Share the family link with 3 Arabic-speaking parent groups or families.",
       "Use the sample link only as a follow-up when someone asks what is inside.",
@@ -1108,6 +1168,15 @@ function trafficLaunchSprintSection(sprint) {
             </dl>
             <pre>${escapeHtml(variant.copy)}</pre>
           </article>`).join("\n");
+  const dailyPlan = (sprint.dailyPlan || []).map((day) => `
+        <tr data-noor-sprint-day="${escapeHtml(day.day)}">
+          <th scope="row">Day ${escapeHtml(day.day)}</th>
+          <td>${escapeHtml(day.label)}</td>
+          <td>${escapeHtml(day.action)}</td>
+          <td><a href="${escapeHtml(day.link || "#")}">Open link</a>${day.followupLink ? ` <a href="${escapeHtml(day.followupLink)}">Follow-up</a>` : ""}</td>
+          <td><code>${escapeHtml(day.reportQuery)}</code></td>
+          <td>${escapeHtml(day.expectedSignal)}</td>
+        </tr>`).join("\n");
   return `
     <section class="creator-kit-safety noor-subscriber-sprint" data-noor-subscriber-sprint="${escapeHtml(sprint.status)}">
       <p class="creator-eyebrow">Noor subscriber sprint</p>
@@ -1131,6 +1200,24 @@ function trafficLaunchSprintSection(sprint) {
       </div>
       <div class="creator-copy-blocks" data-noor-sprint-copy-variants>
 ${variants}
+      </div>
+      <div class="creator-copy-block" data-noor-sprint-daily-plan>
+        <h3>7-day action plan</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">Focus</th>
+              <th scope="col">Action</th>
+              <th scope="col">Link</th>
+              <th scope="col">Report</th>
+              <th scope="col">Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+${dailyPlan}
+          </tbody>
+        </table>
       </div>
       <ol>
         ${sprint.checklist.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("\n        ")}

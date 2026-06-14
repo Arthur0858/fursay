@@ -1512,6 +1512,23 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   validateNoorSprintVariantLinks(noorSprint, failures, "traffic_launch_noor_sprint");
   if (!Array.isArray(noorSprint.checklist) || noorSprint.checklist.length < 4) failures.push("traffic_launch_noor_sprint_short_checklist");
+  if (!Array.isArray(noorSprint.dailyPlan) || noorSprint.dailyPlan.length !== 7) {
+    failures.push(`traffic_launch_noor_sprint_daily_plan_count:${noorSprint.dailyPlan?.length || 0}`);
+  }
+  const dailyPlanDays = new Set((noorSprint.dailyPlan || []).map((day) => day.day));
+  for (let day = 1; day <= 7; day += 1) {
+    if (!dailyPlanDays.has(day)) failures.push(`traffic_launch_noor_sprint_missing_day:${day}`);
+  }
+  for (const day of noorSprint.dailyPlan || []) {
+    if (!day.label) failures.push(`traffic_launch_noor_sprint_day_missing_label:${day.day || "none"}`);
+    if (!day.action) failures.push(`traffic_launch_noor_sprint_day_missing_action:${day.day || "none"}`);
+    if (!day.link?.startsWith("https://fursay.com/")) failures.push(`traffic_launch_noor_sprint_day_bad_link:${day.day || "none"}`);
+    if (day.followupLink && !day.followupLink.startsWith("https://fursay.com/")) {
+      failures.push(`traffic_launch_noor_sprint_day_bad_followup:${day.day || "none"}`);
+    }
+    if (!String(day.reportQuery || "").endsWith("_7d")) failures.push(`traffic_launch_noor_sprint_day_bad_report:${day.day || "none"}:${day.reportQuery || "none"}`);
+    if (!day.expectedSignal) failures.push(`traffic_launch_noor_sprint_day_missing_signal:${day.day || "none"}`);
+  }
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
   if (links.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("links_bad_subscription_endpoint");
@@ -1596,8 +1613,17 @@ async function checkDiscoveryFiles(baseUrl) {
   if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 15) failures.push("traffic_launch_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('data-noor-subscriber-sprint="subscriber_signal_needed"')) failures.push("traffic_launch_page_missing_noor_sprint");
   if ((trafficLaunchPage.match(/data-noor-sprint-copy-variant=/g) || []).length !== 4) failures.push("traffic_launch_page_bad_noor_sprint_variant_count");
+  if (!trafficLaunchPage.includes("data-noor-sprint-daily-plan")) failures.push("traffic_launch_page_missing_noor_daily_plan");
+  if ((trafficLaunchPage.match(/data-noor-sprint-day=/g) || []).length !== 7) failures.push("traffic_launch_page_bad_noor_daily_plan_count");
   if (!htmlContains(trafficLaunchPage, noorSprint.primaryLink || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_primary_link");
   if (!htmlContains(trafficLaunchPage, noorSprint.copy || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_copy");
+  for (const day of noorSprint.dailyPlan || []) {
+    if (!trafficLaunchPage.includes(`data-noor-sprint-day="${escapeHtml(day.day || "")}"`)) failures.push(`traffic_launch_page_missing_noor_day:${day.day || "none"}`);
+    if (!htmlContains(trafficLaunchPage, day.action || "missing")) failures.push(`traffic_launch_page_missing_noor_day_action:${day.day || "none"}`);
+    if (!htmlContains(trafficLaunchPage, day.link || "missing")) failures.push(`traffic_launch_page_missing_noor_day_link:${day.day || "none"}`);
+    if (day.followupLink && !htmlContains(trafficLaunchPage, day.followupLink)) failures.push(`traffic_launch_page_missing_noor_day_followup:${day.day || "none"}`);
+    if (!trafficLaunchPage.includes(`<code>${escapeHtml(day.reportQuery || "")}</code>`)) failures.push(`traffic_launch_page_missing_noor_day_report:${day.day || "none"}`);
+  }
   for (const variant of noorSprint.copyVariants || []) {
     if (!trafficLaunchPage.includes(`data-noor-sprint-copy-variant="${escapeHtml(variant.id || "")}"`)) failures.push(`traffic_launch_page_missing_noor_variant:${variant.id || "none"}`);
     if (!htmlContains(trafficLaunchPage, variant.copy || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_copy:${variant.id || "none"}`);
