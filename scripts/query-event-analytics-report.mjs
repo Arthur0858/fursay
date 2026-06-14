@@ -5,6 +5,11 @@ const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-analytics-report";
 const DATASET = "fursay_events";
 const WINDOW_DAYS = 7;
+const PAGE_INTENT_EVENTS = [
+  "fursay_subscribe_open_click",
+  "fursay_product_info_click",
+  "fursay_product_interest_click",
+];
 const QUERIES = [
   {
     name: "event_totals",
@@ -18,8 +23,8 @@ const QUERIES = [
   },
   {
     name: "page_intent",
-    description: "Subscription and product-interest intent by landing path.",
-    sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 IN ('fursay_subscribe_open_click','fursay_product_interest_click') GROUP BY path, event, pack ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+    description: "Subscription, product info, and product-interest intent by landing path.",
+    sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, blob13 AS product_interest, blob14 AS interest_stage, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 IN (${PAGE_INTENT_EVENTS.map((event) => `'${event}'`).join(",")}) GROUP BY path, event, pack, product_interest, interest_stage ORDER BY events DESC LIMIT 100 FORMAT JSON`,
   },
   {
     name: "affiliate_interest",
@@ -88,6 +93,11 @@ async function main() {
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("manifest_missing_report_script");
   if (conversionHealth.measurement?.analyticsReport?.windowDays !== WINDOW_DAYS) failures.push("manifest_bad_report_window");
   if (conversionHealth.measurement?.analyticsReport?.queries?.length !== QUERIES.length) failures.push("manifest_bad_report_query_count");
+  const pageIntent = QUERIES.find((query) => query.name === "page_intent");
+  for (const eventName of PAGE_INTENT_EVENTS) {
+    if (!pageIntent?.sql.includes(eventName)) failures.push(`page_intent_missing_event:${eventName}`);
+    if (!conversionHealth.events?.includes(eventName)) failures.push(`manifest_missing_page_intent_event:${eventName}`);
+  }
 
   const queryReports = [];
   if (canQuery) {

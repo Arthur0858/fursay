@@ -26,6 +26,7 @@ const REQUIRED_EVENTS = [
   "fursay_public_share_copy_click",
   "fursay_kit_copy_click",
   "fursay_product_interest_click",
+  "fursay_product_info_click",
 ];
 const PRIVATE_VALUE_NEEDLES = [
   "event-contract@example.com",
