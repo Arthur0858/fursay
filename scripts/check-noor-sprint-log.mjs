@@ -1,8 +1,10 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const LOG_FILE = "content/growth/noor-sprint-log.json";
+const RECORDER_SCRIPT = "scripts/record-noor-sprint-log.mjs";
+const RECORDER_COMMAND = "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run";
 const DEFAULT_OUT = "/tmp/fursay-noor-sprint-log";
 const ALLOWED_STATUSES = new Set(["ready_to_start", "in_progress", "signal_observed", "safe_wait_subscriber_empty"]);
 const ALLOWED_ENTRY_STATUSES = new Set(["not_started", "completed", "skipped", "needs_retry"]);
@@ -38,6 +40,15 @@ async function readJson(baseUrl, pathname) {
 
 async function readLocalLog() {
   return JSON.parse(await readFile(resolve(process.cwd(), LOG_FILE), "utf8"));
+}
+
+async function localFileExists(path) {
+  try {
+    await access(resolve(process.cwd(), path));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function scanForPrivateValues(value, failures, path = "log") {
@@ -82,6 +93,7 @@ function validateLog(log, failures) {
 
 function validateStatus(status, log, failures) {
   if (status.logSource !== LOG_FILE) failures.push(`status_bad_log_source:${status.logSource || "none"}`);
+  if (status.recorderCommand !== RECORDER_COMMAND) failures.push(`status_bad_recorder_command:${status.recorderCommand || "none"}`);
   if (status.piiAllowed !== false) failures.push("status_pii_allowed_not_false");
   if (status.privacy?.piiAllowed !== false) failures.push("status_privacy_pii_allowed_not_false");
   if (status.privacy?.boundaryConfirmed !== true) failures.push("status_privacy_boundary_not_confirmed");
@@ -105,6 +117,11 @@ async function main() {
   const log = args.baseUrl ? null : await readLocalLog();
   const status = await readJson(args.baseUrl, "/noor-sprint-status.json");
   if (!args.baseUrl) validateLog(log, failures);
+  if (!args.baseUrl) {
+    const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
+    if (!(await localFileExists(RECORDER_SCRIPT))) failures.push("missing_noor_sprint_recorder_script");
+    if (packageJson.scripts?.["noor:sprint:log"] !== `node ${RECORDER_SCRIPT}`) failures.push("missing_noor_sprint_log_package_script");
+  }
   validateStatus(status, log, failures);
   const html = args.baseUrl
     ? await (await fetch(`${args.baseUrl}/noor-sprint-status`, { cache: "no-store" })).text()
@@ -112,6 +129,7 @@ async function main() {
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");
   if (!html.includes(LOG_FILE)) failures.push("page_missing_log_source");
+  if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
 
   await mkdir(args.outDir, { recursive: true });
   const report = {

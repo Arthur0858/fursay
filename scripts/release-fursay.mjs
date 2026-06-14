@@ -1492,6 +1492,7 @@ function buildNoorSprintStatus(siteDir, source) {
     trafficLaunch: "https://fursay.com/traffic-launch.json",
     conversionHealth: "https://fursay.com/conversion-health.json",
     logSource: "content/growth/noor-sprint-log.json",
+    recorderCommand: "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run",
     piiAllowed: false,
     status: sprintLog.status || "ready_to_log",
     pack: "noor",
@@ -1577,6 +1578,7 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
     <section class="creator-kit-safety" data-noor-sprint-privacy>
       <h2>Logging boundary</h2>
       <p>This sprint log records anonymous execution status only. Do not store email, name, phone, address, subscriber IDs, or MailerLite IDs in <code>${escapeHtml(manifest.logSource)}</code>.</p>
+      <p>Use <code>${escapeHtml(manifest.recorderCommand)}</code> first, then rerun the same command without <code>--dry-run</code> when the anonymous note is ready.</p>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-status-summary>
       <h2>Status</h2>
@@ -3886,6 +3888,7 @@ async function main() {
   run("node", ["--check", "scripts/check-monetization-roadmap-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-noor-sprint-log.mjs"]);
+  run("node", ["--check", "scripts/record-noor-sprint-log.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
   run("node", ["--check", "scripts/check-doc-manifest-drift.mjs"]);
