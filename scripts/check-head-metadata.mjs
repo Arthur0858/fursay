@@ -19,6 +19,7 @@ const PAGES = [
   { path: "/traffic-launch", file: "traffic-launch.html", lang: "en", canonical: "https://fursay.com/traffic-launch", robots: "noindex,follow" },
   { path: "/deploy-readiness", file: "deploy-readiness.html", lang: "en", canonical: "https://fursay.com/deploy-readiness", robots: "noindex,follow" },
   { path: "/conversion-health", file: "conversion-health.html", lang: "en", canonical: "https://fursay.com/conversion-health", robots: "noindex,follow" },
+  { path: "/monetization-roadmap", file: "monetization-roadmap.html", lang: "en", canonical: "https://fursay.com/monetization-roadmap", robots: "noindex,follow" },
   { path: "/products", file: "products.html", lang: "en", canonical: "https://fursay.com/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", canonical: "https://fursay.com/zh/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/ar/products", file: "ar/products.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },

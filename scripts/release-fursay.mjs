@@ -144,6 +144,8 @@ function writeReleaseManifest() {
       conversionHealthPage: "https://fursay.com/conversion-health",
       productsManifest: "https://fursay.com/products.json",
       productsPage: "https://fursay.com/products",
+      monetizationRoadmapManifest: "https://fursay.com/monetization-roadmap.json",
+      monetizationRoadmapPage: "https://fursay.com/monetization-roadmap",
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -209,6 +211,7 @@ function writeReleaseManifest() {
       "scripts/check-episode-landing-contract.mjs",
       "scripts/check-monetization-interest-contract.mjs",
       "scripts/check-product-readiness-contract.mjs",
+      "scripts/check-monetization-roadmap-contract.mjs",
       "scripts/check-noor-subscriber-readiness.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
@@ -247,10 +250,12 @@ function writeReleaseManifest() {
       productLandingPages: 3,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
+      monetizationRoadmapStages: 4,
+      monetizationRoadmapProducts: 2,
       visualLayoutChecks: 24,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 63,
+      cacheHeaderChecks: 65,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -269,6 +274,8 @@ function writeReleaseManifest() {
   writeProductsPage(siteDir);
   writeZhProductsPage(siteDir);
   writeArProductsPage(siteDir);
+  writeMonetizationRoadmap(siteDir, source);
+  writeMonetizationRoadmapPage(siteDir);
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
 }
@@ -1612,6 +1619,85 @@ function writeProductsManifest(siteDir, source) {
   writeFileSync(resolve(siteDir, "products.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
 
+function writeMonetizationRoadmap(siteDir, source) {
+  const release = readJson(resolve(siteDir, "release.json"));
+  const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
+  const products = readJson(resolve(siteDir, "products.json"));
+  const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
+  const checkoutGate = ownedProducts.checkoutGate || {};
+  const manifest = {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    status: "interest_validation",
+    page: "https://fursay.com/monetization-roadmap",
+    productsManifest: "https://fursay.com/products.json",
+    conversionHealth: "https://fursay.com/conversion-health.json",
+    checkoutEnabled: products.checkoutEnabled === true,
+    paymentLinksAllowed: products.paymentLinksAllowed === true,
+    decisionState: "wait_for_interest_and_subscriber_signal",
+    subscribePayloadCompatibility: products.subscribePayloadCompatibility,
+    stages: [
+      {
+        id: "validate_interest",
+        label: "Validate real product interest",
+        status: "active",
+        requiredSignals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
+        evidenceSources: ["products.json", "conversion-health.json"],
+        unlocks: "draft_sample_pack",
+      },
+      {
+        id: "draft_sample_pack",
+        label: "Draft sample PDF packs",
+        status: "locked",
+        unlockCriteria: "Each product meets minimum product-interest and subscriber signals.",
+        deliverables: ["Koko 3-page printable sample", "Noor 3-minute worksheet sample"],
+      },
+      {
+        id: "publish_precheckout_disclosure",
+        label: "Publish checkout disclosure",
+        status: "locked",
+        requirements: checkoutGate.requirements || [],
+        disclosureCopy: checkoutGate.disclosureCopy || "",
+        refundSupportCopy: checkoutGate.refundSupportCopy || "",
+      },
+      {
+        id: "choose_checkout_provider",
+        label: "Choose checkout provider",
+        status: "locked",
+        provider: checkoutGate.provider || "not_selected",
+        paymentLinksAllowed: checkoutGate.paymentLinksAllowed === true,
+        allowedProviderCategories: ["hosted checkout", "creator storefront", "direct card checkout"],
+      },
+    ],
+    products: (products.products || []).map((product) => ({
+      id: product.id,
+      pack: product.pack,
+      label: product.label,
+      format: product.format,
+      checkoutStatus: product.checkoutStatus,
+      plannedIncludes: product.plannedIncludes || [],
+      validationPlan: product.validationPlan || {},
+    })),
+    guardrails: {
+      noPaymentLinks: true,
+      noPricePromise: true,
+      noMailerLiteSecrets: true,
+      noPiiInAnalytics: true,
+      affiliateLocalePolicy: conversionHealth.monetization?.affiliate?.localePolicy || "",
+      subscribePayloadCompatibility: products.subscribePayloadCompatibility,
+    },
+    expectations: {
+      stages: release.liveExpectations?.monetizationRoadmapStages,
+      products: release.liveExpectations?.monetizationRoadmapProducts,
+      checkoutGateRequirements: release.liveExpectations?.checkoutGateRequirements,
+    },
+  };
+  writeFileSync(resolve(siteDir, "monetization-roadmap.json"), JSON.stringify(manifest, null, 2) + "\n");
+}
+
 function productButton(product) {
   const source = product.pack === "noor" ? "product_page_noor_worksheet" : "product_page_koko_printable";
   return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} waitlist</button>`;
@@ -2476,6 +2562,7 @@ function writeConversionHealthPage(siteDir) {
     <section class="creator-kit-safety" data-growth-dashboard-section="product-validation">
       <h2>Product validation scoreboard</h2>
       <p>Paid packs stay disabled until product interest, waitlist clicks, and subscriber signals meet the validation plan. Social entry points are split by language so families land on the right waitlist page.</p>
+      <p><a href="/monetization-roadmap">Review the monetization roadmap</a> for the locked sample-pack, disclosure, and checkout-provider stages.</p>
       <dl>
         ${healthMetric("English social product entry", socialEntries.socialProfileLinks || "none")}
         ${healthMetric("Traditional Chinese social product entry", socialEntries.zhSocialProfileLinks || "none")}
@@ -2497,6 +2584,113 @@ ${events}
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "conversion-health.html"), html + "\n");
+}
+
+function roadmapStageCard(stage) {
+  const details = [
+    stage.requiredSignals?.length ? `Signals: ${stage.requiredSignals.join(", ")}` : "",
+    stage.evidenceSources?.length ? `Evidence: ${stage.evidenceSources.join(", ")}` : "",
+    stage.unlockCriteria || "",
+    stage.deliverables?.length ? `Deliverables: ${stage.deliverables.join(", ")}` : "",
+    stage.requirements?.length ? `Requirements: ${stage.requirements.join(", ")}` : "",
+    stage.provider ? `Provider: ${stage.provider}` : "",
+  ].filter(Boolean);
+  return `
+            <article class="creator-copy-block" data-roadmap-stage="${escapeHtml(stage.id)}">
+              <h3>${escapeHtml(stage.label)}</h3>
+              <p>Status: <code>${escapeHtml(stage.status)}</code></p>
+              ${details.map((detail) => `<p>${escapeHtml(detail)}</p>`).join("\n              ")}
+            </article>`;
+}
+
+function roadmapProductCard(product) {
+  const plan = product.validationPlan || {};
+  const minimumSignals = plan.minimumSignals || {};
+  return `
+            <article class="creator-copy-block" data-roadmap-product="${escapeHtml(product.id)}">
+              <h3>${escapeHtml(product.label)}</h3>
+              <p>${escapeHtml(product.format)}. Checkout status: <code>${escapeHtml(product.checkoutStatus)}</code>.</p>
+              <p>Planned contents: ${escapeHtml((product.plannedIncludes || []).join(", "))}</p>
+              <dl>
+                ${healthMetric("Free bridge", plan.freeBridge || "none")}
+                ${healthMetric("Info clicks", minimumSignals.productInfoClicks || 0, "minimum")}
+                ${healthMetric("Interest clicks", minimumSignals.productInterestClicks || 0, "minimum")}
+                ${healthMetric("Subscriber signals", minimumSignals.subscriberSignals || 0, "minimum")}
+              </dl>
+              <p>${escapeHtml(plan.nextDecision || "Wait for real interest signals before drafting a sample.")}</p>
+            </article>`;
+}
+
+function writeMonetizationRoadmapPage(siteDir) {
+  const roadmap = readJson(resolve(siteDir, "monetization-roadmap.json"));
+  const stageCards = (roadmap.stages || []).map(roadmapStageCard).join("\n");
+  const productCards = (roadmap.products || []).map(roadmapProductCard).join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Monetization Roadmap</title>
+  <meta name="description" content="Fursay internal monetization roadmap for product-interest validation, sample-pack readiness, disclosure requirements, and checkout gating.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/monetization-roadmap">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+</head>
+<body class="picture-world creator-kit-page monetization-roadmap-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Fursay monetization roadmap</p>
+      <h1>From interest list to paid product</h1>
+      <p>This internal roadmap keeps checkout disabled while Fursay validates real family demand for Koko printable packs and Noor 3-minute worksheets.</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(roadmap.updatedAt)}</span>
+        <span>Commit ${escapeHtml(roadmap.source?.commit)}</span>
+        <a href="/monetization-roadmap.json">Roadmap JSON</a>
+        <a href="/products.json">Products JSON</a>
+        <a href="/conversion-health.json">Conversion health</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-monetization-roadmap-section="status">
+      <h2>Current status</h2>
+      <p>Owned products remain in interest validation. No payment links, price promise, or checkout provider is active.</p>
+      <dl>
+        ${healthMetric("Status", roadmap.status)}
+        ${healthMetric("Decision state", roadmap.decisionState)}
+        ${healthMetric("Checkout enabled", String(roadmap.checkoutEnabled))}
+        ${healthMetric("Payment links allowed", String(roadmap.paymentLinksAllowed))}
+        ${healthMetric("Subscribe payload", roadmap.subscribePayloadCompatibility || "unknown")}
+      </dl>
+    </section>
+    <section class="creator-kit-safety" data-monetization-roadmap-section="stages">
+      <h2>Roadmap stages</h2>
+      <div class="creator-copy-blocks">
+${stageCards}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-monetization-roadmap-section="products">
+      <h2>Product validation plans</h2>
+      <div class="creator-copy-blocks">
+${productCards}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-monetization-roadmap-section="guardrails">
+      <h2>Guardrails</h2>
+      <p>The roadmap keeps owned products separate from affiliate links and analytics remains anonymous.</p>
+      <dl>
+        ${healthMetric("No payment links", String(roadmap.guardrails?.noPaymentLinks))}
+        ${healthMetric("No price promise", String(roadmap.guardrails?.noPricePromise))}
+        ${healthMetric("No MailerLite secrets", String(roadmap.guardrails?.noMailerLiteSecrets))}
+        ${healthMetric("No PII in analytics", String(roadmap.guardrails?.noPiiInAnalytics))}
+        ${healthMetric("Affiliate locale policy", roadmap.guardrails?.affiliateLocalePolicy || "unknown")}
+      </dl>
+    </section>
+  </main>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "monetization-roadmap.html"), html + "\n");
 }
 
 function toOriginUrl(route) {
@@ -2546,6 +2740,7 @@ function writeSiteHealthManifest(siteDir) {
   const campaigns = readJson(resolve(siteDir, "campaigns.json"));
   const shortlinks = readJson(resolve(siteDir, "shortlinks.json"));
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
+  const monetizationRoadmap = readJson(resolve(siteDir, "monetization-roadmap.json"));
   const current = readJson(resolve(siteDir, "site-health.json"));
   const manifest = {
     ...current,
@@ -2559,6 +2754,7 @@ function writeSiteHealthManifest(siteDir) {
       "/shortlinks.json",
       "/conversion-health.json",
       "/products.json",
+      "/monetization-roadmap.json",
     ],
     routes: {
       ...current.routes,
@@ -2594,13 +2790,27 @@ function writeSiteHealthManifest(siteDir) {
         "https://fursay.com/ar/products",
         "https://fursay.com/products.json",
       ],
+      monetizationRoadmap: [
+        "https://fursay.com/monetization-roadmap",
+        "https://fursay.com/monetization-roadmap.json",
+      ],
     },
     funnels: {
       koko: campaignHealth(campaigns, "koko"),
       noor: campaignHealth(campaigns, "noor"),
     },
     growth: conversionHealth.growth,
-    monetization: conversionHealth.monetization,
+    monetization: {
+      ...conversionHealth.monetization,
+      roadmap: {
+        status: monetizationRoadmap.status,
+        decisionState: monetizationRoadmap.decisionState,
+        page: monetizationRoadmap.page,
+        manifest: "https://fursay.com/monetization-roadmap.json",
+        stages: monetizationRoadmap.stages?.length || 0,
+        products: monetizationRoadmap.products?.length || 0,
+      },
+    },
     measurement: {
       ...(current.measurement || {}),
       subscriptionEndpoint: "/api/subscribe",
@@ -2881,6 +3091,7 @@ async function main() {
   run("node", ["--check", "scripts/check-episode-landing-contract.mjs"]);
   run("node", ["--check", "scripts/check-monetization-interest-contract.mjs"]);
   run("node", ["--check", "scripts/check-product-readiness-contract.mjs"]);
+  run("node", ["--check", "scripts/check-monetization-roadmap-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
@@ -2924,6 +3135,7 @@ async function main() {
   run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);
   run("node", ["scripts/check-monetization-interest-contract.mjs", "--out-dir", join(outRoot, "monetization-interest-local")]);
   run("node", ["scripts/check-product-readiness-contract.mjs", "--out-dir", join(outRoot, "product-readiness-local")]);
+  run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--out-dir", join(outRoot, "monetization-roadmap-local")]);
   run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
@@ -2968,6 +3180,7 @@ async function main() {
     run("node", ["scripts/check-episode-landing-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "episode-landing-live")]);
     run("node", ["scripts/check-monetization-interest-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-interest-live")]);
     run("node", ["scripts/check-product-readiness-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "product-readiness-live")]);
+    run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-roadmap-live")]);
     run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-readiness-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);

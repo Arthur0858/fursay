@@ -100,6 +100,7 @@ async function main() {
     "/share-kit.json",
     "/traffic-launch.json",
     "/products.json",
+    "/monetization-roadmap.json",
     "/shortlinks.json",
     "FURSAY_EVENTS",
     "fursay_events",

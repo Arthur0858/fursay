@@ -22,6 +22,7 @@ const PUBLIC_PAGES = [
   "/traffic-launch",
   "/deploy-readiness",
   "/conversion-health",
+  "/monetization-roadmap",
   "/products",
   "/zh/products",
   "/ar/products",
@@ -49,6 +50,7 @@ const DISCOVERY_FILES = [
   "/links.json",
   "/conversion-health.json",
   "/products.json",
+  "/monetization-roadmap.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];
@@ -62,6 +64,7 @@ const TOOL_PAGES = [
   { page: "/traffic-launch", manifest: "/traffic-launch.json" },
   { page: "/deploy-readiness", manifest: "/deploy-readiness.json" },
   { page: "/conversion-health", manifest: "/conversion-health.json" },
+  { page: "/monetization-roadmap", manifest: "/monetization-roadmap.json" },
 ];
 
 function parseArgs() {

@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "047f00f",
-    "summary": "Add product page hreflang"
+    "commit": "f5e464a",
+    "summary": "Cover product pages in visual layout gate"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

@@ -60,10 +60,12 @@ Useful actions:
 - Social profile links page: https://fursay.com/links
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Conversion health dashboard: https://fursay.com/conversion-health
+- Monetization roadmap: https://fursay.com/monetization-roadmap
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
 - Product interest manifest: https://fursay.com/products.json
+- Monetization roadmap manifest: https://fursay.com/monetization-roadmap.json
 - Shortlink manifest: https://fursay.com/shortlinks.json
 - Video discovery manifest: https://fursay.com/video-discovery.json
 
@@ -95,6 +97,8 @@ Technical discovery:
 - Social profile links manifest: https://fursay.com/links.json
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Conversion health manifest: https://fursay.com/conversion-health.json
+- Monetization roadmap: https://fursay.com/monetization-roadmap
+- Monetization roadmap manifest: https://fursay.com/monetization-roadmap.json
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products

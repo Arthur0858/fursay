@@ -55,6 +55,7 @@ const OPERATIONS_HTML = new Set([
   "creator-kit.html",
   "deploy-readiness.html",
   "links.html",
+  "monetization-roadmap.html",
   "share-kit.html",
   "traffic-launch.html",
 ]);

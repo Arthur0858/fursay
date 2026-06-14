@@ -20,6 +20,7 @@ const PAGES = [
   { path: "/traffic-launch", file: "traffic-launch.html" },
   { path: "/deploy-readiness", file: "deploy-readiness.html" },
   { path: "/conversion-health", file: "conversion-health.html" },
+  { path: "/monetization-roadmap", file: "monetization-roadmap.html" },
   { path: "/products", file: "products.html" },
   { path: "/zh/products", file: "zh/products.html" },
   { path: "/ar/products", file: "ar/products.html", rtl: true },

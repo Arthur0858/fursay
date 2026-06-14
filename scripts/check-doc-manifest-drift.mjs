@@ -12,6 +12,7 @@ const SITE_HEALTH_GENERATED_FROM = [
   "/shortlinks.json",
   "/conversion-health.json",
   "/products.json",
+  "/monetization-roadmap.json",
 ];
 const DOCS = [
   "docs/site-architecture.md",
@@ -28,6 +29,7 @@ const PUBLIC_MANIFESTS = [
   "/links.json",
   "/conversion-health.json",
   "/products.json",
+  "/monetization-roadmap.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];
@@ -190,6 +192,10 @@ async function checkLocalDocs(failures, details) {
     `${ORIGIN}/ar/products`,
     `${ORIGIN}/products.json`,
   ], normalizeArray(siteHealth.routes?.products)));
+  failures.push(...exactArrayFailures("site_health_monetization_roadmap", [
+    `${ORIGIN}/monetization-roadmap`,
+    `${ORIGIN}/monetization-roadmap.json`,
+  ], normalizeArray(siteHealth.routes?.monetizationRoadmap)));
   for (const pack of ["koko", "noor"]) {
     if (siteHealth.funnels?.[pack]?.campaign !== campaigns.campaigns?.[pack]?.campaign) {
       failures.push(`site_health_funnel_campaign:${pack}:${siteHealth.funnels?.[pack]?.campaign || "none"}`);

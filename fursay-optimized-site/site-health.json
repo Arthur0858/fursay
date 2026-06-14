@@ -122,6 +122,10 @@
       "https://fursay.com/zh/products",
       "https://fursay.com/ar/products",
       "https://fursay.com/products.json"
+    ],
+    "monetizationRoadmap": [
+      "https://fursay.com/monetization-roadmap",
+      "https://fursay.com/monetization-roadmap.json"
     ]
   },
   "funnels": {
@@ -357,7 +361,8 @@
     "/campaigns.json",
     "/shortlinks.json",
     "/conversion-health.json",
-    "/products.json"
+    "/products.json",
+    "/monetization-roadmap.json"
   ],
   "growth": {
     "latestStoryEntries": 12,
@@ -451,6 +456,14 @@
           }
         }
       ]
+    },
+    "roadmap": {
+      "status": "interest_validation",
+      "decisionState": "wait_for_interest_and_subscriber_signal",
+      "page": "https://fursay.com/monetization-roadmap",
+      "manifest": "https://fursay.com/monetization-roadmap.json",
+      "stages": 4,
+      "products": 2
     }
   }
 }

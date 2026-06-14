@@ -9,46 +9,77 @@
     "summary": "Cover product pages in visual layout gate"
   },
   "status": "interest_validation",
-  "page": "https://fursay.com/products",
+  "page": "https://fursay.com/monetization-roadmap",
+  "productsManifest": "https://fursay.com/products.json",
   "conversionHealth": "https://fursay.com/conversion-health.json",
   "checkoutEnabled": false,
   "paymentLinksAllowed": false,
-  "interestOnly": true,
-  "event": "fursay_product_interest_click",
-  "trafficEntryPoints": {
-    "socialProfileLinks": "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest",
-    "zhSocialProfileLinks": "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest",
-    "arSocialProfileLinks": "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest"
-  },
+  "decisionState": "wait_for_interest_and_subscriber_signal",
   "subscribePayloadCompatibility": "email/groups/attribution unchanged",
-  "checkoutGate": {
-    "status": "blocked_until_interest_signal",
-    "provider": "not_selected",
-    "requirements": [
-      "verified_product_interest_clicks",
-      "disclosure_copy",
-      "refund_support_copy",
-      "checkout_tracking_contract"
-    ],
-    "minimumInterestClicks": 10,
-    "minimumSubscriberSignals": 1,
-    "paymentLinksAllowed": false,
-    "disclosureCopy": "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
-    "refundSupportCopy": "Refund and support instructions must be published before any checkout link is enabled.",
-    "trackingGate": "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed."
-  },
+  "stages": [
+    {
+      "id": "validate_interest",
+      "label": "Validate real product interest",
+      "status": "active",
+      "requiredSignals": [
+        "fursay_product_info_click",
+        "fursay_product_interest_click",
+        "fursay_subscribe_submit_success"
+      ],
+      "evidenceSources": [
+        "products.json",
+        "conversion-health.json"
+      ],
+      "unlocks": "draft_sample_pack"
+    },
+    {
+      "id": "draft_sample_pack",
+      "label": "Draft sample PDF packs",
+      "status": "locked",
+      "unlockCriteria": "Each product meets minimum product-interest and subscriber signals.",
+      "deliverables": [
+        "Koko 3-page printable sample",
+        "Noor 3-minute worksheet sample"
+      ]
+    },
+    {
+      "id": "publish_precheckout_disclosure",
+      "label": "Publish checkout disclosure",
+      "status": "locked",
+      "requirements": [
+        "verified_product_interest_clicks",
+        "disclosure_copy",
+        "refund_support_copy",
+        "checkout_tracking_contract"
+      ],
+      "disclosureCopy": "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
+      "refundSupportCopy": "Refund and support instructions must be published before any checkout link is enabled."
+    },
+    {
+      "id": "choose_checkout_provider",
+      "label": "Choose checkout provider",
+      "status": "locked",
+      "provider": "not_selected",
+      "paymentLinksAllowed": false,
+      "allowedProviderCategories": [
+        "hosted checkout",
+        "creator storefront",
+        "direct card checkout"
+      ]
+    }
+  ],
   "products": [
     {
       "id": "koko-printable-pack",
       "pack": "koko",
       "label": "Koko printable pack interest list",
       "format": "PDF printable pack",
+      "checkoutStatus": "not_enabled",
       "plannedIncludes": [
         "story prompt sheet",
         "emotion word practice",
         "parent-child drawing activity"
       ],
-      "checkoutStatus": "not_enabled",
       "validationPlan": {
         "audience": "Mandarin-speaking families testing English feelings practice after a Koko story.",
         "freeBridge": "/koko",
@@ -70,12 +101,12 @@
       "pack": "noor",
       "label": "Noor 3-minute worksheet interest list",
       "format": "PDF worksheet pack",
+      "checkoutStatus": "not_enabled",
       "plannedIncludes": [
         "Chinese color words with Pinyin",
         "Arabic parent prompts",
         "one 3-minute activity"
       ],
-      "checkoutStatus": "not_enabled",
       "validationPlan": {
         "audience": "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
         "freeBridge": "/arabic",
@@ -92,5 +123,18 @@
         "nextDecision": "Draft a 3-minute worksheet sample only after Noor interest and at least one subscriber signal prove family demand."
       }
     }
-  ]
+  ],
+  "guardrails": {
+    "noPaymentLinks": true,
+    "noPricePromise": true,
+    "noMailerLiteSecrets": true,
+    "noPiiInAnalytics": true,
+    "affiliateLocalePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon",
+    "subscribePayloadCompatibility": "email/groups/attribution unchanged"
+  },
+  "expectations": {
+    "stages": 4,
+    "products": 2,
+    "checkoutGateRequirements": 4
+  }
 }

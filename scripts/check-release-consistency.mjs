@@ -14,6 +14,7 @@ const JSON_MANIFESTS = [
   "/links.json",
   "/conversion-health.json",
   "/products.json",
+  "/monetization-roadmap.json",
   "/video-discovery.json",
   "/shortlinks.json",
 ];
@@ -24,6 +25,7 @@ const BADGE_PAGES = [
   "/links",
   "/deploy-readiness",
   "/conversion-health",
+  "/monetization-roadmap",
 ];
 const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
   "scripts/check-newsletter-state-contract.mjs",
