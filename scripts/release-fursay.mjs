@@ -1827,6 +1827,14 @@ function zhProductCopy(product) {
       label: "努爾 3 分鐘中文學習單等候名單",
       audience: "給想用阿語家長提示，陪孩子做一點點中文練習的家庭。",
       outcome: "從一個短故事開始，練三個中文詞、看拼音、用阿語提示完成一個 3 分鐘小活動。",
+      format: "可列印 PDF 學習單，包含拼音、阿語家長提示，以及一個 3 分鐘活動。",
+      plannedIncludes: [
+        "中文詞語與拼音練習",
+        "阿語家長提示",
+        "一個 3 分鐘親子小活動",
+      ],
+      validationAudience: "想用阿語提示建立一個很短中文練習節奏的家庭。",
+      validationNextDecision: "只有在努爾等候名單點擊與至少一個真實訂閱信號出現後，才會製作 3 分鐘學習單樣張。",
       bridge: "/zh/arabic?subscribe=noor&utm_source=zh_products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
       bridgeLabel: "先領免費努爾故事包",
       button: "加入努爾等候名單",
@@ -1837,6 +1845,14 @@ function zhProductCopy(product) {
     label: "叩叩可列印故事包等候名單",
     audience: "給想在短故事後，陪孩子練英文情緒詞與畫畫活動的華語家庭。",
     outcome: "把一集叩叩故事變成一張安靜的親子練習頁：情緒詞、故事提示、孩子可以畫下來的空間。",
+    format: "可列印 PDF 頁面，包含故事提示、情緒詞練習，以及親子畫畫活動。",
+    plannedIncludes: [
+      "故事提示頁",
+      "英文情緒詞練習",
+      "親子畫畫活動",
+    ],
+    validationAudience: "想在叩叩故事後陪孩子練英文情緒詞的華語家庭。",
+    validationNextDecision: "只有在叩叩等候名單點擊與至少一個真實訂閱信號出現後，才會製作 3 頁可列印樣張。",
     bridge: "/zh/koko?subscribe=koko&utm_source=zh_products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
     bridgeLabel: "先領免費叩叩故事包",
     button: "加入叩叩等候名單",
@@ -1862,14 +1878,18 @@ function writeZhProductsPage(siteDir) {
           <article>
             <h3>預計會包含什麼</h3>
             <ul>
-              ${(product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
+              ${(copy.plannedIncludes || product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
             </ul>
+          </article>
+          <article>
+            <h3>家庭可以怎麼用</h3>
+            <p>${escapeHtml(copy.format)} 先從免費故事包開始，孩子準備好時，再把可列印練習當成故事後的一個小步驟。</p>
           </article>
           <article data-product-validation-plan="${escapeHtml(product.id)}">
             <h3>我們先觀察什麼</h3>
-            <p>${escapeHtml(product.validationPlan?.audience || copy.audience)}</p>
+            <p>${escapeHtml(copy.validationAudience || product.validationPlan?.audience || copy.audience)}</p>
             <p>付費版本開放前，我們會先看產品頁點擊、等候名單點擊，以及真實故事包訂閱信號。</p>
-            <p>${escapeHtml(product.validationPlan?.nextDecision || "只有在看得到真實家庭需求後，才會製作測試樣張。")}</p>
+            <p>${escapeHtml(copy.validationNextDecision || product.validationPlan?.nextDecision || "只有在看得到真實家庭需求後，才會製作測試樣張。")}</p>
           </article>
         </div>
         <div class="public-share-actions">
@@ -1942,6 +1962,27 @@ ${products}
       <p>付費學習單或可列印包會在付款前清楚標示；聯盟書單與自有產品會分開說明。</p>
       <p>任何付款連結啟用前，都會先公開退款與支援方式。</p>
       <p>目前目標是確認家庭是否真的想要故事後的可列印練習。這頁沒有價格、購買按鈕或付款連結。</p>
+    </section>
+    <section class="creator-kit-safety product-faq" data-product-faq>
+      <h2>常見問題</h2>
+      <div class="creator-copy-blocks">
+        <article>
+          <h3>今天會收費嗎？</h3>
+          <p>不會。等候名單只用來記錄興趣，並開啟免費故事包訂閱表單。</p>
+        </article>
+        <article>
+          <h3>現在會收到什麼？</h3>
+          <p>你可以加入每週故事包名單，並在表單裡選擇叩叩、努爾或兩者都要。</p>
+        </article>
+        <article>
+          <h3>什麼時候會開放付費包？</h3>
+          <p>只有在足夠家庭點擊、訂閱並表示需要可列印練習後才會開放；如果需求不足，產品會維持等候名單。</p>
+        </article>
+        <article>
+          <h3>之後可以取消嗎？</h3>
+          <p>可以。Email 會提供取消訂閱方式，未來若有付費產品，也會在付款前公開支援與退款說明。</p>
+        </article>
+      </div>
     </section>
   </main>
   <div class="modal-overlay" id="subscribeModal">

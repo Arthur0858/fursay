@@ -20,6 +20,31 @@ const REQUIRED_VALIDATION_SIGNALS = [
   "fursay_subscribe_submit_success",
 ];
 const PRIVATE_NEEDLES = ["@", "email", "name", "phone", "address", "token", "password", "subscriber"];
+const ZH_PRODUCT_REQUIRED_COPY = [
+  "故事提示頁",
+  "英文情緒詞練習",
+  "親子畫畫活動",
+  "中文詞語與拼音練習",
+  "阿語家長提示",
+  "一個 3 分鐘親子小活動",
+  "家庭可以怎麼用",
+  "常見問題",
+  "今天會收費嗎？",
+  "之後可以取消嗎？",
+];
+const ZH_PRODUCT_ENGLISH_REGRESSIONS = [
+  "story prompt sheet",
+  "emotion word practice",
+  "parent-child drawing activity",
+  "Chinese color words with Pinyin",
+  "Arabic parent prompts",
+  "one 3-minute activity",
+  "Mandarin-speaking families testing",
+  "Arabic-speaking families testing",
+  "Draft a 3",
+  "Draft a 3-page",
+  "Draft a 3-minute",
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -241,6 +266,7 @@ async function main() {
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
   if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
+  if (!zhHtml.includes("data-product-faq")) failures.push("zh_products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
   if (!html.includes("site-shared-20260613-commerce4.js")) failures.push("products_page_missing_shared_js");
   if (!zhHtml.includes("site-shared-20260613-commerce4.js")) failures.push("zh_products_page_missing_shared_js");
@@ -248,6 +274,12 @@ async function main() {
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
   if (!zhHtml.includes("今天不會收費")) failures.push("zh_products_page_missing_no_payment_copy");
   if (!zhHtml.includes("先領免費故事包")) failures.push("zh_products_page_missing_free_pack_copy");
+  for (const needle of ZH_PRODUCT_REQUIRED_COPY) {
+    if (!zhHtml.includes(needle)) failures.push(`zh_products_page_missing_localized_copy:${needle}`);
+  }
+  for (const needle of ZH_PRODUCT_ENGLISH_REGRESSIONS) {
+    if (zhHtml.includes(needle)) failures.push(`zh_products_page_english_copy_regression:${needle}`);
+  }
   if (/<div class="creator-kit-meta">/i.test(html)) failures.push("products_page_exposes_ops_meta");
   for (const needle of [/Commit\s+[a-f0-9]{7,}/i, /JSON manifest/i, /Conversion health/i]) {
     if (needle.test(html)) failures.push(`products_page_exposes_internal_copy:${needle}`);
