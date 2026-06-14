@@ -78,9 +78,9 @@
       "sha256": "5a47e687b0ff51f576b2639e8bf94f767d766f63107fc17eefa417d39103b92e"
     },
     {
-      "path": "/js/site-shared-20260615-noorpdf1.js",
-      "bytes": 33547,
-      "sha256": "871cdee339f278d989ccc99cc31832dedbf038dedb97627410fbc3d5ef64b8af"
+      "path": "/js/site-shared-20260615-sharekit1.js",
+      "bytes": 34377,
+      "sha256": "42057d36886e69a5853b65a2f727ccc87fe367f79dde32d995ff8d95f5517b2a"
     }
   ]
 }

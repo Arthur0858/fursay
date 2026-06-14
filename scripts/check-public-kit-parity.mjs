@@ -76,6 +76,14 @@ function hrefValues(html) {
     .map((match) => normalized(match[1]));
 }
 
+function anchorForHref(html, value) {
+  const target = normalized(value);
+  for (const match of html.matchAll(/<a\b[^>]*href=(["'])([\s\S]*?)\1[^>]*>/gi)) {
+    if (normalized(match[2]) === target) return match[0];
+  }
+  return "";
+}
+
 function requireText(failures, pageKey, html, label, value) {
   if (!pageContains(html, value)) failures.push(`${pageKey}:missing_value:${label}:${String(value || "none").slice(0, 140)}`);
 }
@@ -227,6 +235,15 @@ function validateShareKit(manifest, html, failures) {
         failures.push(`share-kit:${pack}:${label}:bad_placement`);
       }
     }
+    const previewAnchor = anchorForHref(html, item.productSamplePreviewUrl);
+    const downloadAnchor = anchorForHref(html, item.productSampleDownloadUrl);
+    if (!previewAnchor.includes(`data-product-info-link="${pack}"`)) failures.push(`share-kit:${pack}:preview_missing_product_info_tracking`);
+    if (!previewAnchor.includes('data-interest-stage="share_kit_sample_preview"')) failures.push(`share-kit:${pack}:preview_bad_interest_stage`);
+    if (!previewAnchor.includes(`data-signup-source="share_kit_sample_preview_${pack}"`)) failures.push(`share-kit:${pack}:preview_bad_signup_source`);
+    if (!downloadAnchor.includes(`data-product-sample-download="${pack}"`)) failures.push(`share-kit:${pack}:download_missing_sample_tracking`);
+    if (!downloadAnchor.includes(`data-product-info-link="${pack}"`)) failures.push(`share-kit:${pack}:download_missing_product_info_tracking`);
+    if (!downloadAnchor.includes('data-interest-stage="share_kit_pdf_sample"')) failures.push(`share-kit:${pack}:download_bad_interest_stage`);
+    if (!downloadAnchor.includes(`data-signup-source="share_kit_pdf_sample_${pack}"`)) failures.push(`share-kit:${pack}:download_bad_signup_source`);
     if (item.attribution?.utm_campaign !== `${pack === "koko" ? "koko" : "noor"}_story_funnel`) {
       failures.push(`share-kit:${pack}:bad_campaign:${item.attribution?.utm_campaign || "none"}`);
     }

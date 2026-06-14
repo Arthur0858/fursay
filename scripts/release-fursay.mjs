@@ -1340,7 +1340,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2356,7 +2356,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -2567,7 +2567,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -2737,7 +2737,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -2876,7 +2876,7 @@ ${cards}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -3425,17 +3425,24 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
 }
 
-function shareKitLinkRow(title, value) {
+function attrsToString(attrs = {}) {
+  return Object.entries(attrs)
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+    .map(([key, value]) => ` ${key}="${escapeHtml(value)}"`)
+    .join("");
+}
+
+function shareKitLinkRow(title, value, attrs = {}) {
   return `<div>
                 <dt>${escapeHtml(title)}</dt>
                 <dd>
-                  <a href="${escapeHtml(value)}">${escapeHtml(value)}</a>
+                  <a href="${escapeHtml(value)}"${attrsToString(attrs)}>${escapeHtml(value)}</a>
                   <button type="button" class="creator-link-copy" data-copy-share-kit data-copy-value="${escapeHtml(value)}">Copy</button>
                 </dd>
               </div>`;
@@ -3462,8 +3469,17 @@ function writeShareKitPage(siteDir, kit) {
             ${shareKitLinkRow("Story world", item.storyWorld)}
             ${shareKitLinkRow("Family sample link", item.familyShareShortlink)}
             ${shareKitLinkRow("Preview sample link", item.sampleShortlink)}
-            ${shareKitLinkRow("Product sample preview", item.productSamplePreviewUrl)}
-            ${shareKitLinkRow("PDF sample download", item.productSampleDownloadUrl)}
+            ${shareKitLinkRow("Product sample preview", item.productSamplePreviewUrl, {
+              "data-product-info-link": pack,
+              "data-interest-stage": "share_kit_sample_preview",
+              "data-signup-source": `share_kit_sample_preview_${pack}`,
+            })}
+            ${shareKitLinkRow("PDF sample download", item.productSampleDownloadUrl, {
+              "data-product-sample-download": pack,
+              "data-product-info-link": pack,
+              "data-interest-stage": "share_kit_pdf_sample",
+              "data-signup-source": `share_kit_pdf_sample_${pack}`,
+            })}
             ${shareKitLinkRow("Bio link", item.bioShortlink)}
             ${shareKitLinkRow("Creator link", item.creatorShortlink)}
             ${shareKitLinkRow("WhatsApp share URL", item.whatsappShareUrl)}
@@ -3528,7 +3544,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

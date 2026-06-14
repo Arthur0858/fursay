@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20260615-noorpdf1.js";
+const SHARED_JS = "/js/site-shared-20260615-sharekit1.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -432,6 +432,100 @@ async function checkPage(browser, baseUrl, spec) {
   };
 }
 
+async function checkShareKitSampleTracking(browser, baseUrl) {
+  const failures = [];
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.goto(`${baseUrl}/share-kit`, { waitUntil: "domcontentloaded", timeout: 45000 });
+  await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+
+  const sampleDownloadMeta = await page.evaluate(() => {
+    window.__fursayShareKitSampleDownloadNavigationBlocked = false;
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a[data-product-sample-download]");
+      if (!link) return;
+      event.preventDefault();
+      window.__fursayShareKitSampleDownloadNavigationBlocked = true;
+    }, { capture: true, once: true });
+    const link = document.querySelector('a[data-product-sample-download="noor"]')
+      || document.querySelector("a[data-product-sample-download]");
+    if (!link) return null;
+    link.click();
+    const url = new URL(link.href);
+    return {
+      href: link.getAttribute("href") || "",
+      interest: link.getAttribute("data-product-sample-download") || "",
+      stage: link.getAttribute("data-interest-stage") || "",
+      signupSource: link.getAttribute("data-signup-source") || "",
+      sourceId: url.searchParams.get("source_id") || "",
+      creator: url.searchParams.get("creator") || "",
+      placement: url.searchParams.get("placement") || "",
+    };
+  });
+  await page.waitForTimeout(120);
+  const sampleDownloadState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+    navigationBlocked: window.__fursayShareKitSampleDownloadNavigationBlocked || false,
+  }));
+
+  if (!sampleDownloadMeta) {
+    failures.push("share-kit:missing_sample_download_link");
+  } else {
+    const sampleDownloadEvent = [...sampleDownloadState.events].reverse().find((event) => event.event === "fursay_product_sample_download_click");
+    if (!sampleDownloadEvent) failures.push("share-kit:missing_sample_download_event");
+    if (sampleDownloadEvent?.detail?.product_interest !== sampleDownloadMeta.interest) failures.push(`share-kit:sample_download_interest:${sampleDownloadEvent?.detail?.product_interest || "none"}`);
+    if (sampleDownloadEvent?.detail?.interest_stage !== sampleDownloadMeta.stage) failures.push(`share-kit:sample_download_stage:${sampleDownloadEvent?.detail?.interest_stage || "none"}`);
+    if (sampleDownloadEvent?.detail?.signup_source !== sampleDownloadMeta.signupSource) failures.push(`share-kit:sample_download_source:${sampleDownloadEvent?.detail?.signup_source || "none"}`);
+    if (sampleDownloadEvent?.detail?.source_id !== sampleDownloadMeta.sourceId) failures.push(`share-kit:sample_download_source_id:${sampleDownloadEvent?.detail?.source_id || "none"}`);
+    if (sampleDownloadEvent?.detail?.creator !== sampleDownloadMeta.creator) failures.push(`share-kit:sample_download_creator:${sampleDownloadEvent?.detail?.creator || "none"}`);
+    if (sampleDownloadEvent?.detail?.placement !== sampleDownloadMeta.placement) failures.push(`share-kit:sample_download_placement:${sampleDownloadEvent?.detail?.placement || "none"}`);
+    if (!sampleDownloadState.dataLayer.some((entry) => entry.event === "fursay_product_sample_download_click")) failures.push("share-kit:data_layer_missing_sample_download_click");
+    if (!sampleDownloadState.navigationBlocked) failures.push("share-kit:sample_download_test_navigation_not_blocked");
+  }
+
+  const copyMeta = await page.evaluate(() => {
+    const button = document.querySelector('button[data-copy-share-kit][data-copy-value*="noor_share_kit_pdf_sample"]')
+      || document.querySelector('button[data-copy-share-kit][data-copy-value*="_share_kit_pdf_sample"]');
+    if (!button) return null;
+    button.click();
+    const value = button.getAttribute("data-copy-value") || "";
+    const url = new URL(value);
+    return {
+      value,
+      sourceId: url.searchParams.get("source_id") || "",
+      creator: url.searchParams.get("creator") || "",
+      placement: url.searchParams.get("placement") || "",
+    };
+  });
+  await page.waitForTimeout(120);
+  const copyState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+  }));
+
+  if (!copyMeta) {
+    failures.push("share-kit:missing_pdf_copy_button");
+  } else {
+    const copyEvent = [...copyState.events].reverse().find((event) => event.event === "fursay_kit_copy_click");
+    if (!copyEvent) failures.push("share-kit:missing_kit_copy_event");
+    if (copyEvent?.detail?.copy_kind !== "share_kit") failures.push(`share-kit:copy_kind:${copyEvent?.detail?.copy_kind || "none"}`);
+    if (copyEvent?.detail?.link_url !== copyMeta.value) failures.push(`share-kit:copy_link_url:${copyEvent?.detail?.link_url || "none"}`);
+    if (copyEvent?.detail?.source_id !== copyMeta.sourceId) failures.push(`share-kit:copy_source_id:${copyEvent?.detail?.source_id || "none"}`);
+    if (copyEvent?.detail?.creator !== copyMeta.creator) failures.push(`share-kit:copy_creator:${copyEvent?.detail?.creator || "none"}`);
+    if (copyEvent?.detail?.placement !== copyMeta.placement) failures.push(`share-kit:copy_placement:${copyEvent?.detail?.placement || "none"}`);
+    if (!copyState.dataLayer.some((entry) => entry.event === "fursay_kit_copy_click")) failures.push("share-kit:data_layer_missing_kit_copy_click");
+  }
+
+  await page.close();
+  return {
+    path: "/share-kit",
+    ok: failures.length === 0,
+    failures,
+    sampleDownloadEvent: Boolean(sampleDownloadMeta),
+    copyEvent: Boolean(copyMeta),
+  };
+}
+
 async function main() {
   const args = parseArgs();
   await mkdir(args.outDir, { recursive: true });
@@ -459,12 +553,15 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const pages = [];
+  let shareKitTracking = null;
   try {
     for (const spec of PAGES) {
       const result = await checkPage(browser, baseUrl, spec);
       pages.push(result);
       failures.push(...result.failures);
     }
+    shareKitTracking = await checkShareKitSampleTracking(browser, baseUrl);
+    failures.push(...shareKitTracking.failures);
   } finally {
     await browser.close();
   }
@@ -502,6 +599,7 @@ async function main() {
     checks,
     htmlChecks,
     pages,
+    shareKitTracking,
     failures,
   };
   await writeFile(resolve(args.outDir, "event-tracking-contract.json"), `${JSON.stringify(report, null, 2)}\n`);

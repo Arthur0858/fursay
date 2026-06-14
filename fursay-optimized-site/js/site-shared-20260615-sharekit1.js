@@ -62,6 +62,18 @@
     return detail;
   }
 
+  function linkUrlAttribution(link) {
+    var detail = {};
+    try {
+      var url = new URL(link.getAttribute('href') || '', window.location.href);
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ref', 'source_id', 'creator', 'placement'].forEach(function (key) {
+        var value = url.searchParams.get(key);
+        if (value) detail[key] = value;
+      });
+    } catch (e) {}
+    return detail;
+  }
+
   function syncChecks() {
     document.querySelectorAll('#subscribeModal .modal-check').forEach(function (check) {
       var input = check.querySelector('input');
@@ -200,23 +212,23 @@
 
       var productInfoLink = event.target.closest('a[data-product-info-link]');
       if (productInfoLink) {
-        emitFursayEvent('fursay_product_info_click', {
+        emitFursayEvent('fursay_product_info_click', Object.assign({
           product_interest: normalizePack(productInfoLink.getAttribute('data-product-info-link')) || productInfoLink.getAttribute('data-product-info-link') || 'all',
           interest_stage: productInfoLink.getAttribute('data-interest-stage') || 'info_page',
           signup_source: productInfoLink.getAttribute('data-signup-source') || 'product_info_link',
           link_url: productInfoLink.getAttribute('href') || ''
-        });
+        }, linkUrlAttribution(productInfoLink)));
       }
 
       var productSampleDownloadLink = event.target.closest('a[data-product-sample-download]');
       if (productSampleDownloadLink) {
         var downloadPack = normalizePack(productSampleDownloadLink.getAttribute('data-product-sample-download')) || pagePack() || 'all';
-        emitFursayEvent('fursay_product_sample_download_click', {
+        emitFursayEvent('fursay_product_sample_download_click', Object.assign({
           product_interest: downloadPack,
           interest_stage: productSampleDownloadLink.getAttribute('data-interest-stage') || 'sample_pdf_download',
           signup_source: productSampleDownloadLink.getAttribute('data-signup-source') || 'sample_pdf_download_' + downloadPack,
           link_url: productSampleDownloadLink.getAttribute('href') || ''
-        });
+        }, linkUrlAttribution(productSampleDownloadLink)));
       }
 
       var productSamplePrintButton = event.target.closest('[data-print-product-sample]');
@@ -252,9 +264,12 @@
       var kitCopyButton = event.target.closest('[data-copy-creator-kit], [data-copy-share-kit], [data-copy-traffic-launch]');
       if (kitCopyButton) {
         event.preventDefault();
-        emitFursayEvent('fursay_kit_copy_click', {
+        var copyValue = kitCopyButton.getAttribute('data-copy-value') || '';
+        var copyDetail = {
           copy_kind: kitCopyButton.hasAttribute('data-copy-traffic-launch') ? 'traffic_launch' : (kitCopyButton.hasAttribute('data-copy-share-kit') ? 'share_kit' : 'creator_kit')
-        });
+        };
+        if (/^https?:\/\//i.test(copyValue)) copyDetail.link_url = copyValue;
+        emitFursayEvent('fursay_kit_copy_click', Object.assign(copyDetail, linkUrlAttribution({ getAttribute: function () { return copyValue; } })));
         copyKitValue(kitCopyButton);
       }
     });
