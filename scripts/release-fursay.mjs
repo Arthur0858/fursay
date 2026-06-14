@@ -1584,7 +1584,7 @@ function writeConversionHealth(siteDir, source) {
       analyticsSink: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
-        status: "pending_cloudflare_enablement",
+        status: "configured_in_wrangler",
         writeMode: "worker_logs_until_enabled",
         fallbackSink: "Cloudflare Worker logs",
         piiAllowed: false,

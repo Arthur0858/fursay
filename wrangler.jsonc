@@ -1,5 +1,5 @@
 {
-  "$schema": "/tmp/codex-wrangler/node_modules/wrangler/config-schema.json",
+  "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "fursay",
   "main": "src/worker.js",
   "compatibility_date": "2026-05-09",
@@ -9,5 +9,11 @@
     "binding": "ASSETS",
     "html_handling": "none",
     "run_worker_first": true
-  }
+  },
+  "analytics_engine_datasets": [
+    {
+      "binding": "FURSAY_EVENTS",
+      "dataset": "fursay_events"
+    }
+  ]
 }

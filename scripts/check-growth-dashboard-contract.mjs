@@ -125,7 +125,7 @@ async function main() {
   if (conversionHealth.measurement?.externalAnalytics !== "worker_event_endpoint") failures.push("bad_external_analytics");
   if (conversionHealth.measurement?.analyticsSink?.binding !== "FURSAY_EVENTS") failures.push("bad_analytics_binding");
   if (conversionHealth.measurement?.analyticsSink?.dataset !== "fursay_events") failures.push("bad_analytics_dataset");
-  if (conversionHealth.measurement?.analyticsSink?.status !== "pending_cloudflare_enablement") failures.push("bad_analytics_status");
+  if (conversionHealth.measurement?.analyticsSink?.status !== "configured_in_wrangler") failures.push("bad_analytics_status");
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");
   for (const field of ["source_id", "creator", "placement"]) {
