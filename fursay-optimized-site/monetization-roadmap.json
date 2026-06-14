@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-15",
   "source": {
     "branch": "main",
-    "commit": "3f260f2",
-    "summary": "Retry transient web vitals navigation timeouts"
+    "commit": "dd494ed",
+    "summary": "Add Noor first-subscriber launch sprint"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/monetization-roadmap",
