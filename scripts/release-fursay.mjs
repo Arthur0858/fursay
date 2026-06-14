@@ -244,6 +244,7 @@ function writeReleaseManifest() {
       productInfoLinks: 18,
       productLandingPages: 1,
       ownedProductSpecs: 2,
+      productValidationPlans: 2,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
       cacheHeaderChecks: 61,
@@ -1523,6 +1524,17 @@ function writeConversionHealth(siteDir, source) {
             format: "PDF printable pack",
             plannedIncludes: ["story prompt sheet", "emotion word practice", "parent-child drawing activity"],
             checkoutStatus: "not_enabled",
+            validationPlan: {
+              audience: "Mandarin-speaking families testing English feelings practice after a Koko story.",
+              freeBridge: "/koko",
+              signals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
+              minimumSignals: {
+                productInfoClicks: 10,
+                productInterestClicks: 5,
+                subscriberSignals: 1,
+              },
+              nextDecision: "Draft a 3-page printable sample only after product-interest clicks and at least one subscriber signal prove family demand.",
+            },
           },
           {
             id: "noor-worksheet-pack",
@@ -1531,6 +1543,17 @@ function writeConversionHealth(siteDir, source) {
             format: "PDF worksheet pack",
             plannedIncludes: ["Chinese color words with Pinyin", "Arabic parent prompts", "one 3-minute activity"],
             checkoutStatus: "not_enabled",
+            validationPlan: {
+              audience: "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
+              freeBridge: "/arabic",
+              signals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
+              minimumSignals: {
+                productInfoClicks: 10,
+                productInterestClicks: 5,
+                subscriberSignals: 1,
+              },
+              nextDecision: "Draft a 3-minute worksheet sample only after Noor interest and at least one subscriber signal prove family demand.",
+            },
           },
         ],
       },
@@ -1676,6 +1699,12 @@ function writeProductsPage(siteDir) {
           <article>
             <h3>How families would use it</h3>
             <p>${escapeHtml(copy.format)} Start with the free story pack, then use the printable when your child is ready for one more small activity.</p>
+          </article>
+          <article data-product-validation-plan="${escapeHtml(product.id)}">
+            <h3>What we are measuring first</h3>
+            <p>${escapeHtml(product.validationPlan?.audience || copy.audience)}</p>
+            <p>Before any paid version opens, we look for product-page visits, waitlist clicks, and real story-pack signup signals.</p>
+            <p>${escapeHtml(product.validationPlan?.nextDecision || "A sample pack is drafted only after real family interest is visible.")}</p>
           </article>
         </div>
         <div class="public-share-actions">

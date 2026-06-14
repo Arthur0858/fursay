@@ -1301,6 +1301,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
+  if (release.liveExpectations?.productValidationPlans !== 2) failures.push(`release_product_validation_plans:${release.liveExpectations?.productValidationPlans || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 61) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");

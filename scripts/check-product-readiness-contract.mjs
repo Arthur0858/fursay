@@ -14,6 +14,11 @@ const REQUIRED_GATE_REQUIREMENTS = [
   "refund_support_copy",
   "checkout_tracking_contract",
 ];
+const REQUIRED_VALIDATION_SIGNALS = [
+  "fursay_product_info_click",
+  "fursay_product_interest_click",
+  "fursay_subscribe_submit_success",
+];
 const PRIVATE_NEEDLES = ["@", "email", "name", "phone", "address", "token", "password", "subscriber"];
 
 function parseArgs() {
@@ -277,6 +282,17 @@ async function main() {
   for (const product of products.products || []) {
     if (product.checkoutStatus !== "not_enabled") failures.push(`product_checkout_status:${product.id}:${product.checkoutStatus || "none"}`);
     if ((product.plannedIncludes || []).length < 3) failures.push(`product_missing_planned_includes:${product.id}`);
+    const plan = product.validationPlan || {};
+    if (!html.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`products_page_missing_validation_plan:${product.id}`);
+    if (!plan.audience || plan.audience.length < 40) failures.push(`product_validation_missing_audience:${product.id}`);
+    if (!plan.freeBridge?.startsWith("/")) failures.push(`product_validation_missing_free_bridge:${product.id}`);
+    if (!plan.nextDecision || plan.nextDecision.length < 60) failures.push(`product_validation_missing_next_decision:${product.id}`);
+    for (const signal of REQUIRED_VALIDATION_SIGNALS) {
+      if (!plan.signals?.includes(signal)) failures.push(`product_validation_missing_signal:${product.id}:${signal}`);
+    }
+    if (plan.minimumSignals?.productInfoClicks < 1) failures.push(`product_validation_missing_info_threshold:${product.id}`);
+    if (plan.minimumSignals?.productInterestClicks < 1) failures.push(`product_validation_missing_interest_threshold:${product.id}`);
+    if (plan.minimumSignals?.subscriberSignals < 1) failures.push(`product_validation_missing_subscriber_threshold:${product.id}`);
   }
 
   const requirements = products.checkoutGate?.requirements || [];
@@ -291,6 +307,7 @@ async function main() {
   if (release.deployment?.productsManifest !== "https://fursay.com/products.json") failures.push("release_missing_products_manifest");
   if (release.liveExpectations?.productLandingPages !== 1) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== products.products?.length) failures.push("release_owned_product_spec_mismatch");
+  if (release.liveExpectations?.productValidationPlans !== products.products?.filter((product) => product.validationPlan).length) failures.push("release_product_validation_plan_mismatch");
   if (!release.qualityGates?.includes("scripts/check-product-readiness-contract.mjs")) failures.push("release_missing_product_readiness_gate");
   if (!siteHealth.routes?.products?.includes("https://fursay.com/products")) failures.push("site_health_missing_products_route");
   if (!siteHealth.generatedFrom?.includes("/products.json")) failures.push("site_health_missing_products_generated_from");

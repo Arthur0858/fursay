@@ -23,6 +23,11 @@ const REQUIRED_GATE_REQUIREMENTS = [
   "refund_support_copy",
   "checkout_tracking_contract",
 ];
+const REQUIRED_VALIDATION_SIGNALS = [
+  "fursay_product_info_click",
+  "fursay_product_interest_click",
+  "fursay_subscribe_submit_success",
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -116,6 +121,7 @@ async function main() {
   const ownedProducts = conversionHealth.monetization?.ownedProducts?.products || [];
   const checkoutGate = conversionHealth.monetization?.ownedProducts?.checkoutGate || {};
   if (release.liveExpectations?.ownedProductSpecs !== ownedProducts.length) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}!=${ownedProducts.length}`);
+  if (release.liveExpectations?.productValidationPlans !== ownedProducts.filter((product) => product.validationPlan).length) failures.push(`release_product_validation_plans:${release.liveExpectations?.productValidationPlans || "none"}!=${ownedProducts.filter((product) => product.validationPlan).length}`);
   if (siteHealth.monetization?.ownedProducts?.products?.length !== ownedProducts.length) failures.push("site_health_owned_product_spec_count_mismatch");
   if (checkoutGate.status !== "blocked_until_interest_signal") failures.push(`checkout_gate_status:${checkoutGate.status || "none"}`);
   if (checkoutGate.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
@@ -133,6 +139,15 @@ async function main() {
     if (!product.format) failures.push(`owned_product_missing_format:${product.id || "none"}`);
     if (product.checkoutStatus !== "not_enabled") failures.push(`owned_product_checkout_enabled:${product.id || "none"}`);
     if ((product.plannedIncludes || []).length < 3) failures.push(`owned_product_missing_includes:${product.id || "none"}`);
+    if (!product.validationPlan?.audience) failures.push(`owned_product_missing_validation_audience:${product.id || "none"}`);
+    if (!product.validationPlan?.freeBridge?.startsWith("/")) failures.push(`owned_product_missing_validation_bridge:${product.id || "none"}`);
+    if (!product.validationPlan?.nextDecision) failures.push(`owned_product_missing_next_decision:${product.id || "none"}`);
+    for (const signal of REQUIRED_VALIDATION_SIGNALS) {
+      if (!product.validationPlan?.signals?.includes(signal)) failures.push(`owned_product_missing_validation_signal:${product.id || "none"}:${signal}`);
+    }
+    if (product.validationPlan?.minimumSignals?.productInfoClicks < 1) failures.push(`owned_product_missing_info_threshold:${product.id || "none"}`);
+    if (product.validationPlan?.minimumSignals?.productInterestClicks < 1) failures.push(`owned_product_missing_interest_threshold:${product.id || "none"}`);
+    if (product.validationPlan?.minimumSignals?.subscriberSignals < 1) failures.push(`owned_product_missing_subscriber_threshold:${product.id || "none"}`);
   }
 
   await mkdir(args.outDir, { recursive: true });
