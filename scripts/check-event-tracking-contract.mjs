@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20260613-commerce3.js";
+const SHARED_JS = "/js/site-shared-20260613-commerce4.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -206,6 +206,34 @@ async function clickFirstOutboundLink(page) {
   });
 }
 
+async function clickFirstProductInfoLink(page) {
+  return page.evaluate(() => {
+    window.__fursayProductInfoNavigationBlocked = false;
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a[data-product-info-link]");
+      if (!link) return;
+      event.preventDefault();
+      window.__fursayProductInfoNavigationBlocked = true;
+    }, { capture: true, once: true });
+    const candidates = [...document.querySelectorAll("a[data-product-info-link]")];
+    const link = candidates.find((el) => {
+      const rect = el.getBoundingClientRect();
+      const style = window.getComputedStyle(el);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+    }) || candidates[0];
+    if (!link) return null;
+    const url = new URL(link.href);
+    link.click();
+    return {
+      href: link.href,
+      interest: link.getAttribute("data-product-info-link") || "",
+      stage: link.getAttribute("data-interest-stage") || "",
+      signupSource: link.getAttribute("data-signup-source") || "",
+      content: url.searchParams.get("utm_content") || "",
+    };
+  });
+}
+
 async function checkPage(browser, baseUrl, spec) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -292,6 +320,31 @@ async function checkPage(browser, baseUrl, spec) {
     if (!outboundState.navigationBlocked) failures.push(`${spec.path}:outbound_test_navigation_not_blocked`);
   }
 
+  const productInfoMeta = await clickFirstProductInfoLink(page);
+  await page.waitForTimeout(120);
+  const productInfoState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+    navigationBlocked: window.__fursayProductInfoNavigationBlocked || false,
+  }));
+  if (!productInfoMeta) {
+    failures.push(`${spec.path}:missing_product_info_link`);
+  } else {
+    const productInfoEvent = [...productInfoState.events].reverse().find((event) => event.event === "fursay_product_info_click");
+    assertEventShape(failures, `${spec.path}:product_info_click`, spec, productInfoEvent);
+    if (!["all", "koko", "noor"].includes(productInfoEvent?.detail?.product_interest || "")) {
+      failures.push(`${spec.path}:product_info_interest:${productInfoEvent?.detail?.product_interest || "none"}`);
+    }
+    if (productInfoEvent?.detail?.interest_stage !== "info_page") failures.push(`${spec.path}:product_info_stage:${productInfoEvent?.detail?.interest_stage || "none"}`);
+    if (productInfoEvent?.detail?.signup_source !== productInfoMeta.signupSource) failures.push(`${spec.path}:product_info_source:${productInfoEvent?.detail?.signup_source || "none"}`);
+    if (!productInfoEvent?.detail?.link_url?.includes("/products?")) failures.push(`${spec.path}:product_info_link_url:${productInfoEvent?.detail?.link_url || "none"}`);
+    if (!productInfoEvent?.detail?.link_url?.includes("utm_campaign=product_interest_validation")) failures.push(`${spec.path}:product_info_missing_campaign`);
+    if (!productInfoState.dataLayer.some((entry) => entry.event === "fursay_product_info_click")) {
+      failures.push(`${spec.path}:data_layer_missing_product_info_click`);
+    }
+    if (!productInfoState.navigationBlocked) failures.push(`${spec.path}:product_info_test_navigation_not_blocked`);
+  }
+
   let submitState = null;
   if (SUBMIT_PATHS.has(spec.path)) {
     await page.fill("#subscribeModal input[type='email']", "event-contract@example.com");
@@ -325,8 +378,9 @@ async function checkPage(browser, baseUrl, spec) {
     clickMeta,
     affiliateEvent: Boolean(affiliateMeta),
     outboundEvent: Boolean(outboundMeta),
+    productInfoEvent: Boolean(productInfoMeta),
     openEvents: openState.events.map((event) => event.event),
-    dataLayerEvents: outboundState.dataLayer.map((event) => event.event),
+    dataLayerEvents: productInfoState.dataLayer.map((event) => event.event),
     submitEvents: submitState ? submitState.events.map((event) => event.event) : [],
   };
 }
@@ -373,6 +427,7 @@ async function main() {
     openEventPages: pages.length,
     affiliateEventPages: pages.filter((page) => page.affiliateEvent).length,
     outboundEventPages: pages.filter((page) => page.outboundEvent).length,
+    productInfoEventPages: pages.filter((page) => page.productInfoEvent).length,
     submitEventPages: pages.filter((page) => page.submitEvents.length).length,
   };
   const expectations = await readReleaseExpectations(baseUrl);
@@ -384,6 +439,9 @@ async function main() {
   }
   if (expectations.eventTrackingPages !== checks.outboundEventPages) {
     failures.push(`release_outbound_event_tracking_pages:${expectations.eventTrackingPages ?? "none"}!=${checks.outboundEventPages}`);
+  }
+  if (expectations.productInfoEventTrackingPages !== checks.productInfoEventPages) {
+    failures.push(`release_product_info_event_tracking_pages:${expectations.productInfoEventTrackingPages ?? "none"}!=${checks.productInfoEventPages}`);
   }
   if (expectations.eventTrackingSubmitPages !== checks.submitEventPages) {
     failures.push(`release_event_tracking_submit_pages:${expectations.eventTrackingSubmitPages ?? "none"}!=${checks.submitEventPages}`);

@@ -233,7 +233,7 @@ async function main() {
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
   if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
-  if (!html.includes("site-shared-20260613-commerce3.js")) failures.push("products_page_missing_shared_js");
+  if (!html.includes("site-shared-20260613-commerce4.js")) failures.push("products_page_missing_shared_js");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
   if (/<div class="creator-kit-meta">/i.test(html)) failures.push("products_page_exposes_ops_meta");

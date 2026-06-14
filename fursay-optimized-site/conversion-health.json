@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "0e5017a",
-    "summary": "Add product waitlist landing page"
+    "commit": "5a2f041",
+    "summary": "Sync product release manifests"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -78,7 +78,8 @@
     "fursay_sample_link_copy_click",
     "fursay_public_share_copy_click",
     "fursay_kit_copy_click",
-    "fursay_product_interest_click"
+    "fursay_product_interest_click",
+    "fursay_product_info_click"
   ],
   "coverage": {
     "publicStoryPages": 9,
@@ -94,7 +95,8 @@
     "episodeLandingPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
-    "productInterestLinks": 18
+    "productInterestLinks": 18,
+    "productInfoLinks": 18
   },
   "monetization": {
     "affiliate": {

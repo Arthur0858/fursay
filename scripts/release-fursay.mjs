@@ -229,8 +229,9 @@ function writeReleaseManifest() {
       booksAffiliateId: "arthur0858",
       eventTrackingPages: 18,
       affiliateEventTrackingPages: 18,
+      productInfoEventTrackingPages: 18,
       eventTrackingSubmitPages: 3,
-      anonymousConversionEvents: 13,
+      anonymousConversionEvents: 14,
       conversionDashboardSections: 5,
       eventAnalyticsBlobFields: 15,
       eventAnalyticsDoubleFields: 1,
@@ -240,6 +241,7 @@ function writeReleaseManifest() {
       episodeLandingPages: 9,
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
+      productInfoLinks: 18,
       productLandingPages: 1,
       ownedProductSpecs: 2,
       checkoutGateRequirements: 4,
@@ -1142,7 +1144,7 @@ ${trafficLaunchChannelRows(item.channels)}
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce3.js"></script>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1466,6 +1468,7 @@ function writeConversionHealth(siteDir, source) {
       "fursay_public_share_copy_click",
       "fursay_kit_copy_click",
       "fursay_product_interest_click",
+      "fursay_product_info_click",
     ],
     coverage: {
       publicStoryPages: release.liveExpectations.pages,
@@ -1482,6 +1485,7 @@ function writeConversionHealth(siteDir, source) {
       noorLeadMagnetPages: release.liveExpectations.noorLeadMagnetPages,
       noorReadinessStatus: "safe_wait_subscriber_empty",
       productInterestLinks: release.liveExpectations.productInterestLinks,
+      productInfoLinks: release.liveExpectations.productInfoLinks,
     },
     monetization: {
       affiliate: {
@@ -1779,7 +1783,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce3.js"></script>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -2134,7 +2138,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce3.js"></script>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -2235,7 +2239,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce3.js"></script>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

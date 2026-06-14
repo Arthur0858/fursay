@@ -188,6 +188,16 @@
         return;
       }
 
+      var productInfoLink = event.target.closest('a[data-product-info-link]');
+      if (productInfoLink) {
+        emitFursayEvent('fursay_product_info_click', {
+          product_interest: normalizePack(productInfoLink.getAttribute('data-product-info-link')) || productInfoLink.getAttribute('data-product-info-link') || 'all',
+          interest_stage: productInfoLink.getAttribute('data-interest-stage') || 'info_page',
+          signup_source: productInfoLink.getAttribute('data-signup-source') || 'product_info_link',
+          link_url: productInfoLink.getAttribute('href') || ''
+        });
+      }
+
       var productInterestButton = event.target.closest('[data-product-interest]');
       if (productInterestButton) {
         event.preventDefault();

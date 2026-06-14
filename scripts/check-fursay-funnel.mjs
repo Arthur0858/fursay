@@ -1231,7 +1231,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260613-traffic12.css") failures.push(`release_css:${release.assets?.css || "none"}`);
-  if (release.assets?.js !== "/js/site-shared-20260613-commerce3.js") failures.push(`release_js:${release.assets?.js || "none"}`);
+  if (release.assets?.js !== "/js/site-shared-20260613-commerce4.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
     failures.push(`release_campaign_manifest:${release.deployment?.campaignManifest || "none"}`);
@@ -1290,7 +1290,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.eventTrackingPages !== 18) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
   if (release.liveExpectations?.affiliateEventTrackingPages !== 18) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
-  if (release.liveExpectations?.anonymousConversionEvents !== 13) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
+  if (release.liveExpectations?.anonymousConversionEvents !== 14) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
   if (release.liveExpectations?.eventAnalyticsBlobFields !== 15) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsDoubleFields !== 1) failures.push(`release_event_analytics_double_fields:${release.liveExpectations?.eventAnalyticsDoubleFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsReportQueries !== 5) failures.push(`release_event_analytics_report_queries:${release.liveExpectations?.eventAnalyticsReportQueries || "none"}`);
@@ -1298,6 +1298,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
+  if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
+  if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 61) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
@@ -1808,7 +1810,7 @@ async function checkDiscoveryFiles(baseUrl) {
   ]) {
     if (!siteHealth.sharedAssets?.css?.includes(asset)) failures.push(`site_health_missing_page_css:${asset}`);
   }
-  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-commerce3.js")) {
+  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-commerce4.js")) {
     failures.push("site_health_missing_current_shared_js");
   }
   return {

@@ -342,7 +342,7 @@
       "/css/picture-world-tools-20260613-products1.css"
     ],
     "js": [
-      "/js/site-shared-20260613-commerce3.js"
+      "/js/site-shared-20260613-commerce4.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
@@ -362,7 +362,8 @@
     "episodeLandingPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
-    "productInterestLinks": 18
+    "productInterestLinks": 18,
+    "productInfoLinks": 18
   },
   "monetization": {
     "affiliate": {
