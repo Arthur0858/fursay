@@ -1724,7 +1724,7 @@ function writeConversionHealth(siteDir, source) {
           reportCommand: "npm run report:events",
           windowDays: release.liveExpectations.eventAnalyticsReportWindowDays,
           comparisonWindows: release.liveExpectations.eventAnalyticsReportComparisonWindows,
-          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a sample or checkout decision changes.",
+          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes.",
           metrics: ["productInfoClicks", "productInterestClicks", "subscriberSignals"],
         },
         products: [
@@ -1754,7 +1754,7 @@ function writeConversionHealth(siteDir, source) {
                 productInterestClicks: 5,
                 subscriberSignals: 1,
               },
-              nextDecision: "Draft a 3-page printable sample only after product-interest clicks and at least one subscriber signal prove family demand.",
+              nextDecision: "Expand the print-ready preview into a complete Koko printable pack only after product-interest clicks and at least one subscriber signal prove family demand.",
             },
           },
           {
@@ -1783,7 +1783,7 @@ function writeConversionHealth(siteDir, source) {
                 productInterestClicks: 5,
                 subscriberSignals: 1,
               },
-              nextDecision: "Draft a 3-minute worksheet sample only after Noor interest and at least one subscriber signal prove family demand.",
+              nextDecision: "Expand the print-ready preview into a complete Noor worksheet pack only after Noor interest and at least one subscriber signal prove family demand.",
             },
           },
         ],
