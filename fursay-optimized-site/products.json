@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "fb27921",
-    "summary": "Sync share layout release manifests"
+    "commit": "0e5017a",
+    "summary": "Add product waitlist landing page"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",
