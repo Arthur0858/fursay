@@ -37,6 +37,14 @@ function urlPath(value) {
   }
 }
 
+function urlParam(value, key) {
+  try {
+    return new URL(value, "https://fursay.com").searchParams.get(key) || "";
+  } catch {
+    return "";
+  }
+}
+
 function htmlContains(html, value) {
   if (!value) return false;
   return html.includes(value) || html.includes(String(value).replace(/&/g, "&amp;"));
@@ -599,8 +607,16 @@ async function checkPage(browser, baseUrl, path) {
     const publicSharePanel = data.publicSharePanels.find((panel) => panel.pack === expectedPack);
     if (!publicSharePanel) failures.push(`missing_${expectedPack}_public_share_panel`);
     const publicShareLinks = new Map((publicSharePanel?.links || []).map((link) => [link.type, link.href]));
-    if (urlPath(publicShareLinks.get("family")) !== `/share/${expectedPack}`) {
-      failures.push(`bad_${expectedPack}_public_family_link:${publicShareLinks.get("family") || "none"}`);
+    const familyPublicShareLink = publicShareLinks.get("family") || "";
+    if (urlPath(familyPublicShareLink) !== `/share/${expectedPack}`) {
+      failures.push(`bad_${expectedPack}_public_family_link:${familyPublicShareLink || "none"}`);
+    }
+    if (expectedPack === "noor") {
+      if (urlParam(familyPublicShareLink, "source_id") !== "noor_first_subscriber_sprint_public_share"
+        || urlParam(familyPublicShareLink, "creator") !== "fursay"
+        || urlParam(familyPublicShareLink, "placement") !== "public_share_panel") {
+        failures.push(`bad_noor_public_family_attribution:${familyPublicShareLink || "none"}`);
+      }
     }
     if (urlPath(publicShareLinks.get("creator")) !== `/creator/${expectedPack}/youtube`) {
       failures.push(`bad_${expectedPack}_public_creator_link:${publicShareLinks.get("creator") || "none"}`);
@@ -611,18 +627,40 @@ async function checkPage(browser, baseUrl, path) {
     const whatsappLink = publicShareLinks.get("whatsapp") || "";
     const decodedWhatsappLink = decodeURIComponent(whatsappLink);
     if (!whatsappLink.startsWith("https://api.whatsapp.com/send?")
-      || !decodedWhatsappLink.includes(`https://fursay.com/share/${expectedPack}?ref=whatsapp&placement=direct_social_share`)) {
+      || !decodedWhatsappLink.includes(`https://fursay.com/share/${expectedPack}?`)
+      || !decodedWhatsappLink.includes("ref=whatsapp")
+      || !decodedWhatsappLink.includes("placement=direct_social_share")) {
       failures.push(`bad_${expectedPack}_public_whatsapp_link:${whatsappLink || "none"}`);
+    }
+    if (expectedPack === "noor"
+      && (!decodedWhatsappLink.includes("source_id=noor_first_subscriber_sprint_public_share")
+        || !decodedWhatsappLink.includes("creator=fursay"))) {
+      failures.push(`bad_noor_public_whatsapp_attribution:${whatsappLink || "none"}`);
     }
     const lineLink = publicShareLinks.get("line") || "";
     const decodedLineLink = decodeURIComponent(lineLink);
     if (!lineLink.startsWith("https://social-plugins.line.me/lineit/share?")
-      || !decodedLineLink.includes(`https://fursay.com/share/${expectedPack}?ref=line&placement=direct_social_share`)) {
+      || !decodedLineLink.includes(`https://fursay.com/share/${expectedPack}?`)
+      || !decodedLineLink.includes("ref=line")
+      || !decodedLineLink.includes("placement=direct_social_share")) {
       failures.push(`bad_${expectedPack}_public_line_link:${lineLink || "none"}`);
     }
+    if (expectedPack === "noor"
+      && (!decodedLineLink.includes("source_id=noor_first_subscriber_sprint_public_share")
+        || !decodedLineLink.includes("creator=fursay"))) {
+      failures.push(`bad_noor_public_line_attribution:${lineLink || "none"}`);
+    }
     const publicShareCopies = new Map((publicSharePanel?.copyButtons || []).map((button) => [button.type, button.value]));
-    if (urlPath(publicShareCopies.get("family")) !== `/share/${expectedPack}`) {
-      failures.push(`bad_${expectedPack}_public_family_copy:${publicShareCopies.get("family") || "none"}`);
+    const familyPublicShareCopy = publicShareCopies.get("family") || "";
+    if (urlPath(familyPublicShareCopy) !== `/share/${expectedPack}`) {
+      failures.push(`bad_${expectedPack}_public_family_copy:${familyPublicShareCopy || "none"}`);
+    }
+    if (expectedPack === "noor") {
+      if (urlParam(familyPublicShareCopy, "source_id") !== "noor_first_subscriber_sprint_public_share"
+        || urlParam(familyPublicShareCopy, "creator") !== "fursay"
+        || urlParam(familyPublicShareCopy, "placement") !== "public_share_panel") {
+        failures.push(`bad_noor_public_family_copy_attribution:${familyPublicShareCopy || "none"}`);
+      }
     }
     if (urlPath(publicShareCopies.get("creator")) !== `/creator/${expectedPack}/youtube`) {
       failures.push(`bad_${expectedPack}_public_creator_copy:${publicShareCopies.get("creator") || "none"}`);
