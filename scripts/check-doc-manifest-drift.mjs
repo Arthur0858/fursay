@@ -26,6 +26,7 @@ const PUBLIC_MANIFESTS = [
   "/creator-kit.json",
   "/share-kit.json",
   "/traffic-launch.json",
+  "/noor-sprint-status.json",
   "/links.json",
   "/conversion-health.json",
   "/products.json",

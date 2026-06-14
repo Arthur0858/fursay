@@ -57,6 +57,7 @@ Useful actions:
 - Creator kit page: https://fursay.com/creator-kit
 - Family share kit page: https://fursay.com/share-kit
 - Traffic launch kit page: https://fursay.com/traffic-launch
+- Noor sprint status page: https://fursay.com/noor-sprint-status
 - Social profile links page: https://fursay.com/links
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Conversion health dashboard: https://fursay.com/conversion-health
@@ -96,6 +97,7 @@ Technical discovery:
 - Creator kit: https://fursay.com/creator-kit.json
 - Share kit: https://fursay.com/share-kit.json
 - Traffic launch kit: https://fursay.com/traffic-launch.json
+- Noor sprint status manifest: https://fursay.com/noor-sprint-status.json
 - Social profile links manifest: https://fursay.com/links.json
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Conversion health manifest: https://fursay.com/conversion-health.json

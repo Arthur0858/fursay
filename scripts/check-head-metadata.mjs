@@ -17,6 +17,7 @@ const PAGES = [
   { path: "/share-kit", file: "share-kit.html", lang: "en", canonical: "https://fursay.com/share-kit", ogImage: "https://fursay.com/og-image.png" },
   { path: "/creator-kit", file: "creator-kit.html", lang: "en", canonical: "https://fursay.com/creator-kit", robots: "noindex,follow" },
   { path: "/traffic-launch", file: "traffic-launch.html", lang: "en", canonical: "https://fursay.com/traffic-launch", robots: "noindex,follow" },
+  { path: "/noor-sprint-status", file: "noor-sprint-status.html", lang: "en", canonical: "https://fursay.com/noor-sprint-status", robots: "noindex,follow" },
   { path: "/deploy-readiness", file: "deploy-readiness.html", lang: "en", canonical: "https://fursay.com/deploy-readiness", robots: "noindex,follow" },
   { path: "/conversion-health", file: "conversion-health.html", lang: "en", canonical: "https://fursay.com/conversion-health", robots: "noindex,follow" },
   { path: "/monetization-roadmap", file: "monetization-roadmap.html", lang: "en", canonical: "https://fursay.com/monetization-roadmap", robots: "noindex,follow" },

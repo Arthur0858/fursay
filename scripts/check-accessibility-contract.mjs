@@ -18,6 +18,7 @@ const PAGES = [
   { path: "/share-kit", file: "share-kit.html" },
   { path: "/creator-kit", file: "creator-kit.html" },
   { path: "/traffic-launch", file: "traffic-launch.html" },
+  { path: "/noor-sprint-status", file: "noor-sprint-status.html" },
   { path: "/deploy-readiness", file: "deploy-readiness.html" },
   { path: "/conversion-health", file: "conversion-health.html" },
   { path: "/monetization-roadmap", file: "monetization-roadmap.html" },

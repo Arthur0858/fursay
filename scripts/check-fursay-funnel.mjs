@@ -1090,12 +1090,14 @@ async function checkDiscoveryFiles(baseUrl) {
   const creatorKitRaw = await readDiscoveryFile(baseUrl, "creator-kit.json");
   const shareKitRaw = await readDiscoveryFile(baseUrl, "share-kit.json");
   const trafficLaunchRaw = await readDiscoveryFile(baseUrl, "traffic-launch.json");
+  const noorSprintStatusRaw = await readDiscoveryFile(baseUrl, "noor-sprint-status.json");
   const linksRaw = await readDiscoveryFile(baseUrl, "links.json");
   const videoDiscoveryRaw = await readDiscoveryFile(baseUrl, "video-discovery.json");
   const shortlinksRaw = await readDiscoveryFile(baseUrl, "shortlinks.json");
   const creatorKitPage = await readDiscoveryFile(baseUrl, "creator-kit.html");
   const shareKitPage = await readDiscoveryFile(baseUrl, "share-kit.html");
   const trafficLaunchPage = await readDiscoveryFile(baseUrl, "traffic-launch.html");
+  const noorSprintStatusPage = await readDiscoveryFile(baseUrl, "noor-sprint-status.html");
   const linksPage = await readDiscoveryFile(baseUrl, "links.html");
   const packageRaw = baseUrl ? "" : await readRepoFile("package.json");
   const workflowRaw = baseUrl ? "" : await readRepoFile(".github/workflows/deploy-worker.yml");
@@ -1108,6 +1110,7 @@ async function checkDiscoveryFiles(baseUrl) {
   let creatorKit = {};
   let shareKit = {};
   let trafficLaunch = {};
+  let noorSprintStatus = {};
   let links = {};
   let videoDiscovery = {};
   let shortlinks = {};
@@ -1146,6 +1149,11 @@ async function checkDiscoveryFiles(baseUrl) {
     trafficLaunch = JSON.parse(trafficLaunchRaw);
   } catch {
     failures.push("traffic_launch_invalid_json");
+  }
+  try {
+    noorSprintStatus = JSON.parse(noorSprintStatusRaw);
+  } catch {
+    failures.push("noor_sprint_status_invalid_json");
   }
   try {
     links = JSON.parse(linksRaw);
@@ -1303,6 +1311,12 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.deployment?.trafficLaunchPage !== "https://fursay.com/traffic-launch") {
     failures.push(`site_health_traffic_launch_page:${siteHealth.deployment?.trafficLaunchPage || "none"}`);
   }
+  if (siteHealth.deployment?.noorSprintStatusManifest !== "https://fursay.com/noor-sprint-status.json") {
+    failures.push(`site_health_noor_sprint_status_manifest:${siteHealth.deployment?.noorSprintStatusManifest || "none"}`);
+  }
+  if (siteHealth.deployment?.noorSprintStatusPage !== "https://fursay.com/noor-sprint-status") {
+    failures.push(`site_health_noor_sprint_status_page:${siteHealth.deployment?.noorSprintStatusPage || "none"}`);
+  }
   if (siteHealth.deployment?.linksManifest !== "https://fursay.com/links.json") {
     failures.push(`site_health_links_manifest:${siteHealth.deployment?.linksManifest || "none"}`);
   }
@@ -1367,6 +1381,12 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.trafficLaunchPage !== "https://fursay.com/traffic-launch") {
     failures.push(`release_traffic_launch_page:${release.deployment?.trafficLaunchPage || "none"}`);
   }
+  if (release.deployment?.noorSprintStatusManifest !== "https://fursay.com/noor-sprint-status.json") {
+    failures.push(`release_noor_sprint_status_manifest:${release.deployment?.noorSprintStatusManifest || "none"}`);
+  }
+  if (release.deployment?.noorSprintStatusPage !== "https://fursay.com/noor-sprint-status") {
+    failures.push(`release_noor_sprint_status_page:${release.deployment?.noorSprintStatusPage || "none"}`);
+  }
   if (release.deployment?.linksManifest !== "https://fursay.com/links.json") {
     failures.push(`release_links_manifest:${release.deployment?.linksManifest || "none"}`);
   }
@@ -1414,6 +1434,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.noorSprintCopyVariants !== 4) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
+  if (release.liveExpectations?.noorSprintStatusDays !== 7) failures.push(`release_noor_sprint_status_days:${release.liveExpectations?.noorSprintStatusDays || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
@@ -1424,7 +1445,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.monetizationRoadmapStages !== 4) failures.push(`release_monetization_roadmap_stages:${release.liveExpectations?.monetizationRoadmapStages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapProducts !== 2) failures.push(`release_monetization_roadmap_products:${release.liveExpectations?.monetizationRoadmapProducts || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 67) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 69) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");
@@ -1529,6 +1550,30 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!String(day.reportQuery || "").endsWith("_7d")) failures.push(`traffic_launch_noor_sprint_day_bad_report:${day.day || "none"}:${day.reportQuery || "none"}`);
     if (!day.expectedSignal) failures.push(`traffic_launch_noor_sprint_day_missing_signal:${day.day || "none"}`);
   }
+  if (noorSprintStatus.platform !== "cloudflare-workers-static-assets") failures.push(`noor_sprint_status_platform:${noorSprintStatus.platform || "none"}`);
+  if (noorSprintStatus.page !== "https://fursay.com/noor-sprint-status") failures.push(`noor_sprint_status_page:${noorSprintStatus.page || "none"}`);
+  if (noorSprintStatus.manifest !== "https://fursay.com/noor-sprint-status.json") failures.push(`noor_sprint_status_manifest:${noorSprintStatus.manifest || "none"}`);
+  if (noorSprintStatus.trafficLaunch !== "https://fursay.com/traffic-launch.json") failures.push("noor_sprint_status_bad_traffic_launch");
+  if (noorSprintStatus.conversionHealth !== "https://fursay.com/conversion-health.json") failures.push("noor_sprint_status_bad_conversion_health");
+  if (noorSprintStatus.piiAllowed !== false) failures.push("noor_sprint_status_pii_allowed");
+  if (noorSprintStatus.status !== "ready_to_log") failures.push(`noor_sprint_status_bad_status:${noorSprintStatus.status || "none"}`);
+  if (noorSprintStatus.pack !== "noor") failures.push(`noor_sprint_status_pack:${noorSprintStatus.pack || "none"}`);
+  if (noorSprintStatus.windowDays !== 7) failures.push(`noor_sprint_status_window:${noorSprintStatus.windowDays || "none"}`);
+  if (noorSprintStatus.successMetric !== "at_least_one_noor_subscribe_submit_success") failures.push(`noor_sprint_status_success_metric:${noorSprintStatus.successMetric || "none"}`);
+  if (noorSprintStatus.summary?.totalDays !== 7) failures.push(`noor_sprint_status_total_days:${noorSprintStatus.summary?.totalDays || "none"}`);
+  if (noorSprintStatus.summary?.completedDays !== 0) failures.push(`noor_sprint_status_completed_days:${noorSprintStatus.summary?.completedDays || "none"}`);
+  if (noorSprintStatus.summary?.subscriberSignalObserved !== false) failures.push("noor_sprint_status_signal_should_start_false");
+  if (noorSprintStatus.summary?.checkoutEnabled !== false || noorSprintStatus.summary?.paymentLinksAllowed !== false) failures.push("noor_sprint_status_checkout_not_locked");
+  if (!Array.isArray(noorSprintStatus.days) || noorSprintStatus.days.length !== 7) failures.push(`noor_sprint_status_day_count:${noorSprintStatus.days?.length || 0}`);
+  for (const day of noorSprintStatus.days || []) {
+    const planDay = (noorSprint.dailyPlan || []).find((entry) => entry.day === day.day) || {};
+    if (day.status !== "not_started") failures.push(`noor_sprint_status_day_status:${day.day || "none"}:${day.status || "none"}`);
+    if (day.link !== planDay.link) failures.push(`noor_sprint_status_day_link:${day.day || "none"}`);
+    if ((day.followupLink || "") !== (planDay.followupLink || "")) failures.push(`noor_sprint_status_day_followup:${day.day || "none"}`);
+    if (day.reportQuery !== planDay.reportQuery) failures.push(`noor_sprint_status_day_report:${day.day || "none"}`);
+    if (day.signalObserved !== false) failures.push(`noor_sprint_status_day_signal_should_start_false:${day.day || "none"}`);
+    if (!day.nextAction) failures.push(`noor_sprint_status_day_missing_next_action:${day.day || "none"}`);
+  }
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
   if (links.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("links_bad_subscription_endpoint");
@@ -1629,6 +1674,19 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!htmlContains(trafficLaunchPage, variant.copy || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_copy:${variant.id || "none"}`);
     if (!htmlContains(trafficLaunchPage, variant.link || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_link:${variant.id || "none"}`);
     if (variant.storyLink && !htmlContains(trafficLaunchPage, variant.storyLink)) failures.push(`traffic_launch_page_missing_noor_variant_story_link:${variant.id || "none"}`);
+  }
+  if (!noorSprintStatusPage.includes('<body class="picture-world creator-kit-page noor-sprint-status-page">')) failures.push("noor_sprint_status_page_missing_body_class");
+  if (!noorSprintStatusPage.includes("/noor-sprint-status.json")) failures.push("noor_sprint_status_page_missing_json_manifest_link");
+  if (!noorSprintStatusPage.includes("/traffic-launch")) failures.push("noor_sprint_status_page_missing_traffic_launch_link");
+  if (!noorSprintStatusPage.includes("data-noor-sprint-status-summary")) failures.push("noor_sprint_status_page_missing_summary");
+  if (!noorSprintStatusPage.includes("data-noor-sprint-status-log")) failures.push("noor_sprint_status_page_missing_log");
+  if ((noorSprintStatusPage.match(/data-noor-sprint-status-day=/g) || []).length !== 7) failures.push("noor_sprint_status_page_bad_day_count");
+  for (const day of noorSprintStatus.days || []) {
+    if (!noorSprintStatusPage.includes(`data-noor-sprint-status-day="${escapeHtml(day.day || "")}"`)) failures.push(`noor_sprint_status_page_missing_day:${day.day || "none"}`);
+    if (!htmlContains(noorSprintStatusPage, day.action || "missing")) failures.push(`noor_sprint_status_page_missing_action:${day.day || "none"}`);
+    if (!htmlContains(noorSprintStatusPage, day.link || "missing")) failures.push(`noor_sprint_status_page_missing_link:${day.day || "none"}`);
+    if (day.followupLink && !htmlContains(noorSprintStatusPage, day.followupLink)) failures.push(`noor_sprint_status_page_missing_followup:${day.day || "none"}`);
+    if (!noorSprintStatusPage.includes(`<code>${escapeHtml(day.reportQuery || "")}</code>`)) failures.push(`noor_sprint_status_page_missing_report:${day.day || "none"}`);
   }
   if (!linksPage.includes('<body class="picture-world creator-kit-page social-links-page">')) failures.push("links_page_missing_body_class");
   if (!linksPage.includes("<h1>Choose Your Story Pack</h1>")) failures.push("links_page_missing_h1");
@@ -1922,6 +1980,9 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   for (const route of ["https://fursay.com/traffic-launch", "https://fursay.com/traffic-launch.json"]) {
     if (!siteHealth.routes?.trafficLaunch?.includes(route)) failures.push(`site_health_missing_traffic_launch_route:${route}`);
+  }
+  for (const route of ["https://fursay.com/noor-sprint-status", "https://fursay.com/noor-sprint-status.json"]) {
+    if (!siteHealth.routes?.noorSprintStatus?.includes(route)) failures.push(`site_health_missing_noor_sprint_status_route:${route}`);
   }
   for (const route of ["https://fursay.com/links", "https://fursay.com/links.json"]) {
     if (!siteHealth.routes?.links?.includes(route)) failures.push(`site_health_missing_links_route:${route}`);

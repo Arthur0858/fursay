@@ -204,6 +204,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/noor-sprint-status.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/links.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],
@@ -253,6 +259,12 @@ const CHECKS = [
   },
   {
     path: "/traffic-launch",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
+    path: "/noor-sprint-status",
     status: 200,
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     contentTypeIncludes: "text/html",

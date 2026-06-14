@@ -138,6 +138,8 @@ function writeReleaseManifest() {
       shareKitPage: "https://fursay.com/share-kit",
       trafficLaunchManifest: "https://fursay.com/traffic-launch.json",
       trafficLaunchPage: "https://fursay.com/traffic-launch",
+      noorSprintStatusManifest: "https://fursay.com/noor-sprint-status.json",
+      noorSprintStatusPage: "https://fursay.com/noor-sprint-status",
       linksManifest: "https://fursay.com/links.json",
       linksPage: "https://fursay.com/links",
       conversionHealthManifest: "https://fursay.com/conversion-health.json",
@@ -255,6 +257,7 @@ function writeReleaseManifest() {
       episodeLandingPages: 9,
       noorLeadMagnetPages: 3,
       noorSprintCopyVariants: 4,
+      noorSprintStatusDays: 7,
       productInterestLinks: 18,
       productInfoLinks: 18,
       productLandingPages: 3,
@@ -267,7 +270,7 @@ function writeReleaseManifest() {
       visualLayoutChecks: 28,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 67,
+      cacheHeaderChecks: 69,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -279,6 +282,7 @@ function writeReleaseManifest() {
   writeLinksManifest(siteDir, source);
   writeShareKit(siteDir, source);
   writeTrafficLaunchKit(siteDir, source);
+  writeNoorSprintStatus(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
   writeConversionHealth(siteDir, source);
@@ -1437,6 +1441,155 @@ function writeTrafficLaunchKit(siteDir, source) {
   const kit = buildTrafficLaunchKit(siteDir, source);
   writeFileSync(resolve(siteDir, "traffic-launch.json"), JSON.stringify(kit, null, 2) + "\n");
   writeTrafficLaunchPage(siteDir, kit);
+}
+
+function buildNoorSprintStatus(siteDir, source) {
+  const trafficLaunch = readJson(resolve(siteDir, "traffic-launch.json"));
+  const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
+  const sprint = trafficLaunch.activationSprints?.noorFirstSubscriber || {};
+  const analyticsStatus = conversionHealth.measurement?.analyticsReport?.status || "pending_cloudflare_credentials_or_enablement";
+  const readinessStatus = conversionHealth.growth?.noorReadinessStatus || "safe_wait_subscriber_empty";
+  const days = (sprint.dailyPlan || []).map((day) => ({
+    day: day.day,
+    label: day.label,
+    status: "not_started",
+    action: day.action,
+    link: day.link,
+    followupLink: day.followupLink || "",
+    reportQuery: day.reportQuery,
+    expectedSignal: day.expectedSignal,
+    executedAt: "",
+    signalObserved: false,
+    signalEvidence: "",
+    notes: "",
+    nextAction: day.day === 1 ? "Start with the warmest parent-group placement." : "Wait until the previous day has been tried or skipped.",
+  }));
+  return {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: taipeiDateString(),
+    source,
+    page: "https://fursay.com/noor-sprint-status",
+    manifest: "https://fursay.com/noor-sprint-status.json",
+    trafficLaunch: "https://fursay.com/traffic-launch.json",
+    conversionHealth: "https://fursay.com/conversion-health.json",
+    piiAllowed: false,
+    status: "ready_to_log",
+    pack: "noor",
+    windowDays: sprint.windowDays || 7,
+    goal: sprint.goal || "Get the first real Noor subscriber signal.",
+    successMetric: sprint.successMetric || "at_least_one_noor_subscribe_submit_success",
+    readinessStatus,
+    analyticsStatus,
+    summary: {
+      totalDays: days.length,
+      completedDays: 0,
+      skippedDays: 0,
+      subscriberSignalObserved: false,
+      checkoutEnabled: false,
+      paymentLinksAllowed: false,
+      nextDay: days[0]?.day || 1,
+      nextAction: days[0]?.action || "",
+    },
+    blockedBy: [
+      analyticsStatus,
+      readinessStatus,
+    ],
+    logFields: [
+      "executedAt",
+      "status",
+      "signalObserved",
+      "signalEvidence",
+      "notes",
+      "nextAction",
+    ],
+    days,
+  };
+}
+
+function writeNoorSprintStatusPage(siteDir, manifest) {
+  const rows = (manifest.days || []).map((day) => `
+        <tr data-noor-sprint-status-day="${escapeHtml(day.day)}">
+          <th scope="row">Day ${escapeHtml(day.day)}</th>
+          <td>${escapeHtml(day.label)}</td>
+          <td><span>${escapeHtml(day.status)}</span></td>
+          <td>${escapeHtml(day.action)}</td>
+          <td><a href="${escapeHtml(day.link || "#")}">Open link</a>${day.followupLink ? ` <a href="${escapeHtml(day.followupLink)}">Follow-up</a>` : ""}</td>
+          <td><code>${escapeHtml(day.reportQuery)}</code></td>
+          <td>${escapeHtml(day.expectedSignal)}</td>
+          <td>${escapeHtml(day.nextAction)}</td>
+        </tr>`).join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay Noor Sprint Status</title>
+  <meta name="description" content="Noor first-subscriber sprint status log for daily outreach actions, anonymous signal checks, and safe wait state.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/noor-sprint-status">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+</head>
+<body class="picture-world creator-kit-page noor-sprint-status-page">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero">
+      <p class="creator-eyebrow">Noor sprint log</p>
+      <h1>Noor Sprint Status</h1>
+      <p>${escapeHtml(manifest.goal)}</p>
+      <div class="creator-kit-meta">
+        <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
+        <span>Commit ${escapeHtml(manifest.source.commit)}</span>
+        <a href="/noor-sprint-status.json">JSON manifest</a>
+        <a href="/traffic-launch">Traffic launch kit</a>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-noor-sprint-status-summary>
+      <h2>Status</h2>
+      <dl>
+        ${healthMetric("Sprint status", manifest.status)}
+        ${healthMetric("Readiness", manifest.readinessStatus)}
+        ${healthMetric("Analytics report", manifest.analyticsStatus)}
+        ${healthMetric("Total days", manifest.summary.totalDays)}
+        ${healthMetric("Completed days", manifest.summary.completedDays)}
+        ${healthMetric("Subscriber signal", String(manifest.summary.subscriberSignalObserved))}
+        ${healthMetric("Checkout enabled", String(manifest.summary.checkoutEnabled))}
+      </dl>
+    </section>
+    <section class="creator-kit-safety" data-noor-sprint-status-log>
+      <h2>Daily log</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Focus</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+            <th scope="col">Link</th>
+            <th scope="col">Report</th>
+            <th scope="col">Signal</th>
+            <th scope="col">Next</th>
+          </tr>
+        </thead>
+        <tbody>
+${rows}
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
+}
+
+function writeNoorSprintStatus(siteDir, source) {
+  const manifest = buildNoorSprintStatus(siteDir, source);
+  writeFileSync(resolve(siteDir, "noor-sprint-status.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeNoorSprintStatusPage(siteDir, manifest);
 }
 
 function buildVideoDiscoveryChannels() {
@@ -3319,6 +3472,11 @@ function writeSiteHealthManifest(siteDir) {
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
+    deployment: {
+      ...current.deployment,
+      noorSprintStatusManifest: "https://fursay.com/noor-sprint-status.json",
+      noorSprintStatusPage: "https://fursay.com/noor-sprint-status",
+    },
     generatedFrom: [
       "/data/site-structure.json",
       "/campaigns.json",
@@ -3372,6 +3530,10 @@ function writeSiteHealthManifest(siteDir) {
       monetizationRoadmap: [
         "https://fursay.com/monetization-roadmap",
         "https://fursay.com/monetization-roadmap.json",
+      ],
+      noorSprintStatus: [
+        "https://fursay.com/noor-sprint-status",
+        "https://fursay.com/noor-sprint-status.json",
       ],
     },
     funnels: {

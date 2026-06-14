@@ -30,7 +30,9 @@
       "deploy": "npm run deploy",
       "liveSmoke": "npm run smoke:live"
     },
-    "autoDeployWorkflow": ".github/workflows/deploy-worker.yml"
+    "autoDeployWorkflow": ".github/workflows/deploy-worker.yml",
+    "noorSprintStatusManifest": "https://fursay.com/noor-sprint-status.json",
+    "noorSprintStatusPage": "https://fursay.com/noor-sprint-status"
   },
   "routes": {
     "home": [
@@ -134,6 +136,10 @@
     "productSampleDownloads": [
       "https://fursay.com/downloads/koko-printable-sample.pdf",
       "https://fursay.com/downloads/noor-worksheet-sample.pdf"
+    ],
+    "noorSprintStatus": [
+      "https://fursay.com/noor-sprint-status",
+      "https://fursay.com/noor-sprint-status.json"
     ]
   },
   "funnels": {
