@@ -9,14 +9,37 @@
   "siteHealth": "https://fursay.com/site-health.json",
   "trafficLaunch": "https://fursay.com/traffic-launch.json",
   "conversionHealth": "https://fursay.com/conversion-health.json",
+  "logSource": "content/growth/noor-sprint-log.json",
   "piiAllowed": false,
-  "status": "ready_to_log",
+  "status": "ready_to_start",
   "pack": "noor",
   "windowDays": 7,
   "goal": "Get the first real Noor subscriber signal without sending a newsletter or enabling checkout.",
   "successMetric": "at_least_one_noor_subscribe_submit_success",
   "readinessStatus": "safe_wait_subscriber_empty",
   "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
+  "logStatus": "ready_to_start",
+  "logEntryCount": 0,
+  "privacy": {
+    "piiAllowed": false,
+    "boundaryConfirmed": true,
+    "allowedEvidence": [
+      "anonymous event query name",
+      "source_id",
+      "placement",
+      "aggregate count",
+      "public URL",
+      "manual note without personal identity"
+    ],
+    "blockedFields": [
+      "email",
+      "name",
+      "phone",
+      "address",
+      "subscriberId",
+      "mailerLiteSubscriberId"
+    ]
+  },
   "summary": {
     "totalDays": 7,
     "completedDays": 0,

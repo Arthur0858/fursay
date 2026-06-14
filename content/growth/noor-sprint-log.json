@@ -1,0 +1,34 @@
+{
+  "site": "Fursay",
+  "pack": "noor",
+  "piiAllowed": false,
+  "status": "ready_to_start",
+  "privacy": {
+    "allowedEvidence": [
+      "anonymous event query name",
+      "source_id",
+      "placement",
+      "aggregate count",
+      "public URL",
+      "manual note without personal identity"
+    ],
+    "blockedFields": [
+      "email",
+      "name",
+      "phone",
+      "address",
+      "subscriberId",
+      "mailerLiteSubscriberId"
+    ]
+  },
+  "logFields": [
+    "day",
+    "executedAt",
+    "status",
+    "signalObserved",
+    "signalEvidence",
+    "notes",
+    "nextAction"
+  ],
+  "entries": []
+}

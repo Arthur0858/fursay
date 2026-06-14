@@ -1557,14 +1557,24 @@ async function checkDiscoveryFiles(baseUrl) {
   if (noorSprintStatus.siteHealth !== "https://fursay.com/site-health.json") failures.push(`noor_sprint_status_site_health:${noorSprintStatus.siteHealth || "none"}`);
   if (noorSprintStatus.trafficLaunch !== "https://fursay.com/traffic-launch.json") failures.push("noor_sprint_status_bad_traffic_launch");
   if (noorSprintStatus.conversionHealth !== "https://fursay.com/conversion-health.json") failures.push("noor_sprint_status_bad_conversion_health");
+  if (noorSprintStatus.logSource !== "content/growth/noor-sprint-log.json") failures.push(`noor_sprint_status_bad_log_source:${noorSprintStatus.logSource || "none"}`);
   if (noorSprintStatus.piiAllowed !== false) failures.push("noor_sprint_status_pii_allowed");
-  if (noorSprintStatus.status !== "ready_to_log") failures.push(`noor_sprint_status_bad_status:${noorSprintStatus.status || "none"}`);
+  if (!["ready_to_start", "in_progress", "signal_observed", "safe_wait_subscriber_empty"].includes(noorSprintStatus.status)) {
+    failures.push(`noor_sprint_status_bad_status:${noorSprintStatus.status || "none"}`);
+  }
+  if (noorSprintStatus.privacy?.piiAllowed !== false) failures.push("noor_sprint_status_privacy_pii_allowed");
+  if (noorSprintStatus.privacy?.boundaryConfirmed !== true) failures.push("noor_sprint_status_privacy_boundary_missing");
+  if (!Array.isArray(noorSprintStatus.privacy?.blockedFields) || !noorSprintStatus.privacy.blockedFields.includes("email")) {
+    failures.push("noor_sprint_status_missing_blocked_email");
+  }
   if (noorSprintStatus.pack !== "noor") failures.push(`noor_sprint_status_pack:${noorSprintStatus.pack || "none"}`);
   if (noorSprintStatus.windowDays !== 7) failures.push(`noor_sprint_status_window:${noorSprintStatus.windowDays || "none"}`);
   if (noorSprintStatus.successMetric !== "at_least_one_noor_subscribe_submit_success") failures.push(`noor_sprint_status_success_metric:${noorSprintStatus.successMetric || "none"}`);
   if (noorSprintStatus.summary?.totalDays !== 7) failures.push(`noor_sprint_status_total_days:${noorSprintStatus.summary?.totalDays || "none"}`);
-  if (noorSprintStatus.summary?.completedDays !== 0) failures.push(`noor_sprint_status_completed_days:${noorSprintStatus.summary?.completedDays || "none"}`);
-  if (noorSprintStatus.summary?.subscriberSignalObserved !== false) failures.push("noor_sprint_status_signal_should_start_false");
+  const noorStatusCompletedDays = (noorSprintStatus.days || []).filter((day) => day.status === "completed").length;
+  const noorStatusSignalObserved = (noorSprintStatus.days || []).some((day) => day.signalObserved === true);
+  if (noorSprintStatus.summary?.completedDays !== noorStatusCompletedDays) failures.push(`noor_sprint_status_completed_days:${noorSprintStatus.summary?.completedDays || "none"}`);
+  if (noorSprintStatus.summary?.subscriberSignalObserved !== noorStatusSignalObserved) failures.push("noor_sprint_status_signal_mismatch");
   if (noorSprintStatus.summary?.checkoutEnabled !== false || noorSprintStatus.summary?.paymentLinksAllowed !== false) failures.push("noor_sprint_status_checkout_not_locked");
   if (!Array.isArray(noorSprintStatus.days) || noorSprintStatus.days.length !== 7) failures.push(`noor_sprint_status_day_count:${noorSprintStatus.days?.length || 0}`);
   for (const day of noorSprintStatus.days || []) {
@@ -1682,6 +1692,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprintStatusPage.includes("/release.json")) failures.push("noor_sprint_status_page_missing_release_manifest_link");
   if (!noorSprintStatusPage.includes("/site-health.json")) failures.push("noor_sprint_status_page_missing_site_health_link");
   if (!noorSprintStatusPage.includes("/traffic-launch")) failures.push("noor_sprint_status_page_missing_traffic_launch_link");
+  if (!noorSprintStatusPage.includes("data-noor-sprint-privacy")) failures.push("noor_sprint_status_page_missing_privacy_boundary");
+  if (!noorSprintStatusPage.includes("content/growth/noor-sprint-log.json")) failures.push("noor_sprint_status_page_missing_log_source");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-summary")) failures.push("noor_sprint_status_page_missing_summary");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-log")) failures.push("noor_sprint_status_page_missing_log");
   if ((noorSprintStatusPage.match(/data-noor-sprint-status-day=/g) || []).length !== 7) failures.push("noor_sprint_status_page_bad_day_count");

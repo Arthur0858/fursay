@@ -83,6 +83,10 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
+function readJsonIfExists(path, fallback) {
+  return existsSync(path) ? readJson(path) : fallback;
+}
+
 const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator", "placement"];
 const PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest";
 const ZH_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest";
@@ -223,6 +227,7 @@ function writeReleaseManifest() {
       "scripts/check-product-readiness-contract.mjs",
       "scripts/check-monetization-roadmap-contract.mjs",
       "scripts/check-noor-subscriber-readiness.mjs",
+      "scripts/check-noor-sprint-log.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
       "scripts/check-doc-manifest-drift.mjs",
@@ -1446,24 +1451,35 @@ function writeTrafficLaunchKit(siteDir, source) {
 function buildNoorSprintStatus(siteDir, source) {
   const trafficLaunch = readJson(resolve(siteDir, "traffic-launch.json"));
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
+  const sprintLog = readJsonIfExists(resolve(process.cwd(), "content/growth/noor-sprint-log.json"), {
+    status: "ready_to_start",
+    piiAllowed: false,
+    entries: [],
+  });
   const sprint = trafficLaunch.activationSprints?.noorFirstSubscriber || {};
   const analyticsStatus = conversionHealth.measurement?.analyticsReport?.status || "pending_cloudflare_credentials_or_enablement";
   const readinessStatus = conversionHealth.growth?.noorReadinessStatus || "safe_wait_subscriber_empty";
+  const logEntries = Array.isArray(sprintLog.entries) ? sprintLog.entries : [];
+  const entriesByDay = new Map(logEntries.map((entry) => [Number(entry.day), entry]));
   const days = (sprint.dailyPlan || []).map((day) => ({
     day: day.day,
     label: day.label,
-    status: "not_started",
+    status: entriesByDay.get(Number(day.day))?.status || "not_started",
     action: day.action,
     link: day.link,
     followupLink: day.followupLink || "",
     reportQuery: day.reportQuery,
     expectedSignal: day.expectedSignal,
-    executedAt: "",
-    signalObserved: false,
-    signalEvidence: "",
-    notes: "",
-    nextAction: day.day === 1 ? "Start with the warmest parent-group placement." : "Wait until the previous day has been tried or skipped.",
+    executedAt: entriesByDay.get(Number(day.day))?.executedAt || "",
+    signalObserved: entriesByDay.get(Number(day.day))?.signalObserved === true,
+    signalEvidence: entriesByDay.get(Number(day.day))?.signalEvidence || "",
+    notes: entriesByDay.get(Number(day.day))?.notes || "",
+    nextAction: entriesByDay.get(Number(day.day))?.nextAction || (day.day === 1 ? "Start with the warmest parent-group placement." : "Wait until the previous day has been tried or skipped."),
   }));
+  const completedDays = days.filter((day) => day.status === "completed").length;
+  const skippedDays = days.filter((day) => day.status === "skipped").length;
+  const subscriberSignalObserved = days.some((day) => day.signalObserved === true);
+  const nextOpenDay = days.find((day) => !["completed", "skipped"].includes(day.status)) || days.at(-1) || {};
   return {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1475,23 +1491,32 @@ function buildNoorSprintStatus(siteDir, source) {
     siteHealth: "https://fursay.com/site-health.json",
     trafficLaunch: "https://fursay.com/traffic-launch.json",
     conversionHealth: "https://fursay.com/conversion-health.json",
+    logSource: "content/growth/noor-sprint-log.json",
     piiAllowed: false,
-    status: "ready_to_log",
+    status: sprintLog.status || "ready_to_log",
     pack: "noor",
     windowDays: sprint.windowDays || 7,
     goal: sprint.goal || "Get the first real Noor subscriber signal.",
     successMetric: sprint.successMetric || "at_least_one_noor_subscribe_submit_success",
     readinessStatus,
     analyticsStatus,
+    logStatus: sprintLog.status || "ready_to_start",
+    logEntryCount: logEntries.length,
+    privacy: {
+      piiAllowed: false,
+      boundaryConfirmed: sprintLog.piiAllowed === false,
+      allowedEvidence: sprintLog.privacy?.allowedEvidence || [],
+      blockedFields: sprintLog.privacy?.blockedFields || [],
+    },
     summary: {
       totalDays: days.length,
-      completedDays: 0,
-      skippedDays: 0,
-      subscriberSignalObserved: false,
+      completedDays,
+      skippedDays,
+      subscriberSignalObserved,
       checkoutEnabled: false,
       paymentLinksAllowed: false,
-      nextDay: days[0]?.day || 1,
-      nextAction: days[0]?.action || "",
+      nextDay: nextOpenDay.day || 1,
+      nextAction: nextOpenDay.action || "",
     },
     blockedBy: [
       analyticsStatus,
@@ -1549,12 +1574,18 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
         <a href="/traffic-launch">Traffic launch kit</a>
       </div>
     </header>
+    <section class="creator-kit-safety" data-noor-sprint-privacy>
+      <h2>Logging boundary</h2>
+      <p>This sprint log records anonymous execution status only. Do not store email, name, phone, address, subscriber IDs, or MailerLite IDs in <code>${escapeHtml(manifest.logSource)}</code>.</p>
+    </section>
     <section class="creator-kit-safety" data-noor-sprint-status-summary>
       <h2>Status</h2>
       <dl>
         ${healthMetric("Sprint status", manifest.status)}
         ${healthMetric("Readiness", manifest.readinessStatus)}
         ${healthMetric("Analytics report", manifest.analyticsStatus)}
+        ${healthMetric("Log status", manifest.logStatus)}
+        ${healthMetric("Log entries", manifest.logEntryCount)}
         ${healthMetric("Total days", manifest.summary.totalDays)}
         ${healthMetric("Completed days", manifest.summary.completedDays)}
         ${healthMetric("Subscriber signal", String(manifest.summary.subscriberSignalObserved))}
@@ -3854,6 +3885,7 @@ async function main() {
   run("node", ["--check", "scripts/check-product-readiness-contract.mjs"]);
   run("node", ["--check", "scripts/check-monetization-roadmap-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
+  run("node", ["--check", "scripts/check-noor-sprint-log.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
   run("node", ["--check", "scripts/check-doc-manifest-drift.mjs"]);
@@ -3898,6 +3930,7 @@ async function main() {
   run("node", ["scripts/check-product-readiness-contract.mjs", "--out-dir", join(outRoot, "product-readiness-local")]);
   run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--out-dir", join(outRoot, "monetization-roadmap-local")]);
   run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
+  run("node", ["scripts/check-noor-sprint-log.mjs", "--out-dir", join(outRoot, "noor-sprint-log-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
   run("node", ["scripts/check-doc-manifest-drift.mjs", "--out-dir", join(outRoot, "doc-manifest-drift-local")]);
@@ -3943,6 +3976,7 @@ async function main() {
     run("node", ["scripts/check-product-readiness-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "product-readiness-live")]);
     run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "monetization-roadmap-live")]);
     run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-readiness-live")]);
+    run("node", ["scripts/check-noor-sprint-log.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-sprint-log-live")]);
     run("node", ["scripts/check-security-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "security-headers-live")]);
     run("node", ["scripts/check-release-consistency.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "release-consistency-live")]);
     run("node", ["scripts/check-doc-manifest-drift.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "doc-manifest-drift-live")]);
