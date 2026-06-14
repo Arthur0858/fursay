@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20260613-commerce6.js";
+const SHARED_JS = "/js/site-shared-20260615-noorpdf1.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -234,6 +234,32 @@ async function clickFirstProductInfoLink(page) {
   });
 }
 
+async function clickFirstProductSampleDownloadLink(page) {
+  return page.evaluate(() => {
+    window.__fursaySampleDownloadNavigationBlocked = false;
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest?.("a[data-product-sample-download]");
+      if (!link) return;
+      event.preventDefault();
+      window.__fursaySampleDownloadNavigationBlocked = true;
+    }, { capture: true, once: true });
+    const candidates = [...document.querySelectorAll("a[data-product-sample-download]")];
+    const link = candidates.find((el) => {
+      const rect = el.getBoundingClientRect();
+      const style = window.getComputedStyle(el);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+    }) || candidates[0];
+    if (!link) return null;
+    link.click();
+    return {
+      href: link.getAttribute("href") || "",
+      interest: link.getAttribute("data-product-sample-download") || "",
+      stage: link.getAttribute("data-interest-stage") || "",
+      signupSource: link.getAttribute("data-signup-source") || "",
+    };
+  });
+}
+
 async function checkPage(browser, baseUrl, spec) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -345,6 +371,26 @@ async function checkPage(browser, baseUrl, spec) {
     if (!productInfoState.navigationBlocked) failures.push(`${spec.path}:product_info_test_navigation_not_blocked`);
   }
 
+  const sampleDownloadMeta = await clickFirstProductSampleDownloadLink(page);
+  await page.waitForTimeout(120);
+  const sampleDownloadState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+    navigationBlocked: window.__fursaySampleDownloadNavigationBlocked || false,
+  }));
+  if (sampleDownloadMeta) {
+    const sampleDownloadEvent = [...sampleDownloadState.events].reverse().find((event) => event.event === "fursay_product_sample_download_click");
+    assertEventShape(failures, `${spec.path}:sample_download_click`, spec, sampleDownloadEvent);
+    if (sampleDownloadEvent?.detail?.product_interest !== sampleDownloadMeta.interest) failures.push(`${spec.path}:sample_download_interest:${sampleDownloadEvent?.detail?.product_interest || "none"}`);
+    if (sampleDownloadEvent?.detail?.interest_stage !== sampleDownloadMeta.stage) failures.push(`${spec.path}:sample_download_stage:${sampleDownloadEvent?.detail?.interest_stage || "none"}`);
+    if (sampleDownloadEvent?.detail?.signup_source !== sampleDownloadMeta.signupSource) failures.push(`${spec.path}:sample_download_source:${sampleDownloadEvent?.detail?.signup_source || "none"}`);
+    if (sampleDownloadEvent?.detail?.link_url !== sampleDownloadMeta.href) failures.push(`${spec.path}:sample_download_link_url:${sampleDownloadEvent?.detail?.link_url || "none"}`);
+    if (!sampleDownloadState.dataLayer.some((entry) => entry.event === "fursay_product_sample_download_click")) {
+      failures.push(`${spec.path}:data_layer_missing_sample_download_click`);
+    }
+    if (!sampleDownloadState.navigationBlocked) failures.push(`${spec.path}:sample_download_test_navigation_not_blocked`);
+  }
+
   let submitState = null;
   if (SUBMIT_PATHS.has(spec.path)) {
     await page.fill("#subscribeModal input[type='email']", "event-contract@example.com");
@@ -379,8 +425,9 @@ async function checkPage(browser, baseUrl, spec) {
     affiliateEvent: Boolean(affiliateMeta),
     outboundEvent: Boolean(outboundMeta),
     productInfoEvent: Boolean(productInfoMeta),
+    sampleDownloadEvent: Boolean(sampleDownloadMeta),
     openEvents: openState.events.map((event) => event.event),
-    dataLayerEvents: productInfoState.dataLayer.map((event) => event.event),
+    dataLayerEvents: sampleDownloadState.dataLayer.map((event) => event.event),
     submitEvents: submitState ? submitState.events.map((event) => event.event) : [],
   };
 }

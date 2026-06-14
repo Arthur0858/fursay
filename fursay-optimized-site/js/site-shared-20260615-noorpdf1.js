@@ -208,6 +208,17 @@
         });
       }
 
+      var productSampleDownloadLink = event.target.closest('a[data-product-sample-download]');
+      if (productSampleDownloadLink) {
+        var downloadPack = normalizePack(productSampleDownloadLink.getAttribute('data-product-sample-download')) || pagePack() || 'all';
+        emitFursayEvent('fursay_product_sample_download_click', {
+          product_interest: downloadPack,
+          interest_stage: productSampleDownloadLink.getAttribute('data-interest-stage') || 'sample_pdf_download',
+          signup_source: productSampleDownloadLink.getAttribute('data-signup-source') || 'sample_pdf_download_' + downloadPack,
+          link_url: productSampleDownloadLink.getAttribute('href') || ''
+        });
+      }
+
       var productSamplePrintButton = event.target.closest('[data-print-product-sample]');
       if (productSamplePrintButton) {
         event.preventDefault();

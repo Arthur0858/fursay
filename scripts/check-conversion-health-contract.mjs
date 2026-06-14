@@ -35,6 +35,7 @@ const BASE_REQUIRED_EVENTS = [
   "fursay_sample_link_copy_click",
 ];
 const PRODUCT_INTEREST_EVENT = "fursay_product_interest_click";
+const PRODUCT_SAMPLE_DOWNLOAD_EVENT = "fursay_product_sample_download_click";
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "email", "name", "phone", "address"];
 
 function parseArgs() {
@@ -211,7 +212,7 @@ async function main() {
     if (!noorVariantSourceIds.has(sourceId)) failures.push(`missing_noor_variant_source_id:${sourceId}`);
   }
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
-  for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT]) {
+  for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT, PRODUCT_SAMPLE_DOWNLOAD_EVENT]) {
     if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);
   }
 

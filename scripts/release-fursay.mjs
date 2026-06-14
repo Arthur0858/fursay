@@ -244,7 +244,7 @@ function writeReleaseManifest() {
       affiliateEventTrackingPages: 18,
       productInfoEventTrackingPages: 18,
       eventTrackingSubmitPages: 3,
-      anonymousConversionEvents: 14,
+      anonymousConversionEvents: 15,
       conversionDashboardSections: 6,
       eventAnalyticsBlobFields: 18,
       eventAnalyticsDoubleFields: 1,
@@ -1318,7 +1318,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1675,6 +1675,7 @@ function writeConversionHealth(siteDir, source) {
       "fursay_kit_copy_click",
       "fursay_product_interest_click",
       "fursay_product_info_click",
+      "fursay_product_sample_download_click",
     ],
     coverage: {
       publicStoryPages: release.liveExpectations.pages,
@@ -2333,7 +2334,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -2544,7 +2545,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -2714,7 +2715,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -2853,7 +2854,7 @@ ${cards}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -3402,7 +3403,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -3503,7 +3504,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce6.js"></script>
+  <script src="/js/site-shared-20260615-noorpdf1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

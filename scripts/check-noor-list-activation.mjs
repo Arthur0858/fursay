@@ -32,10 +32,17 @@ function contentType(path) {
   if (ext === ".js") return "text/javascript; charset=utf-8";
   if (ext === ".css") return "text/css; charset=utf-8";
   if (ext === ".json") return "application/json; charset=utf-8";
+  if (ext === ".pdf") return "application/pdf";
   if (ext === ".webp") return "image/webp";
   if (ext === ".png") return "image/png";
   if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
   return "application/octet-stream";
+}
+
+async function readBytes(baseUrl, pathname) {
+  const response = await fetch(`${baseUrl}${pathname}`);
+  if (!response.ok) return { ok: false, status: response.status, bytes: new Uint8Array() };
+  return { ok: true, status: response.status, bytes: new Uint8Array(await response.arrayBuffer()) };
 }
 
 function startServer() {
@@ -104,6 +111,12 @@ async function checkPage(browser, baseUrl, path) {
       leadMagnetText: document.querySelector(".noor-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
       leadMagnetItems: document.querySelectorAll(".noor-lead-magnet li").length,
       sampleCtaGroup: document.querySelector('[data-signup-source="arabic_sample_pack_cta"]')?.getAttribute("data-open-subscribe") || "",
+      sampleDownload: {
+        href: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.getAttribute("href") || "",
+        download: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.hasAttribute("download") || false,
+        stage: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.getAttribute("data-interest-stage") || "",
+        source: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.getAttribute("data-signup-source") || "",
+      },
       hasNoorCheckbox: !!document.querySelector('#subscribeModal input[name="groups"][value="noor"]'),
       hasSubscribeForm: !!document.querySelector("#subscribeModal form"),
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
@@ -136,6 +149,10 @@ async function checkPage(browser, baseUrl, path) {
   if (staticChecks.leadMagnetVariant !== "weekly-sample-v2") failures.push(`bad_lead_magnet_variant:${staticChecks.leadMagnetVariant || "none"}`);
   if (staticChecks.leadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${staticChecks.leadMagnetItems}`);
   if (staticChecks.sampleCtaGroup !== "noor") failures.push(`bad_sample_cta_group:${staticChecks.sampleCtaGroup || "none"}`);
+  if (staticChecks.sampleDownload.href !== "/downloads/noor-worksheet-sample.pdf") failures.push(`bad_sample_download_href:${staticChecks.sampleDownload.href || "none"}`);
+  if (!staticChecks.sampleDownload.download) failures.push("sample_download_missing_download_attr");
+  if (staticChecks.sampleDownload.stage !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_stage:${staticChecks.sampleDownload.stage || "none"}`);
+  if (staticChecks.sampleDownload.source !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_source:${staticChecks.sampleDownload.source || "none"}`);
   if (!/(sample pack|樣張|نموذج)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_sample_copy");
   if (!/(ready|準備好|جاهزة)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_delivery_copy");
   if (!/(free|免費|مجانية)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_free_copy");
@@ -150,6 +167,14 @@ async function checkPage(browser, baseUrl, path) {
   if (modalChecks.kokoChecked) failures.push("koko_unexpectedly_checked");
   if (!modalChecks.bodyLocked) failures.push("body_not_locked");
   if (apiCalls.length) failures.push("api_called_before_submit");
+  const pdf = await readBytes(baseUrl, "/downloads/noor-worksheet-sample.pdf");
+  if (!pdf.ok) {
+    failures.push(`sample_download_pdf_status:${pdf.status}`);
+  } else {
+    const signature = String.fromCharCode(...pdf.bytes.slice(0, 4));
+    if (signature !== "%PDF") failures.push(`sample_download_pdf_signature:${signature || "none"}`);
+    if (pdf.bytes.length < 5000) failures.push(`sample_download_pdf_too_small:${pdf.bytes.length}`);
+  }
 
   return {
     path,
