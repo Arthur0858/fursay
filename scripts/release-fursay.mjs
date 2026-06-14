@@ -150,6 +150,10 @@ function writeReleaseManifest() {
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
       ],
+      productSampleDownloads: [
+        "https://fursay.com/downloads/koko-printable-sample.pdf",
+        "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+      ],
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -257,6 +261,7 @@ function writeReleaseManifest() {
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
+      productSampleDownloadFiles: 2,
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
       visualLayoutChecks: 28,
@@ -282,6 +287,7 @@ function writeReleaseManifest() {
   writeZhProductsPage(siteDir);
   writeArProductsPage(siteDir);
   writeProductSamplePages(siteDir);
+  run("node", ["scripts/build-product-sample-pdfs.mjs"]);
   writeMonetizationRoadmap(siteDir, source);
   writeMonetizationRoadmapPage(siteDir);
   writeConversionHealthPage(siteDir);
@@ -1741,7 +1747,8 @@ function writeConversionHealth(siteDir, source) {
               label: "Preview the Koko 3-page printable sample",
               noindex: true,
               printReady: true,
-              downloadableFormat: "browser_print_to_pdf",
+              downloadableFormat: "pdf_and_browser_print",
+              downloadUrl: "https://fursay.com/downloads/koko-printable-sample.pdf",
               contents: ["Story moment prompt", "Three feeling words", "Draw-and-tell activity"],
               nextCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
             },
@@ -1770,7 +1777,8 @@ function writeConversionHealth(siteDir, source) {
               label: "Preview the Noor 3-minute worksheet sample",
               noindex: true,
               printReady: true,
-              downloadableFormat: "browser_print_to_pdf",
+              downloadableFormat: "pdf_and_browser_print",
+              downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
               contents: ["Three Chinese words with Pinyin", "Arabic parent prompt", "One 3-minute activity"],
               nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
             },
@@ -2766,6 +2774,7 @@ function writeProductSamplePages(siteDir) {
   mkdirSync(resolve(siteDir, "product-samples"), { recursive: true });
   for (const product of manifest.products || []) {
     const spec = samplePageSpec(product);
+    const downloadPath = product.samplePreview?.downloadUrl ? new URL(product.samplePreview.downloadUrl).pathname : "";
     const cards = spec.sections.map(([label, title, body]) => `
           <article class="creator-copy-block">
             <p class="creator-eyebrow">${escapeHtml(label)}</p>
@@ -2805,16 +2814,17 @@ function writeProductSamplePages(siteDir) {
     </header>
     <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
       <h2>What the sample would include</h2>
-      <p class="product-sample-print-note">This page is formatted as a lightweight print view. Use the browser print command to save it as PDF or print one copy for family testing.</p>
+      <p class="product-sample-print-note">This page is formatted as a lightweight print view. You can download the PDF sample or use the browser print command to save one copy for family testing.</p>
       <div class="creator-copy-blocks">
 ${cards}
       </div>
     </section>
     <section class="creator-kit-safety" data-product-sample-print-view="${escapeHtml(product.pack)}">
-      <h2>Print or save the sample</h2>
-      <p>Open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.</p>
+      <h2>Download or print the sample</h2>
+      <p>Download the PDF sample for sharing, or open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.</p>
       <p>No checkout, price, or payment link is connected to this sample. It is only a trust-building preview before a paid pack exists.</p>
       <div class="public-share-actions">
+        <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadPath)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">Download PDF sample</a>
         <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">Print or save as PDF</button>
       </div>
     </section>
@@ -3231,6 +3241,10 @@ function writeSiteHealthManifest(siteDir) {
       productSamplePreviews: [
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
+      ],
+      productSampleDownloads: [
+        "https://fursay.com/downloads/koko-printable-sample.pdf",
+        "https://fursay.com/downloads/noor-worksheet-sample.pdf",
       ],
       monetizationRoadmap: [
         "https://fursay.com/monetization-roadmap",

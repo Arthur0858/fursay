@@ -56,6 +56,10 @@ const DISCOVERY_FILES = [
   "/video-discovery.json",
   "/shortlinks.json",
 ];
+const PUBLIC_DOWNLOADS = [
+  "/downloads/koko-printable-sample.pdf",
+  "/downloads/noor-worksheet-sample.pdf",
+];
 const KNOWN_API_ROUTES = new Set([
   "/api/event",
 ]);
@@ -211,7 +215,7 @@ async function main() {
   const failures = [];
   const checks = [];
   const knownPages = new Set(PUBLIC_PAGES);
-  const knownFiles = new Set(DISCOVERY_FILES);
+  const knownFiles = new Set([...DISCOVERY_FILES, ...PUBLIC_DOWNLOADS]);
   const texts = {};
   const json = {};
 
@@ -322,6 +326,7 @@ async function main() {
   const publicArtifacts = [
     ...PUBLIC_PAGES,
     ...DISCOVERY_FILES,
+    ...PUBLIC_DOWNLOADS,
     ...[...ownUrls].map(pathKey).filter((path) => path.startsWith("/images/qr/")),
   ];
   for (const pathname of [...new Set(publicArtifacts)]) {

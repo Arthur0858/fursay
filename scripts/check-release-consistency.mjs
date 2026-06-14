@@ -34,6 +34,9 @@ const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
   "scripts/check-static-asset-structure.mjs",
   "scripts/check-deploy-readiness.mjs",
 ]);
+const RELEASE_SCRIPT_UTILITY_RUNS = new Set([
+  "scripts/build-product-sample-pdfs.mjs",
+]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -122,7 +125,7 @@ async function releaseScriptGateCoverage(release) {
     missingSyntaxChecks: qualityGates.filter((gate) => gate.startsWith("scripts/") && !syntaxChecks.includes(gate)),
     missingExecutableRuns: qualityGates.filter((gate) => !executableRuns.includes(gate)),
     missingReleaseLiveRuns: expectedLiveGates.filter((gate) => !liveRuns.includes(gate)),
-    extraExecutableRuns: executableRuns.filter((gate) => !qualityGates.includes(gate)),
+    extraExecutableRuns: executableRuns.filter((gate) => !qualityGates.includes(gate) && !RELEASE_SCRIPT_UTILITY_RUNS.has(gate)),
   };
 }
 

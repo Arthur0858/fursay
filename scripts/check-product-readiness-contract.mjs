@@ -9,8 +9,20 @@ const DEFAULT_OUT = "/tmp/fursay-product-readiness-contract";
 const CHECKOUT_NEEDLES = [/gumroad/i, /stripe/i, /ko-fi/i, /buy now/i, /立即購買/i, /(?:^|\s)اشتر(?:\s|$)/i];
 const REQUIRED_PRODUCTS = ["koko-printable-pack", "noor-worksheet-pack"];
 const REQUIRED_SAMPLE_PREVIEWS = [
-  { pack: "koko", path: "/product-samples/koko-printable", canonical: "https://fursay.com/product-samples/koko-printable" },
-  { pack: "noor", path: "/product-samples/noor-worksheet", canonical: "https://fursay.com/product-samples/noor-worksheet" },
+  {
+    pack: "koko",
+    path: "/product-samples/koko-printable",
+    canonical: "https://fursay.com/product-samples/koko-printable",
+    downloadPath: "/downloads/koko-printable-sample.pdf",
+    downloadUrl: "https://fursay.com/downloads/koko-printable-sample.pdf",
+  },
+  {
+    pack: "noor",
+    path: "/product-samples/noor-worksheet",
+    canonical: "https://fursay.com/product-samples/noor-worksheet",
+    downloadPath: "/downloads/noor-worksheet-sample.pdf",
+    downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+  },
 ];
 const REQUIRED_GATE_REQUIREMENTS = [
   "verified_product_interest_clicks",
@@ -89,6 +101,7 @@ function contentType(path) {
   if (ext === ".avif") return "image/avif";
   if (ext === ".png") return "image/png";
   if (ext === ".svg") return "image/svg+xml";
+  if (ext === ".pdf") return "application/pdf";
   return "application/octet-stream";
 }
 
@@ -148,6 +161,21 @@ async function readText(baseUrl, pathname) {
     return response.text();
   }
   return readFile(resolve(SITE_DIR, localFile(pathname)), "utf8");
+}
+
+async function readBytes(baseUrl, pathname) {
+  if (baseUrl) {
+    const response = await fetch(`${baseUrl}${pathname}`, { cache: "no-store" });
+    if (!response.ok) {
+      return { ok: false, status: response.status, bytes: new Uint8Array() };
+    }
+    return { ok: true, status: response.status, bytes: new Uint8Array(await response.arrayBuffer()) };
+  }
+  try {
+    return { ok: true, status: 200, bytes: await readFile(resolve(SITE_DIR, pathname.replace(/^\//, ""))) };
+  } catch {
+    return { ok: false, status: 0, bytes: new Uint8Array() };
+  }
 }
 
 async function readJson(baseUrl, pathname) {
@@ -563,6 +591,13 @@ async function main() {
   if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_ar_social_entry_missing_source");
   if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_ar_social_entry_missing_campaign");
   if (!products.trafficEntryPoints?.arSocialProfileLinks?.includes("utm_content=links_ar_product_interest")) failures.push("products_manifest_ar_social_entry_missing_content");
+  if (release.liveExpectations?.productSampleDownloadFiles !== REQUIRED_SAMPLE_PREVIEWS.length) {
+    failures.push(`release_product_sample_download_files:${release.liveExpectations?.productSampleDownloadFiles || "none"}`);
+  }
+  const healthDownloads = siteHealth.routes?.productSampleDownloads || [];
+  for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
+    if (!healthDownloads.includes(sample.downloadUrl)) failures.push(`site_health_missing_sample_download:${sample.pack}`);
+  }
   if (!linksHtml.includes('href="/links.json"')) failures.push("links_page_missing_manifest_link");
   if (!linksHtml.includes("Printable and worksheet packs")) failures.push("links_page_missing_product_interest_label");
   if (!linksHtml.includes("繁中產品等候名單")) failures.push("links_page_missing_zh_product_interest_label");
@@ -583,8 +618,17 @@ async function main() {
     if (manifestSample?.url !== sample.canonical) failures.push(`products_manifest_bad_sample_url:${sample.pack}:${manifestSample?.url || "none"}`);
     if (manifestSample?.noindex !== true) failures.push(`products_manifest_sample_not_noindex:${sample.pack}`);
     if (manifestSample?.printReady !== true) failures.push(`products_manifest_sample_not_print_ready:${sample.pack}`);
-    if (manifestSample?.downloadableFormat !== "browser_print_to_pdf") failures.push(`products_manifest_sample_bad_download_format:${sample.pack}:${manifestSample?.downloadableFormat || "none"}`);
+    if (manifestSample?.downloadableFormat !== "pdf_and_browser_print") failures.push(`products_manifest_sample_bad_download_format:${sample.pack}:${manifestSample?.downloadableFormat || "none"}`);
+    if (manifestSample?.downloadUrl !== sample.downloadUrl) failures.push(`products_manifest_sample_bad_download_url:${sample.pack}:${manifestSample?.downloadUrl || "none"}`);
     if ((manifestSample?.contents || []).length < 3) failures.push(`products_manifest_sample_missing_contents:${sample.pack}`);
+    const pdf = await readBytes(args.baseUrl, sample.downloadPath);
+    if (!pdf.ok) {
+      failures.push(`sample_download_pdf_status:${sample.pack}:${pdf.status}`);
+    } else {
+      const signature = String.fromCharCode(...pdf.bytes.slice(0, 4));
+      if (signature !== "%PDF") failures.push(`sample_download_pdf_signature:${sample.pack}:${signature || "none"}`);
+      if (pdf.bytes.length < 5000) failures.push(`sample_download_pdf_too_small:${sample.pack}:${pdf.bytes.length}`);
+    }
     if (!html.includes(`href="${sample.path}"`)) failures.push(`products_page_missing_sample_link:${sample.pack}`);
     if (!zhHtml.includes(`href="${sample.path}"`)) failures.push(`zh_products_page_missing_sample_link:${sample.pack}`);
     if (!arHtml.includes(`href="${sample.path}"`)) failures.push(`ar_products_page_missing_sample_link:${sample.pack}`);
@@ -598,6 +642,10 @@ async function main() {
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
     if (!pageHtml.includes("No payment today")) failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
     if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
+    if (!pageHtml.includes(`href="${sample.downloadPath}"`)) failures.push(`sample_page_missing_pdf_download_href:${sample.pack}`);
+    if (!pageHtml.includes(`data-product-sample-download="${sample.pack}"`)) failures.push(`sample_page_missing_pdf_download_tracking:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="sample_pdf_download"')) failures.push(`sample_page_missing_pdf_download_stage:${sample.pack}`);
+    if (!pageHtml.includes(`data-signup-source="sample_pdf_download_${sample.pack}"`)) failures.push(`sample_page_missing_pdf_download_source:${sample.pack}`);
     if (!pageHtml.includes(`data-print-product-sample="${sample.pack}"`)) failures.push(`sample_page_missing_print_button:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_print"')) failures.push(`sample_page_missing_print_stage:${sample.pack}`);
     if (!pageHtml.includes(`data-signup-source="sample_print_${sample.pack}"`)) failures.push(`sample_page_missing_print_source:${sample.pack}`);

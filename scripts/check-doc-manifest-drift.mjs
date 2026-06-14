@@ -196,6 +196,10 @@ async function checkLocalDocs(failures, details) {
     `${ORIGIN}/product-samples/koko-printable`,
     `${ORIGIN}/product-samples/noor-worksheet`,
   ], normalizeArray(siteHealth.routes?.productSamplePreviews)));
+  failures.push(...exactArrayFailures("site_health_product_sample_downloads", [
+    `${ORIGIN}/downloads/koko-printable-sample.pdf`,
+    `${ORIGIN}/downloads/noor-worksheet-sample.pdf`,
+  ], normalizeArray(siteHealth.routes?.productSampleDownloads)));
   failures.push(...exactArrayFailures("site_health_monetization_roadmap", [
     `${ORIGIN}/monetization-roadmap`,
     `${ORIGIN}/monetization-roadmap.json`,

@@ -130,6 +130,10 @@
     "productSamplePreviews": [
       "https://fursay.com/product-samples/koko-printable",
       "https://fursay.com/product-samples/noor-worksheet"
+    ],
+    "productSampleDownloads": [
+      "https://fursay.com/downloads/koko-printable-sample.pdf",
+      "https://fursay.com/downloads/noor-worksheet-sample.pdf"
     ]
   },
   "funnels": {
@@ -491,7 +495,8 @@
             "label": "Preview the Koko 3-page printable sample",
             "noindex": true,
             "printReady": true,
-            "downloadableFormat": "browser_print_to_pdf",
+            "downloadableFormat": "pdf_and_browser_print",
+            "downloadUrl": "https://fursay.com/downloads/koko-printable-sample.pdf",
             "contents": [
               "Story moment prompt",
               "Three feeling words",
@@ -532,7 +537,8 @@
             "label": "Preview the Noor 3-minute worksheet sample",
             "noindex": true,
             "printReady": true,
-            "downloadableFormat": "browser_print_to_pdf",
+            "downloadableFormat": "pdf_and_browser_print",
+            "downloadUrl": "https://fursay.com/downloads/noor-worksheet-sample.pdf",
             "contents": [
               "Three Chinese words with Pinyin",
               "Arabic parent prompt",
