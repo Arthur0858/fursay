@@ -143,6 +143,56 @@ function attr(tag, name) {
   return match?.[2] || "";
 }
 
+function structuredDataBlocks(html, pagePath, failures) {
+  const blocks = [];
+  const matches = [...html.matchAll(/<script\b([^>]*)type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  for (let index = 0; index < matches.length; index += 1) {
+    try {
+      blocks.push(JSON.parse(matches[index][2]));
+    } catch (error) {
+      failures.push(`product_json_ld_parse:${pagePath}:${index}:${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  return blocks;
+}
+
+function graphNodes(blocks) {
+  return blocks.flatMap((block) => (Array.isArray(block?.["@graph"]) ? block["@graph"] : [block]));
+}
+
+function itemListProductItems(blocks) {
+  return graphNodes(blocks)
+    .filter((node) => node?.["@type"] === "ItemList")
+    .flatMap((list) => list.itemListElement || [])
+    .map((item) => item?.item)
+    .filter((item) => item?.["@type"] === "Product");
+}
+
+function checkProductSchema(html, pagePath, expectedUrl, expectedNames, localizedNeedle, failures) {
+  const blocks = structuredDataBlocks(html, pagePath, failures);
+  const nodes = graphNodes(blocks);
+  const webpage = nodes.find((node) => node?.["@type"] === "WebPage");
+  const products = itemListProductItems(blocks);
+  if (blocks.length < 1) failures.push(`product_schema_missing_json_ld:${pagePath}`);
+  if (webpage?.url !== expectedUrl) failures.push(`product_schema_webpage_url:${pagePath}:${webpage?.url || "none"}`);
+  if (pagePath === "/zh/products" && webpage?.inLanguage !== "zh-TW") failures.push(`product_schema_zh_language:${webpage?.inLanguage || "none"}`);
+  if (products.length !== expectedNames.length) failures.push(`product_schema_product_count:${pagePath}:${products.length}`);
+  for (const name of expectedNames) {
+    if (!products.some((product) => product.name === name)) failures.push(`product_schema_missing_name:${pagePath}:${name}`);
+  }
+  for (const product of products) {
+    const offer = product.offers || {};
+    if (offer?.["@type"] !== "Offer") failures.push(`product_schema_offer_type:${pagePath}:${product.name || "unnamed"}`);
+    if (offer.availability !== "https://schema.org/PreOrder") failures.push(`product_schema_offer_availability:${pagePath}:${product.name || "unnamed"}:${offer.availability || "none"}`);
+    if (offer.price !== "0") failures.push(`product_schema_offer_price:${pagePath}:${product.name || "unnamed"}:${offer.price || "none"}`);
+    if (offer.url !== expectedUrl) failures.push(`product_schema_offer_url:${pagePath}:${product.name || "unnamed"}:${offer.url || "none"}`);
+    const description = `${product.description || ""} ${offer.description || ""}`;
+    if (!description.includes(localizedNeedle)) failures.push(`product_schema_missing_interest_copy:${pagePath}:${product.name || "unnamed"}`);
+    if (product.potentialAction?.["@type"] !== "RegisterAction") failures.push(`product_schema_register_action:${pagePath}:${product.name || "unnamed"}`);
+    if (product.potentialAction?.target !== expectedUrl) failures.push(`product_schema_register_target:${pagePath}:${product.name || "unnamed"}:${product.potentialAction?.target || "none"}`);
+  }
+}
+
 function externalPaymentHrefs(html) {
   return [...html.matchAll(/<a\b[^>]*href=(["'])(.*?)\1[^>]*>/gi)]
     .map((match) => match[2])
@@ -284,8 +334,22 @@ async function main() {
   for (const needle of [/Commit\s+[a-f0-9]{7,}/i, /JSON manifest/i, /Conversion health/i]) {
     if (needle.test(html)) failures.push(`products_page_exposes_internal_copy:${needle}`);
   }
-  if (!html.includes('"@type":"Product"') || !html.includes('"@type":"Offer"')) failures.push("products_page_missing_product_offer_schema");
-  if (!html.includes('"RegisterAction"')) failures.push("products_page_missing_register_action_schema");
+  checkProductSchema(
+    html,
+    "/products",
+    "https://fursay.com/products",
+    ["Koko printable story pack", "Noor 3-minute worksheet pack"],
+    "Interest",
+    failures,
+  );
+  checkProductSchema(
+    zhHtml,
+    "/zh/products",
+    "https://fursay.com/zh/products",
+    ["叩叩可列印故事包等候名單", "努爾 3 分鐘中文學習單等候名單"],
+    "興趣",
+    failures,
+  );
 
   for (const needle of CHECKOUT_NEEDLES) {
     if (needle.test(html)) failures.push(`products_page_checkout_language_or_link:${needle}`);

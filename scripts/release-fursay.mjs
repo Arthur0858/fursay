@@ -1683,6 +1683,65 @@ function productsJsonLd(manifest) {
   });
 }
 
+function zhProductsJsonLd(manifest) {
+  const products = (manifest.products || []).map((product) => {
+    const copy = zhProductCopy(product);
+    return {
+      "@type": "Product",
+      name: copy.label,
+      description: `${copy.format} 目前只收集興趣信號，今天不會收費。`,
+      brand: {
+        "@type": "Brand",
+        name: "Fursay",
+      },
+      audience: {
+        "@type": "PeopleAudience",
+        audienceType: copy.audience,
+      },
+      offers: {
+        "@type": "Offer",
+        availability: "https://schema.org/PreOrder",
+        price: "0",
+        priceCurrency: "USD",
+        description: "等候名單與興趣驗證階段。付費版本尚未開放，這個頁面不會向家庭收費。",
+        url: "https://fursay.com/zh/products",
+      },
+      potentialAction: {
+        "@type": "RegisterAction",
+        target: "https://fursay.com/zh/products",
+        name: copy.button,
+      },
+    };
+  });
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://fursay.com/zh/products#webpage",
+        url: "https://fursay.com/zh/products",
+        name: "Fursay 親子可列印故事包等候名單",
+        description: "加入叩叩可列印故事包或努爾 3 分鐘學習單等候名單。先領免費故事包，今天不會收費。",
+        inLanguage: "zh-TW",
+        isPartOf: {
+          "@type": "WebSite",
+          name: "Fursay",
+          url: "https://fursay.com/",
+        },
+      },
+      {
+        "@type": "ItemList",
+        name: "Fursay 親子產品等候名單",
+        itemListElement: products.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item,
+        })),
+      },
+    ],
+  });
+}
+
 function writeProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
   const products = (manifest.products || [])
@@ -1932,6 +1991,7 @@ function writeZhProductsPage(siteDir) {
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+  <script type="application/ld+json">${zhProductsJsonLd(manifest)}</script>
 </head>
 <body class="picture-world creator-kit-page products-page product-waitlist-page" data-page-pack="products">
   <main class="creator-kit-shell">
