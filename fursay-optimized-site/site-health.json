@@ -119,6 +119,7 @@
     ],
     "products": [
       "https://fursay.com/products",
+      "https://fursay.com/zh/products",
       "https://fursay.com/products.json"
     ]
   },

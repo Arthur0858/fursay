@@ -270,6 +270,12 @@ const CHECKS = [
     contentTypeIncludes: "text/html",
   },
   {
+    path: "/zh/products",
+    status: 200,
+    cacheIncludes: ["public", "max-age=300", "must-revalidate"],
+    contentTypeIncludes: "text/html",
+  },
+  {
     path: "/llms.txt",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],

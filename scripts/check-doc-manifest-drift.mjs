@@ -186,6 +186,7 @@ async function checkLocalDocs(failures, details) {
   failures.push(...exactArrayFailures("site_health_creator_placement", shortlinkUrls(shortlinks, (route) => /^\/creator\/[^/]+\/[^/]+$/.test(route.path)), normalizeArray(siteHealth.routes?.creatorPlacement)));
   failures.push(...exactArrayFailures("site_health_products", [
     `${ORIGIN}/products`,
+    `${ORIGIN}/zh/products`,
     `${ORIGIN}/products.json`,
   ], normalizeArray(siteHealth.routes?.products)));
   for (const pack of ["koko", "noor"]) {

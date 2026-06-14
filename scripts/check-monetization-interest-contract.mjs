@@ -102,6 +102,8 @@ async function main() {
     if (infoLinks.length < 1) failures.push(`${pathname}:missing_product_info_link`);
     for (const link of infoLinks) {
       if (!link.href.includes("/products?")) failures.push(`${pathname}:product_info_link_bad_target`);
+      if (pathname.startsWith("/zh/") && !link.href.startsWith("/zh/products?")) failures.push(`${pathname}:product_info_link_not_localized:${link.href}`);
+      if (!pathname.startsWith("/zh/") && link.href.startsWith("/zh/products?")) failures.push(`${pathname}:product_info_link_unexpected_zh_target:${link.href}`);
       if (!link.href.includes("utm_campaign=product_interest_validation")) failures.push(`${pathname}:product_info_link_missing_campaign`);
       if (!link.href.includes("utm_content=")) failures.push(`${pathname}:product_info_link_missing_content`);
     }

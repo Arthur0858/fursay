@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "f4dbe7b",
-    "summary": "Include product info in intent reporting"
+    "commit": "c83235c",
+    "summary": "Add product validation plans"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",

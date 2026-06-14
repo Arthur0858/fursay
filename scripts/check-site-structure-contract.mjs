@@ -295,7 +295,7 @@ async function validateLocalHtmlInventory(context, failures, data) {
     .map((file) => relative(context.root, file).split("\\").join("/"))
     .sort();
   data.htmlFiles = htmlFiles;
-  if (htmlFiles.length !== 25) failures.push(`html_file_count:${htmlFiles.length}`);
+  if (htmlFiles.length !== 26) failures.push(`html_file_count:${htmlFiles.length}`);
   for (const file of htmlFiles) {
     const html = await readLocalText(context.root, file);
     for (const href of [...stylesheetHrefs(html), ...scriptSrcs(html)]) {

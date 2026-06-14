@@ -242,12 +242,12 @@ function writeReleaseManifest() {
       noorLeadMagnetPages: 3,
       productInterestLinks: 18,
       productInfoLinks: 18,
-      productLandingPages: 1,
+      productLandingPages: 2,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 61,
+      cacheHeaderChecks: 62,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -264,6 +264,7 @@ function writeReleaseManifest() {
   writeConversionHealth(siteDir, source);
   writeProductsManifest(siteDir, source);
   writeProductsPage(siteDir);
+  writeZhProductsPage(siteDir);
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
 }
@@ -467,6 +468,7 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/zh/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/ar/episodes/noor-greetings", noorGreetingsAlternates, "0.6"),
     sitemapUrl("https://fursay.com/products", {}, "0.5"),
+    sitemapUrl("https://fursay.com/zh/products", {}, "0.5"),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -1818,6 +1820,150 @@ ${products}
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
 }
 
+function zhProductCopy(product) {
+  if (product.pack === "noor") {
+    return {
+      eyebrow: "努爾 3 分鐘學習單",
+      label: "努爾 3 分鐘中文學習單等候名單",
+      audience: "給想用阿語家長提示，陪孩子做一點點中文練習的家庭。",
+      outcome: "從一個短故事開始，練三個中文詞、看拼音、用阿語提示完成一個 3 分鐘小活動。",
+      bridge: "/zh/arabic?subscribe=noor&utm_source=zh_products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
+      bridgeLabel: "先領免費努爾故事包",
+      button: "加入努爾等候名單",
+    };
+  }
+  return {
+    eyebrow: "叩叩英文可列印包",
+    label: "叩叩可列印故事包等候名單",
+    audience: "給想在短故事後，陪孩子練英文情緒詞與畫畫活動的華語家庭。",
+    outcome: "把一集叩叩故事變成一張安靜的親子練習頁：情緒詞、故事提示、孩子可以畫下來的空間。",
+    bridge: "/zh/koko?subscribe=koko&utm_source=zh_products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
+    bridgeLabel: "先領免費叩叩故事包",
+    button: "加入叩叩等候名單",
+  };
+}
+
+function writeZhProductsPage(siteDir) {
+  const manifest = readJson(resolve(siteDir, "products.json"));
+  const products = (manifest.products || [])
+    .map((product) => {
+      const copy = zhProductCopy(product);
+      const source = product.pack === "noor" ? "zh_product_page_noor_worksheet" : "zh_product_page_koko_printable";
+      return `
+      <article class="creator-pack product-waitlist-card" data-product-card="${escapeHtml(product.id)}">
+        <div class="creator-pack-copy">
+          <p class="creator-eyebrow">${escapeHtml(copy.eyebrow)}</p>
+          <h2>${escapeHtml(copy.label)}</h2>
+          <p>${escapeHtml(copy.audience)}</p>
+          <p>${escapeHtml(copy.outcome)}</p>
+          <p><strong>今天不會收費。</strong> 只有在你想收到未來測試通知時，才需要加入等候名單。</p>
+        </div>
+        <div class="creator-copy-blocks">
+          <article>
+            <h3>預計會包含什麼</h3>
+            <ul>
+              ${(product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
+            </ul>
+          </article>
+          <article data-product-validation-plan="${escapeHtml(product.id)}">
+            <h3>我們先觀察什麼</h3>
+            <p>${escapeHtml(product.validationPlan?.audience || copy.audience)}</p>
+            <p>付費版本開放前，我們會先看產品頁點擊、等候名單點擊，以及真實故事包訂閱信號。</p>
+            <p>${escapeHtml(product.validationPlan?.nextDecision || "只有在看得到真實家庭需求後，才會製作測試樣張。")}</p>
+          </article>
+        </div>
+        <div class="public-share-actions">
+          <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
+          <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
+        </div>
+      </article>`;
+    })
+    .join("\n");
+  const html = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fursay 親子可列印故事包等候名單</title>
+  <meta name="description" content="加入 Fursay 叩叩可列印故事包與努爾 3 分鐘學習單等候名單。先領免費故事包，付費版本尚未開放，今天不會收費。">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="https://fursay.com/zh/products">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Fursay 親子可列印故事包等候名單">
+  <meta property="og:description" content="先領免費故事包，再加入叩叩或努爾可列印包等候名單。今天不會收費。">
+  <meta property="og:url" content="https://fursay.com/zh/products">
+  <meta property="og:image" content="https://fursay.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Fursay 親子雙語故事世界">
+  <meta property="og:locale" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fursay 親子可列印故事包等候名單">
+  <meta name="twitter:description" content="加入叩叩或努爾可列印包等候名單。先領免費故事包，今天不會收費。">
+  <meta name="twitter:image" content="https://fursay.com/og-image.png">
+  <meta name="twitter:image:alt" content="Fursay 親子雙語故事世界">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+</head>
+<body class="picture-world creator-kit-page products-page product-waitlist-page" data-page-pack="products">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero product-waitlist-hero" data-product-hero>
+      <p class="creator-eyebrow">Fursay 親子可列印包</p>
+      <h1>先領免費故事包，再決定是否想要可列印練習</h1>
+      <p>叩叩適合英文情緒詞陪讀，努爾適合阿語家庭做 3 分鐘中文練習。付費版本尚未開放，這個頁面不會收費。</p>
+      <div class="product-trust-strip" aria-label="產品等候狀態">
+        <span>今天不會收費</span>
+        <span>先領免費故事包</span>
+        <span>只收集興趣信號</span>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-product-readiness-summary>
+      <h2>等候名單怎麼運作</h2>
+      <div class="product-step-grid">
+        <article>
+          <h3>1. 選一個故事世界</h3>
+          <p>叩叩偏英文情緒詞，努爾偏中文詞語加阿語家長提示。</p>
+        </article>
+        <article>
+          <h3>2. 先試免費故事包</h3>
+          <p>按鈕會開啟既有故事包訂閱表單，讓家庭先試試節奏。</p>
+        </article>
+        <article>
+          <h3>3. 有足夠需求才做付費包</h3>
+          <p>如果興趣信號足夠，Fursay 才會公開定價、客服與退款說明。</p>
+        </article>
+      </div>
+    </section>
+${products}
+    <section class="creator-kit-safety" data-product-readiness-gate>
+      <h2>付費包開放前</h2>
+      <p>付費學習單或可列印包會在付款前清楚標示；聯盟書單與自有產品會分開說明。</p>
+      <p>任何付款連結啟用前，都會先公開退款與支援方式。</p>
+      <p>目前目標是確認家庭是否真的想要故事後的可列印練習。這頁沒有價格、購買按鈕或付款連結。</p>
+    </section>
+  </main>
+  <div class="modal-overlay" id="subscribeModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close-subscribe aria-label="關閉">&times;</button>
+      <span class="modal-emoji">📬</span>
+      <div class="modal-title">加入故事包名單</div>
+      <p class="modal-sub">選擇叩叩或努爾，收到每週故事包與未來測試通知。今天不會收費。</p>
+      <form id="subscribeForm">
+        <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
+        <div class="modal-field"><label>我有興趣</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>叩叩森林英文故事</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>努爾阿語中文故事</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">寄給我每週故事包</button>
+      </form>
+      <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
+    </div>
+  </div>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
+</body>
+</html>`;
+  writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
+}
+
 function healthMetric(label, value, note = "") {
   return `<div>
                 <dt>${escapeHtml(label)}</dt>
@@ -2023,6 +2169,7 @@ function writeSiteHealthManifest(siteDir) {
       ],
       products: [
         "https://fursay.com/products",
+        "https://fursay.com/zh/products",
         "https://fursay.com/products.json",
       ],
     },

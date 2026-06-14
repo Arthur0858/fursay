@@ -142,7 +142,7 @@ async function clickProductInterest(page, pack) {
   }, pack);
 }
 
-async function checkProductInteraction(baseUrl) {
+async function checkProductInteraction(baseUrl, productPath = "/products") {
   const failures = [];
   const checks = [];
   const browser = await chromium.launch({ headless: true });
@@ -167,7 +167,7 @@ async function checkProductInteraction(baseUrl) {
           body: JSON.stringify({ success: false, message: "contract stub" }),
         });
       });
-      await page.goto(`${baseUrl}/products?utm_source=contract&utm_medium=browser&utm_campaign=product_interest_validation&utm_content=${pack}_interaction`, {
+      await page.goto(`${baseUrl}${productPath}?utm_source=contract&utm_medium=browser&utm_campaign=product_interest_validation&utm_content=${pack}_interaction`, {
         waitUntil: "domcontentloaded",
         timeout: 45000,
       });
@@ -192,7 +192,7 @@ async function checkProductInteraction(baseUrl) {
       if (!state.modalOpen) failures.push(`product_interaction:${pack}:modal_not_open`);
       if (!state.checkedGroups.includes(pack)) failures.push(`product_interaction:${pack}:modal_not_preselected`);
       if (state.modalPreselect !== pack) failures.push(`product_interaction:${pack}:modal_preselect:${state.modalPreselect || "none"}`);
-      if (productEvent?.detail?.path !== "/products") failures.push(`product_interaction:${pack}:event_path:${productEvent?.detail?.path || "none"}`);
+      if (productEvent?.detail?.path !== productPath) failures.push(`product_interaction:${productPath}:${pack}:event_path:${productEvent?.detail?.path || "none"}`);
       if (productEvent?.detail?.product_interest !== pack) failures.push(`product_interaction:${pack}:event_interest:${productEvent?.detail?.product_interest || "none"}`);
       if (productEvent?.detail?.interest_stage !== "waitlist") failures.push(`product_interaction:${pack}:event_stage:${productEvent?.detail?.interest_stage || "none"}`);
       if (productEvent?.detail?.signup_source !== clickMeta?.signupSource) failures.push(`product_interaction:${pack}:event_source:${productEvent?.detail?.signup_source || "none"}`);
@@ -203,6 +203,7 @@ async function checkProductInteraction(baseUrl) {
       if (privateHits.length) failures.push(`product_interaction:${pack}:event_payload_private_needles:${privateHits.join(",")}`);
       if (!eventPayloads.some((payload) => payload.event === "fursay_product_interest_click")) failures.push(`product_interaction:${pack}:api_event_missing_product_interest`);
       checks.push({
+        productPath,
         pack,
         clickMeta,
         modalOpen: state.modalOpen,
@@ -225,6 +226,7 @@ async function main() {
   let localServer = null;
   let interaction = null;
   const html = await readText(args.baseUrl, "/products");
+  const zhHtml = await readText(args.baseUrl, "/zh/products");
   const products = await readJson(args.baseUrl, "/products.json");
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
@@ -233,14 +235,19 @@ async function main() {
   const linksHtml = await readText(args.baseUrl, "/links");
 
   if (!html.includes('<link rel="canonical" href="https://fursay.com/products">')) failures.push("products_page_bad_canonical");
+  if (!zhHtml.includes('<link rel="canonical" href="https://fursay.com/zh/products">')) failures.push("zh_products_page_bad_canonical");
+  if (!zhHtml.includes('<html lang="zh-TW">')) failures.push("zh_products_page_bad_lang");
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
   if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
   if (!html.includes("site-shared-20260613-commerce4.js")) failures.push("products_page_missing_shared_js");
+  if (!zhHtml.includes("site-shared-20260613-commerce4.js")) failures.push("zh_products_page_missing_shared_js");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
+  if (!zhHtml.includes("今天不會收費")) failures.push("zh_products_page_missing_no_payment_copy");
+  if (!zhHtml.includes("先領免費故事包")) failures.push("zh_products_page_missing_free_pack_copy");
   if (/<div class="creator-kit-meta">/i.test(html)) failures.push("products_page_exposes_ops_meta");
   for (const needle of [/Commit\s+[a-f0-9]{7,}/i, /JSON manifest/i, /Conversion health/i]) {
     if (needle.test(html)) failures.push(`products_page_exposes_internal_copy:${needle}`);
@@ -250,13 +257,19 @@ async function main() {
 
   for (const needle of CHECKOUT_NEEDLES) {
     if (needle.test(html)) failures.push(`products_page_checkout_language_or_link:${needle}`);
+    if (needle.test(zhHtml)) failures.push(`zh_products_page_checkout_language_or_link:${needle}`);
   }
   const paymentHrefs = externalPaymentHrefs(html);
+  const zhPaymentHrefs = externalPaymentHrefs(zhHtml);
   if (paymentHrefs.length) failures.push(`products_page_payment_hrefs:${paymentHrefs.join(",")}`);
+  if (zhPaymentHrefs.length) failures.push(`zh_products_page_payment_hrefs:${zhPaymentHrefs.join(",")}`);
 
   const productButtons = [...html.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
     .map((match) => ({ pack: match[2], tag: match[0] }));
+  const zhProductButtons = [...zhHtml.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
+    .map((match) => ({ pack: match[2], tag: match[0] }));
   if (productButtons.length !== 2) failures.push(`products_page_product_interest_buttons:${productButtons.length}`);
+  if (zhProductButtons.length !== 2) failures.push(`zh_products_page_product_interest_buttons:${zhProductButtons.length}`);
   for (const button of productButtons) {
     if (attr(button.tag, "data-interest-stage") !== "waitlist") failures.push(`product_button_bad_stage:${button.pack}`);
     if (!attr(button.tag, "data-signup-source").startsWith(`product_page_${button.pack}`)) failures.push(`product_button_bad_source:${button.pack}`);
@@ -284,6 +297,7 @@ async function main() {
     if ((product.plannedIncludes || []).length < 3) failures.push(`product_missing_planned_includes:${product.id}`);
     const plan = product.validationPlan || {};
     if (!html.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`products_page_missing_validation_plan:${product.id}`);
+    if (!zhHtml.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`zh_products_page_missing_validation_plan:${product.id}`);
     if (!plan.audience || plan.audience.length < 40) failures.push(`product_validation_missing_audience:${product.id}`);
     if (!plan.freeBridge?.startsWith("/")) failures.push(`product_validation_missing_free_bridge:${product.id}`);
     if (!plan.nextDecision || plan.nextDecision.length < 60) failures.push(`product_validation_missing_next_decision:${product.id}`);
@@ -305,21 +319,26 @@ async function main() {
 
   if (release.deployment?.productsPage !== "https://fursay.com/products") failures.push("release_missing_products_page");
   if (release.deployment?.productsManifest !== "https://fursay.com/products.json") failures.push("release_missing_products_manifest");
-  if (release.liveExpectations?.productLandingPages !== 1) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
+  if (release.liveExpectations?.productLandingPages !== 2) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== products.products?.length) failures.push("release_owned_product_spec_mismatch");
   if (release.liveExpectations?.productValidationPlans !== products.products?.filter((product) => product.validationPlan).length) failures.push("release_product_validation_plan_mismatch");
   if (!release.qualityGates?.includes("scripts/check-product-readiness-contract.mjs")) failures.push("release_missing_product_readiness_gate");
   if (!siteHealth.routes?.products?.includes("https://fursay.com/products")) failures.push("site_health_missing_products_route");
+  if (!siteHealth.routes?.products?.includes("https://fursay.com/zh/products")) failures.push("site_health_missing_zh_products_route");
   if (!siteHealth.generatedFrom?.includes("/products.json")) failures.push("site_health_missing_products_generated_from");
   if (siteHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("site_health_checkout_enabled");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
 
   try {
     if (args.baseUrl) {
-      interaction = await checkProductInteraction(args.baseUrl);
+      const enInteraction = await checkProductInteraction(args.baseUrl, "/products");
+      const zhInteraction = await checkProductInteraction(args.baseUrl, "/zh/products");
+      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks] };
     } else {
       localServer = await startServer();
-      interaction = await checkProductInteraction(localServer.baseUrl);
+      const enInteraction = await checkProductInteraction(localServer.baseUrl, "/products");
+      const zhInteraction = await checkProductInteraction(localServer.baseUrl, "/zh/products");
+      interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks] };
     }
     failures.push(...interaction.failures);
   } finally {

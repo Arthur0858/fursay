@@ -65,7 +65,7 @@ Live smoke must keep these invariants:
 
 - 9 public pages pass audit with `badCount 0`
 - `/api/subscribe` smoke remains intercepted-only and does not call MailerLite
-- `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/links`, `/links.json`, `/conversion-health`, `/conversion-health.json`, `/products`, `/products.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
+- `/release.json`, `/site-health.json`, `/deploy-readiness`, `/deploy-readiness.json`, `/campaigns.json`, `/creator-kit.json`, `/share-kit.json`, `/traffic-launch.json`, `/links`, `/links.json`, `/conversion-health`, `/conversion-health.json`, `/products`, `/zh/products`, `/products.json`, `/video-discovery.json`, `/shortlinks.json`, `/sitemap.xml`, and `/robots.txt` are readable
 - `/creator-kit`, `/share-kit`, `/traffic-launch`, `/conversion-health`, and `/products` render their public copy/launch/growth/product surfaces without calling MailerLite
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
 - `/api/event` receives anonymous conversion events and falls back to Cloudflare Worker logs until the account enables the `FURSAY_EVENTS` Analytics Engine dataset `fursay_events`; no email, name, token, address, or subscriber payload is written
