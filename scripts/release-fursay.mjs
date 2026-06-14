@@ -348,7 +348,7 @@ function writeDeployReadinessPage(siteDir, manifest) {
   <link rel="canonical" href="https://fursay.com/deploy-readiness">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page deploy-readiness-page">
   <main class="creator-kit-shell">
@@ -756,7 +756,7 @@ function writeLinksPage(siteDir, links) {
   <link rel="canonical" href="https://fursay.com/links">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page social-links-page">
   <main class="creator-kit-shell">
@@ -1122,7 +1122,7 @@ ${trafficLaunchChannelRows(item.channels)}
   <link rel="canonical" href="https://fursay.com/traffic-launch">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page traffic-launch-page">
   <main class="creator-kit-shell">
@@ -1564,99 +1564,205 @@ function writeProductsManifest(siteDir, source) {
 
 function productButton(product) {
   const source = product.pack === "noor" ? "product_page_noor_worksheet" : "product_page_koko_printable";
-  return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} interest list</button>`;
+  return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} waitlist</button>`;
+}
+
+function productPublicCopy(product) {
+  if (product.pack === "noor") {
+    return {
+      eyebrow: "Noor Chinese-Arabic worksheet",
+      label: "Noor 3-minute worksheet pack",
+      audience: "For families who want a tiny Chinese practice ritual with Arabic parent prompts.",
+      outcome: "Use one short story moment to practice three Chinese words, hear the parent prompt in Arabic, and finish a quick activity before attention fades.",
+      format: "Printable PDF worksheets with Pinyin, Arabic prompts, and one 3-minute activity.",
+      bridge: "/arabic?subscribe=noor&utm_source=products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
+      bridgeLabel: "Get the free Noor story pack",
+    };
+  }
+  return {
+    eyebrow: "Koko English printable",
+    label: "Koko printable story pack",
+    audience: "For Mandarin-speaking families who want English feelings practice after a short forest story.",
+    outcome: "Turn one Koko episode into a calm parent-child activity with emotion words, a drawing prompt, and one printable page.",
+    format: "Printable PDF pages with story prompts, emotion word practice, and parent-child drawing space.",
+    bridge: "/koko?subscribe=koko&utm_source=products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
+    bridgeLabel: "Get the free Koko story pack",
+  };
+}
+
+function productsJsonLd(manifest) {
+  const products = (manifest.products || []).map((product) => {
+    const copy = productPublicCopy(product);
+    return {
+      "@type": "Product",
+      name: copy.label,
+      description: `${copy.format} Interest list only; no payment today.`,
+      brand: {
+        "@type": "Brand",
+        name: "Fursay",
+      },
+      audience: {
+        "@type": "PeopleAudience",
+        audienceType: copy.audience,
+      },
+      offers: {
+        "@type": "Offer",
+        availability: "https://schema.org/PreOrder",
+        price: "0",
+        priceCurrency: "USD",
+        description: "Interest validation only. Paid access is not open, and the family is not charged on this page.",
+        url: "https://fursay.com/products",
+      },
+      potentialAction: {
+        "@type": "RegisterAction",
+        target: "https://fursay.com/products",
+        name: `Join the ${product.pack === "noor" ? "Noor" : "Koko"} waitlist`,
+      },
+    };
+  });
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://fursay.com/products#webpage",
+        url: "https://fursay.com/products",
+        name: "Fursay printable story pack waitlist",
+        description: "Join the Koko printable pack or Noor 3-minute worksheet pack waitlist. No payment today.",
+        isPartOf: {
+          "@type": "WebSite",
+          name: "Fursay",
+          url: "https://fursay.com/",
+        },
+      },
+      {
+        "@type": "ItemList",
+        name: "Fursay product waitlists",
+        itemListElement: products.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item,
+        })),
+      },
+    ],
+  });
 }
 
 function writeProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
-  const release = readJson(resolve(siteDir, "release.json"));
   const products = (manifest.products || [])
-    .map((product) => `
-      <article class="creator-pack" data-product-card="${escapeHtml(product.id)}">
+    .map((product) => {
+      const copy = productPublicCopy(product);
+      return `
+      <article class="creator-pack product-waitlist-card" data-product-card="${escapeHtml(product.id)}">
         <div class="creator-pack-copy">
-          <p class="creator-eyebrow">${escapeHtml(product.pack === "noor" ? "Noor Chinese worksheet" : "Koko English printable")}</p>
-          <h2>${escapeHtml(product.label)}</h2>
-          <p>${escapeHtml(product.format)} for families who want a short parent-child activity after a story video.</p>
-          <p><strong>Interest list only.</strong> No payment today. This page measures demand before any paid pack is opened.</p>
+          <p class="creator-eyebrow">${escapeHtml(copy.eyebrow)}</p>
+          <h2>${escapeHtml(copy.label)}</h2>
+          <p>${escapeHtml(copy.audience)}</p>
+          <p>${escapeHtml(copy.outcome)}</p>
+          <p><strong>No payment today.</strong> Join only if you want a note when this pack is ready to test.</p>
         </div>
         <div class="creator-copy-blocks">
           <article>
-            <h3>Planned pack contents</h3>
+            <h3>What the pack is planned to include</h3>
             <ul>
               ${(product.plannedIncludes || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n")}
             </ul>
           </article>
           <article>
-            <h3>Validation path</h3>
-            <p>Clicking the interest button sends the anonymous <code>${escapeHtml(manifest.event)}</code> event, opens the story-pack signup modal, and keeps the subscribe payload unchanged.</p>
+            <h3>How families would use it</h3>
+            <p>${escapeHtml(copy.format)} Start with the free story pack, then use the printable when your child is ready for one more small activity.</p>
           </article>
         </div>
         <div class="public-share-actions">
           ${productButton(product)}
-          <a href="${escapeHtml(product.pack === "noor" ? "/arabic?subscribe=noor&utm_source=products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample" : "/koko?subscribe=koko&utm_source=products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample")}">Preview story pack</a>
+          <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
         </div>
-      </article>`)
-    .join("\n");
-  const gateRequirements = (manifest.checkoutGate?.requirements || [])
-    .map((requirement) => `<li><code>${escapeHtml(requirement)}</code></li>`)
+      </article>`;
+    })
     .join("\n");
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fursay Printable and Worksheet Packs</title>
-  <meta name="description" content="Join interest lists for Fursay Koko printable and Noor worksheet packs. No payment today; the page validates demand before paid packs open.">
+  <title>Fursay Printable Story Pack Waitlist</title>
+  <meta name="description" content="Join the Fursay waitlist for Koko printable story packs and Noor 3-minute worksheet packs. Families get the free story pack first; paid access is not open.">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/products">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta property="og:title" content="Fursay Printable and Worksheet Packs">
-  <meta property="og:description" content="Interest lists for Koko printable and Noor worksheet packs for parent-child bilingual story time.">
+  <meta property="og:title" content="Fursay Printable Story Pack Waitlist">
+  <meta property="og:description" content="Join interest lists for parent-child printable packs based on Koko and Noor story worlds. No payment today.">
   <meta property="og:url" content="https://fursay.com/products">
   <meta property="og:image" content="https://fursay.com/og-image.png">
   <meta property="og:image:alt" content="Fursay parent-child bilingual story world">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fursay Printable and Worksheet Packs">
-  <meta name="twitter:description" content="Join interest lists for Koko printable and Noor worksheet packs. No payment today.">
+  <meta name="twitter:title" content="Fursay Printable Story Pack Waitlist">
+  <meta name="twitter:description" content="Join the Koko or Noor printable pack waitlist. Free story pack first, no payment today.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+  <script type="application/ld+json">${productsJsonLd(manifest)}</script>
 </head>
-<body class="picture-world creator-kit-page products-page" data-page-pack="products">
+<body class="picture-world creator-kit-page products-page product-waitlist-page" data-page-pack="products">
   <main class="creator-kit-shell">
-    <header class="creator-kit-hero">
-      <p class="creator-eyebrow">Fursay product validation</p>
-      <h1>Printable and Worksheet Packs</h1>
-      <p>Koko and Noor paid packs are not open yet. This page collects measurable interest so the next product step is based on real family demand, not guesses.</p>
-      <div class="creator-kit-meta">
-        <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
-        <span>Commit ${escapeHtml(manifest.source?.commit)}</span>
-        <a href="/products.json">JSON manifest</a>
-        <a href="/conversion-health">Conversion health</a>
+    <header class="creator-kit-hero product-waitlist-hero" data-product-hero>
+      <p class="creator-eyebrow">Fursay printable packs</p>
+      <h1>Printable story packs for busy parents</h1>
+      <p>Choose Koko or Noor, get the free story pack first, and join the waitlist for a future printable PDF pack. Paid access is not open yet, and this page will not charge you.</p>
+      <div class="product-trust-strip" aria-label="Product waitlist status">
+        <span>No payment today</span>
+        <span>Free story pack first</span>
+        <span>Interest list only</span>
       </div>
     </header>
     <section class="creator-kit-safety" data-product-readiness-summary>
-      <h2>Current product status</h2>
-      <p>Interest validation is active. Payment links are disabled, and any future paid pack must pass the checkout gate first.</p>
-      <dl>
-        ${healthMetric("Checkout enabled", String(manifest.checkoutEnabled))}
-        ${healthMetric("Payment links allowed", String(manifest.paymentLinksAllowed))}
-        ${healthMetric("Interest only", String(manifest.interestOnly))}
-        ${healthMetric("Minimum interest clicks", manifest.checkoutGate?.minimumInterestClicks || 0)}
-        ${healthMetric("Minimum subscriber signals", manifest.checkoutGate?.minimumSubscriberSignals || 0)}
-      </dl>
+      <h2>How the waitlist works</h2>
+      <div class="product-step-grid">
+        <article>
+          <h3>1. Pick a story world</h3>
+          <p>Koko focuses on English feelings practice. Noor focuses on Chinese words with Arabic parent prompts.</p>
+        </article>
+        <article>
+          <h3>2. Receive the free pack first</h3>
+          <p>The signup opens the existing story-pack form, so families can try the learning rhythm before any paid product exists.</p>
+        </article>
+        <article>
+          <h3>3. Get notified only if it opens</h3>
+          <p>If enough families show interest, Fursay will publish clear pricing, support, and refund details before any payment step.</p>
+        </article>
+      </div>
     </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
       <h2>Before any paid pack opens</h2>
       <p>${escapeHtml(manifest.checkoutGate?.disclosureCopy || "")}</p>
       <p>${escapeHtml(manifest.checkoutGate?.refundSupportCopy || "")}</p>
-      <ul>
-${gateRequirements}
-      </ul>
+      <p>The current goal is simple: learn whether families want printable packs after the free story pack. No price, purchase button, or payment link is active on this page.</p>
+    </section>
+    <section class="creator-kit-safety product-faq" data-product-faq>
+      <h2>FAQ</h2>
+      <div class="creator-copy-blocks">
+        <article>
+          <h3>Will I pay today?</h3>
+          <p>No. The waitlist only records interest and opens the free story-pack signup.</p>
+        </article>
+        <article>
+          <h3>What will I receive now?</h3>
+          <p>You can join the weekly story pack list and choose Koko, Noor, or both inside the signup form.</p>
+        </article>
+        <article>
+          <h3>When will the paid packs open?</h3>
+          <p>Only after enough families click, subscribe, and ask for printable practice. The product may stay waitlist-only if interest is too low.</p>
+        </article>
+        <article>
+          <h3>Can I cancel later?</h3>
+          <p>Yes. Email updates include an unsubscribe option, and any future paid product will show support and refund details before payment.</p>
+        </article>
+      </div>
     </section>
   </main>
   <div class="modal-overlay" id="subscribeModal">
@@ -1712,7 +1818,7 @@ function writeConversionHealthPage(siteDir) {
   <link rel="canonical" href="https://fursay.com/conversion-health">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page conversion-health-page">
   <main class="creator-kit-shell">
@@ -2008,7 +2114,7 @@ function writeCreatorKitPage(siteDir, kit) {
   <link rel="canonical" href="https://fursay.com/creator-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page">
   <main class="creator-kit-shell">
@@ -2113,7 +2219,7 @@ function writeShareKitPage(siteDir, kit) {
   <link rel="canonical" href="https://fursay.com/share-kit">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
-  <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
 </head>
 <body class="picture-world creator-kit-page share-kit-page">
   <main class="creator-kit-shell">

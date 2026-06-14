@@ -24,7 +24,6 @@ const BADGE_PAGES = [
   "/links",
   "/deploy-readiness",
   "/conversion-health",
-  "/products",
 ];
 const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
   "scripts/check-newsletter-state-contract.mjs",

@@ -24,7 +24,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/css/picture-world-tools-20260613-ops2.css",
+    path: "/css/picture-world-tools-20260613-products1.css",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/css",

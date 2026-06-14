@@ -20,7 +20,7 @@ const EXPECTED_CSS = [
   "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260613-traffic12.css",
-  "picture-world-tools-20260613-ops2.css",
+  "picture-world-tools-20260613-products1.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260613-commerce3.js",
@@ -62,7 +62,7 @@ const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic12.css";
 const HOME_COMMON_CSS = "/css/home-common-20260613-cache1.css";
 const KOKO_COMMON_CSS = "/css/koko-common-20260613-cache1.css";
 const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
-const OPERATIONS_CSS = "/css/picture-world-tools-20260613-ops2.css";
+const OPERATIONS_CSS = "/css/picture-world-tools-20260613-products1.css";
 const HOME_HTML = new Set(["index.html", "zh/index.html", "ar/index.html"]);
 const KOKO_HTML = new Set(["koko.html", "zh/koko.html", "ar/koko.html", "episodes/koko-feelings.html", "zh/episodes/koko-feelings.html", "ar/episodes/koko-feelings.html"]);
 const NOOR_HTML = new Set(["arabic.html", "zh/arabic.html", "ar/arabic.html", "episodes/noor-colors.html", "zh/episodes/noor-colors.html", "ar/episodes/noor-colors.html", "episodes/noor-greetings.html", "zh/episodes/noor-greetings.html", "ar/episodes/noor-greetings.html"]);

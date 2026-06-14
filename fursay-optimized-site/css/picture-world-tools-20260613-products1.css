@@ -240,8 +240,69 @@ body.picture-world .creator-qr span {
   font-weight: 900 !important;
   font-size: 0.86rem !important;
 }
+body.picture-world.product-waitlist-page .creator-kit-hero {
+  max-width: 920px !important;
+}
+body.picture-world.product-waitlist-page .creator-kit-hero h1 {
+  max-width: 820px !important;
+}
+body.picture-world .product-trust-strip {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 20px !important;
+}
+body.picture-world .product-trust-strip span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 36px !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(74, 117, 87, 0.18) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #31543f !important;
+  font-size: 0.86rem !important;
+  font-weight: 900 !important;
+}
+body.picture-world .product-step-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-top: 14px !important;
+}
+body.picture-world .product-step-grid article {
+  padding: 14px !important;
+  border-radius: 8px !important;
+  background: rgba(247, 241, 228, 0.72) !important;
+}
+body.picture-world .product-step-grid h3 {
+  margin: 0 0 8px !important;
+  font-size: 0.98rem !important;
+}
+body.picture-world .product-step-grid p {
+  margin: 0 !important;
+}
+body.picture-world .product-waitlist-card .creator-copy-button {
+  background: #2f7d5d !important;
+  border-color: #2f7d5d !important;
+  color: #fff !important;
+}
+body.picture-world .product-faq .creator-copy-blocks {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+body.picture-world .product-faq .creator-copy-blocks p {
+  margin: 0 !important;
+}
 
 @media (max-width: 760px) {
+  body.picture-world .product-step-grid,
+  body.picture-world .product-faq .creator-copy-blocks {
+    grid-template-columns: 1fr !important;
+  }
+  body.picture-world .product-trust-strip span {
+    flex: 1 1 150px !important;
+    justify-content: center !important;
+  }
   body.picture-world .creator-pack {
     grid-template-columns: 1fr !important;
   }

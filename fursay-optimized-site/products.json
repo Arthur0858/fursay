@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "f55c512",
-    "summary": "Fix share strip layout across pages"
+    "commit": "fb27921",
+    "summary": "Sync share layout release manifests"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",

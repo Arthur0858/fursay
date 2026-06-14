@@ -54,7 +54,7 @@ const EXPECTED_CHANNELS = {
   },
 };
 const TOOL_ONLY_CSS = new Set([
-  "/css/picture-world-tools-20260613-ops2.css",
+  "/css/picture-world-tools-20260613-products1.css",
 ]);
 
 function parseArgs() {

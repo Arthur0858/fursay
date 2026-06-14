@@ -230,11 +230,18 @@ async function main() {
   if (!html.includes('<link rel="canonical" href="https://fursay.com/products">')) failures.push("products_page_bad_canonical");
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
+  if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
+  if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
   if (!html.includes("site-shared-20260613-commerce3.js")) failures.push("products_page_missing_shared_js");
-  if (!html.includes("/products.json")) failures.push("products_page_missing_manifest_link");
-  if (!html.includes("/conversion-health")) failures.push("products_page_missing_conversion_health_link");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
+  if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
+  if (/<div class="creator-kit-meta">/i.test(html)) failures.push("products_page_exposes_ops_meta");
+  for (const needle of [/Commit\s+[a-f0-9]{7,}/i, /JSON manifest/i, /Conversion health/i]) {
+    if (needle.test(html)) failures.push(`products_page_exposes_internal_copy:${needle}`);
+  }
+  if (!html.includes('"@type":"Product"') || !html.includes('"@type":"Offer"')) failures.push("products_page_missing_product_offer_schema");
+  if (!html.includes('"RegisterAction"')) failures.push("products_page_missing_register_action_schema");
 
   for (const needle of CHECKOUT_NEEDLES) {
     if (needle.test(html)) failures.push(`products_page_checkout_language_or_link:${needle}`);
