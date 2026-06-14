@@ -250,6 +250,7 @@ function writeReleaseManifest() {
       latestStoryEntries: 12,
       episodeLandingPages: 9,
       noorLeadMagnetPages: 3,
+      noorSprintCopyVariants: 3,
       productInterestLinks: 18,
       productInfoLinks: 18,
       productLandingPages: 3,
@@ -1000,6 +1001,38 @@ function buildNoorSubscriberSprint() {
       `Free Noor 3-minute story pack: ${primaryLink}`,
       "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
     ].join("\n"),
+    copyVariants: [
+      {
+        id: "parent_group",
+        label: "Parent group post",
+        placement: "family_share",
+        copy: [
+          "Trying a tiny Arabic-Chinese routine with kids this week.",
+          `Free Noor 3-minute story pack: ${primaryLink}`,
+          "It is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
+        ].join("\n"),
+      },
+      {
+        id: "direct_dm",
+        label: "Direct family DM",
+        placement: "family_share",
+        copy: [
+          "I thought your family might like this tiny Noor story pack.",
+          `Free 3-minute Arabic-Chinese story pack: ${primaryLink}`,
+          "No payment. It just helps test whether families want this kind of bilingual routine.",
+        ].join("\n"),
+      },
+      {
+        id: "worksheet_followup",
+        label: "Worksheet follow-up",
+        placement: "worksheet_preview",
+        copy: [
+          "Here is the Noor worksheet preview I mentioned.",
+          `Preview: ${worksheetPreview}`,
+          `If it feels useful, the free story pack starts here: ${primaryLink}`,
+        ].join("\n"),
+      },
+    ],
     checklist: [
       "Share the family link with 3 Arabic-speaking parent groups or families.",
       "Use the sample link only as a follow-up when someone asks what is inside.",
@@ -1010,6 +1043,15 @@ function buildNoorSubscriberSprint() {
 }
 
 function trafficLaunchSprintSection(sprint) {
+  const variants = (sprint.copyVariants || []).map((variant) => `
+          <article class="creator-copy-block" data-noor-sprint-copy-variant="${escapeHtml(variant.id)}">
+            <div class="creator-copy-heading">
+              <h3>${escapeHtml(variant.label)}</h3>
+              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(variant.copy)}">Copy variant</button>
+            </div>
+            <p>Placement: ${escapeHtml(variant.placement)}</p>
+            <pre>${escapeHtml(variant.copy)}</pre>
+          </article>`).join("\n");
   return `
     <section class="creator-kit-safety noor-subscriber-sprint" data-noor-subscriber-sprint="${escapeHtml(sprint.status)}">
       <p class="creator-eyebrow">Noor subscriber sprint</p>
@@ -1030,6 +1072,9 @@ function trafficLaunchSprintSection(sprint) {
           <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(sprint.copy)}">Copy sprint copy</button>
         </div>
         <pre>${escapeHtml(sprint.copy)}</pre>
+      </div>
+      <div class="creator-copy-blocks" data-noor-sprint-copy-variants>
+${variants}
       </div>
       <ol>
         ${sprint.checklist.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("\n        ")}

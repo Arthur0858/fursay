@@ -179,7 +179,7 @@ function validateTrafficLaunch(manifest, html, failures) {
   if (manifest.safety?.creatorKitManifest !== "https://fursay.com/creator-kit.json") failures.push("traffic-launch:bad_creator_manifest");
   if (manifest.safety?.shareKitManifest !== "https://fursay.com/share-kit.json") failures.push("traffic-launch:bad_share_manifest");
   if (manifest.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("traffic-launch:bad_shortlink_manifest");
-  if (copySet.size !== 11) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
+  if (copySet.size !== 14) failures.push(`traffic-launch:copy_button_count:${copySet.size}`);
 
   const noorSprint = manifest.activationSprints?.noorFirstSubscriber || {};
   for (const [label, value] of Object.entries({
@@ -199,6 +199,23 @@ function validateTrafficLaunch(manifest, html, failures) {
   requireCopyValue(failures, pageKey, copySet, "noor_sprint:copy", noorSprint.copy);
   if (noorSprint.pack !== "noor") failures.push(`traffic-launch:noor_sprint_bad_pack:${noorSprint.pack || "none"}`);
   if (noorSprint.windowDays !== 7) failures.push(`traffic-launch:noor_sprint_bad_window:${noorSprint.windowDays || "none"}`);
+  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 3) {
+    failures.push(`traffic-launch:noor_sprint_variant_count:${noorSprint.copyVariants?.length || 0}`);
+  }
+  for (const variant of noorSprint.copyVariants || []) {
+    requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:label`, variant.label);
+    requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
+    requireCopyValue(failures, pageKey, copySet, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
+    if (!["parent_group", "direct_dm", "worksheet_followup"].includes(variant.id)) {
+      failures.push(`traffic-launch:noor_sprint_unknown_variant:${variant.id || "none"}`);
+    }
+    if (!variant.copy?.includes(noorSprint.primaryLink || "missing")) {
+      failures.push(`traffic-launch:noor_sprint_variant_missing_primary:${variant.id || "none"}`);
+    }
+    if (variant.id === "worksheet_followup" && !variant.copy?.includes(noorSprint.worksheetPreview || "missing")) {
+      failures.push("traffic-launch:noor_sprint_worksheet_variant_missing_preview");
+    }
+  }
   for (const checkpoint of noorSprint.checklist || []) requireText(failures, pageKey, html, "noor_sprint:checklist", checkpoint);
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {

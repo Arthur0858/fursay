@@ -1314,6 +1314,7 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
+  if (release.liveExpectations?.noorSprintCopyVariants !== 3) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
@@ -1400,6 +1401,19 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprint.copy?.includes("Free Noor 3-minute story pack") || !noorSprint.copy?.includes(noorSprint.primaryLink || "missing")) {
     failures.push("traffic_launch_noor_sprint_copy_missing_primary_link");
   }
+  if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 3) {
+    failures.push(`traffic_launch_noor_sprint_variant_count:${noorSprint.copyVariants?.length || 0}`);
+  }
+  const variantIds = new Set((noorSprint.copyVariants || []).map((variant) => variant.id));
+  for (const id of ["parent_group", "direct_dm", "worksheet_followup"]) {
+    if (!variantIds.has(id)) failures.push(`traffic_launch_noor_sprint_missing_variant:${id}`);
+  }
+  for (const variant of noorSprint.copyVariants || []) {
+    if (!variant.copy?.includes(noorSprint.primaryLink || "missing")) failures.push(`traffic_launch_noor_sprint_variant_missing_primary:${variant.id || "none"}`);
+    if (variant.id === "worksheet_followup" && !variant.copy?.includes(noorSprint.worksheetPreview || "missing")) {
+      failures.push("traffic_launch_noor_sprint_worksheet_variant_missing_preview");
+    }
+  }
   if (!Array.isArray(noorSprint.checklist) || noorSprint.checklist.length < 4) failures.push("traffic_launch_noor_sprint_short_checklist");
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
@@ -1482,10 +1496,15 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
   if (!trafficLaunchPage.includes("/traffic-launch.json")) failures.push("traffic_launch_page_missing_json_manifest_link");
   if ((trafficLaunchPage.match(/data-traffic-launch-channel=/g) || []).length !== 10) failures.push("traffic_launch_page_bad_channel_count");
-  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 11) failures.push("traffic_launch_page_bad_copy_button_count");
+  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 14) failures.push("traffic_launch_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('data-noor-subscriber-sprint="subscriber_signal_needed"')) failures.push("traffic_launch_page_missing_noor_sprint");
+  if ((trafficLaunchPage.match(/data-noor-sprint-copy-variant=/g) || []).length !== 3) failures.push("traffic_launch_page_bad_noor_sprint_variant_count");
   if (!htmlContains(trafficLaunchPage, noorSprint.primaryLink || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_primary_link");
   if (!htmlContains(trafficLaunchPage, noorSprint.copy || "missing")) failures.push("traffic_launch_page_missing_noor_sprint_copy");
+  for (const variant of noorSprint.copyVariants || []) {
+    if (!trafficLaunchPage.includes(`data-noor-sprint-copy-variant="${escapeHtml(variant.id || "")}"`)) failures.push(`traffic_launch_page_missing_noor_variant:${variant.id || "none"}`);
+    if (!htmlContains(trafficLaunchPage, variant.copy || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_copy:${variant.id || "none"}`);
+  }
   if (!linksPage.includes('<body class="picture-world creator-kit-page social-links-page">')) failures.push("links_page_missing_body_class");
   if (!linksPage.includes("<h1>Choose Your Story Pack</h1>")) failures.push("links_page_missing_h1");
   if (!linksPage.includes("/links.json")) failures.push("links_page_missing_json_manifest_link");
