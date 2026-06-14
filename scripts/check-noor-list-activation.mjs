@@ -138,6 +138,8 @@ async function checkPage(browser, baseUrl, path) {
   if (staticChecks.sampleCtaGroup !== "noor") failures.push(`bad_sample_cta_group:${staticChecks.sampleCtaGroup || "none"}`);
   if (!/(sample pack|樣張|نموذج)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_sample_copy");
   if (!/(ready|準備好|جاهزة)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_delivery_copy");
+  if (!/(free|免費|مجانية)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_free_copy");
+  if (!/(receive|收到|تصلكم|ستصلكم|ستصل)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_receive_copy");
   if (!staticChecks.hasNoorCheckbox) failures.push("missing_noor_checkbox");
   if (!staticChecks.hasSubscribeForm) failures.push("missing_subscribe_form");
   if (staticChecks.horizontalOverflow > 2) failures.push(`horizontal_overflow:${staticChecks.horizontalOverflow}`);

@@ -194,6 +194,10 @@ async function main() {
   if (conversionHealth.measurement?.analyticsReport?.status !== "pending_cloudflare_credentials_or_enablement") failures.push("bad_report_status");
   if (conversionHealth.measurement?.analyticsReport?.queryCount !== release.liveExpectations?.eventAnalyticsReportQueries) failures.push("report_query_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.windowDays !== release.liveExpectations?.eventAnalyticsReportWindowDays) failures.push("report_window_mismatch");
+  if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
+  for (const name of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
+    if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(name)) failures.push(`report_missing_noor_query:${name}`);
+  }
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
   for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT]) {
     if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);

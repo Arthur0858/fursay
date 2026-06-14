@@ -244,8 +244,9 @@ function writeReleaseManifest() {
       conversionDashboardSections: 6,
       eventAnalyticsBlobFields: 15,
       eventAnalyticsDoubleFields: 1,
-      eventAnalyticsReportQueries: 5,
+      eventAnalyticsReportQueries: 12,
       eventAnalyticsReportWindowDays: 7,
+      eventAnalyticsReportComparisonWindows: [7, 30],
       latestStoryEntries: 12,
       episodeLandingPages: 9,
       noorLeadMagnetPages: 3,
@@ -1475,16 +1476,24 @@ function writeConversionHealth(siteDir, source) {
         status: "pending_cloudflare_credentials_or_enablement",
         dataset: "fursay_events",
         windowDays: 7,
+        comparisonWindows: release.liveExpectations.eventAnalyticsReportComparisonWindows,
         queryCount: release.liveExpectations.eventAnalyticsReportQueries,
         output: "/tmp/fursay-event-analytics-report/event-analytics-report.json",
         requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN"],
         piiAllowed: false,
         queries: [
-          "event_totals",
-          "subscribe_funnel_by_pack",
-          "page_intent",
-          "affiliate_interest",
-          "outbound_destinations",
+          "event_totals_7d",
+          "subscribe_funnel_by_pack_7d",
+          "page_intent_7d",
+          "affiliate_interest_7d",
+          "outbound_destinations_7d",
+          "noor_growth_signals_7d",
+          "event_totals_30d",
+          "subscribe_funnel_by_pack_30d",
+          "page_intent_30d",
+          "affiliate_interest_30d",
+          "outbound_destinations_30d",
+          "noor_growth_signals_30d",
         ],
       },
       fallbackReviewSurface: "Cloudflare Worker logs",
@@ -1519,6 +1528,8 @@ function writeConversionHealth(siteDir, source) {
       episodeLandingPages: release.liveExpectations.episodeLandingPages,
       noorLeadMagnetPages: release.liveExpectations.noorLeadMagnetPages,
       noorReadinessStatus: "safe_wait_subscriber_empty",
+      noorSubscriberSignalGoal: 1,
+      noorSubscriberSignalStatus: "waiting_for_first_real_subscriber_signal",
       productInterestLinks: release.liveExpectations.productInterestLinks,
       productInfoLinks: release.liveExpectations.productInfoLinks,
     },
@@ -1554,6 +1565,7 @@ function writeConversionHealth(siteDir, source) {
           status: "pending_cloudflare_credentials_or_enablement",
           reportCommand: "npm run report:events",
           windowDays: release.liveExpectations.eventAnalyticsReportWindowDays,
+          comparisonWindows: release.liveExpectations.eventAnalyticsReportComparisonWindows,
           unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a sample or checkout decision changes.",
           metrics: ["productInfoClicks", "productInterestClicks", "subscriberSignals"],
         },
@@ -1566,10 +1578,12 @@ function writeConversionHealth(siteDir, source) {
             plannedIncludes: ["story prompt sheet", "emotion word practice", "parent-child drawing activity"],
             checkoutStatus: "not_enabled",
             samplePreview: {
-              status: "draft_preview",
+              status: "print_ready_preview",
               url: "https://fursay.com/product-samples/koko-printable",
               label: "Preview the Koko 3-page printable sample",
               noindex: true,
+              printReady: true,
+              downloadableFormat: "browser_print_to_pdf",
               contents: ["Story moment prompt", "Three feeling words", "Draw-and-tell activity"],
               nextCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
             },
@@ -1593,10 +1607,12 @@ function writeConversionHealth(siteDir, source) {
             plannedIncludes: ["Chinese color words with Pinyin", "Arabic parent prompts", "one 3-minute activity"],
             checkoutStatus: "not_enabled",
             samplePreview: {
-              status: "draft_preview",
+              status: "print_ready_preview",
               url: "https://fursay.com/product-samples/noor-worksheet",
               label: "Preview the Noor 3-minute worksheet sample",
               noindex: true,
+              printReady: true,
+              downloadableFormat: "browser_print_to_pdf",
               contents: ["Three Chinese words with Pinyin", "Arabic parent prompt", "One 3-minute activity"],
               nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
             },
@@ -2622,7 +2638,7 @@ function writeProductSamplePages(siteDir) {
       <p>${escapeHtml(spec.intro)}</p>
       <div class="product-trust-strip" aria-label="Sample preview status">
         <span>No payment today</span>
-        <span>Sample preview only</span>
+        <span>Print-ready preview</span>
         <span>Interest validation</span>
       </div>
       <div class="public-share-actions">
@@ -2631,9 +2647,15 @@ function writeProductSamplePages(siteDir) {
     </header>
     <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
       <h2>What the sample would include</h2>
+      <p class="product-sample-print-note">This page is formatted as a lightweight print view. Use the browser print command to save it as PDF or print one copy for family testing.</p>
       <div class="creator-copy-blocks">
 ${cards}
       </div>
+    </section>
+    <section class="creator-kit-safety" data-product-sample-print-view="${escapeHtml(product.pack)}">
+      <h2>Print or save the sample</h2>
+      <p>Open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.</p>
+      <p>No checkout, price, or payment link is connected to this sample. It is only a trust-building preview before a paid pack exists.</p>
     </section>
     <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
       <h2>How to test it with a child</h2>
@@ -2745,6 +2767,7 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Analytics binding", health.measurement?.analyticsSink?.binding || "none", health.measurement?.analyticsSink?.dataset || "")}
         ${healthMetric("Analytics write mode", health.measurement?.analyticsSink?.writeMode || "none")}
         ${healthMetric("Analytics report", health.measurement?.analyticsReport?.packageScript || "none", health.measurement?.analyticsReport?.status || "")}
+        ${healthMetric("Report windows", (health.measurement?.analyticsReport?.comparisonWindows || []).join(" / "), "days")}
         ${healthMetric("Fallback review", health.measurement?.fallbackReviewSurface || "Cloudflare Worker logs")}
         ${healthMetric("Tracked event types", health.events?.length || 0, `expected ${release.liveExpectations?.anonymousConversionEvents}`)}
         ${healthMetric("Analytics blob fields", health.measurement?.analyticsSink?.blobFields?.length || 0, `expected ${release.liveExpectations?.eventAnalyticsBlobFields}`)}
@@ -2770,6 +2793,7 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Episode landing pages", health.growth?.episodeLandingPages)}
         ${healthMetric("Noor lead magnet pages", health.growth?.noorLeadMagnetPages)}
         ${healthMetric("Noor readiness", health.growth?.noorReadinessStatus)}
+        ${healthMetric("Noor subscriber signal goal", health.growth?.noorSubscriberSignalGoal, health.growth?.noorSubscriberSignalStatus || "")}
         ${healthMetric("Product interest links", health.growth?.productInterestLinks)}
       </dl>
     </section>
@@ -2799,6 +2823,7 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Signal report status", validationDashboard.status || "unknown")}
         ${healthMetric("Report command", validationDashboard.reportCommand || "none")}
         ${healthMetric("Report window", validationDashboard.windowDays || 0, "days")}
+        ${healthMetric("Comparison windows", (validationDashboard.comparisonWindows || []).join(" / "), "days")}
         ${healthMetric("English social product entry", socialEntries.socialProfileLinks || "none")}
         ${healthMetric("Traditional Chinese social product entry", socialEntries.zhSocialProfileLinks || "none")}
         ${healthMetric("Arabic social product entry", socialEntries.arSocialProfileLinks || "none")}

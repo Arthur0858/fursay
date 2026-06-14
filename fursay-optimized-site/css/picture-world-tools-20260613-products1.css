@@ -293,6 +293,10 @@ body.picture-world .product-faq .creator-copy-blocks {
 body.picture-world .product-faq .creator-copy-blocks p {
   margin: 0 !important;
 }
+body.picture-world .product-sample-print-note {
+  color: #345246 !important;
+  font-weight: 800 !important;
+}
 
 @media (max-width: 760px) {
   body.picture-world .product-step-grid,
@@ -324,3 +328,33 @@ body.picture-world .product-faq .creator-copy-blocks p {
     flex: 1 1 160px !important;
   }
  }
+
+@media print {
+  body.picture-world.product-sample-preview-page {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  body.picture-world.product-sample-preview-page .creator-kit-shell {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  body.picture-world.product-sample-preview-page .creator-kit-hero,
+  body.picture-world.product-sample-preview-page .creator-kit-safety,
+  body.picture-world.product-sample-preview-page .creator-copy-block {
+    box-shadow: none !important;
+    border-color: #bbb !important;
+    break-inside: avoid !important;
+  }
+
+  body.picture-world.product-sample-preview-page .modal-overlay,
+  body.picture-world.product-sample-preview-page .public-share-actions {
+    display: none !important;
+  }
+
+  body.picture-world.product-sample-preview-page a {
+    color: #111 !important;
+    text-decoration: none !important;
+  }
+}

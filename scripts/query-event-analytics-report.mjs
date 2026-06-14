@@ -4,39 +4,62 @@ import { resolve } from "node:path";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-analytics-report";
 const DATASET = "fursay_events";
-const WINDOW_DAYS = 7;
+const PRIMARY_WINDOW_DAYS = 7;
+const COMPARISON_WINDOWS_DAYS = [7, 30];
 const PAGE_INTENT_EVENTS = [
   "fursay_subscribe_open_click",
   "fursay_product_info_click",
   "fursay_product_interest_click",
 ];
-const QUERIES = [
-  {
-    name: "event_totals",
-    description: "Top anonymous event types in the last 7 days.",
-    sql: `SELECT blob1 AS event, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY GROUP BY event ORDER BY events DESC LIMIT 50 FORMAT JSON`,
-  },
-  {
-    name: "subscribe_funnel_by_pack",
-    description: "Subscribe open and submit events split by Koko/Noor pack.",
-    sql: `SELECT blob1 AS event, blob6 AS pack, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 IN ('fursay_subscribe_open_click','fursay_subscribe_modal_open','fursay_subscribe_submit_attempt','fursay_subscribe_submit_success','fursay_subscribe_submit_failure') GROUP BY event, pack ORDER BY event, events DESC FORMAT JSON`,
-  },
-  {
-    name: "page_intent",
-    description: "Subscription, product info, and product-interest intent by landing path.",
-    sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, blob13 AS product_interest, blob14 AS interest_stage, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 IN (${PAGE_INTENT_EVENTS.map((event) => `'${event}'`).join(",")}) GROUP BY path, event, pack, product_interest, interest_stage ORDER BY events DESC LIMIT 100 FORMAT JSON`,
-  },
-  {
-    name: "affiliate_interest",
-    description: "Affiliate clicks by market and product id.",
-    sql: `SELECT blob8 AS market, blob9 AS product_id, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 = 'fursay_affiliate_click' GROUP BY market, product_id ORDER BY events DESC LIMIT 100 FORMAT JSON`,
-  },
-  {
-    name: "outbound_destinations",
-    description: "Outbound clicks by host and path.",
-    sql: `SELECT blob10 AS outbound_host, blob11 AS outbound_path, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${WINDOW_DAYS}' DAY AND blob1 = 'fursay_outbound_click' GROUP BY outbound_host, outbound_path ORDER BY events DESC LIMIT 100 FORMAT JSON`,
-  },
-];
+
+function windowQueries(days) {
+  return [
+    {
+      name: `event_totals_${days}d`,
+      family: "event_totals",
+      windowDays: days,
+      description: `Top anonymous event types in the last ${days} days.`,
+      sql: `SELECT blob1 AS event, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY GROUP BY event ORDER BY events DESC LIMIT 50 FORMAT JSON`,
+    },
+    {
+      name: `subscribe_funnel_by_pack_${days}d`,
+      family: "subscribe_funnel_by_pack",
+      windowDays: days,
+      description: `Subscribe open and submit events split by Koko/Noor pack in the last ${days} days.`,
+      sql: `SELECT blob1 AS event, blob6 AS pack, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND blob1 IN ('fursay_subscribe_open_click','fursay_subscribe_modal_open','fursay_subscribe_submit_attempt','fursay_subscribe_submit_success','fursay_subscribe_submit_failure') GROUP BY event, pack ORDER BY event, events DESC FORMAT JSON`,
+    },
+    {
+      name: `page_intent_${days}d`,
+      family: "page_intent",
+      windowDays: days,
+      description: `Subscription, product info, and product-interest intent by landing path in the last ${days} days.`,
+      sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, blob13 AS product_interest, blob14 AS interest_stage, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND blob1 IN (${PAGE_INTENT_EVENTS.map((event) => `'${event}'`).join(",")}) GROUP BY path, event, pack, product_interest, interest_stage ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+    },
+    {
+      name: `affiliate_interest_${days}d`,
+      family: "affiliate_interest",
+      windowDays: days,
+      description: `Affiliate clicks by market and product id in the last ${days} days.`,
+      sql: `SELECT blob8 AS market, blob9 AS product_id, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND blob1 = 'fursay_affiliate_click' GROUP BY market, product_id ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+    },
+    {
+      name: `outbound_destinations_${days}d`,
+      family: "outbound_destinations",
+      windowDays: days,
+      description: `Outbound clicks by host and path in the last ${days} days.`,
+      sql: `SELECT blob10 AS outbound_host, blob11 AS outbound_path, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND blob1 = 'fursay_outbound_click' GROUP BY outbound_host, outbound_path ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+    },
+    {
+      name: `noor_growth_signals_${days}d`,
+      family: "noor_growth_signals",
+      windowDays: days,
+      description: `Noor-specific subscriber, story-pack, and worksheet validation signals in the last ${days} days.`,
+      sql: `SELECT blob1 AS event, blob2 AS path, blob6 AS pack, blob7 AS signup_source, blob13 AS product_interest, blob14 AS interest_stage, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND (blob6 = 'noor' OR blob13 = 'noor' OR blob2 LIKE '%arabic%' OR blob2 LIKE '%noor%') AND blob1 IN ('fursay_subscribe_open_click','fursay_subscribe_modal_open','fursay_subscribe_submit_attempt','fursay_subscribe_submit_success','fursay_product_info_click','fursay_product_interest_click') GROUP BY event, path, pack, signup_source, product_interest, interest_stage ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+    },
+  ];
+}
+
+const QUERIES = COMPARISON_WINDOWS_DAYS.flatMap(windowQueries);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -91,12 +114,16 @@ async function main() {
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("blob_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsSink?.doubleFields?.length !== release.liveExpectations?.eventAnalyticsDoubleFields) failures.push("double_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("manifest_missing_report_script");
-  if (conversionHealth.measurement?.analyticsReport?.windowDays !== WINDOW_DAYS) failures.push("manifest_bad_report_window");
+  if (conversionHealth.measurement?.analyticsReport?.windowDays !== PRIMARY_WINDOW_DAYS) failures.push("manifest_bad_report_window");
+  if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== COMPARISON_WINDOWS_DAYS.join(",")) failures.push("manifest_bad_comparison_windows");
   if (conversionHealth.measurement?.analyticsReport?.queries?.length !== QUERIES.length) failures.push("manifest_bad_report_query_count");
-  const pageIntent = QUERIES.find((query) => query.name === "page_intent");
+  const pageIntent = QUERIES.find((query) => query.family === "page_intent" && query.windowDays === PRIMARY_WINDOW_DAYS);
   for (const eventName of PAGE_INTENT_EVENTS) {
     if (!pageIntent?.sql.includes(eventName)) failures.push(`page_intent_missing_event:${eventName}`);
     if (!conversionHealth.events?.includes(eventName)) failures.push(`manifest_missing_page_intent_event:${eventName}`);
+  }
+  for (const days of COMPARISON_WINDOWS_DAYS) {
+    if (!QUERIES.some((query) => query.name === `noor_growth_signals_${days}d`)) failures.push(`missing_noor_growth_query:${days}`);
   }
 
   const queryReports = [];
@@ -119,7 +146,8 @@ async function main() {
     generatedAt: new Date().toISOString(),
     source: release.source,
     dataset: DATASET,
-    windowDays: WINDOW_DAYS,
+    windowDays: PRIMARY_WINDOW_DAYS,
+    comparisonWindows: COMPARISON_WINDOWS_DAYS,
     credentialsPresent: {
       accountId: Boolean(accountId),
       analyticsToken: Boolean(token),

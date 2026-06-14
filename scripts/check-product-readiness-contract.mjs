@@ -510,6 +510,8 @@ async function main() {
     if (!manifestSample) failures.push(`products_manifest_missing_sample_preview:${sample.pack}`);
     if (manifestSample?.url !== sample.canonical) failures.push(`products_manifest_bad_sample_url:${sample.pack}:${manifestSample?.url || "none"}`);
     if (manifestSample?.noindex !== true) failures.push(`products_manifest_sample_not_noindex:${sample.pack}`);
+    if (manifestSample?.printReady !== true) failures.push(`products_manifest_sample_not_print_ready:${sample.pack}`);
+    if (manifestSample?.downloadableFormat !== "browser_print_to_pdf") failures.push(`products_manifest_sample_bad_download_format:${sample.pack}:${manifestSample?.downloadableFormat || "none"}`);
     if ((manifestSample?.contents || []).length < 3) failures.push(`products_manifest_sample_missing_contents:${sample.pack}`);
     if (!html.includes(`href="${sample.path}"`)) failures.push(`products_page_missing_sample_link:${sample.pack}`);
     if (!zhHtml.includes(`href="${sample.path}"`)) failures.push(`zh_products_page_missing_sample_link:${sample.pack}`);
@@ -523,6 +525,8 @@ async function main() {
     if (!pageHtml.includes(`data-product-interest="${sample.pack}"`)) failures.push(`sample_page_missing_interest_button:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
     if (!pageHtml.includes("No payment today")) failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
+    if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
+    if (!/Save as PDF|print command|列印|PDF/i.test(pageHtml)) failures.push(`sample_page_missing_print_copy:${sample.pack}`);
     for (const needle of CHECKOUT_NEEDLES) {
       if (needle.test(pageHtml)) failures.push(`sample_page_checkout_language_or_link:${sample.pack}:${needle}`);
     }

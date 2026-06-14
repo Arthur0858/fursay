@@ -134,6 +134,13 @@ async function main() {
   if (conversionHealth.measurement?.analyticsReport?.status !== "pending_cloudflare_credentials_or_enablement") failures.push("bad_report_status");
   if (conversionHealth.measurement?.analyticsReport?.queryCount !== release.liveExpectations?.eventAnalyticsReportQueries) failures.push("report_query_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.windowDays !== release.liveExpectations?.eventAnalyticsReportWindowDays) failures.push("report_window_mismatch");
+  if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
+  if (!html.includes("Report windows")) failures.push("dashboard_missing_report_windows");
+  if (!html.includes("Comparison windows")) failures.push("dashboard_missing_comparison_windows");
+  if (!html.includes("Noor subscriber signal goal")) failures.push("dashboard_missing_noor_subscriber_goal");
+  for (const queryName of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
+    if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(queryName)) failures.push(`dashboard_manifest_missing_noor_query:${queryName}`);
+  }
   if (!html.includes("npm run report:events")) failures.push("dashboard_missing_report_script");
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_mismatch");
   for (const event of REQUIRED_EVENTS) {

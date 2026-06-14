@@ -1307,8 +1307,11 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.anonymousConversionEvents !== 14) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
   if (release.liveExpectations?.eventAnalyticsBlobFields !== 15) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsDoubleFields !== 1) failures.push(`release_event_analytics_double_fields:${release.liveExpectations?.eventAnalyticsDoubleFields || "none"}`);
-  if (release.liveExpectations?.eventAnalyticsReportQueries !== 5) failures.push(`release_event_analytics_report_queries:${release.liveExpectations?.eventAnalyticsReportQueries || "none"}`);
+  if (release.liveExpectations?.eventAnalyticsReportQueries !== 12) failures.push(`release_event_analytics_report_queries:${release.liveExpectations?.eventAnalyticsReportQueries || "none"}`);
   if (release.liveExpectations?.eventAnalyticsReportWindowDays !== 7) failures.push(`release_event_analytics_report_window:${release.liveExpectations?.eventAnalyticsReportWindowDays || "none"}`);
+  if (JSON.stringify(release.liveExpectations?.eventAnalyticsReportComparisonWindows || []) !== JSON.stringify([7, 30])) {
+    failures.push(`release_event_analytics_report_comparison_windows:${(release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",") || "none"}`);
+  }
   if (release.liveExpectations?.latestStoryEntries !== 12) failures.push(`release_latest_story_entries:${release.liveExpectations?.latestStoryEntries || "none"}`);
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);

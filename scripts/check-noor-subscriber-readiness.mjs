@@ -64,6 +64,8 @@ async function main() {
     if (noorCtas < 3) failures.push(`${page.path}:noor_ctas:${noorCtas}<3`);
     if (leadMagnets !== 1) failures.push(`${page.path}:lead_magnet:${leadMagnets}!=1`);
     if (!/3-minute|3 分鐘|3 دقائق/.test(html)) failures.push(`${page.path}:missing_three_minute_promise`);
+    if (!/free|免費|مجانية/i.test(html)) failures.push(`${page.path}:missing_free_promise`);
+    if (!/receive|收到|تصلكم|ستصلكم|ستصل/i.test(html)) failures.push(`${page.path}:missing_delivery_promise`);
     pageResults.push({ path: page.path, noorCtas, leadMagnets });
   }
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");

@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-06-14",
+  "updatedAt": "2026-06-15",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -235,7 +235,11 @@
       "status": "pending_cloudflare_credentials_or_enablement",
       "dataset": "fursay_events",
       "windowDays": 7,
-      "queryCount": 5,
+      "comparisonWindows": [
+        7,
+        30
+      ],
+      "queryCount": 12,
       "output": "/tmp/fursay-event-analytics-report/event-analytics-report.json",
       "requiredEnv": [
         "CLOUDFLARE_ACCOUNT_ID",
@@ -243,11 +247,18 @@
       ],
       "piiAllowed": false,
       "queries": [
-        "event_totals",
-        "subscribe_funnel_by_pack",
-        "page_intent",
-        "affiliate_interest",
-        "outbound_destinations"
+        "event_totals_7d",
+        "subscribe_funnel_by_pack_7d",
+        "page_intent_7d",
+        "affiliate_interest_7d",
+        "outbound_destinations_7d",
+        "noor_growth_signals_7d",
+        "event_totals_30d",
+        "subscribe_funnel_by_pack_30d",
+        "page_intent_30d",
+        "affiliate_interest_30d",
+        "outbound_destinations_30d",
+        "noor_growth_signals_30d"
       ]
     }
   },
@@ -373,6 +384,8 @@
     "episodeLandingPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
+    "noorSubscriberSignalGoal": 1,
+    "noorSubscriberSignalStatus": "waiting_for_first_real_subscriber_signal",
     "productInterestLinks": 18,
     "productInfoLinks": 18
   },
@@ -408,6 +421,10 @@
         "status": "pending_cloudflare_credentials_or_enablement",
         "reportCommand": "npm run report:events",
         "windowDays": 7,
+        "comparisonWindows": [
+          7,
+          30
+        ],
         "unlockPolicy": "Each product needs product info clicks, product interest clicks, and subscriber signals before a sample or checkout decision changes.",
         "metrics": [
           "productInfoClicks",
@@ -428,10 +445,12 @@
           ],
           "checkoutStatus": "not_enabled",
           "samplePreview": {
-            "status": "draft_preview",
+            "status": "print_ready_preview",
             "url": "https://fursay.com/product-samples/koko-printable",
             "label": "Preview the Koko 3-page printable sample",
             "noindex": true,
+            "printReady": true,
+            "downloadableFormat": "browser_print_to_pdf",
             "contents": [
               "Story moment prompt",
               "Three feeling words",
@@ -467,10 +486,12 @@
           ],
           "checkoutStatus": "not_enabled",
           "samplePreview": {
-            "status": "draft_preview",
+            "status": "print_ready_preview",
             "url": "https://fursay.com/product-samples/noor-worksheet",
             "label": "Preview the Noor 3-minute worksheet sample",
             "noindex": true,
+            "printReady": true,
+            "downloadableFormat": "browser_print_to_pdf",
             "contents": [
               "Three Chinese words with Pinyin",
               "Arabic parent prompt",
