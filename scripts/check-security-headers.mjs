@@ -13,7 +13,7 @@ const CHECKS = [
   { name: "home_html", path: "/", method: "GET", status: 200 },
   { name: "story_html", path: "/koko", method: "GET", status: 200 },
   { name: "manifest_json", path: "/release.json", method: "GET", status: 200 },
-  { name: "css_asset", path: "/css/picture-world-shared-20260613-traffic11.css", method: "GET", status: 200 },
+  { name: "css_asset", path: "/css/picture-world-shared-20260613-traffic12.css", method: "GET", status: 200 },
   { name: "image_asset", path: "/og-koko.png", method: "GET", status: 200 },
   { name: "shortlink_redirect", path: "/join/koko", method: "GET", status: 302 },
   { name: "html_clean_redirect", path: "/koko.html", method: "GET", status: 301 },

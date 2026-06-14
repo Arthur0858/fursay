@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "7f10907",
-    "summary": "Route latest story cards to episode guides"
+    "commit": "78df3bd",
+    "summary": "Sync latest story guide release manifests"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/products",

@@ -2233,7 +2233,7 @@ body.picture-world .share-strip-inner {
   width: min(980px, 100%) !important;
   margin: 0 auto !important;
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr) !important;
   gap: 22px !important;
   align-items: center !important;
   padding: clamp(20px, 4vw, 30px) !important;
@@ -2241,6 +2241,10 @@ body.picture-world .share-strip-inner {
   border-radius: 22px !important;
   background: rgba(255, 255, 255, 0.78) !important;
   box-shadow: 0 14px 34px rgba(88, 67, 44, 0.08) !important;
+}
+body.picture-world .share-copy,
+body.picture-world .share-actions {
+  min-width: 0 !important;
 }
 body.picture-world .share-kicker {
   display: inline-flex !important;
@@ -2269,6 +2273,11 @@ body.picture-world .share-actions {
   gap: 12px !important;
 }
 body.picture-world .share-fallback {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 44px !important;
+  padding: 10px 12px !important;
   color: var(--world-accent-dark) !important;
   font-weight: 800 !important;
   text-decoration: none !important;
@@ -2436,6 +2445,12 @@ body.picture-world .empty-story-note-warm {
   background: #fff8e9 !important;
   border: 1px dashed rgba(122, 82, 48, 0.22) !important;
   border-radius: 14px !important;
+}
+
+@media (max-width: 920px) {
+  body.picture-world .share-strip-inner {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* Reserve the Noor hero artwork footprint before the AVIF/WebP source decodes. */

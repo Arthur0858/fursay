@@ -1622,7 +1622,7 @@ function writeProductsPage(siteDir) {
   <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
-  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic11.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/picture-world-tools-20260613-ops2.css">
 </head>
 <body class="picture-world creator-kit-page products-page" data-page-pack="products">

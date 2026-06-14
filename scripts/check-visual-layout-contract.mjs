@@ -143,6 +143,11 @@ async function collectLayout(page) {
       rect: rectFor(element),
       pointerEvents: getComputedStyle(element).pointerEvents,
     }));
+    const shareStrip = document.querySelector(".share-strip");
+    const shareCopy = document.querySelector(".share-copy");
+    const shareActions = document.querySelector(".share-actions");
+    const shareTextNodes = [...document.querySelectorAll(".share-copy h2, .share-copy p")];
+    const shareActionNodes = [...document.querySelectorAll(".share-actions button, .share-actions a")];
     const h1Style = h1 ? getComputedStyle(h1) : null;
     return {
       title: document.title,
@@ -170,6 +175,23 @@ async function collectLayout(page) {
         rect: rectFor(element),
       })),
       heroImages,
+      share: shareStrip && shareCopy && shareActions ? {
+        strip: rectFor(shareStrip),
+        copy: rectFor(shareCopy),
+        actions: rectFor(shareActions),
+        copyOverflowX: shareCopy.scrollWidth > Math.ceil(shareCopy.clientWidth) + 1,
+        actionsOverflowX: shareActions.scrollWidth > Math.ceil(shareActions.clientWidth) + 1,
+        textNodes: shareTextNodes.map((element) => ({
+          text: labelFor(element),
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+        actionsNodes: shareActionNodes.filter(isVisible).map((element) => ({
+          text: labelFor(element),
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+      } : null,
     };
   });
 }
@@ -242,6 +264,27 @@ function checkLayout(spec, viewport, layout) {
       }
     }
   }
+
+  if (!layout.share) {
+    failures.push(`${prefix}:share_strip_missing`);
+  } else {
+    const minCopyWidth = viewport.isMobile ? 240 : 260;
+    checkRectInsideViewport(failures, `${prefix}:share_strip`, layout.share.strip, viewport, 8);
+    checkRectInsideViewport(failures, `${prefix}:share_copy`, layout.share.copy, viewport, 8);
+    checkRectInsideViewport(failures, `${prefix}:share_actions`, layout.share.actions, viewport, 8);
+    if (layout.share.copy.width < minCopyWidth) failures.push(`${prefix}:share_copy_too_narrow:${Math.round(layout.share.copy.width)}<${minCopyWidth}`);
+    if (layout.share.copyOverflowX) failures.push(`${prefix}:share_copy_overflow`);
+    if (layout.share.actionsOverflowX) failures.push(`${prefix}:share_actions_overflow`);
+    for (const textNode of layout.share.textNodes) {
+      if (textNode.rect.width < minCopyWidth) failures.push(`${prefix}:share_text_too_narrow:${textNode.text.slice(0, 24)}:${Math.round(textNode.rect.width)}<${minCopyWidth}`);
+      if (textNode.overflowX) failures.push(`${prefix}:share_text_overflow:${textNode.text.slice(0, 24)}`);
+    }
+    for (const action of layout.share.actionsNodes) {
+      checkRectInsideViewport(failures, `${prefix}:share_action`, action.rect, viewport, 8);
+      if (action.overflowX) failures.push(`${prefix}:share_action_text_overflow:${action.text.slice(0, 24)}`);
+      if (action.rect.width < 44 || action.rect.height < 36) failures.push(`${prefix}:share_action_touch_target:${action.text.slice(0, 24)}:${Math.round(action.rect.width)}x${Math.round(action.rect.height)}`);
+    }
+  }
   return failures;
 }
 
@@ -281,6 +324,11 @@ async function main() {
           failures: pageFailures,
           h1: layout.h1 ? { text: layout.h1.text, rect: roundedRect(layout.h1.rect) } : null,
           ctas: layout.primaryCtas.map((cta) => ({ pack: cta.pack, source: cta.source, rect: roundedRect(cta.rect) })),
+          share: layout.share ? {
+            copy: roundedRect(layout.share.copy),
+            actions: roundedRect(layout.share.actions),
+            textNodes: layout.share.textNodes.map((node) => ({ text: node.text, rect: roundedRect(node.rect), overflowX: node.overflowX })),
+          } : null,
           scrollWidth: Math.max(layout.scrollWidth, layout.bodyScrollWidth),
         });
         await page.close();

@@ -19,7 +19,7 @@ const EXPECTED_CSS = [
   "picture-book-base-20260613-base1.css",
   "story-page-common-20260613-css1.css",
   "storybook-skin-20260613-inline1.css",
-  "picture-world-shared-20260613-traffic11.css",
+  "picture-world-shared-20260613-traffic12.css",
   "picture-world-tools-20260613-ops2.css",
 ];
 const EXPECTED_JS = [
@@ -58,7 +58,7 @@ const OPERATIONS_HTML = new Set([
   "share-kit.html",
   "traffic-launch.html",
 ]);
-const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic11.css";
+const MAIN_SHARED_CSS = "/css/picture-world-shared-20260613-traffic12.css";
 const HOME_COMMON_CSS = "/css/home-common-20260613-cache1.css";
 const KOKO_COMMON_CSS = "/css/koko-common-20260613-cache1.css";
 const NOOR_COMMON_CSS = "/css/noor-common-20260613-cache1.css";
@@ -248,8 +248,8 @@ async function main() {
     assetSizes.css[name] = bytes;
     if (bytes > MAX_SINGLE_CSS_BYTES) failures.push(`css_asset_too_large:${name}:${bytes}`);
   }
-  if ((assetSizes.css["picture-world-shared-20260613-traffic11.css"] || 0) > MAX_MAIN_SHARED_CSS_BYTES) {
-    failures.push(`main_shared_css_too_large:picture-world-shared-20260613-traffic11.css:${assetSizes.css["picture-world-shared-20260613-traffic11.css"]}`);
+  if ((assetSizes.css["picture-world-shared-20260613-traffic12.css"] || 0) > MAX_MAIN_SHARED_CSS_BYTES) {
+    failures.push(`main_shared_css_too_large:picture-world-shared-20260613-traffic12.css:${assetSizes.css["picture-world-shared-20260613-traffic12.css"]}`);
   }
   for (const name of jsFiles) {
     const bytes = await existsWithBytes(resolve(root, "js", name));
