@@ -11,7 +11,7 @@
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260613-commerce6.js`; page HTML should not add inline event handlers.
-- Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints to the configured `FURSAY_EVENTS` Analytics Engine dataset `fursay_events`, and falls back to Worker logs without blocking the request if the binding is unavailable.
+- Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints to Worker logs until the Cloudflare account enables Analytics Engine. The planned binding is `FURSAY_EVENTS` for dataset `fursay_events`, but it remains out of `wrangler.jsonc` so deployment is not blocked by Cloudflare error `10089`.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Immutable CSS/JS fingerprints are recorded in `/data/immutable-asset-fingerprints.json`; after changing any long-cache CSS/JS filename or content, run `npm run assets:fingerprints` and keep `npm run assets:fingerprints:check` clean.
 - Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.
@@ -44,5 +44,5 @@
 - `/products`, `/zh/products`, and `/ar/products` render public product-interest landing pages from `/products.json`; payment links remain disallowed while `paymentLinksAllowed=false`.
 - `/product-samples/koko-printable` and `/product-samples/noor-worksheet` render noindex sample previews from the product specs; they are proof-of-interest pages, not checkout or download fulfillment pages.
 - Event analytics fields are limited to event/page/campaign/pack/affiliate/outbound/interest dimensions plus a numeric `event_count`; email, name, phone, address, token, password, and subscriber payloads are not analytics fields.
-- `npm run report:events` is the local conversion report command for Analytics Engine after account enablement. The page-intent query covers subscribe opens, product info clicks, and product-interest clicks so the product funnel can distinguish browsing intent from waitlist intent. Without Cloudflare credentials it writes a pending-status report and does not query external APIs.
+- `npm run report:events` is the local conversion report command for Analytics Engine after account enablement. The page-intent query covers subscribe opens, product info clicks, and product-interest clicks so the product funnel can distinguish browsing intent from waitlist intent. Without dashboard enablement or Cloudflare credentials it writes a pending-status report and does not query external APIs.
 - Owned products stay in interest-validation mode until the checkout gate has verified interest clicks, disclosure copy, refund/support copy, and checkout tracking. Payment links are not allowed while `paymentLinksAllowed=false`.

@@ -4,6 +4,8 @@ import { resolve } from "node:path";
 
 const ROOT = process.cwd();
 const DEFAULT_OUT = "/tmp/fursay-deploy-readiness";
+const ANALYTICS_ENGINE_ENABLEMENT_URL =
+  "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine";
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -67,8 +69,11 @@ async function main() {
   addIssue(failures, wrangler.assets?.binding === "ASSETS", "wrangler_bad_assets_binding", wrangler.assets?.binding || "none");
   addIssue(failures, wrangler.assets?.run_worker_first === true, "wrangler_must_run_worker_first");
   const analyticsBinding = (wrangler.analytics_engine_datasets || []).find((item) => item.binding === "FURSAY_EVENTS");
-  addIssue(failures, Boolean(analyticsBinding), "wrangler_missing_event_analytics_binding");
-  addIssue(failures, analyticsBinding?.dataset === "fursay_events", "wrangler_bad_event_analytics_dataset", analyticsBinding?.dataset || "none");
+  if (!analyticsBinding) {
+    warnings.push("analytics_engine_dashboard_enablement_required");
+  } else {
+    addIssue(failures, analyticsBinding.dataset === "fursay_events", "wrangler_bad_event_analytics_dataset", analyticsBinding.dataset || "none");
+  }
 
   for (const needle of [
     "npm run deploy:ready",
@@ -142,6 +147,14 @@ async function main() {
       hasOriginRemote: Boolean(remote),
       hasCloudflareToken,
       hasCloudflareAccount,
+      analyticsEngine: {
+        binding: "FURSAY_EVENTS",
+        dataset: "fursay_events",
+        configured: Boolean(analyticsBinding),
+        status: analyticsBinding ? "configured_in_wrangler" : "pending_cloudflare_dashboard_enablement",
+        enablementUrl: ANALYTICS_ENGINE_ENABLEMENT_URL,
+        lastDeployBlockerCode: analyticsBinding ? "" : "10089",
+      },
     },
     failures,
     warnings,

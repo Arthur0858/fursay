@@ -79,8 +79,8 @@ Commerce and affiliate policy:
 - Amazon Associates Store ID: parenttechche-20
 - Current expected Amazon affiliate links: 37
 - Affiliate click tracking is expected on all 18 public story and episode pages.
-- Anonymous conversion events post to /api/event through the configured FURSAY_EVENTS Analytics Engine binding for dataset fursay_events, with Worker logs as a fallback and no PII fields.
-- Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries 7-day and 30-day Analytics Engine summaries after Cloudflare query credentials are available.
+- Anonymous conversion events post to /api/event and write to Worker logs until the Cloudflare account enables Analytics Engine; the planned binding is FURSAY_EVENTS for dataset fursay_events, with no PII fields.
+- Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries 7-day and 30-day Analytics Engine summaries after dashboard enablement and Cloudflare query credentials are available.
 - Owned products are family-facing waitlists only: Koko printable story pack and Noor 3-minute worksheet pack. Families can join interest lists and receive the free story pack first; paid access is not open and no payment is collected on the product page.
 - Event analytics must not include email, name, phone, address, token, password, or subscriber payload fields.
 

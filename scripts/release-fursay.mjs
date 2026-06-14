@@ -1584,9 +1584,11 @@ function writeConversionHealth(siteDir, source) {
       analyticsSink: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
-        status: "configured_in_wrangler",
-        writeMode: "worker_logs_until_enabled",
+        status: "pending_cloudflare_dashboard_enablement",
+        writeMode: "worker_logs_until_dashboard_enabled",
         fallbackSink: "Cloudflare Worker logs",
+        deployBlockerCode: "10089",
+        enablementUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
         piiAllowed: false,
         blobFields: [
           "event",
