@@ -1587,7 +1587,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!shareKitPage.includes('data-share-kit-pack="koko"')) failures.push("share_kit_page_missing_koko_pack");
   if (!shareKitPage.includes('data-share-kit-pack="noor"')) failures.push("share_kit_page_missing_noor_pack");
   if (!shareKitPage.includes("/share-kit.json")) failures.push("share_kit_page_missing_json_manifest_link");
-  if ((shareKitPage.match(/<button[^>]+data-copy-share-kit/g) || []).length !== 24) failures.push("share_kit_page_bad_copy_button_count");
+  if ((shareKitPage.match(/<button[^>]+data-copy-share-kit/g) || []).length !== 28) failures.push("share_kit_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('<body class="picture-world creator-kit-page traffic-launch-page">')) failures.push("traffic_launch_page_missing_body_class");
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="koko"')) failures.push("traffic_launch_page_missing_koko_pack");
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
@@ -1655,8 +1655,12 @@ async function checkDiscoveryFiles(baseUrl) {
     if (creatorPack.shareShortlink !== expectedShare) failures.push(`creator_kit_${pack}_share:${creatorPack.shareShortlink || "none"}`);
     const sharePack = shareKit.packs?.[pack] || {};
     const launchPack = trafficLaunch.packs?.[pack] || {};
+    const expectedProductSamplePreview = `https://fursay.com/${pack === "koko" ? "product-samples/koko-printable" : "product-samples/noor-worksheet"}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
+    const expectedProductSampleDownload = `https://fursay.com/${pack === "koko" ? "downloads/koko-printable-sample.pdf" : "downloads/noor-worksheet-sample.pdf"}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     if (sharePack.sampleShortlink !== expectedSample) failures.push(`share_kit_${pack}_sample:${sharePack.sampleShortlink || "none"}`);
     if (sharePack.familyShareShortlink !== expectedShare) failures.push(`share_kit_${pack}_share:${sharePack.familyShareShortlink || "none"}`);
+    if (sharePack.productSamplePreviewUrl !== expectedProductSamplePreview) failures.push(`share_kit_${pack}_product_sample_preview:${sharePack.productSamplePreviewUrl || "none"}`);
+    if (sharePack.productSampleDownloadUrl !== expectedProductSampleDownload) failures.push(`share_kit_${pack}_product_sample_download:${sharePack.productSampleDownloadUrl || "none"}`);
     if (sharePack.bioShortlink !== `https://fursay.com/bio/${pack}`) failures.push(`share_kit_${pack}_bio:${sharePack.bioShortlink || "none"}`);
     if (sharePack.creatorShortlink !== expectedCreator) failures.push(`share_kit_${pack}_creator:${sharePack.creatorShortlink || "none"}`);
     if (sharePack.whatsappShareUrl !== expectedWhatsapp) failures.push(`share_kit_${pack}_whatsapp_share:${sharePack.whatsappShareUrl || "none"}`);
@@ -1668,8 +1672,8 @@ async function checkDiscoveryFiles(baseUrl) {
     if (sharePack.attribution?.utm_source !== "family_share" || sharePack.attribution?.utm_medium !== "share") failures.push(`share_kit_${pack}_bad_attribution_source`);
     if (!shareKitPage.includes(sharePack.familyShareMessage || "")) failures.push(`share_kit_page_missing_family_message:${pack}`);
     if (!shareKitPage.includes(sharePack.bioProfileCopy || "")) failures.push(`share_kit_page_missing_bio_profile:${pack}`);
-    for (const value of [expectedSample, expectedShare, expectedCreator, `https://fursay.com/bio/${pack}`, expectedWhatsapp, expectedLine, expectedQr, expectedShareQr]) {
-      if (!shareKitPage.includes(value)) failures.push(`share_kit_page_missing_value:${pack}:${value}`);
+    for (const value of [expectedSample, expectedShare, expectedProductSamplePreview, expectedProductSampleDownload, expectedCreator, `https://fursay.com/bio/${pack}`, expectedWhatsapp, expectedLine, expectedQr, expectedShareQr]) {
+      if (!htmlContains(shareKitPage, value)) failures.push(`share_kit_page_missing_value:${pack}:${value}`);
     }
     if (launchPack.campaign !== expectedCampaign) failures.push(`traffic_launch_${pack}_campaign:${launchPack.campaign || "none"}`);
     if (launchPack.sampleShortlink !== expectedSample) failures.push(`traffic_launch_${pack}_sample:${launchPack.sampleShortlink || "none"}`);

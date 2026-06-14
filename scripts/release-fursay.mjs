@@ -941,6 +941,10 @@ function writeShareKit(siteDir, source) {
   const campaignManifest = readJson(resolve(siteDir, "campaigns.json"));
   const packs = Object.fromEntries(Object.entries(campaignManifest.campaigns || {}).map(([pack, campaign]) => {
     const copy = campaign.copyKit || {};
+    const productSamplePreviewPath = pack === "koko" ? "/product-samples/koko-printable" : "/product-samples/noor-worksheet";
+    const productSampleDownloadPath = pack === "koko" ? "/downloads/koko-printable-sample.pdf" : "/downloads/noor-worksheet-sample.pdf";
+    const productSamplePreviewUrl = `https://fursay.com${productSamplePreviewPath}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
+    const productSampleDownloadUrl = `https://fursay.com${productSampleDownloadPath}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     return [pack, {
       title: pack === "koko" ? "Koko weekly English story pack" : "Noor 3-minute Chinese story pack",
       audience: campaign.audience,
@@ -948,6 +952,8 @@ function writeShareKit(siteDir, source) {
       storyWorld: campaign.landingPages?.storyWorld || "",
       sampleShortlink: campaign.shortlinks?.sample || "",
       familyShareShortlink: campaign.shortlinks?.share || "",
+      productSamplePreviewUrl,
+      productSampleDownloadUrl,
       bioShortlink: campaign.shortlinks?.bio || "",
       creatorShortlink: campaign.shortlinks?.creator || "",
       whatsappShareUrl: copy.whatsappShareUrl || "",
@@ -3456,6 +3462,8 @@ function writeShareKitPage(siteDir, kit) {
             ${shareKitLinkRow("Story world", item.storyWorld)}
             ${shareKitLinkRow("Family sample link", item.familyShareShortlink)}
             ${shareKitLinkRow("Preview sample link", item.sampleShortlink)}
+            ${shareKitLinkRow("Product sample preview", item.productSamplePreviewUrl)}
+            ${shareKitLinkRow("PDF sample download", item.productSampleDownloadUrl)}
             ${shareKitLinkRow("Bio link", item.bioShortlink)}
             ${shareKitLinkRow("Creator link", item.creatorShortlink)}
             ${shareKitLinkRow("WhatsApp share URL", item.whatsappShareUrl)}

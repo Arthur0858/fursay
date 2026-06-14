@@ -183,14 +183,18 @@ function validateShareKit(manifest, html, failures) {
   validateManifestBasics(pageKey, manifest, html, failures);
   if (manifest.safety?.linksUseShortlinksWithUtmRedirects !== true) failures.push("share-kit:missing_shortlink_contract");
   if (manifest.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("share-kit:bad_shortlink_manifest");
-  if (copySet.size !== 24) failures.push(`share-kit:copy_button_count:${copySet.size}`);
+  if (copySet.size !== 28) failures.push(`share-kit:copy_button_count:${copySet.size}`);
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {
+    const expectedSamplePreviewPath = pack === "koko" ? "/product-samples/koko-printable" : "/product-samples/noor-worksheet";
+    const expectedSampleDownloadPath = pack === "koko" ? "/downloads/koko-printable-sample.pdf" : "/downloads/noor-worksheet-sample.pdf";
     const values = {
       title: item.title,
       storyWorld: item.storyWorld,
       sampleShortlink: item.sampleShortlink,
       familyShareShortlink: item.familyShareShortlink,
+      productSamplePreviewUrl: item.productSamplePreviewUrl,
+      productSampleDownloadUrl: item.productSampleDownloadUrl,
       bioShortlink: item.bioShortlink,
       creatorShortlink: item.creatorShortlink,
       whatsappShareUrl: item.whatsappShareUrl,
@@ -202,11 +206,26 @@ function validateShareKit(manifest, html, failures) {
       shortHeadline: item.shortHeadline,
     };
     for (const [label, value] of Object.entries(values)) requireText(failures, pageKey, html, `${pack}:${label}`, value);
-    for (const label of ["storyWorld", "sampleShortlink", "familyShareShortlink", "bioShortlink", "creatorShortlink", "whatsappShareUrl", "lineShareUrl", "sampleQrSvg", "shareQrSvg", "familyShareMessage", "bioProfileCopy", "shortHeadline"]) {
+    for (const label of ["storyWorld", "sampleShortlink", "familyShareShortlink", "productSamplePreviewUrl", "productSampleDownloadUrl", "bioShortlink", "creatorShortlink", "whatsappShareUrl", "lineShareUrl", "sampleQrSvg", "shareQrSvg", "familyShareMessage", "bioProfileCopy", "shortHeadline"]) {
       requireCopyValue(failures, pageKey, copySet, `${pack}:${label}`, values[label]);
     }
-    for (const label of ["storyWorld", "sampleShortlink", "familyShareShortlink", "bioShortlink", "creatorShortlink", "sampleQrSvg", "shareQrSvg"]) {
+    for (const label of ["storyWorld", "sampleShortlink", "familyShareShortlink", "productSamplePreviewUrl", "productSampleDownloadUrl", "bioShortlink", "creatorShortlink", "sampleQrSvg", "shareQrSvg"]) {
       requireHref(failures, pageKey, hrefSet, `${pack}:${label}`, values[label]);
+    }
+    if (!item.productSamplePreviewUrl?.includes(`${expectedSamplePreviewPath}?source_id=${pack}_share_kit_sample_preview`)) {
+      failures.push(`share-kit:${pack}:bad_product_sample_preview:${item.productSamplePreviewUrl || "none"}`);
+    }
+    if (!item.productSampleDownloadUrl?.includes(`${expectedSampleDownloadPath}?source_id=${pack}_share_kit_pdf_sample`)) {
+      failures.push(`share-kit:${pack}:bad_product_sample_download:${item.productSampleDownloadUrl || "none"}`);
+    }
+    for (const [label, value] of Object.entries({
+      productSamplePreviewUrl: item.productSamplePreviewUrl,
+      productSampleDownloadUrl: item.productSampleDownloadUrl,
+    })) {
+      if (!value?.includes("creator=fursay")) failures.push(`share-kit:${pack}:${label}:missing_creator`);
+      if (!value?.includes(label === "productSamplePreviewUrl" ? "placement=share_kit_sample_preview" : "placement=share_kit_pdf_sample")) {
+        failures.push(`share-kit:${pack}:${label}:bad_placement`);
+      }
     }
     if (item.attribution?.utm_campaign !== `${pack === "koko" ? "koko" : "noor"}_story_funnel`) {
       failures.push(`share-kit:${pack}:bad_campaign:${item.attribution?.utm_campaign || "none"}`);
