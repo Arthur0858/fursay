@@ -23,6 +23,8 @@ const PAGES = [
   { path: "/products", file: "products.html", lang: "en", canonical: "https://fursay.com/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", canonical: "https://fursay.com/zh/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/ar/products", file: "ar/products.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", canonical: "https://fursay.com/product-samples/koko-printable", robots: "noindex,follow" },
+  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "en", canonical: "https://fursay.com/product-samples/noor-worksheet", robots: "noindex,follow" },
   { path: "/episodes/koko-feelings", file: "episodes/koko-feelings.html", lang: "en", canonical: "https://fursay.com/episodes/koko-feelings", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/episodes/koko-feelings", file: "zh/episodes/koko-feelings.html", lang: "zh-TW", canonical: "https://fursay.com/zh/episodes/koko-feelings", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/ar/episodes/koko-feelings", file: "ar/episodes/koko-feelings.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/episodes/koko-feelings", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },

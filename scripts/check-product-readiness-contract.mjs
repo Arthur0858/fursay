@@ -8,6 +8,10 @@ const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-product-readiness-contract";
 const CHECKOUT_NEEDLES = [/gumroad/i, /stripe/i, /ko-fi/i, /buy now/i, /立即購買/i, /(?:^|\s)اشتر(?:\s|$)/i];
 const REQUIRED_PRODUCTS = ["koko-printable-pack", "noor-worksheet-pack"];
+const REQUIRED_SAMPLE_PREVIEWS = [
+  { pack: "koko", path: "/product-samples/koko-printable", canonical: "https://fursay.com/product-samples/koko-printable" },
+  { pack: "noor", path: "/product-samples/noor-worksheet", canonical: "https://fursay.com/product-samples/noor-worksheet" },
+];
 const REQUIRED_GATE_REQUIREMENTS = [
   "verified_product_interest_clicks",
   "disclosure_copy",
@@ -367,6 +371,7 @@ async function main() {
   const html = await readText(args.baseUrl, "/products");
   const zhHtml = await readText(args.baseUrl, "/zh/products");
   const arHtml = await readText(args.baseUrl, "/ar/products");
+  const sampleHtml = Object.fromEntries(await Promise.all(REQUIRED_SAMPLE_PREVIEWS.map(async (sample) => [sample.path, await readText(args.baseUrl, sample.path)])));
   const products = await readJson(args.baseUrl, "/products.json");
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
@@ -386,6 +391,9 @@ async function main() {
   checkProductSitemapAlternates(sitemap, failures);
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
+  if (!html.includes("data-product-sample-previews")) failures.push("products_page_missing_sample_preview_section");
+  if (!zhHtml.includes("data-product-sample-previews")) failures.push("zh_products_page_missing_sample_preview_section");
+  if (!arHtml.includes("data-product-sample-previews")) failures.push("ar_products_page_missing_sample_preview_section");
   if (!html.includes("data-product-hero")) failures.push("products_page_missing_parent_hero");
   if (!html.includes("data-product-faq")) failures.push("products_page_missing_faq");
   if (!zhHtml.includes("data-product-faq")) failures.push("zh_products_page_missing_faq");
@@ -470,6 +478,7 @@ async function main() {
   if (products.paymentLinksAllowed !== false) failures.push("products_manifest_payment_links_allowed");
   if (products.interestOnly !== true) failures.push("products_manifest_interest_only_not_true");
   if (products.event !== "fursay_product_interest_click") failures.push(`products_manifest_event:${products.event || "none"}`);
+  if (products.samplePreviews?.length !== release.liveExpectations?.productSamplePreviewPages) failures.push(`products_manifest_sample_preview_count:${products.samplePreviews?.length || 0}`);
   if (products.subscribePayloadCompatibility !== "email/groups/attribution unchanged") failures.push("products_manifest_payload_contract_changed");
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_manifest_social_entry_mismatch");
   if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_manifest_zh_social_entry_mismatch");
@@ -495,9 +504,35 @@ async function main() {
 
   const productIds = (products.products || []).map((product) => product.id).sort();
   if (productIds.join(",") !== REQUIRED_PRODUCTS.slice().sort().join(",")) failures.push(`products_manifest_product_ids:${productIds.join(",") || "none"}`);
+  for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
+    const manifestSample = (products.samplePreviews || []).find((item) => item.pack === sample.pack);
+    const pageHtml = sampleHtml[sample.path] || "";
+    if (!manifestSample) failures.push(`products_manifest_missing_sample_preview:${sample.pack}`);
+    if (manifestSample?.url !== sample.canonical) failures.push(`products_manifest_bad_sample_url:${sample.pack}:${manifestSample?.url || "none"}`);
+    if (manifestSample?.noindex !== true) failures.push(`products_manifest_sample_not_noindex:${sample.pack}`);
+    if ((manifestSample?.contents || []).length < 3) failures.push(`products_manifest_sample_missing_contents:${sample.pack}`);
+    if (!html.includes(`href="${sample.path}"`)) failures.push(`products_page_missing_sample_link:${sample.pack}`);
+    if (!zhHtml.includes(`href="${sample.path}"`)) failures.push(`zh_products_page_missing_sample_link:${sample.pack}`);
+    if (!arHtml.includes(`href="${sample.path}"`)) failures.push(`ar_products_page_missing_sample_link:${sample.pack}`);
+    if (!html.includes(`data-product-info-link="${sample.pack}"`)) failures.push(`products_page_sample_missing_tracking:${sample.pack}`);
+    if (!zhHtml.includes(`data-product-info-link="${sample.pack}"`)) failures.push(`zh_products_page_sample_missing_tracking:${sample.pack}`);
+    if (!arHtml.includes(`data-product-info-link="${sample.pack}"`)) failures.push(`ar_products_page_sample_missing_tracking:${sample.pack}`);
+    if (!pageHtml.includes(`rel="canonical" href="${sample.canonical}"`)) failures.push(`sample_page_bad_canonical:${sample.pack}`);
+    if (!pageHtml.includes('name="robots" content="noindex,follow"')) failures.push(`sample_page_not_noindex:${sample.pack}`);
+    if (!pageHtml.includes(`data-product-sample-preview-page="${sample.pack}"`)) failures.push(`sample_page_missing_body_marker:${sample.pack}`);
+    if (!pageHtml.includes(`data-product-interest="${sample.pack}"`)) failures.push(`sample_page_missing_interest_button:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
+    if (!pageHtml.includes("No payment today")) failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
+    for (const needle of CHECKOUT_NEEDLES) {
+      if (needle.test(pageHtml)) failures.push(`sample_page_checkout_language_or_link:${sample.pack}:${needle}`);
+    }
+    const samplePaymentHrefs = externalPaymentHrefs(pageHtml);
+    if (samplePaymentHrefs.length) failures.push(`sample_page_payment_hrefs:${sample.pack}:${samplePaymentHrefs.join(",")}`);
+  }
   for (const product of products.products || []) {
     if (product.checkoutStatus !== "not_enabled") failures.push(`product_checkout_status:${product.id}:${product.checkoutStatus || "none"}`);
     if ((product.plannedIncludes || []).length < 3) failures.push(`product_missing_planned_includes:${product.id}`);
+    if (!product.samplePreview?.url?.startsWith("https://fursay.com/product-samples/")) failures.push(`product_missing_sample_preview:${product.id}`);
     const plan = product.validationPlan || {};
     if (!html.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`products_page_missing_validation_plan:${product.id}`);
     if (!zhHtml.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`zh_products_page_missing_validation_plan:${product.id}`);
@@ -524,6 +559,7 @@ async function main() {
   if (release.deployment?.productsPage !== "https://fursay.com/products") failures.push("release_missing_products_page");
   if (release.deployment?.productsManifest !== "https://fursay.com/products.json") failures.push("release_missing_products_manifest");
   if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
+  if (release.liveExpectations?.productSamplePreviewPages !== REQUIRED_SAMPLE_PREVIEWS.length) failures.push(`release_product_sample_preview_pages:${release.liveExpectations?.productSamplePreviewPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== products.products?.length) failures.push("release_owned_product_spec_mismatch");
   if (release.liveExpectations?.productValidationPlans !== products.products?.filter((product) => product.validationPlan).length) failures.push("release_product_validation_plan_mismatch");
   if (!release.qualityGates?.includes("scripts/check-product-readiness-contract.mjs")) failures.push("release_missing_product_readiness_gate");

@@ -122,6 +122,8 @@ async function main() {
   for (const product of roadmap.products || []) {
     if (!productIds.has(product.id)) failures.push(`unknown_product:${product.id}`);
     if (product.checkoutStatus !== "not_enabled") failures.push(`product_checkout_status:${product.id}:${product.checkoutStatus || "none"}`);
+    if (!product.samplePreview?.url?.startsWith(`${ORIGIN}/product-samples/`)) failures.push(`missing_sample_preview:${product.id}`);
+    if (product.samplePreview?.noindex !== true) failures.push(`sample_preview_not_noindex:${product.id}`);
     const minimumSignals = product.validationPlan?.minimumSignals || {};
     if (!minimumSignals.productInfoClicks || !minimumSignals.productInterestClicks || !minimumSignals.subscriberSignals) {
       failures.push(`missing_minimum_signals:${product.id}`);

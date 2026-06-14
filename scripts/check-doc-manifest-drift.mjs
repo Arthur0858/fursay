@@ -192,6 +192,10 @@ async function checkLocalDocs(failures, details) {
     `${ORIGIN}/ar/products`,
     `${ORIGIN}/products.json`,
   ], normalizeArray(siteHealth.routes?.products)));
+  failures.push(...exactArrayFailures("site_health_product_sample_previews", [
+    `${ORIGIN}/product-samples/koko-printable`,
+    `${ORIGIN}/product-samples/noor-worksheet`,
+  ], normalizeArray(siteHealth.routes?.productSamplePreviews)));
   failures.push(...exactArrayFailures("site_health_monetization_roadmap", [
     `${ORIGIN}/monetization-roadmap`,
     `${ORIGIN}/monetization-roadmap.json`,

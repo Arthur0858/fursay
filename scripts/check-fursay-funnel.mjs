@@ -1317,10 +1317,11 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
   if (release.liveExpectations?.productValidationPlans !== 2) failures.push(`release_product_validation_plans:${release.liveExpectations?.productValidationPlans || "none"}`);
+  if (release.liveExpectations?.productSamplePreviewPages !== 2) failures.push(`release_product_sample_preview_pages:${release.liveExpectations?.productSamplePreviewPages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapStages !== 4) failures.push(`release_monetization_roadmap_stages:${release.liveExpectations?.monetizationRoadmapStages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapProducts !== 2) failures.push(`release_monetization_roadmap_products:${release.liveExpectations?.monetizationRoadmapProducts || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 65) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 67) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");

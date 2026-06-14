@@ -64,6 +64,8 @@ Useful actions:
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
+- Koko printable sample preview: https://fursay.com/product-samples/koko-printable
+- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 - Product interest manifest: https://fursay.com/products.json
 - Monetization roadmap manifest: https://fursay.com/monetization-roadmap.json
 - Shortlink manifest: https://fursay.com/shortlinks.json
@@ -102,6 +104,8 @@ Technical discovery:
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
+- Koko printable sample preview: https://fursay.com/product-samples/koko-printable
+- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 - Product interest manifest: https://fursay.com/products.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready

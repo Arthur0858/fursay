@@ -100,6 +100,8 @@ async function main() {
     "/share-kit.json",
     "/traffic-launch.json",
     "/products.json",
+    "/product-samples/koko-printable",
+    "/product-samples/noor-worksheet",
     "/monetization-roadmap.json",
     "/shortlinks.json",
     "FURSAY_EVENTS",

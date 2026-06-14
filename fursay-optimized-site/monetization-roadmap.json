@@ -5,8 +5,8 @@
   "updatedAt": "2026-06-14",
   "source": {
     "branch": "main",
-    "commit": "f5e464a",
-    "summary": "Cover product pages in visual layout gate"
+    "commit": "92ac99c",
+    "summary": "Add monetization roadmap gate"
   },
   "status": "interest_validation",
   "page": "https://fursay.com/monetization-roadmap",
@@ -80,6 +80,18 @@
         "emotion word practice",
         "parent-child drawing activity"
       ],
+      "samplePreview": {
+        "status": "draft_preview",
+        "url": "https://fursay.com/product-samples/koko-printable",
+        "label": "Preview the Koko 3-page printable sample",
+        "noindex": true,
+        "contents": [
+          "Story moment prompt",
+          "Three feeling words",
+          "Draw-and-tell activity"
+        ],
+        "nextCta": "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview"
+      },
       "validationPlan": {
         "audience": "Mandarin-speaking families testing English feelings practice after a Koko story.",
         "freeBridge": "/koko",
@@ -107,6 +119,18 @@
         "Arabic parent prompts",
         "one 3-minute activity"
       ],
+      "samplePreview": {
+        "status": "draft_preview",
+        "url": "https://fursay.com/product-samples/noor-worksheet",
+        "label": "Preview the Noor 3-minute worksheet sample",
+        "noindex": true,
+        "contents": [
+          "Three Chinese words with Pinyin",
+          "Arabic parent prompt",
+          "One 3-minute activity"
+        ],
+        "nextCta": "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview"
+      },
       "validationPlan": {
         "audience": "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
         "freeBridge": "/arabic",

@@ -146,6 +146,10 @@ function writeReleaseManifest() {
       productsPage: "https://fursay.com/products",
       monetizationRoadmapManifest: "https://fursay.com/monetization-roadmap.json",
       monetizationRoadmapPage: "https://fursay.com/monetization-roadmap",
+      productSamplePreviews: [
+        "https://fursay.com/product-samples/koko-printable",
+        "https://fursay.com/product-samples/noor-worksheet",
+      ],
       videoDiscoveryManifest: "https://fursay.com/video-discovery.json",
       shortlinkManifest: "https://fursay.com/shortlinks.json",
       sitemap: "https://fursay.com/sitemap.xml",
@@ -250,12 +254,13 @@ function writeReleaseManifest() {
       productLandingPages: 3,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
+      productSamplePreviewPages: 2,
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
       visualLayoutChecks: 24,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 65,
+      cacheHeaderChecks: 67,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -274,6 +279,7 @@ function writeReleaseManifest() {
   writeProductsPage(siteDir);
   writeZhProductsPage(siteDir);
   writeArProductsPage(siteDir);
+  writeProductSamplePages(siteDir);
   writeMonetizationRoadmap(siteDir, source);
   writeMonetizationRoadmapPage(siteDir);
   writeConversionHealthPage(siteDir);
@@ -1544,6 +1550,13 @@ function writeConversionHealth(siteDir, source) {
           refundSupportCopy: "Refund and support instructions must be published before any checkout link is enabled.",
           trackingGate: "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed.",
         },
+        validationDashboard: {
+          status: "pending_cloudflare_credentials_or_enablement",
+          reportCommand: "npm run report:events",
+          windowDays: release.liveExpectations.eventAnalyticsReportWindowDays,
+          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a sample or checkout decision changes.",
+          metrics: ["productInfoClicks", "productInterestClicks", "subscriberSignals"],
+        },
         products: [
           {
             id: "koko-printable-pack",
@@ -1552,6 +1565,14 @@ function writeConversionHealth(siteDir, source) {
             format: "PDF printable pack",
             plannedIncludes: ["story prompt sheet", "emotion word practice", "parent-child drawing activity"],
             checkoutStatus: "not_enabled",
+            samplePreview: {
+              status: "draft_preview",
+              url: "https://fursay.com/product-samples/koko-printable",
+              label: "Preview the Koko 3-page printable sample",
+              noindex: true,
+              contents: ["Story moment prompt", "Three feeling words", "Draw-and-tell activity"],
+              nextCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
+            },
             validationPlan: {
               audience: "Mandarin-speaking families testing English feelings practice after a Koko story.",
               freeBridge: "/koko",
@@ -1571,6 +1592,14 @@ function writeConversionHealth(siteDir, source) {
             format: "PDF worksheet pack",
             plannedIncludes: ["Chinese color words with Pinyin", "Arabic parent prompts", "one 3-minute activity"],
             checkoutStatus: "not_enabled",
+            samplePreview: {
+              status: "draft_preview",
+              url: "https://fursay.com/product-samples/noor-worksheet",
+              label: "Preview the Noor 3-minute worksheet sample",
+              noindex: true,
+              contents: ["Three Chinese words with Pinyin", "Arabic parent prompt", "One 3-minute activity"],
+              nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
+            },
             validationPlan: {
               audience: "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
               freeBridge: "/arabic",
@@ -1612,6 +1641,11 @@ function writeProductsManifest(siteDir, source) {
       zhSocialProfileLinks: links.operations?.zhProductInterest?.url || ZH_PRODUCT_INTEREST_SOCIAL_LINK,
       arSocialProfileLinks: links.operations?.arProductInterest?.url || AR_PRODUCT_INTEREST_SOCIAL_LINK,
     },
+    samplePreviews: (ownedProducts.products || []).map((product) => ({
+      productId: product.id,
+      pack: product.pack,
+      ...(product.samplePreview || {}),
+    })),
     subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
     checkoutGate: ownedProducts.checkoutGate || {},
     products: ownedProducts.products || [],
@@ -1679,6 +1713,7 @@ function writeMonetizationRoadmap(siteDir, source) {
       format: product.format,
       checkoutStatus: product.checkoutStatus,
       plannedIncludes: product.plannedIncludes || [],
+      samplePreview: product.samplePreview || {},
       validationPlan: product.validationPlan || {},
     })),
     guardrails: {
@@ -1703,6 +1738,14 @@ function productButton(product) {
   return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} waitlist</button>`;
 }
 
+function samplePreviewHref(product) {
+  try {
+    return new URL(product.samplePreview?.url || "").pathname || "";
+  } catch {
+    return "";
+  }
+}
+
 function productPublicCopy(product) {
   if (product.pack === "noor") {
     return {
@@ -1711,6 +1754,7 @@ function productPublicCopy(product) {
       audience: "For families who want a tiny Chinese practice ritual with Arabic parent prompts.",
       outcome: "Use one short story moment to practice three Chinese words, hear the parent prompt in Arabic, and finish a quick activity before attention fades.",
       format: "Printable PDF worksheets with Pinyin, Arabic prompts, and one 3-minute activity.",
+      previewLabel: "Preview the free Noor worksheet sample",
       bridge: "/arabic?subscribe=noor&utm_source=products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
       bridgeLabel: "Get the free Noor story pack",
     };
@@ -1721,6 +1765,7 @@ function productPublicCopy(product) {
     audience: "For Mandarin-speaking families who want English feelings practice after a short forest story.",
     outcome: "Turn one Koko episode into a calm parent-child activity with emotion words, a drawing prompt, and one printable page.",
     format: "Printable PDF pages with story prompts, emotion word practice, and parent-child drawing space.",
+    previewLabel: "Preview the free Koko printable sample",
     bridge: "/koko?subscribe=koko&utm_source=products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
     bridgeLabel: "Get the free Koko story pack",
   };
@@ -1858,6 +1903,7 @@ function arProductCopy(product) {
       ],
       validationAudience: "عائلات عربية تريد تجربة صينية قصيرة جدا مع توجيه واضح للوالدين.",
       validationNextDecision: "سنجهز عينة ورقة نور فقط بعد ظهور نقرات حقيقية على قائمة الانتظار وإشارة اشتراك واحدة على الأقل.",
+      previewLabel: "شاهدوا عينة ورقة نور المجانية",
       bridge: "/ar/arabic?subscribe=noor&utm_source=ar_products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
       bridgeLabel: "احصلوا على حزمة نور المجانية",
       button: "انضموا لقائمة نور",
@@ -1876,6 +1922,7 @@ function arProductCopy(product) {
     ],
     validationAudience: "عائلات ناطقة بالصينية تريد متابعة قصيرة بعد قصة كوكو الإنجليزية.",
     validationNextDecision: "سنجهز عينة حزمة كوكو فقط بعد ظهور نقرات حقيقية على قائمة الانتظار وإشارة اشتراك واحدة على الأقل.",
+    previewLabel: "شاهدوا عينة كوكو المجانية",
     bridge: "/ar/koko?subscribe=koko&utm_source=ar_products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
     bridgeLabel: "احصلوا على حزمة كوكو المجانية",
     button: "انضموا لقائمة كوكو",
@@ -1943,6 +1990,15 @@ function arProductsJsonLd(manifest) {
 
 function writeProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const samplePreviews = (manifest.samplePreviews || [])
+    .map((sample) => `
+        <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
+          <h3>${escapeHtml(sample.label)}</h3>
+          <p>Preview contents: ${escapeHtml((sample.contents || []).join(", "))}</p>
+          <p>This is a free sample preview for interest validation. It is not a checkout page.</p>
+          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="products_sample_preview_${escapeHtml(sample.pack)}">Open sample preview</a>
+        </article>`)
+    .join("\n");
   const products = (manifest.products || [])
     .map((product) => {
       const copy = productPublicCopy(product);
@@ -1973,6 +2029,7 @@ function writeProductsPage(siteDir) {
             <p>${escapeHtml(product.validationPlan?.nextDecision || "A sample pack is drafted only after real family interest is visible.")}</p>
           </article>
         </div>
+        <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
         <div class="public-share-actions">
           ${productButton(product)}
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
@@ -2044,6 +2101,13 @@ function writeProductsPage(siteDir) {
         </article>
       </div>
     </section>
+    <section class="creator-kit-safety" data-product-sample-previews>
+      <h2>Free sample previews</h2>
+      <p>See the kind of printable or worksheet families would test before any paid version exists.</p>
+      <div class="creator-copy-blocks">
+${samplePreviews}
+      </div>
+    </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
       <h2>Before any paid pack opens</h2>
@@ -2108,6 +2172,7 @@ function zhProductCopy(product) {
       ],
       validationAudience: "想用阿語提示建立一個很短中文練習節奏的家庭。",
       validationNextDecision: "只有在努爾等候名單點擊與至少一個真實訂閱信號出現後，才會製作 3 分鐘學習單樣張。",
+      previewLabel: "預覽免費努爾學習單樣張",
       bridge: "/zh/arabic?subscribe=noor&utm_source=zh_products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
       bridgeLabel: "先領免費努爾故事包",
       button: "加入努爾等候名單",
@@ -2126,6 +2191,7 @@ function zhProductCopy(product) {
     ],
     validationAudience: "想在叩叩故事後陪孩子練英文情緒詞的華語家庭。",
     validationNextDecision: "只有在叩叩等候名單點擊與至少一個真實訂閱信號出現後，才會製作 3 頁可列印樣張。",
+    previewLabel: "預覽免費叩叩可列印樣張",
     bridge: "/zh/koko?subscribe=koko&utm_source=zh_products&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=product_page_sample",
     bridgeLabel: "先領免費叩叩故事包",
     button: "加入叩叩等候名單",
@@ -2134,6 +2200,15 @@ function zhProductCopy(product) {
 
 function writeZhProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const samplePreviews = (manifest.samplePreviews || [])
+    .map((sample) => `
+        <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
+          <h3>${escapeHtml(sample.pack === "noor" ? "免費努爾學習單樣張" : "免費叩叩可列印樣張")}</h3>
+          <p>樣張內容：${escapeHtml((sample.contents || []).join("、"))}</p>
+          <p>這是用來驗證家庭興趣的免費預覽，不是付款頁。</p>
+          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="zh_products_sample_preview_${escapeHtml(sample.pack)}">打開樣張預覽</a>
+        </article>`)
+    .join("\n");
   const products = (manifest.products || [])
     .map((product) => {
       const copy = zhProductCopy(product);
@@ -2165,6 +2240,7 @@ function writeZhProductsPage(siteDir) {
             <p>${escapeHtml(copy.validationNextDecision || product.validationPlan?.nextDecision || "只有在看得到真實家庭需求後，才會製作測試樣張。")}</p>
           </article>
         </div>
+        <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="zh_product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
         <div class="public-share-actions">
           <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
@@ -2236,6 +2312,13 @@ function writeZhProductsPage(siteDir) {
         </article>
       </div>
     </section>
+    <section class="creator-kit-safety" data-product-sample-previews>
+      <h2>免費樣張預覽</h2>
+      <p>先看看未來可列印包可能長什麼樣子；這些預覽只用來確認家庭是否真的有需求。</p>
+      <div class="creator-copy-blocks">
+${samplePreviews}
+      </div>
+    </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
       <h2>付費包開放前</h2>
@@ -2287,6 +2370,15 @@ ${products}
 
 function writeArProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const samplePreviews = (manifest.samplePreviews || [])
+    .map((sample) => `
+        <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
+          <h3>${escapeHtml(sample.pack === "noor" ? "عينة مجانية من ورقة نور" : "عينة مجانية من حزمة كوكو")}</h3>
+          <p>محتوى العينة: ${escapeHtml((sample.contents || []).join("، "))}</p>
+          <p>هذه معاينة مجانية لاختبار اهتمام العائلات، وليست صفحة دفع.</p>
+          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="ar_products_sample_preview_${escapeHtml(sample.pack)}">افتحوا معاينة العينة</a>
+        </article>`)
+    .join("\n");
   const products = (manifest.products || [])
     .map((product) => {
       const copy = arProductCopy(product);
@@ -2318,6 +2410,7 @@ function writeArProductsPage(siteDir) {
             <p>${escapeHtml(copy.validationNextDecision || product.validationPlan?.nextDecision || "لن نجهز عينة اختبارية إلا بعد ظهور اهتمام حقيقي من العائلات.")}</p>
           </article>
         </div>
+        <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="ar_product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
         <div class="public-share-actions">
           <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
@@ -2389,6 +2482,13 @@ function writeArProductsPage(siteDir) {
         </article>
       </div>
     </section>
+    <section class="creator-kit-safety" data-product-sample-previews>
+      <h2>معاينات عينات مجانية</h2>
+      <p>شاهدوا شكل الورقة أو الحزمة المحتملة قبل وجود أي نسخة مدفوعة.</p>
+      <div class="creator-copy-blocks">
+${samplePreviews}
+      </div>
+    </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
       <h2>قبل فتح أي حزمة مدفوعة</h2>
@@ -2438,6 +2538,133 @@ ${products}
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
 }
 
+function samplePageSpec(product) {
+  if (product.pack === "noor") {
+    return {
+      path: "product-samples/noor-worksheet.html",
+      canonical: "https://fursay.com/product-samples/noor-worksheet",
+      lang: "en",
+      title: "Noor 3-minute worksheet sample preview",
+      description: "Preview the Noor 3-minute worksheet sample: three Chinese words with Pinyin, one Arabic parent prompt, and one tiny family activity.",
+      eyebrow: "Free sample preview",
+      h1: "Noor 3-minute worksheet sample",
+      intro: "This preview shows the kind of tiny worksheet Fursay may create after enough families join the Noor interest list. It is a sample preview only; paid access is not open.",
+      sections: [
+        ["Word 1", "hong", "Red. Point to something red and say the word slowly with your child."],
+        ["Word 2", "lan", "Blue. Ask your child to find one blue object near the story space."],
+        ["Word 3", "lv", "Green. Let your child draw a green leaf for Noor and Zayd."],
+      ],
+      parentPrompt: "Arabic parent prompt: Read one word, point to one object, then stop while the activity still feels easy.",
+      activity: "Three-minute activity: choose one color, draw a tiny object, and say the word once more with Pinyin.",
+      storyCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
+      storyCtaLabel: "Get the free Noor story pack",
+      waitlistPack: "noor",
+      waitlistSource: "sample_preview_noor_worksheet",
+      waitlistLabel: "Join Noor worksheet interest list",
+    };
+  }
+  return {
+    path: "product-samples/koko-printable.html",
+    canonical: "https://fursay.com/product-samples/koko-printable",
+    lang: "en",
+    title: "Koko printable pack sample preview",
+    description: "Preview the Koko 3-page printable sample: a story moment prompt, three feeling words, and one draw-and-tell activity.",
+    eyebrow: "Free sample preview",
+    h1: "Koko 3-page printable sample",
+    intro: "This preview shows the kind of printable Fursay may create after enough families join the Koko interest list. It is a sample preview only; paid access is not open.",
+    sections: [
+      ["Page 1", "Story moment", "Koko pauses in the forest. Ask: What did Koko notice first?"],
+      ["Page 2", "Feeling words", "Practice happy, worried, and brave with one small face drawing for each word."],
+      ["Page 3", "Draw and tell", "Draw Koko taking one brave step, then tell the story in one sentence."],
+    ],
+    parentPrompt: "Parent prompt: Keep the practice short. Read one line, let your child draw, then stop before the activity feels heavy.",
+    activity: "Five-minute activity: circle one feeling word and draw one forest detail that matches it.",
+    storyCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
+    storyCtaLabel: "Get the free Koko story pack",
+    waitlistPack: "koko",
+    waitlistSource: "sample_preview_koko_printable",
+    waitlistLabel: "Join Koko printable interest list",
+  };
+}
+
+function writeProductSamplePages(siteDir) {
+  const manifest = readJson(resolve(siteDir, "products.json"));
+  mkdirSync(resolve(siteDir, "product-samples"), { recursive: true });
+  for (const product of manifest.products || []) {
+    const spec = samplePageSpec(product);
+    const cards = spec.sections.map(([label, title, body]) => `
+          <article class="creator-copy-block">
+            <p class="creator-eyebrow">${escapeHtml(label)}</p>
+            <h2>${escapeHtml(title)}</h2>
+            <p>${escapeHtml(body)}</p>
+          </article>`).join("\n");
+    const html = `<!DOCTYPE html>
+<html lang="${escapeHtml(spec.lang)}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(spec.title)}</title>
+  <meta name="description" content="${escapeHtml(spec.description)}">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#4CAF7D">
+  <link rel="canonical" href="${escapeHtml(spec.canonical)}">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
+  <link rel="stylesheet" href="/css/story-page-common-20260613-css1.css">
+  <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
+  <link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css">
+</head>
+<body class="picture-world creator-kit-page products-page product-sample-preview-page" data-page-pack="products">
+  <main class="creator-kit-shell">
+    <header class="creator-kit-hero product-waitlist-hero" data-product-sample-preview-page="${escapeHtml(product.pack)}">
+      <p class="creator-eyebrow">${escapeHtml(spec.eyebrow)}</p>
+      <h1>${escapeHtml(spec.h1)}</h1>
+      <p>${escapeHtml(spec.intro)}</p>
+      <div class="product-trust-strip" aria-label="Sample preview status">
+        <span>No payment today</span>
+        <span>Sample preview only</span>
+        <span>Interest validation</span>
+      </div>
+    </header>
+    <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
+      <h2>What the sample would include</h2>
+      <div class="creator-copy-blocks">
+${cards}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
+      <h2>How to test it with a child</h2>
+      <p>${escapeHtml(spec.parentPrompt)}</p>
+      <p>${escapeHtml(spec.activity)}</p>
+      <p>This preview is here to validate interest before a paid product exists. There is no price, purchase button, or payment link on this page.</p>
+      <div class="public-share-actions">
+        <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
+        <a href="${escapeHtml(spec.storyCta)}">${escapeHtml(spec.storyCtaLabel)}</a>
+        <a href="/products?utm_source=sample_preview&utm_medium=site&utm_campaign=product_interest_validation&utm_content=${escapeHtml(spec.waitlistPack)}_sample_back_to_products">Back to product waitlists</a>
+      </div>
+    </section>
+  </main>
+  <div class="modal-overlay" id="subscribeModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
+      <span class="modal-emoji">📬</span>
+      <div class="modal-title">Join the story pack list</div>
+      <p class="modal-sub">Get the free story pack first. Paid sample packs are not open yet.</p>
+      <form id="subscribeForm">
+        <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
+        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+      </form>
+      <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+    </div>
+  </div>
+  <script src="/js/site-shared-20260613-commerce4.js"></script>
+</body>
+</html>`;
+    writeFileSync(resolve(siteDir, spec.path), html + "\n");
+  }
+}
+
 function healthMetric(label, value, note = "") {
   return `<div>
                 <dt>${escapeHtml(label)}</dt>
@@ -2458,6 +2685,7 @@ function writeConversionHealthPage(siteDir) {
               <h3>${escapeHtml(product.label)}</h3>
               <p>Pack: <code>${escapeHtml(product.pack)}</code>. ${escapeHtml(product.format || "Product spec")}. Checkout is disabled; current goal is interest-list validation only.</p>
               <p>Planned contents: ${escapeHtml((product.plannedIncludes || []).join(", "))}</p>
+              <p>Sample preview: <a href="${escapeHtml(samplePreviewHref(product))}">${escapeHtml(product.samplePreview?.label || "Sample preview")}</a></p>
             </article>`)
     .join("\n");
   const productValidationCards = (health.monetization?.ownedProducts?.products || [])
@@ -2478,6 +2706,7 @@ function writeConversionHealthPage(siteDir) {
     })
     .join("\n");
   const socialEntries = productsManifest.trafficEntryPoints || {};
+  const validationDashboard = health.monetization?.ownedProducts?.validationDashboard || {};
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2551,6 +2780,7 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Checkout enabled", String(health.monetization?.ownedProducts?.checkoutEnabled))}
         ${healthMetric("Interest only", String(health.monetization?.ownedProducts?.interestOnly))}
         ${healthMetric("Owned product specs", health.monetization?.ownedProducts?.products?.length || 0, `expected ${release.liveExpectations?.ownedProductSpecs}`)}
+        ${healthMetric("Sample preview pages", productsManifest.samplePreviews?.length || 0, `expected ${release.liveExpectations?.productSamplePreviewPages}`)}
         ${healthMetric("Checkout gate", health.monetization?.ownedProducts?.checkoutGate?.status || "none")}
         ${healthMetric("Gate requirements", health.monetization?.ownedProducts?.checkoutGate?.requirements?.length || 0, `expected ${release.liveExpectations?.checkoutGateRequirements}`)}
       </dl>
@@ -2564,6 +2794,9 @@ function writeConversionHealthPage(siteDir) {
       <p>Paid packs stay disabled until product interest, waitlist clicks, and subscriber signals meet the validation plan. Social entry points are split by language so families land on the right waitlist page.</p>
       <p><a href="/monetization-roadmap">Review the monetization roadmap</a> for the locked sample-pack, disclosure, and checkout-provider stages.</p>
       <dl>
+        ${healthMetric("Signal report status", validationDashboard.status || "unknown")}
+        ${healthMetric("Report command", validationDashboard.reportCommand || "none")}
+        ${healthMetric("Report window", validationDashboard.windowDays || 0, "days")}
         ${healthMetric("English social product entry", socialEntries.socialProfileLinks || "none")}
         ${healthMetric("Traditional Chinese social product entry", socialEntries.zhSocialProfileLinks || "none")}
         ${healthMetric("Arabic social product entry", socialEntries.arSocialProfileLinks || "none")}
@@ -2789,6 +3022,10 @@ function writeSiteHealthManifest(siteDir) {
         "https://fursay.com/zh/products",
         "https://fursay.com/ar/products",
         "https://fursay.com/products.json",
+      ],
+      productSamplePreviews: [
+        "https://fursay.com/product-samples/koko-printable",
+        "https://fursay.com/product-samples/noor-worksheet",
       ],
       monetizationRoadmap: [
         "https://fursay.com/monetization-roadmap",

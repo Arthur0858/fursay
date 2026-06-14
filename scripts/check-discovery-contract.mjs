@@ -26,6 +26,8 @@ const PUBLIC_PAGES = [
   "/products",
   "/zh/products",
   "/ar/products",
+  "/product-samples/koko-printable",
+  "/product-samples/noor-worksheet",
   "/episodes/koko-feelings",
   "/zh/episodes/koko-feelings",
   "/ar/episodes/koko-feelings",
