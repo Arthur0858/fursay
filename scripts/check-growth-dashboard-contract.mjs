@@ -175,6 +175,14 @@ async function main() {
   }
   for (const variant of conversionHealth.growth?.noorSprintVariants || []) {
     if (!html.includes(`data-noor-growth-variant="${variant.id}"`)) failures.push(`dashboard_missing_noor_variant_card:${variant.id || "none"}`);
+    if (!variant.link?.startsWith("https://fursay.com/")) failures.push(`dashboard_variant_bad_link:${variant.id || "none"}`);
+    if (!html.includes(`href="${variant.link.replace(/&/g, "&amp;")}"`)) failures.push(`dashboard_missing_noor_variant_link:${variant.id || "none"}`);
+    if (!html.includes(`data-copy-value="${variant.link.replace(/&/g, "&amp;")}"`)) failures.push(`dashboard_missing_noor_variant_copy:${variant.id || "none"}`);
+    if (variant.storyLink) {
+      if (!variant.storyLink.startsWith("https://fursay.com/")) failures.push(`dashboard_variant_bad_story_link:${variant.id || "none"}`);
+      if (!html.includes(`href="${variant.storyLink.replace(/&/g, "&amp;")}"`)) failures.push(`dashboard_missing_noor_variant_story_link:${variant.id || "none"}`);
+      if (!html.includes(`data-copy-value="${variant.storyLink.replace(/&/g, "&amp;")}"`)) failures.push(`dashboard_missing_noor_variant_story_copy:${variant.id || "none"}`);
+    }
   }
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("checkout_enabled_must_be_false");
   if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("interest_only_must_be_true");

@@ -2930,6 +2930,14 @@ function writeConversionHealthPage(siteDir) {
             <article class="creator-copy-block" data-noor-growth-variant="${escapeHtml(variant.id)}">
               <h3>${escapeHtml(variant.label)}</h3>
               <p>Track in <code>${escapeHtml(variant.reportFamily || "noor_growth_signals")}</code> by <code>${escapeHtml(variant.sourceId)}</code>.</p>
+              <p>
+                <a href="${escapeHtml(variant.link || "#")}">Open tracked link</a>
+                <button type="button" class="creator-link-copy" data-copy-share-kit data-copy-value="${escapeHtml(variant.link || "")}">Copy link</button>
+              </p>
+              ${variant.storyLink ? `<p>
+                <a href="${escapeHtml(variant.storyLink)}">Open story follow-up</a>
+                <button type="button" class="creator-link-copy" data-copy-share-kit data-copy-value="${escapeHtml(variant.storyLink)}">Copy story link</button>
+              </p>` : ""}
               <dl>
                 ${healthMetric("Placement", variant.placement || "none")}
                 ${healthMetric("Creator", variant.creator || "none")}
