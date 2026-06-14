@@ -987,6 +987,13 @@ function buildNoorSubscriberSprint() {
   const primaryLink = "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=family_share";
   const sampleLink = "https://fursay.com/sample/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=sample_followup";
   const worksheetPreview = "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint&creator=fursay&placement=worksheet_preview";
+  const sprintLink = (path, sourceId, placement) => `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
+  const variantLinks = {
+    parentGroup: sprintLink("/share/noor", "noor_first_subscriber_sprint_parent_group", "parent_group"),
+    directDm: sprintLink("/share/noor", "noor_first_subscriber_sprint_direct_dm", "direct_dm"),
+    worksheetFollowup: sprintLink("/product-samples/noor-worksheet", "noor_first_subscriber_sprint_worksheet_followup", "worksheet_followup"),
+    worksheetFollowupStory: sprintLink("/share/noor", "noor_first_subscriber_sprint_worksheet_followup_story", "worksheet_followup_story"),
+  };
   return {
     pack: "noor",
     status: "subscriber_signal_needed",
@@ -1005,31 +1012,35 @@ function buildNoorSubscriberSprint() {
       {
         id: "parent_group",
         label: "Parent group post",
-        placement: "family_share",
+        placement: "parent_group",
+        link: variantLinks.parentGroup,
         copy: [
           "Trying a tiny Arabic-Chinese routine with kids this week.",
-          `Free Noor 3-minute story pack: ${primaryLink}`,
+          `Free Noor 3-minute story pack: ${variantLinks.parentGroup}`,
           "It is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
         ].join("\n"),
       },
       {
         id: "direct_dm",
         label: "Direct family DM",
-        placement: "family_share",
+        placement: "direct_dm",
+        link: variantLinks.directDm,
         copy: [
           "I thought your family might like this tiny Noor story pack.",
-          `Free 3-minute Arabic-Chinese story pack: ${primaryLink}`,
+          `Free 3-minute Arabic-Chinese story pack: ${variantLinks.directDm}`,
           "No payment. It just helps test whether families want this kind of bilingual routine.",
         ].join("\n"),
       },
       {
         id: "worksheet_followup",
         label: "Worksheet follow-up",
-        placement: "worksheet_preview",
+        placement: "worksheet_followup",
+        link: variantLinks.worksheetFollowup,
+        storyLink: variantLinks.worksheetFollowupStory,
         copy: [
           "Here is the Noor worksheet preview I mentioned.",
-          `Preview: ${worksheetPreview}`,
-          `If it feels useful, the free story pack starts here: ${primaryLink}`,
+          `Preview: ${variantLinks.worksheetFollowup}`,
+          `If it feels useful, the free story pack starts here: ${variantLinks.worksheetFollowupStory}`,
         ].join("\n"),
       },
     ],
@@ -1050,6 +1061,10 @@ function trafficLaunchSprintSection(sprint) {
               <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(variant.copy)}">Copy variant</button>
             </div>
             <p>Placement: ${escapeHtml(variant.placement)}</p>
+            <dl>
+              ${shareKitLinkRow("Variant link", variant.link)}
+              ${variant.storyLink ? shareKitLinkRow("Story pack link", variant.storyLink) : ""}
+            </dl>
             <pre>${escapeHtml(variant.copy)}</pre>
           </article>`).join("\n");
   return `

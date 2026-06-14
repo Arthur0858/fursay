@@ -88,6 +88,44 @@ function requireHref(failures, pageKey, hrefSet, label, value) {
   if (!hrefSet.has(normalized(value))) failures.push(`${pageKey}:missing_href:${label}:${String(value || "none").slice(0, 140)}`);
 }
 
+function validateNoorSprintVariantLink(failures, pageKey, variant) {
+  const expected = {
+    parent_group: {
+      linkPath: "/share/noor",
+      sourceId: "noor_first_subscriber_sprint_parent_group",
+      placement: "parent_group",
+    },
+    direct_dm: {
+      linkPath: "/share/noor",
+      sourceId: "noor_first_subscriber_sprint_direct_dm",
+      placement: "direct_dm",
+    },
+    worksheet_followup: {
+      linkPath: "/product-samples/noor-worksheet",
+      sourceId: "noor_first_subscriber_sprint_worksheet_followup",
+      placement: "worksheet_followup",
+      storyLinkPath: "/share/noor",
+      storySourceId: "noor_first_subscriber_sprint_worksheet_followup_story",
+      storyPlacement: "worksheet_followup_story",
+    },
+  }[variant.id];
+  if (!expected) return;
+  if (!variant.link?.includes(`${expected.linkPath}?source_id=${expected.sourceId}`)) {
+    failures.push(`${pageKey}:noor_sprint_variant_bad_link:${variant.id || "none"}`);
+  }
+  if (!variant.link?.includes("creator=fursay")) failures.push(`${pageKey}:noor_sprint_variant_missing_creator:${variant.id || "none"}`);
+  if (!variant.link?.includes(`placement=${expected.placement}`)) failures.push(`${pageKey}:noor_sprint_variant_bad_placement:${variant.id || "none"}`);
+  if (!variant.copy?.includes(variant.link || "missing")) failures.push(`${pageKey}:noor_sprint_variant_copy_missing_link:${variant.id || "none"}`);
+  if (expected.storyLinkPath) {
+    if (!variant.storyLink?.includes(`${expected.storyLinkPath}?source_id=${expected.storySourceId}`)) {
+      failures.push(`${pageKey}:noor_sprint_variant_bad_story_link:${variant.id || "none"}`);
+    }
+    if (!variant.storyLink?.includes("creator=fursay")) failures.push(`${pageKey}:noor_sprint_variant_story_missing_creator:${variant.id || "none"}`);
+    if (!variant.storyLink?.includes(`placement=${expected.storyPlacement}`)) failures.push(`${pageKey}:noor_sprint_variant_bad_story_placement:${variant.id || "none"}`);
+    if (!variant.copy?.includes(variant.storyLink || "missing")) failures.push(`${pageKey}:noor_sprint_variant_copy_missing_story_link:${variant.id || "none"}`);
+  }
+}
+
 function validateManifestBasics(key, manifest, html, failures) {
   if (manifest.site !== "Fursay") failures.push(`${key}:bad_site:${manifest.site || "none"}`);
   if (manifest.origin !== "https://fursay.com") failures.push(`${key}:bad_origin:${manifest.origin || "none"}`);
@@ -204,16 +242,17 @@ function validateTrafficLaunch(manifest, html, failures) {
   }
   for (const variant of noorSprint.copyVariants || []) {
     requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:label`, variant.label);
+    requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:link`, variant.link);
     requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
+    requireHref(failures, pageKey, hrefSet, `noor_sprint:variant:${variant.id}:link`, variant.link);
     requireCopyValue(failures, pageKey, copySet, `noor_sprint:variant:${variant.id}:copy`, variant.copy);
     if (!["parent_group", "direct_dm", "worksheet_followup"].includes(variant.id)) {
       failures.push(`traffic-launch:noor_sprint_unknown_variant:${variant.id || "none"}`);
     }
-    if (!variant.copy?.includes(noorSprint.primaryLink || "missing")) {
-      failures.push(`traffic-launch:noor_sprint_variant_missing_primary:${variant.id || "none"}`);
-    }
-    if (variant.id === "worksheet_followup" && !variant.copy?.includes(noorSprint.worksheetPreview || "missing")) {
-      failures.push("traffic-launch:noor_sprint_worksheet_variant_missing_preview");
+    validateNoorSprintVariantLink(failures, pageKey, variant);
+    if (variant.storyLink) {
+      requireText(failures, pageKey, html, `noor_sprint:variant:${variant.id}:storyLink`, variant.storyLink);
+      requireHref(failures, pageKey, hrefSet, `noor_sprint:variant:${variant.id}:storyLink`, variant.storyLink);
     }
   }
   for (const checkpoint of noorSprint.checklist || []) requireText(failures, pageKey, html, "noor_sprint:checklist", checkpoint);
