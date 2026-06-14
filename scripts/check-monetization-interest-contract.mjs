@@ -112,6 +112,9 @@ async function main() {
   const release = await readJson(args.baseUrl, "/release.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
   const conversionHealth = await readJson(args.baseUrl, "/conversion-health.json");
+  const products = await readJson(args.baseUrl, "/products.json");
+  const links = await readJson(args.baseUrl, "/links.json");
+  const linksHtml = await readText(args.baseUrl, "/links");
   if (release.liveExpectations?.productInterestLinks !== productInterestLinks) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}!=${productInterestLinks}`);
   if (release.liveExpectations?.productInfoLinks !== productInfoLinks) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}!=${productInfoLinks}`);
   if (conversionHealth.growth?.productInfoLinks !== release.liveExpectations?.productInfoLinks) failures.push("conversion_health_product_info_link_mismatch");
@@ -119,6 +122,11 @@ async function main() {
   if (siteHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("site_health_interest_only_not_true");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
   if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("conversion_health_interest_only_not_true");
+  if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_social_entry_mismatch");
+  if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_zh_social_entry_mismatch");
+  if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_missing_product_social_entry");
+  if (!linksHtml.includes("https://fursay.com/zh/products?utm_source=links")) failures.push("links_missing_zh_product_social_entry");
+  if (!linksHtml.includes("utm_content=links_zh_product_interest")) failures.push("links_missing_zh_product_social_utm");
 
   const ownedProducts = conversionHealth.monetization?.ownedProducts?.products || [];
   const checkoutGate = conversionHealth.monetization?.ownedProducts?.checkoutGate || {};

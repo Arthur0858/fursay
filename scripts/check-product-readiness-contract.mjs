@@ -315,12 +315,19 @@ async function main() {
   if (products.event !== "fursay_product_interest_click") failures.push(`products_manifest_event:${products.event || "none"}`);
   if (products.subscribePayloadCompatibility !== "email/groups/attribution unchanged") failures.push("products_manifest_payload_contract_changed");
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_manifest_social_entry_mismatch");
+  if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_manifest_zh_social_entry_mismatch");
   if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_social_entry_missing_source");
   if (!products.trafficEntryPoints?.socialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_social_entry_missing_campaign");
+  if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_source=links")) failures.push("products_manifest_zh_social_entry_missing_source");
+  if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_campaign=product_interest_validation")) failures.push("products_manifest_zh_social_entry_missing_campaign");
+  if (!products.trafficEntryPoints?.zhSocialProfileLinks?.includes("utm_content=links_zh_product_interest")) failures.push("products_manifest_zh_social_entry_missing_content");
   if (!linksHtml.includes('href="/links.json"')) failures.push("links_page_missing_manifest_link");
   if (!linksHtml.includes("Printable and worksheet packs")) failures.push("links_page_missing_product_interest_label");
+  if (!linksHtml.includes("繁中產品等候名單")) failures.push("links_page_missing_zh_product_interest_label");
   if (!linksHtml.includes("utm_content=links_product_interest")) failures.push("links_page_missing_product_interest_utm");
+  if (!linksHtml.includes("utm_content=links_zh_product_interest")) failures.push("links_page_missing_zh_product_interest_utm");
   if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_page_missing_product_interest_href");
+  if (!linksHtml.includes("https://fursay.com/zh/products?utm_source=links")) failures.push("links_page_missing_zh_product_interest_href");
 
   const productIds = (products.products || []).map((product) => product.id).sort();
   if (productIds.join(",") !== REQUIRED_PRODUCTS.slice().sort().join(",")) failures.push(`products_manifest_product_ids:${productIds.join(",") || "none"}`);
