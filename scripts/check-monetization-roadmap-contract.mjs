@@ -115,6 +115,20 @@ async function main() {
   if (checkoutStage.status !== "locked") failures.push(`checkout_stage_status:${checkoutStage.status || "none"}`);
   if (checkoutStage.provider !== "not_selected") failures.push(`checkout_provider:${checkoutStage.provider || "none"}`);
   if (checkoutStage.paymentLinksAllowed !== false) failures.push("checkout_stage_payment_allowed");
+  const sampleStage = (roadmap.stages || []).find((stage) => stage.id === "draft_sample_pack") || {};
+  const printReadySamples = (roadmap.products || []).filter((product) => (
+    product.samplePreview?.status === "print_ready_preview" &&
+    product.samplePreview?.printReady === true &&
+    product.samplePreview?.downloadableFormat === "pdf_and_browser_print"
+  ));
+  if (printReadySamples.length === (roadmap.products || []).length && sampleStage.status !== "completed") {
+    failures.push(`sample_stage_status:${sampleStage.status || "none"}`);
+  }
+  if (sampleStage.status === "completed") {
+    if (!sampleStage.completedAt) failures.push("sample_stage_missing_completed_at");
+    if (!(sampleStage.evidenceSources || []).includes("sample PDF downloads")) failures.push("sample_stage_missing_download_evidence");
+    if (!sampleStage.nextGate?.includes("checkout locked")) failures.push("sample_stage_missing_next_gate");
+  }
   const disclosureStage = (roadmap.stages || []).find((stage) => stage.id === "publish_precheckout_disclosure") || {};
   if ((disclosureStage.requirements || []).length !== release.liveExpectations?.checkoutGateRequirements) failures.push("disclosure_requirement_count_mismatch");
 

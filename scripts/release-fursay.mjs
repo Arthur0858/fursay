@@ -1890,8 +1890,10 @@ function writeMonetizationRoadmap(siteDir, source) {
       {
         id: "draft_sample_pack",
         label: "Draft sample PDF packs",
-        status: "locked",
-        unlockCriteria: "Each product meets minimum product-interest and subscriber signals.",
+        status: "completed",
+        completedAt: taipeiDateString(),
+        evidenceSources: ["products.json", "product sample preview pages", "sample PDF downloads"],
+        nextGate: "Keep checkout locked until each product meets minimum product-interest and subscriber signals.",
         deliverables: ["Koko 3-page printable sample", "Noor 3-minute worksheet sample"],
       },
       {
@@ -3029,7 +3031,7 @@ ${noorSprintVariantCards}
     <section class="creator-kit-safety" data-growth-dashboard-section="product-validation">
       <h2>Product validation scoreboard</h2>
       <p>Paid packs stay disabled until product interest, waitlist clicks, and subscriber signals meet the validation plan. Social entry points are split by language so families land on the right waitlist page.</p>
-      <p><a href="/monetization-roadmap">Review the monetization roadmap</a> for the locked sample-pack, disclosure, and checkout-provider stages.</p>
+      <p><a href="/monetization-roadmap">Review the monetization roadmap</a> for completed sample previews, disclosure requirements, and locked checkout-provider stages.</p>
       <dl>
         ${healthMetric("Signal report status", validationDashboard.status || "unknown")}
         ${healthMetric("Report command", validationDashboard.reportCommand || "none")}
