@@ -10,6 +10,7 @@
   "trafficLaunch": "https://fursay.com/traffic-launch.json",
   "conversionHealth": "https://fursay.com/conversion-health.json",
   "logSource": "content/growth/noor-sprint-log.json",
+  "nextActionCommand": "npm run noor:sprint:next",
   "recorderCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run",
   "piiAllowed": false,
   "status": "ready_to_start",

@@ -3,7 +3,9 @@ import { resolve } from "node:path";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const LOG_FILE = "content/growth/noor-sprint-log.json";
+const NEXT_ACTION_SCRIPT = "scripts/next-noor-sprint-action.mjs";
 const RECORDER_SCRIPT = "scripts/record-noor-sprint-log.mjs";
+const NEXT_ACTION_COMMAND = "npm run noor:sprint:next";
 const RECORDER_COMMAND = "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run";
 const DEFAULT_OUT = "/tmp/fursay-noor-sprint-log";
 const ALLOWED_STATUSES = new Set(["ready_to_start", "in_progress", "signal_observed", "safe_wait_subscriber_empty"]);
@@ -93,6 +95,7 @@ function validateLog(log, failures) {
 
 function validateStatus(status, log, failures) {
   if (status.logSource !== LOG_FILE) failures.push(`status_bad_log_source:${status.logSource || "none"}`);
+  if (status.nextActionCommand !== NEXT_ACTION_COMMAND) failures.push(`status_bad_next_action_command:${status.nextActionCommand || "none"}`);
   if (status.recorderCommand !== RECORDER_COMMAND) failures.push(`status_bad_recorder_command:${status.recorderCommand || "none"}`);
   if (status.piiAllowed !== false) failures.push("status_pii_allowed_not_false");
   if (status.privacy?.piiAllowed !== false) failures.push("status_privacy_pii_allowed_not_false");
@@ -119,7 +122,9 @@ async function main() {
   if (!args.baseUrl) validateLog(log, failures);
   if (!args.baseUrl) {
     const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
+    if (!(await localFileExists(NEXT_ACTION_SCRIPT))) failures.push("missing_noor_sprint_next_action_script");
     if (!(await localFileExists(RECORDER_SCRIPT))) failures.push("missing_noor_sprint_recorder_script");
+    if (packageJson.scripts?.["noor:sprint:next"] !== `node ${NEXT_ACTION_SCRIPT}`) failures.push("missing_noor_sprint_next_package_script");
     if (packageJson.scripts?.["noor:sprint:log"] !== `node ${RECORDER_SCRIPT}`) failures.push("missing_noor_sprint_log_package_script");
   }
   validateStatus(status, log, failures);
@@ -129,6 +134,7 @@ async function main() {
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");
   if (!html.includes(LOG_FILE)) failures.push("page_missing_log_source");
+  if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
 
   await mkdir(args.outDir, { recursive: true });
