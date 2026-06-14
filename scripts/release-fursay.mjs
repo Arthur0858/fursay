@@ -293,6 +293,7 @@ function writeDeployReadinessManifest(siteDir, source) {
   const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
   const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const warnings = [];
+  warnings.push("analytics_engine_dashboard_enablement_required");
   if (!remote) warnings.push("git_missing_origin_remote");
   if (!hasCloudflareToken) warnings.push("missing_CLOUDFLARE_API_TOKEN");
   if (!hasCloudflareAccount) warnings.push("missing_CLOUDFLARE_ACCOUNT_ID");
@@ -311,6 +312,14 @@ function writeDeployReadinessManifest(siteDir, source) {
       deployReadinessCommand: "npm run deploy:ready",
       autoDeployWorkflow: ".github/workflows/deploy-worker.yml",
       runbook: "docs/cloudflare-deploy-runbook.md",
+      analyticsEngine: {
+        binding: "FURSAY_EVENTS",
+        dataset: "fursay_events",
+        configured: false,
+        status: "pending_cloudflare_dashboard_enablement",
+        enablementUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
+        lastDeployBlockerCode: "10089",
+      },
     },
     requiredSecrets: [
       "CLOUDFLARE_API_TOKEN",
@@ -395,6 +404,10 @@ function writeDeployReadinessPage(siteDir, manifest) {
         ${deployReadinessRow("GitHub push deploy proven", String(manifest.status.githubPushDeployProven))}
         ${deployReadinessRow("Local gate", manifest.deployment.localGateCommand)}
         ${deployReadinessRow("Live smoke", manifest.deployment.liveSmokeCommand)}
+        ${deployReadinessRow("Analytics Engine", manifest.deployment.analyticsEngine.status)}
+        ${deployReadinessRow("Analytics binding", `${manifest.deployment.analyticsEngine.binding} / ${manifest.deployment.analyticsEngine.dataset}`)}
+        ${deployReadinessRow("Analytics enablement", manifest.deployment.analyticsEngine.enablementUrl)}
+        ${deployReadinessRow("Last Analytics deploy blocker", manifest.deployment.analyticsEngine.lastDeployBlockerCode)}
         ${deployReadinessRow("Push deploy proof", manifest.strictGates.requirePushDeploy)}
       </dl>
     </section>
