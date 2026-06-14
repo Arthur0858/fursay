@@ -52,6 +52,16 @@
     } catch (e) {}
   }
 
+  function currentUrlAttribution() {
+    var params = new URLSearchParams(window.location.search || '');
+    var detail = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ref', 'source_id', 'creator', 'placement'].forEach(function (key) {
+      var value = params.get(key);
+      if (value) detail[key] = value;
+    });
+    return detail;
+  }
+
   function syncChecks() {
     document.querySelectorAll('#subscribeModal .modal-check').forEach(function (check) {
       var input = check.querySelector('input');
@@ -119,10 +129,10 @@
       var opener = event.target.closest('[data-open-subscribe]');
       if (opener) {
         event.preventDefault();
-        emitFursayEvent('fursay_subscribe_open_click', {
+        emitFursayEvent('fursay_subscribe_open_click', Object.assign({
           pack: normalizePack(opener.getAttribute('data-open-subscribe')),
           signup_source: opener.getAttribute('data-signup-source') || ''
-        });
+        }, currentUrlAttribution()));
         window.openSubscribeModal(
           opener.getAttribute('data-open-subscribe') || undefined,
           opener.getAttribute('data-signup-source') || undefined
@@ -666,10 +676,10 @@
     overlay.dataset.preselect = preselect || '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    emitFursayEvent('fursay_subscribe_modal_open', {
+    emitFursayEvent('fursay_subscribe_modal_open', Object.assign({
       pack: normalizePack(preselect),
       signup_source: overlay.dataset.signupSource
-    });
+    }, currentUrlAttribution()));
     if (preselect) {
       document.querySelectorAll('#subscribeModal input[name="groups"]').forEach(function (input) {
         input.checked = input.value === preselect;
@@ -733,9 +743,13 @@
       attribution: collectSubscribeAttribution()
     };
     emitFursayEvent('fursay_subscribe_submit_attempt', {
+      pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
       groups: groups.join(','),
       signup_source: payload.attribution.signup_source || '',
-      modal_preselect: payload.attribution.modal_preselect || ''
+      modal_preselect: payload.attribution.modal_preselect || '',
+      source_id: payload.attribution.source_id || '',
+      creator: payload.attribution.creator || '',
+      placement: payload.attribution.placement || ''
     });
 
     if (btn) {
@@ -759,8 +773,12 @@
       try { data = await res.json(); } catch (e) {}
       var ok = res.ok && data.success !== false;
       emitFursayEvent(ok ? 'fursay_subscribe_submit_success' : 'fursay_subscribe_submit_failure', {
+        pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
         groups: groups.join(','),
         signup_source: payload.attribution.signup_source || '',
+        source_id: payload.attribution.source_id || '',
+        creator: payload.attribution.creator || '',
+        placement: payload.attribution.placement || '',
         status: res.status
       });
       if (msg) msg.textContent = ok ? 'Subscribed successfully.' : (data.message || 'Please try again.');
@@ -769,8 +787,12 @@
       syncChecks();
     } catch (e) {
       emitFursayEvent('fursay_subscribe_submit_error', {
+        pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
         groups: groups.join(','),
-        signup_source: payload.attribution.signup_source || ''
+        signup_source: payload.attribution.signup_source || '',
+        source_id: payload.attribution.source_id || '',
+        creator: payload.attribution.creator || '',
+        placement: payload.attribution.placement || ''
       });
       if (msg) msg.textContent = 'Could not connect. Please try again later.';
       if (btn) btn.textContent = btn.dataset.originalText || 'Subscribe';

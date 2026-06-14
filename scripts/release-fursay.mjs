@@ -242,7 +242,7 @@ function writeReleaseManifest() {
       eventTrackingSubmitPages: 3,
       anonymousConversionEvents: 14,
       conversionDashboardSections: 6,
-      eventAnalyticsBlobFields: 15,
+      eventAnalyticsBlobFields: 18,
       eventAnalyticsDoubleFields: 1,
       eventAnalyticsReportQueries: 12,
       eventAnalyticsReportWindowDays: 7,
@@ -1299,7 +1299,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -1551,6 +1551,25 @@ function writeShortlinkManifest(siteDir, source) {
 
 function writeConversionHealth(siteDir, source) {
   const release = readJson(resolve(siteDir, "release.json"));
+  const trafficLaunch = readJson(resolve(siteDir, "traffic-launch.json"));
+  const noorSprint = trafficLaunch.activationSprints?.noorFirstSubscriber || {};
+  const trackedNoorSprintVariants = (noorSprint.copyVariants || []).map((variant) => {
+    const link = variant.link || "";
+    const storyLink = variant.storyLink || "";
+    const params = new URL(link || "https://fursay.com").searchParams;
+    const storyParams = new URL(storyLink || "https://fursay.com").searchParams;
+    return {
+      id: variant.id,
+      label: variant.label,
+      placement: variant.placement,
+      sourceId: params.get("source_id") || "",
+      creator: params.get("creator") || "",
+      link,
+      storySourceId: storyParams.get("source_id") || "",
+      storyLink,
+      reportFamily: "noor_growth_signals",
+    };
+  });
   const manifest = {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1585,6 +1604,9 @@ function writeConversionHealth(siteDir, source) {
           "product_interest",
           "interest_stage",
           "colo",
+          "source_id",
+          "creator",
+          "placement",
         ],
         doubleFields: ["event_count"],
         sqlApi: "Cloudflare Analytics Engine SQL API after account enablement",
@@ -1649,6 +1671,8 @@ function writeConversionHealth(siteDir, source) {
       noorReadinessStatus: "safe_wait_subscriber_empty",
       noorSubscriberSignalGoal: 1,
       noorSubscriberSignalStatus: "waiting_for_first_real_subscriber_signal",
+      noorSprintVariantCount: trackedNoorSprintVariants.length,
+      noorSprintVariants: trackedNoorSprintVariants,
       productInterestLinks: release.liveExpectations.productInterestLinks,
       productInfoLinks: release.liveExpectations.productInfoLinks,
     },
@@ -2286,7 +2310,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -2497,7 +2521,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -2667,7 +2691,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -2804,7 +2828,7 @@ ${cards}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -2850,6 +2874,19 @@ function writeConversionHealthPage(siteDir) {
               </dl>
             </article>`;
     })
+    .join("\n");
+  const noorSprintVariantCards = (health.growth?.noorSprintVariants || [])
+    .map((variant) => `
+            <article class="creator-copy-block" data-noor-growth-variant="${escapeHtml(variant.id)}">
+              <h3>${escapeHtml(variant.label)}</h3>
+              <p>Track in <code>${escapeHtml(variant.reportFamily || "noor_growth_signals")}</code> by <code>${escapeHtml(variant.sourceId)}</code>.</p>
+              <dl>
+                ${healthMetric("Placement", variant.placement || "none")}
+                ${healthMetric("Creator", variant.creator || "none")}
+                ${healthMetric("Source ID", variant.sourceId || "none")}
+                ${variant.storySourceId ? healthMetric("Story source ID", variant.storySourceId) : ""}
+              </dl>
+            </article>`)
     .join("\n");
   const socialEntries = productsManifest.trafficEntryPoints || {};
   const validationDashboard = health.monetization?.ownedProducts?.validationDashboard || {};
@@ -2916,8 +2953,12 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Noor lead magnet pages", health.growth?.noorLeadMagnetPages)}
         ${healthMetric("Noor readiness", health.growth?.noorReadinessStatus)}
         ${healthMetric("Noor subscriber signal goal", health.growth?.noorSubscriberSignalGoal, health.growth?.noorSubscriberSignalStatus || "")}
+        ${healthMetric("Noor sprint variants", health.growth?.noorSprintVariantCount || 0, `expected ${release.liveExpectations?.noorSprintCopyVariants}`)}
         ${healthMetric("Product interest links", health.growth?.productInterestLinks)}
       </dl>
+      <div class="creator-copy-blocks">
+${noorSprintVariantCards}
+      </div>
     </section>
     <section class="creator-kit-safety" data-growth-dashboard-section="monetization">
       <h2>Monetization</h2>
@@ -3332,7 +3373,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -3433,7 +3474,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce5.js"></script>
+  <script src="/js/site-shared-20260613-commerce6.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

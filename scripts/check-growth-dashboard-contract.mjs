@@ -128,6 +128,9 @@ async function main() {
   if (conversionHealth.measurement?.analyticsSink?.status !== "pending_cloudflare_enablement") failures.push("bad_analytics_status");
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");
+  for (const field of ["source_id", "creator", "placement"]) {
+    if (!conversionHealth.measurement?.analyticsSink?.blobFields?.includes(field)) failures.push(`dashboard_manifest_missing_variant_field:${field}`);
+  }
   if (conversionHealth.measurement?.analyticsSink?.doubleFields?.length !== release.liveExpectations?.eventAnalyticsDoubleFields) failures.push("analytics_double_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("bad_report_script");
   if (conversionHealth.measurement?.analyticsReport?.packageScript !== "npm run report:events") failures.push("bad_report_package_script");
@@ -138,6 +141,7 @@ async function main() {
   if (!html.includes("Report windows")) failures.push("dashboard_missing_report_windows");
   if (!html.includes("Comparison windows")) failures.push("dashboard_missing_comparison_windows");
   if (!html.includes("Noor subscriber signal goal")) failures.push("dashboard_missing_noor_subscriber_goal");
+  if (!html.includes("Noor sprint variants")) failures.push("dashboard_missing_noor_sprint_variant_metric");
   for (const queryName of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
     if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(queryName)) failures.push(`dashboard_manifest_missing_noor_query:${queryName}`);
   }
@@ -154,6 +158,20 @@ async function main() {
   if (conversionHealth.coverage?.shareOrCopyPages !== release.liveExpectations?.eventTrackingPages) failures.push("share_copy_coverage_mismatch");
   if (conversionHealth.coverage?.submitAttemptPages !== release.liveExpectations?.eventTrackingSubmitPages) failures.push("submit_coverage_mismatch");
   if (conversionHealth.growth?.noorReadinessStatus !== "safe_wait_subscriber_empty") failures.push("bad_noor_readiness_status");
+  if (conversionHealth.growth?.noorSprintVariantCount !== release.liveExpectations?.noorSprintCopyVariants) failures.push("noor_sprint_variant_count_mismatch");
+  const expectedNoorVariantSourceIds = [
+    "noor_first_subscriber_sprint_parent_group",
+    "noor_first_subscriber_sprint_direct_dm",
+    "noor_first_subscriber_sprint_worksheet_followup",
+  ];
+  const noorVariantSourceIds = new Set((conversionHealth.growth?.noorSprintVariants || []).map((variant) => variant.sourceId));
+  for (const sourceId of expectedNoorVariantSourceIds) {
+    if (!noorVariantSourceIds.has(sourceId)) failures.push(`dashboard_manifest_missing_noor_variant_source:${sourceId}`);
+    if (!html.includes(sourceId)) failures.push(`dashboard_missing_noor_variant_source:${sourceId}`);
+  }
+  for (const variant of conversionHealth.growth?.noorSprintVariants || []) {
+    if (!html.includes(`data-noor-growth-variant="${variant.id}"`)) failures.push(`dashboard_missing_noor_variant_card:${variant.id || "none"}`);
+  }
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("checkout_enabled_must_be_false");
   if (conversionHealth.monetization?.ownedProducts?.interestOnly !== true) failures.push("interest_only_must_be_true");
   if (conversionHealth.monetization?.ownedProducts?.status !== "interest_validation") failures.push("owned_products_bad_status");

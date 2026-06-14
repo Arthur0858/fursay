@@ -188,6 +188,9 @@ async function main() {
   if (conversionHealth.measurement?.analyticsSink?.status !== "pending_cloudflare_enablement") failures.push("bad_analytics_status");
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");
+  for (const field of ["source_id", "creator", "placement"]) {
+    if (!conversionHealth.measurement?.analyticsSink?.blobFields?.includes(field)) failures.push(`analytics_missing_variant_field:${field}`);
+  }
   if (conversionHealth.measurement?.analyticsSink?.doubleFields?.length !== release.liveExpectations?.eventAnalyticsDoubleFields) failures.push("analytics_double_field_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("bad_report_script");
   if (conversionHealth.measurement?.analyticsReport?.packageScript !== "npm run report:events") failures.push("bad_report_package_script");
@@ -197,6 +200,13 @@ async function main() {
   if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
   for (const name of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
     if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(name)) failures.push(`report_missing_noor_query:${name}`);
+  }
+  if (conversionHealth.growth?.noorSprintVariantCount !== release.liveExpectations?.noorSprintCopyVariants) {
+    failures.push(`noor_sprint_variant_count:${conversionHealth.growth?.noorSprintVariantCount || 0}`);
+  }
+  const noorVariantSourceIds = new Set((conversionHealth.growth?.noorSprintVariants || []).map((variant) => variant.sourceId));
+  for (const sourceId of ["noor_first_subscriber_sprint_parent_group", "noor_first_subscriber_sprint_direct_dm", "noor_first_subscriber_sprint_worksheet_followup"]) {
+    if (!noorVariantSourceIds.has(sourceId)) failures.push(`missing_noor_variant_source_id:${sourceId}`);
   }
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
   for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT]) {

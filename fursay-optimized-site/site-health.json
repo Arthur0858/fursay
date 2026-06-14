@@ -222,7 +222,10 @@
         "copy_kind",
         "product_interest",
         "interest_stage",
-        "colo"
+        "colo",
+        "source_id",
+        "creator",
+        "placement"
       ],
       "doubleFields": [
         "event_count"
@@ -363,7 +366,7 @@
       "/css/picture-world-tools-20260613-products1.css"
     ],
     "js": [
-      "/js/site-shared-20260613-commerce5.js"
+      "/js/site-shared-20260613-commerce6.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
@@ -386,6 +389,42 @@
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "noorSubscriberSignalGoal": 1,
     "noorSubscriberSignalStatus": "waiting_for_first_real_subscriber_signal",
+    "noorSprintVariantCount": 3,
+    "noorSprintVariants": [
+      {
+        "id": "parent_group",
+        "label": "Parent group post",
+        "placement": "parent_group",
+        "sourceId": "noor_first_subscriber_sprint_parent_group",
+        "creator": "fursay",
+        "link": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
+        "storySourceId": "",
+        "storyLink": "",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "direct_dm",
+        "label": "Direct family DM",
+        "placement": "direct_dm",
+        "sourceId": "noor_first_subscriber_sprint_direct_dm",
+        "creator": "fursay",
+        "link": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm",
+        "storySourceId": "",
+        "storyLink": "",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "worksheet_followup",
+        "label": "Worksheet follow-up",
+        "placement": "worksheet_followup",
+        "sourceId": "noor_first_subscriber_sprint_worksheet_followup",
+        "creator": "fursay",
+        "link": "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint_worksheet_followup&creator=fursay&placement=worksheet_followup",
+        "storySourceId": "noor_first_subscriber_sprint_worksheet_followup_story",
+        "storyLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_worksheet_followup_story&creator=fursay&placement=worksheet_followup_story",
+        "reportFamily": "noor_growth_signals"
+      }
+    ],
     "productInterestLinks": 18,
     "productInfoLinks": 18
   },

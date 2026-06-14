@@ -366,6 +366,9 @@ function writeAnonymousEvent(event, request, env) {
         safeAnalyticsValue(detail.product_interest),
         safeAnalyticsValue(detail.interest_stage),
         safeAnalyticsValue(request.cf?.colo || ""),
+        safeAnalyticsValue(detail.source_id),
+        safeAnalyticsValue(detail.creator),
+        safeAnalyticsValue(detail.placement),
       ],
       doubles: [1],
     });
@@ -398,7 +401,10 @@ function sanitizeEvent(body) {
     "link_url",
     "copy_kind",
     "product_interest",
-    "interest_stage"
+    "interest_stage",
+    "source_id",
+    "creator",
+    "placement"
   ]);
   const blocked = /email|name|phone|address|token|secret|password/i;
   const event = typeof body?.event === "string" ? body.event.replace(/[^a-z0-9_:-]/gi, "").slice(0, 80) : "";

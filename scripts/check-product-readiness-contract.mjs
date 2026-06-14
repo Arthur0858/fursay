@@ -471,9 +471,9 @@ async function main() {
   if (!zhHtml.includes("data-product-faq")) failures.push("zh_products_page_missing_faq");
   if (!arHtml.includes("data-product-faq")) failures.push("ar_products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
-  if (!html.includes("site-shared-20260613-commerce5.js")) failures.push("products_page_missing_shared_js");
-  if (!zhHtml.includes("site-shared-20260613-commerce5.js")) failures.push("zh_products_page_missing_shared_js");
-  if (!arHtml.includes("site-shared-20260613-commerce5.js")) failures.push("ar_products_page_missing_shared_js");
+  if (!html.includes("site-shared-20260613-commerce6.js")) failures.push("products_page_missing_shared_js");
+  if (!zhHtml.includes("site-shared-20260613-commerce6.js")) failures.push("zh_products_page_missing_shared_js");
+  if (!arHtml.includes("site-shared-20260613-commerce6.js")) failures.push("ar_products_page_missing_shared_js");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
   if (!zhHtml.includes("今天不會收費")) failures.push("zh_products_page_missing_no_payment_copy");

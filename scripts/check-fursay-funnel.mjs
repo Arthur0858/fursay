@@ -811,6 +811,7 @@ async function checkAttributionPayload(browser, baseUrl) {
   await page.locator('#subscribeModal.open input[type="email"]:visible').fill("funnel-smoke@example.test");
   await page.evaluate(() => document.querySelector("#subscribeModal form")?.requestSubmit());
   await page.waitForFunction(() => document.querySelector("#subscribeModal .modal-note")?.textContent.includes("Subscribed"), null, { timeout: 5000 }).catch(() => {});
+  const events = await page.evaluate(() => window.fursayEvents || []);
   await page.close();
 
   const attribution = capturedPayload?.attribution || {};
@@ -830,12 +831,23 @@ async function checkAttributionPayload(browser, baseUrl) {
   if (attribution.source_id !== "chat42") failures.push(`wrong_payload_source_id:${attribution.source_id || "none"}`);
   if (attribution.creator !== "parent_group") failures.push(`wrong_payload_creator:${attribution.creator || "none"}`);
   if (attribution.placement !== "whatsapp") failures.push(`wrong_payload_placement:${attribution.placement || "none"}`);
+  for (const eventName of ["fursay_subscribe_modal_open", "fursay_subscribe_submit_attempt", "fursay_subscribe_submit_success"]) {
+    const event = events.find((item) => item.event === eventName);
+    if (!event) {
+      failures.push(`missing_attribution_event:${eventName}`);
+      continue;
+    }
+    if (event.detail?.pack !== "noor") failures.push(`wrong_event_pack:${eventName}:${event.detail?.pack || "none"}`);
+    if (event.detail?.source_id !== "chat42") failures.push(`wrong_event_source_id:${eventName}:${event.detail?.source_id || "none"}`);
+    if (event.detail?.creator !== "parent_group") failures.push(`wrong_event_creator:${eventName}:${event.detail?.creator || "none"}`);
+    if (event.detail?.placement !== "whatsapp") failures.push(`wrong_event_placement:${eventName}:${event.detail?.placement || "none"}`);
+  }
 
   return {
     path: "/arabic?subscribe=noor attribution payload",
     ok: failures.length === 0,
     failures,
-    data: { groups, attribution },
+    data: { groups, attribution, eventCount: events.length },
   };
 }
 
@@ -1286,7 +1298,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260613-traffic12.css") failures.push(`release_css:${release.assets?.css || "none"}`);
-  if (release.assets?.js !== "/js/site-shared-20260613-commerce5.js") failures.push(`release_js:${release.assets?.js || "none"}`);
+  if (release.assets?.js !== "/js/site-shared-20260613-commerce6.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
     failures.push(`release_campaign_manifest:${release.deployment?.campaignManifest || "none"}`);
@@ -1346,7 +1358,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.affiliateEventTrackingPages !== 18) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
   if (release.liveExpectations?.anonymousConversionEvents !== 14) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
-  if (release.liveExpectations?.eventAnalyticsBlobFields !== 15) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
+  if (release.liveExpectations?.eventAnalyticsBlobFields !== 18) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsDoubleFields !== 1) failures.push(`release_event_analytics_double_fields:${release.liveExpectations?.eventAnalyticsDoubleFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsReportQueries !== 12) failures.push(`release_event_analytics_report_queries:${release.liveExpectations?.eventAnalyticsReportQueries || "none"}`);
   if (release.liveExpectations?.eventAnalyticsReportWindowDays !== 7) failures.push(`release_event_analytics_report_window:${release.liveExpectations?.eventAnalyticsReportWindowDays || "none"}`);
@@ -1916,7 +1928,7 @@ async function checkDiscoveryFiles(baseUrl) {
   ]) {
     if (!siteHealth.sharedAssets?.css?.includes(asset)) failures.push(`site_health_missing_page_css:${asset}`);
   }
-  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-commerce5.js")) {
+  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20260613-commerce6.js")) {
     failures.push("site_health_missing_current_shared_js");
   }
   return {

@@ -4,7 +4,7 @@ import worker from "../src/worker.js";
 
 const DEFAULT_OUT = "/tmp/fursay-event-analytics-contract";
 const ORIGIN = "https://fursay.com";
-const REQUIRED_BLOBS = 15;
+const REQUIRED_BLOBS = 18;
 const REQUIRED_DOUBLES = 1;
 const PRIVATE_NEEDLES = ["event-contract@example.com", "Ada Parent", "phone", "address", "secret-token"];
 
@@ -57,6 +57,9 @@ function sampleEvent() {
       copy_kind: "dashboard",
       product_interest: "noor-worksheet-pack",
       interest_stage: "waitlist",
+      source_id: "noor_first_subscriber_sprint_direct_dm",
+      creator: "fursay",
+      placement: "direct_dm",
       email: "event-contract@example.com",
       name: "Ada Parent",
       secret: "secret-token",
@@ -109,6 +112,9 @@ async function runLocal() {
   if (point.blobs?.[0] !== "fursay_contract_ping") failures.push(`analytics:bad_event_blob:${point.blobs?.[0] || "none"}`);
   if (point.blobs?.[1] !== "/conversion-health") failures.push(`analytics:bad_path_blob:${point.blobs?.[1] || "none"}`);
   if (point.blobs?.[10] !== "/@ArabicKidsChinese") failures.push(`analytics:bad_outbound_path_blob:${point.blobs?.[10] || "none"}`);
+  if (point.blobs?.[15] !== "noor_first_subscriber_sprint_direct_dm") failures.push(`analytics:bad_source_id_blob:${point.blobs?.[15] || "none"}`);
+  if (point.blobs?.[16] !== "fursay") failures.push(`analytics:bad_creator_blob:${point.blobs?.[16] || "none"}`);
+  if (point.blobs?.[17] !== "direct_dm") failures.push(`analytics:bad_placement_blob:${point.blobs?.[17] || "none"}`);
   const privateValues = privateNeedles(point);
   if (privateValues.length) failures.push(`analytics:private_values:${privateValues.join(",")}`);
   checks.push({ name: "analytics_engine_binding", status: analyticsResponse.status, body: analyticsBody, dataPoint: point });
