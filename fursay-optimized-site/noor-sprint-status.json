@@ -5,11 +5,13 @@
   "updatedAt": "2026-06-15",
   "source": {
     "branch": "main",
-    "commit": "407bce7",
-    "summary": "Add Noor sprint daily action plan"
+    "commit": "57bb69a",
+    "summary": "Add Noor sprint status log"
   },
   "page": "https://fursay.com/noor-sprint-status",
   "manifest": "https://fursay.com/noor-sprint-status.json",
+  "releaseManifest": "https://fursay.com/release.json",
+  "siteHealth": "https://fursay.com/site-health.json",
   "trafficLaunch": "https://fursay.com/traffic-launch.json",
   "conversionHealth": "https://fursay.com/conversion-health.json",
   "piiAllowed": false,

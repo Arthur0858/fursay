@@ -70,7 +70,7 @@ const TOOL_PAGES = [
   { page: "/share-kit", manifest: "/share-kit.json" },
   { page: "/creator-kit", manifest: "/creator-kit.json" },
   { page: "/traffic-launch", manifest: "/traffic-launch.json" },
-  { page: "/noor-sprint-status", manifest: "/noor-sprint-status.json" },
+  { page: "/noor-sprint-status", manifest: "/noor-sprint-status.json", requiresCommitBadge: false },
   { page: "/deploy-readiness", manifest: "/deploy-readiness.json" },
   { page: "/conversion-health", manifest: "/conversion-health.json" },
   { page: "/monetization-roadmap", manifest: "/monetization-roadmap.json" },
@@ -205,12 +205,12 @@ function checkShortlinkRoute(route, failures, knownPages) {
   }
 }
 
-function checkToolPage(page, html, manifest, expectedCommit, failures) {
+function checkToolPage(page, html, manifest, expectedCommit, failures, options = {}) {
   const canonical = [...html.matchAll(/<link\b[^>]*>/gi)]
     .find((match) => attr(match[0], "rel").toLowerCase() === "canonical")?.[0] || "";
   if (attr(canonical, "href") !== `${ORIGIN}${page}`) failures.push(`${page}:bad_canonical:${attr(canonical, "href") || "none"}`);
   if (!html.includes(`href="${manifest}"`)) failures.push(`${page}:missing_manifest_link:${manifest}`);
-  if (!html.includes(`Commit ${expectedCommit}`)) failures.push(`${page}:missing_commit_badge:${expectedCommit}`);
+  if (options.requiresCommitBadge !== false && !html.includes(`Commit ${expectedCommit}`)) failures.push(`${page}:missing_commit_badge:${expectedCommit}`);
 }
 
 async function main() {
@@ -307,8 +307,8 @@ async function main() {
     }
   }
 
-  for (const { page, manifest } of TOOL_PAGES) {
-    checkToolPage(page, texts[page], manifest, expectedCommit, failures);
+  for (const toolPage of TOOL_PAGES) {
+    checkToolPage(toolPage.page, texts[toolPage.page], toolPage.manifest, expectedCommit, failures, toolPage);
   }
 
   const ownUrls = new Set();

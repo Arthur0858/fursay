@@ -1469,9 +1469,10 @@ function buildNoorSprintStatus(siteDir, source) {
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
-    source,
     page: "https://fursay.com/noor-sprint-status",
     manifest: "https://fursay.com/noor-sprint-status.json",
+    releaseManifest: "https://fursay.com/release.json",
+    siteHealth: "https://fursay.com/site-health.json",
     trafficLaunch: "https://fursay.com/traffic-launch.json",
     conversionHealth: "https://fursay.com/conversion-health.json",
     piiAllowed: false,
@@ -1542,8 +1543,9 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
       <p>${escapeHtml(manifest.goal)}</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
-        <span>Commit ${escapeHtml(manifest.source.commit)}</span>
         <a href="/noor-sprint-status.json">JSON manifest</a>
+        <a href="/release.json">Release manifest</a>
+        <a href="/site-health.json">Site health</a>
         <a href="/traffic-launch">Traffic launch kit</a>
       </div>
     </header>

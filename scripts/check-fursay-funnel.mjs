@@ -1553,6 +1553,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (noorSprintStatus.platform !== "cloudflare-workers-static-assets") failures.push(`noor_sprint_status_platform:${noorSprintStatus.platform || "none"}`);
   if (noorSprintStatus.page !== "https://fursay.com/noor-sprint-status") failures.push(`noor_sprint_status_page:${noorSprintStatus.page || "none"}`);
   if (noorSprintStatus.manifest !== "https://fursay.com/noor-sprint-status.json") failures.push(`noor_sprint_status_manifest:${noorSprintStatus.manifest || "none"}`);
+  if (noorSprintStatus.releaseManifest !== "https://fursay.com/release.json") failures.push(`noor_sprint_status_release_manifest:${noorSprintStatus.releaseManifest || "none"}`);
+  if (noorSprintStatus.siteHealth !== "https://fursay.com/site-health.json") failures.push(`noor_sprint_status_site_health:${noorSprintStatus.siteHealth || "none"}`);
   if (noorSprintStatus.trafficLaunch !== "https://fursay.com/traffic-launch.json") failures.push("noor_sprint_status_bad_traffic_launch");
   if (noorSprintStatus.conversionHealth !== "https://fursay.com/conversion-health.json") failures.push("noor_sprint_status_bad_conversion_health");
   if (noorSprintStatus.piiAllowed !== false) failures.push("noor_sprint_status_pii_allowed");
@@ -1677,6 +1679,8 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (!noorSprintStatusPage.includes('<body class="picture-world creator-kit-page noor-sprint-status-page">')) failures.push("noor_sprint_status_page_missing_body_class");
   if (!noorSprintStatusPage.includes("/noor-sprint-status.json")) failures.push("noor_sprint_status_page_missing_json_manifest_link");
+  if (!noorSprintStatusPage.includes("/release.json")) failures.push("noor_sprint_status_page_missing_release_manifest_link");
+  if (!noorSprintStatusPage.includes("/site-health.json")) failures.push("noor_sprint_status_page_missing_site_health_link");
   if (!noorSprintStatusPage.includes("/traffic-launch")) failures.push("noor_sprint_status_page_missing_traffic_launch_link");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-summary")) failures.push("noor_sprint_status_page_missing_summary");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-log")) failures.push("noor_sprint_status_page_missing_log");
