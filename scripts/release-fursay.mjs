@@ -247,6 +247,7 @@ function writeReleaseManifest() {
       productLandingPages: 3,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
+      visualLayoutChecks: 24,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
       cacheHeaderChecks: 63,

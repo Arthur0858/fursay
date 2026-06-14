@@ -15,6 +15,9 @@ const PAGES = [
   { path: "/arabic", file: "arabic.html", lang: "en" },
   { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW" },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", rtl: true },
+  { path: "/products", file: "products.html", lang: "en", product: true },
+  { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", product: true },
+  { path: "/ar/products", file: "ar/products.html", lang: "ar", rtl: true, product: true },
 ];
 const VIEWPORTS = [
   { name: "desktop", width: 1366, height: 900, isMobile: false, deviceScaleFactor: 1 },
@@ -123,7 +126,7 @@ async function collectLayout(page) {
       const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
       return text || element.getAttribute("aria-label") || element.getAttribute("alt") || element.tagName.toLowerCase();
     };
-    const actionableSelector = "nav a, nav button, .hero a, .hero button, .hero [data-open-subscribe]";
+    const actionableSelector = "nav a, nav button, .hero a, .hero button, .hero [data-open-subscribe], .products-page [data-product-interest], .products-page .public-share-actions a";
     const actionables = [...document.querySelectorAll(actionableSelector)]
       .filter(isVisible)
       .map((element, index) => ({
@@ -148,6 +151,11 @@ async function collectLayout(page) {
     const shareActions = document.querySelector(".share-actions");
     const shareTextNodes = [...document.querySelectorAll(".share-copy h2, .share-copy p")];
     const shareActionNodes = [...document.querySelectorAll(".share-actions button, .share-actions a")];
+    const productHero = document.querySelector("[data-product-hero]");
+    const productTrust = document.querySelector(".product-trust-strip");
+    const productCards = [...document.querySelectorAll(".product-waitlist-card")].filter(isVisible);
+    const productButtons = [...document.querySelectorAll("[data-product-interest]")].filter(isVisible);
+    const productBridgeLinks = [...document.querySelectorAll(".product-waitlist-card .public-share-actions a")].filter(isVisible);
     const h1Style = h1 ? getComputedStyle(h1) : null;
     return {
       title: document.title,
@@ -192,6 +200,33 @@ async function collectLayout(page) {
           overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
         })),
       } : null,
+      product: productHero ? {
+        hero: rectFor(productHero),
+        trust: productTrust ? {
+          rect: rectFor(productTrust),
+          itemCount: [...productTrust.children].filter(isVisible).length,
+          overflowX: productTrust.scrollWidth > Math.ceil(productTrust.clientWidth) + 1,
+        } : null,
+        cards: productCards.map((element) => ({
+          id: element.getAttribute("data-product-card") || "",
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+        buttons: productButtons.map((element) => ({
+          pack: element.getAttribute("data-product-interest") || "",
+          source: element.getAttribute("data-signup-source") || "",
+          stage: element.getAttribute("data-interest-stage") || "",
+          text: labelFor(element),
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+        bridgeLinks: productBridgeLinks.map((element) => ({
+          text: labelFor(element),
+          href: element.getAttribute("href") || "",
+          rect: rectFor(element),
+          overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
+        })),
+      } : null,
     };
   });
 }
@@ -210,7 +245,8 @@ function checkLayout(spec, viewport, layout) {
   if (layout.lang !== spec.lang) failures.push(`${prefix}:lang:${layout.lang || "none"}`);
   if (spec.rtl && layout.dir !== "rtl") failures.push(`${prefix}:html_dir:${layout.dir || "none"}`);
   if (!spec.rtl && layout.dir === "rtl") failures.push(`${prefix}:unexpected_rtl_dir`);
-  if (!layout.hero) failures.push(`${prefix}:missing_hero`);
+  const expectedHero = spec.product ? layout.product?.hero : layout.hero;
+  if (!expectedHero) failures.push(`${prefix}:missing_hero`);
   if (!layout.h1) {
     failures.push(`${prefix}:missing_h1`);
     return failures;
@@ -224,13 +260,46 @@ function checkLayout(spec, viewport, layout) {
   if (layout.h1.letterSpacing.startsWith("-")) failures.push(`${prefix}:h1_negative_letter_spacing:${layout.h1.letterSpacing}`);
   if (spec.rtl && layout.h1.direction !== "rtl") failures.push(`${prefix}:h1_direction:${layout.h1.direction}`);
 
-  const heroCtas = layout.primaryCtas;
+  const heroCtas = spec.product ? layout.product?.buttons || [] : layout.primaryCtas;
   if (!heroCtas.length) failures.push(`${prefix}:hero_subscribe_cta_missing`);
   for (const cta of heroCtas) {
     checkRectInsideViewport(failures, `${prefix}:cta_${cta.pack || cta.index}`, cta.rect, viewport, 8);
-    if (cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
+    if (!spec.product && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
     if (cta.rect.width < 44 || cta.rect.height < 36) failures.push(`${prefix}:cta_touch_target:${cta.pack || cta.index}:${Math.round(cta.rect.width)}x${Math.round(cta.rect.height)}`);
     if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
+    if (spec.product && cta.stage !== "waitlist") failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.product && cta.overflowX) failures.push(`${prefix}:product_cta_text_overflow:${cta.pack || cta.index}`);
+  }
+
+  if (spec.product) {
+    const product = layout.product;
+    if (!product) {
+      failures.push(`${prefix}:missing_product_layout`);
+      return failures;
+    }
+    checkRectInsideViewport(failures, `${prefix}:product_hero`, product.hero, viewport, 8);
+    if (!product.trust) {
+      failures.push(`${prefix}:product_trust_missing`);
+    } else {
+      checkRectInsideViewport(failures, `${prefix}:product_trust`, product.trust.rect, viewport, 8);
+      if (product.trust.itemCount < 3) failures.push(`${prefix}:product_trust_item_count:${product.trust.itemCount}`);
+      if (product.trust.overflowX) failures.push(`${prefix}:product_trust_overflow`);
+    }
+    if (product.cards.length !== 2) failures.push(`${prefix}:product_card_count:${product.cards.length}`);
+    for (const card of product.cards) {
+      checkRectInsideViewport(failures, `${prefix}:product_card_${card.id || "unknown"}`, card.rect, viewport, 8);
+      if (card.rect.width < (viewport.isMobile ? 280 : 360)) failures.push(`${prefix}:product_card_too_narrow:${card.id || "unknown"}:${Math.round(card.rect.width)}`);
+      if (card.overflowX) failures.push(`${prefix}:product_card_overflow:${card.id || "unknown"}`);
+    }
+    const buttonPacks = product.buttons.map((button) => button.pack).sort().join(",");
+    if (buttonPacks !== "koko,noor") failures.push(`${prefix}:product_button_packs:${buttonPacks || "none"}`);
+    if (product.bridgeLinks.length !== 2) failures.push(`${prefix}:product_bridge_link_count:${product.bridgeLinks.length}`);
+    for (const link of product.bridgeLinks) {
+      checkRectInsideViewport(failures, `${prefix}:product_bridge`, link.rect, viewport, 8);
+      if (!link.href.includes("subscribe=")) failures.push(`${prefix}:product_bridge_missing_subscribe:${link.href || "none"}`);
+      if (link.rect.width < 44 || link.rect.height < 36) failures.push(`${prefix}:product_bridge_touch_target:${Math.round(link.rect.width)}x${Math.round(link.rect.height)}`);
+      if (link.overflowX) failures.push(`${prefix}:product_bridge_text_overflow:${link.text.slice(0, 24)}`);
+    }
   }
 
   if (layout.nav && layout.nav.rect.bottom > layout.h1.rect.top && layout.nav.rect.top < layout.h1.rect.bottom) {
@@ -263,6 +332,10 @@ function checkLayout(spec, viewport, layout) {
         failures.push(`${prefix}:hero_image_obscures_cta:${cta.pack || cta.index}:${image.index}`);
       }
     }
+  }
+
+  if (spec.product) {
+    return failures;
   }
 
   if (!layout.share) {
@@ -299,8 +372,11 @@ async function main() {
   const browser = await chromium.launch({ headless: true });
   const failures = [];
   const pages = [];
+  let release = {};
 
   try {
+    const releaseResponse = await fetch(`${args.baseUrl}/release.json`);
+    release = await releaseResponse.json();
     for (const viewport of VIEWPORTS) {
       const context = await browser.newContext({
         viewport: { width: viewport.width, height: viewport.height },
@@ -324,6 +400,12 @@ async function main() {
           failures: pageFailures,
           h1: layout.h1 ? { text: layout.h1.text, rect: roundedRect(layout.h1.rect) } : null,
           ctas: layout.primaryCtas.map((cta) => ({ pack: cta.pack, source: cta.source, rect: roundedRect(cta.rect) })),
+          product: layout.product ? {
+            trust: layout.product.trust ? { rect: roundedRect(layout.product.trust.rect), itemCount: layout.product.trust.itemCount, overflowX: layout.product.trust.overflowX } : null,
+            cards: layout.product.cards.map((card) => ({ id: card.id, rect: roundedRect(card.rect), overflowX: card.overflowX })),
+            buttons: layout.product.buttons.map((button) => ({ pack: button.pack, source: button.source, stage: button.stage, rect: roundedRect(button.rect), overflowX: button.overflowX })),
+            bridgeLinks: layout.product.bridgeLinks.map((link) => ({ text: link.text, href: link.href, rect: roundedRect(link.rect), overflowX: link.overflowX })),
+          } : null,
           share: layout.share ? {
             copy: roundedRect(layout.share.copy),
             actions: roundedRect(layout.share.actions),
@@ -334,6 +416,9 @@ async function main() {
         await page.close();
       }
       await context.close();
+    }
+    if (release.liveExpectations?.visualLayoutChecks !== pages.length) {
+      failures.push(`release_visual_layout_checks:${release.liveExpectations?.visualLayoutChecks ?? "none"}!=${pages.length}`);
     }
   } finally {
     await browser.close();
