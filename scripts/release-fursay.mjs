@@ -1239,7 +1239,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2226,7 +2226,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -2437,7 +2437,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -2607,7 +2607,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -2715,6 +2715,9 @@ ${cards}
       <h2>Print or save the sample</h2>
       <p>Open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.</p>
       <p>No checkout, price, or payment link is connected to this sample. It is only a trust-building preview before a paid pack exists.</p>
+      <div class="public-share-actions">
+        <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">Print or save as PDF</button>
+      </div>
     </section>
     <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
       <h2>How to test it with a child</h2>
@@ -2741,7 +2744,7 @@ ${cards}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -3269,7 +3272,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -3370,7 +3373,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260613-commerce4.js"></script>
+  <script src="/js/site-shared-20260613-commerce5.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

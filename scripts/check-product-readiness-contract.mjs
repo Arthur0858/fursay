@@ -363,11 +363,83 @@ async function checkProductInteraction(baseUrl, productPath = "/products") {
   return { failures, checks };
 }
 
+async function checkSamplePrintInteraction(baseUrl) {
+  const failures = [];
+  const checks = [];
+  const browser = await chromium.launch({ headless: true });
+  try {
+    for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      const eventPayloads = [];
+      await page.addInitScript(() => {
+        window.__fursayPrintCalls = 0;
+        window.print = () => {
+          window.__fursayPrintCalls += 1;
+        };
+      });
+      await page.route("**/api/event", async (route) => {
+        try {
+          eventPayloads.push(JSON.parse(route.request().postData() || "{}"));
+        } catch {
+          failures.push(`sample_print:${sample.pack}:event_payload_invalid_json`);
+        }
+        await route.fulfill({ status: 204, body: "" });
+      });
+      await page.goto(`${baseUrl}${sample.path}?utm_source=contract&utm_medium=browser&utm_campaign=product_interest_validation&utm_content=${sample.pack}_sample_print`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45000,
+      });
+      await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
+      const clickMeta = await page.evaluate((pack) => {
+        const button = document.querySelector(`[data-print-product-sample="${pack}"]`);
+        if (!button) return null;
+        button.click();
+        return {
+          pack: button.getAttribute("data-print-product-sample") || "",
+          stage: button.getAttribute("data-interest-stage") || "",
+          signupSource: button.getAttribute("data-signup-source") || "",
+        };
+      }, sample.pack);
+      if (!clickMeta) failures.push(`sample_print:${sample.pack}:missing_button`);
+      await page.waitForTimeout(250);
+      const state = await page.evaluate(() => ({
+        events: window.fursayEvents || [],
+        dataLayer: window.dataLayer || [],
+        printCalls: window.__fursayPrintCalls || 0,
+      }));
+      const printEvent = [...state.events].reverse().find((event) => event.event === "fursay_product_info_click");
+      if (!printEvent) failures.push(`sample_print:${sample.pack}:missing_product_info_event`);
+      if (!state.dataLayer.some((event) => event.event === "fursay_product_info_click")) failures.push(`sample_print:${sample.pack}:data_layer_missing_product_info_event`);
+      if (state.printCalls !== 1) failures.push(`sample_print:${sample.pack}:print_calls:${state.printCalls}`);
+      if (printEvent?.detail?.path !== sample.path) failures.push(`sample_print:${sample.pack}:event_path:${printEvent?.detail?.path || "none"}`);
+      if (printEvent?.detail?.product_interest !== sample.pack) failures.push(`sample_print:${sample.pack}:event_interest:${printEvent?.detail?.product_interest || "none"}`);
+      if (printEvent?.detail?.interest_stage !== "sample_print") failures.push(`sample_print:${sample.pack}:event_stage:${printEvent?.detail?.interest_stage || "none"}`);
+      if (printEvent?.detail?.signup_source !== `sample_print_${sample.pack}`) failures.push(`sample_print:${sample.pack}:event_source:${printEvent?.detail?.signup_source || "none"}`);
+      const privateHits = payloadHasPrivateNeedle(eventPayloads);
+      if (privateHits.length) failures.push(`sample_print:${sample.pack}:event_payload_private_needles:${privateHits.join(",")}`);
+      if (!eventPayloads.some((payload) => payload.event === "fursay_product_info_click")) failures.push(`sample_print:${sample.pack}:api_event_missing_product_info`);
+      checks.push({
+        path: sample.path,
+        pack: sample.pack,
+        clickMeta,
+        printCalls: state.printCalls,
+        events: state.events.map((event) => event.event),
+        apiEvents: eventPayloads.map((payload) => payload.event),
+      });
+      await page.close();
+    }
+  } finally {
+    await browser.close();
+  }
+  return { failures, checks };
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
   let localServer = null;
   let interaction = null;
+  let samplePrintInteraction = null;
   const html = await readText(args.baseUrl, "/products");
   const zhHtml = await readText(args.baseUrl, "/zh/products");
   const arHtml = await readText(args.baseUrl, "/ar/products");
@@ -399,9 +471,9 @@ async function main() {
   if (!zhHtml.includes("data-product-faq")) failures.push("zh_products_page_missing_faq");
   if (!arHtml.includes("data-product-faq")) failures.push("ar_products_page_missing_faq");
   if (!html.includes('id="subscribeModal"')) failures.push("products_page_missing_subscribe_modal");
-  if (!html.includes("site-shared-20260613-commerce4.js")) failures.push("products_page_missing_shared_js");
-  if (!zhHtml.includes("site-shared-20260613-commerce4.js")) failures.push("zh_products_page_missing_shared_js");
-  if (!arHtml.includes("site-shared-20260613-commerce4.js")) failures.push("ar_products_page_missing_shared_js");
+  if (!html.includes("site-shared-20260613-commerce5.js")) failures.push("products_page_missing_shared_js");
+  if (!zhHtml.includes("site-shared-20260613-commerce5.js")) failures.push("zh_products_page_missing_shared_js");
+  if (!arHtml.includes("site-shared-20260613-commerce5.js")) failures.push("ar_products_page_missing_shared_js");
   if (!/No payment today/i.test(html)) failures.push("products_page_missing_no_payment_copy");
   if (!/Free story pack first/i.test(html)) failures.push("products_page_missing_free_pack_copy");
   if (!zhHtml.includes("今天不會收費")) failures.push("zh_products_page_missing_no_payment_copy");
@@ -526,6 +598,9 @@ async function main() {
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
     if (!pageHtml.includes("No payment today")) failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
     if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
+    if (!pageHtml.includes(`data-print-product-sample="${sample.pack}"`)) failures.push(`sample_page_missing_print_button:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="sample_print"')) failures.push(`sample_page_missing_print_stage:${sample.pack}`);
+    if (!pageHtml.includes(`data-signup-source="sample_print_${sample.pack}"`)) failures.push(`sample_page_missing_print_source:${sample.pack}`);
     if (!/Save as PDF|print command|列印|PDF/i.test(pageHtml)) failures.push(`sample_page_missing_print_copy:${sample.pack}`);
     for (const needle of CHECKOUT_NEEDLES) {
       if (needle.test(pageHtml)) failures.push(`sample_page_checkout_language_or_link:${sample.pack}:${needle}`);
@@ -580,14 +655,17 @@ async function main() {
       const zhInteraction = await checkProductInteraction(args.baseUrl, "/zh/products");
       const arInteraction = await checkProductInteraction(args.baseUrl, "/ar/products");
       interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures, ...arInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks, ...arInteraction.checks] };
+      samplePrintInteraction = await checkSamplePrintInteraction(args.baseUrl);
     } else {
       localServer = await startServer();
       const enInteraction = await checkProductInteraction(localServer.baseUrl, "/products");
       const zhInteraction = await checkProductInteraction(localServer.baseUrl, "/zh/products");
       const arInteraction = await checkProductInteraction(localServer.baseUrl, "/ar/products");
       interaction = { failures: [...enInteraction.failures, ...zhInteraction.failures, ...arInteraction.failures], checks: [...enInteraction.checks, ...zhInteraction.checks, ...arInteraction.checks] };
+      samplePrintInteraction = await checkSamplePrintInteraction(localServer.baseUrl);
     }
     failures.push(...interaction.failures);
+    failures.push(...samplePrintInteraction.failures);
   } finally {
     if (localServer) await new Promise((resolveClose) => localServer.server.close(resolveClose));
   }
@@ -600,6 +678,7 @@ async function main() {
     failures,
     productButtons: productButtons.map((button) => button.pack),
     interaction: interaction?.checks || [],
+    samplePrintInteraction: samplePrintInteraction?.checks || [],
     products: products.products || [],
     checkoutGate: products.checkoutGate || {},
   };

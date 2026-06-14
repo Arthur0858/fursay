@@ -198,6 +198,20 @@
         });
       }
 
+      var productSamplePrintButton = event.target.closest('[data-print-product-sample]');
+      if (productSamplePrintButton) {
+        event.preventDefault();
+        var samplePack = normalizePack(productSamplePrintButton.getAttribute('data-print-product-sample')) || pagePack() || 'all';
+        emitFursayEvent('fursay_product_info_click', {
+          product_interest: samplePack,
+          interest_stage: productSamplePrintButton.getAttribute('data-interest-stage') || 'sample_print',
+          signup_source: productSamplePrintButton.getAttribute('data-signup-source') || 'sample_print_' + samplePack,
+          link_url: window.location.pathname || ''
+        });
+        window.print();
+        return;
+      }
+
       var productInterestButton = event.target.closest('[data-product-interest]');
       if (productInterestButton) {
         event.preventDefault();
