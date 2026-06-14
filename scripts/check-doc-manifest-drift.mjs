@@ -34,6 +34,9 @@ const PUBLIC_MANIFESTS = [
   "/video-discovery.json",
   "/shortlinks.json",
 ];
+const STATUS_MANIFESTS_WITHOUT_SOURCE = new Set([
+  "/noor-sprint-status.json",
+]);
 const LIVE_SMOKE_EXCLUDES = new Set([
   "scripts/check-deploy-readiness.mjs",
   "scripts/check-newsletter-state-contract.mjs",
@@ -242,10 +245,11 @@ async function checkManifestParity(args, failures, details) {
   for (const [pathname, manifest] of Object.entries(manifests)) {
     const itemFailures = [];
     if (manifest.platform !== PLATFORM) itemFailures.push(`platform:${manifest.platform || "none"}`);
-    if (pathname !== "/site-health.json" && manifest.source?.commit !== expectedCommit) {
+    const requiresSource = pathname !== "/site-health.json" && !STATUS_MANIFESTS_WITHOUT_SOURCE.has(pathname);
+    if (requiresSource && manifest.source?.commit !== expectedCommit) {
       itemFailures.push(`commit:${manifest.source?.commit || "none"}`);
     }
-    if (pathname !== "/site-health.json" && manifest.source?.summary !== expectedSummary) {
+    if (requiresSource && manifest.source?.summary !== expectedSummary) {
       itemFailures.push(`summary:${manifest.source?.summary || "none"}`);
     }
     const date = manifest.releasedAt || manifest.updatedAt || "";

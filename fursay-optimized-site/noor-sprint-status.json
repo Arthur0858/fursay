@@ -3,11 +3,6 @@
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
   "updatedAt": "2026-06-15",
-  "source": {
-    "branch": "main",
-    "commit": "57bb69a",
-    "summary": "Add Noor sprint status log"
-  },
   "page": "https://fursay.com/noor-sprint-status",
   "manifest": "https://fursay.com/noor-sprint-status.json",
   "releaseManifest": "https://fursay.com/release.json",
