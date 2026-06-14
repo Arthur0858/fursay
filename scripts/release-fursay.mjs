@@ -233,7 +233,7 @@ function writeReleaseManifest() {
       productInfoEventTrackingPages: 18,
       eventTrackingSubmitPages: 3,
       anonymousConversionEvents: 14,
-      conversionDashboardSections: 5,
+      conversionDashboardSections: 6,
       eventAnalyticsBlobFields: 15,
       eventAnalyticsDoubleFields: 1,
       eventAnalyticsReportQueries: 5,
@@ -2021,6 +2021,7 @@ function healthMetric(label, value, note = "") {
 function writeConversionHealthPage(siteDir) {
   const health = readJson(resolve(siteDir, "conversion-health.json"));
   const release = readJson(resolve(siteDir, "release.json"));
+  const productsManifest = readJson(resolve(siteDir, "products.json"));
   const events = (health.events || [])
     .map((event) => `<li><code>${escapeHtml(event)}</code></li>`)
     .join("\n");
@@ -2032,6 +2033,24 @@ function writeConversionHealthPage(siteDir) {
               <p>Planned contents: ${escapeHtml((product.plannedIncludes || []).join(", "))}</p>
             </article>`)
     .join("\n");
+  const productValidationCards = (health.monetization?.ownedProducts?.products || [])
+    .map((product) => {
+      const plan = product.validationPlan || {};
+      const minimumSignals = plan.minimumSignals || {};
+      return `
+            <article class="creator-copy-block" data-product-validation-scorecard="${escapeHtml(product.id)}">
+              <h3>${escapeHtml(product.label)}</h3>
+              <p>Decision: ${escapeHtml(plan.nextDecision || "Wait for real interest signals before drafting the paid product.")}</p>
+              <dl>
+                ${healthMetric("Product info clicks", minimumSignals.productInfoClicks || 0, "minimum")}
+                ${healthMetric("Waitlist clicks", minimumSignals.productInterestClicks || 0, "minimum")}
+                ${healthMetric("Subscriber signals", minimumSignals.subscriberSignals || 0, "minimum")}
+                ${healthMetric("Free bridge", plan.freeBridge || "none")}
+              </dl>
+            </article>`;
+    })
+    .join("\n");
+  const socialEntries = productsManifest.trafficEntryPoints || {};
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2111,6 +2130,19 @@ function writeConversionHealthPage(siteDir) {
       <p>${escapeHtml(health.monetization?.ownedProducts?.checkoutGate?.refundSupportCopy || "")}</p>
       <div class="creator-copy-blocks">
         ${ownedProducts}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="product-validation">
+      <h2>Product validation scoreboard</h2>
+      <p>Paid packs stay disabled until product interest, waitlist clicks, and subscriber signals meet the validation plan. Social entry points are split by language so families land on the right waitlist page.</p>
+      <dl>
+        ${healthMetric("English social product entry", socialEntries.socialProfileLinks || "none")}
+        ${healthMetric("Traditional Chinese social product entry", socialEntries.zhSocialProfileLinks || "none")}
+        ${healthMetric("Checkout links allowed", String(productsManifest.paymentLinksAllowed === true))}
+        ${healthMetric("Interest status", productsManifest.status || "unknown")}
+      </dl>
+      <div class="creator-copy-blocks">
+${productValidationCards}
       </div>
     </section>
     <section class="creator-kit-safety" data-growth-dashboard-section="events">

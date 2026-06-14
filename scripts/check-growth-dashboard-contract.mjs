@@ -10,6 +10,7 @@ const REQUIRED_SECTIONS = [
   "coverage",
   "growth",
   "monetization",
+  "product-validation",
   "events",
 ];
 const REQUIRED_EVENTS = [
@@ -76,12 +77,18 @@ function textLength(value) {
   return String(value || "").trim().length;
 }
 
+function htmlIncludesValue(html, value) {
+  const text = String(value || "");
+  return html.includes(text) || html.includes(text.replace(/&/g, "&amp;"));
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
   const release = await readJson(args.baseUrl, "/release.json");
   const conversionHealth = await readJson(args.baseUrl, "/conversion-health.json");
   const siteHealth = await readJson(args.baseUrl, "/site-health.json");
+  const products = await readJson(args.baseUrl, "/products.json");
   const html = await readText(args.baseUrl, DASHBOARD_PATH, DASHBOARD_FILE);
   const head = html.match(/<head>([\s\S]*?)<\/head>/i)?.[1] || "";
   const htmlLang = attr(html, /<html\b[^>]*>/i, "lang");
@@ -148,6 +155,18 @@ async function main() {
   if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.requirements?.length !== release.liveExpectations?.checkoutGateRequirements) failures.push("checkout_gate_requirement_count_mismatch");
   if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
   if (!html.includes("Checkout gate")) failures.push("dashboard_missing_checkout_gate");
+  if (!html.includes("Product validation scoreboard")) failures.push("dashboard_missing_product_validation_scoreboard");
+  if (!htmlIncludesValue(html, products.trafficEntryPoints?.socialProfileLinks || "missing")) failures.push("dashboard_missing_product_social_entry");
+  if (!htmlIncludesValue(html, products.trafficEntryPoints?.zhSocialProfileLinks || "missing")) failures.push("dashboard_missing_zh_product_social_entry");
+  if (!html.includes("Checkout links allowed")) failures.push("dashboard_missing_checkout_links_allowed");
+  for (const product of conversionHealth.monetization?.ownedProducts?.products || []) {
+    const minimumSignals = product.validationPlan?.minimumSignals || {};
+    if (!html.includes(`data-product-validation-scorecard="${product.id}"`)) failures.push(`dashboard_missing_product_scorecard:${product.id}`);
+    if (!html.includes(product.validationPlan?.nextDecision || "missing")) failures.push(`dashboard_missing_product_next_decision:${product.id}`);
+    if (!html.includes(String(minimumSignals.productInfoClicks))) failures.push(`dashboard_missing_info_threshold:${product.id}`);
+    if (!html.includes(String(minimumSignals.productInterestClicks))) failures.push(`dashboard_missing_interest_threshold:${product.id}`);
+    if (!html.includes(String(minimumSignals.subscriberSignals))) failures.push(`dashboard_missing_subscriber_threshold:${product.id}`);
+  }
   if (!conversionHealth.monetization?.affiliate?.localePolicy?.includes("zh-TW pages use Books.com.tw")) failures.push("missing_locale_affiliate_policy");
 
   const healthRoutes = siteHealth.routes?.conversionHealth || [];
