@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-episode-landing-contract";
+const MIN_ZH_EPISODE_CONTENT_LENGTH = 1350;
 const EPISODES = [
   {
     path: "/episodes/koko-feelings",
@@ -177,7 +178,7 @@ function checkEpisode(episode, html) {
   if (episode.lang === "zh-TW") {
     if (!html.includes("data-zh-episode-guide")) failures.push(`${episode.path}:missing_zh_episode_guide`);
     const contentLength = visibleContentLength(html);
-    if (contentLength < 1000) failures.push(`${episode.path}:thin_zh_episode_content:${contentLength}<1000`);
+    if (contentLength < MIN_ZH_EPISODE_CONTENT_LENGTH) failures.push(`${episode.path}:thin_zh_episode_content:${contentLength}<${MIN_ZH_EPISODE_CONTENT_LENGTH}`);
   }
   const words = [...html.matchAll(/data-episode-word=["']([^"']+)["']/g)].map((match) => match[1]);
   if (words.length !== 3) failures.push(`${episode.path}:word_count:${words.length}`);
