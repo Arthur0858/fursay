@@ -148,12 +148,21 @@ function firstType(blocks, type) {
   return null;
 }
 
-function checkFaqSchema(blocks, episode, failures) {
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function checkFaqSchema(blocks, html, episode, failures) {
   const faq = firstType(blocks, "FAQPage");
   if (!faq) {
     failures.push(`${episode.path}:missing_faq_page`);
     return;
   }
+  if (!html.includes(`data-episode-faq="${episode.pack}"`)) failures.push(`${episode.path}:missing_visible_faq`);
   if (!Array.isArray(faq.mainEntity) || faq.mainEntity.length < 3) {
     failures.push(`${episode.path}:faq_question_count:${faq.mainEntity?.length || 0}<3`);
     return;
@@ -163,6 +172,8 @@ function checkFaqSchema(blocks, episode, failures) {
     if (!item?.name || String(item.name).replace(/\s+/g, "").length < 6) failures.push(`${episode.path}:faq_question_missing:${index}`);
     if (item?.acceptedAnswer?.["@type"] !== "Answer") failures.push(`${episode.path}:faq_answer_type:${index}`);
     if (!item?.acceptedAnswer?.text || String(item.acceptedAnswer.text).trim().length < 24) failures.push(`${episode.path}:faq_answer_missing:${index}`);
+    if (item?.name && !html.includes(`<summary>${escapeHtml(item.name)}</summary>`)) failures.push(`${episode.path}:faq_question_not_visible:${index}`);
+    if (item?.acceptedAnswer?.text && !html.includes(`<div class="faq-answer">${escapeHtml(item.acceptedAnswer.text)}</div>`)) failures.push(`${episode.path}:faq_answer_not_visible:${index}`);
   }
 }
 
@@ -224,7 +235,7 @@ function checkEpisode(episode, html) {
   const learning = firstType(blocks, "LearningResource");
   if (learning?.isPartOf?.name !== episode.schemaSeries) failures.push(`${episode.path}:learning_resource_series:${learning?.isPartOf?.name || "none"}`);
   if (!String(learning?.potentialAction?.target || "").includes(`subscribe=${episode.pack}`)) failures.push(`${episode.path}:schema_subscribe_target`);
-  checkFaqSchema(blocks, episode, failures);
+  checkFaqSchema(blocks, html, episode, failures);
   return { path: episode.path, ok: failures.length === 0, failures, words, bookLinks: links.length };
 }
 
