@@ -24,11 +24,24 @@ Do not add `analytics_engine_datasets` back to `wrangler.jsonc` until the Cloudf
 5. Run `npm run deploy:ready -- --require-cloudflare`.
 6. Run `npm run report:events`.
 
+## Report Handoff
+
+Before Analytics Engine is enabled, `npm run report:events -- --dry-run` still writes an operator handoff to `/tmp/fursay-event-analytics-report/event-analytics-report.json`.
+
+Use `enablementHandoff` in that JSON as the checklist for:
+
+- enabling dataset `fursay_events` for binding `FURSAY_EVENTS`
+- providing `CLOUDFLARE_ACCOUNT_ID` plus an analytics token without printing or committing secret values
+- running `npm run deploy:ready -- --require-cloudflare`
+- running `npm run report:events`
+- reviewing Noor aggregate signals with `npm run noor:sprint:review`
+
 ## Success Criteria
 
 The report is ready when `npm run report:events` writes `/tmp/fursay-event-analytics-report/event-analytics-report.json` with:
 
 - `status` equal to `queried`
+- `enablementHandoff.status` equal to `queried`
 - `piiAllowed` equal to `false`
 - `queries` count equal to `12`
 - 7-day and 30-day rows for `noor_growth_signals`

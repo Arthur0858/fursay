@@ -240,6 +240,62 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
   };
 }
 
+function buildEnablementHandoff(conversionHealth, canQuery) {
+  const analyticsReport = conversionHealth.measurement?.analyticsReport || {};
+  const analyticsSink = conversionHealth.measurement?.analyticsSink || {};
+  const requiredEnv = Array.isArray(analyticsReport.requiredEnv) && analyticsReport.requiredEnv.length
+    ? analyticsReport.requiredEnv
+    : ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN"];
+  return {
+    status: canQuery ? "queried" : "pending_cloudflare_credentials_or_enablement",
+    piiAllowed: false,
+    dataset: analyticsReport.dataset || DATASET,
+    binding: analyticsSink.binding || "FURSAY_EVENTS",
+    dashboardUrl: analyticsSink.enablementUrl || "",
+    reportCommand: analyticsReport.packageScript || "npm run report:events",
+    readinessCommand: "npm run deploy:ready -- --require-cloudflare",
+    noorReviewCommand: "npm run noor:sprint:review",
+    blockedBy: canQuery ? [] : [
+      "pending_cloudflare_dashboard_enablement",
+      "missing_cloudflare_account_or_analytics_token",
+    ],
+    requiredEnv,
+    privacyBoundary: "Report rows and sprint notes must stay aggregate only; do not record email, name, phone, address, subscriber IDs, MailerLite IDs, or token values.",
+    steps: [
+      {
+        id: "enable_dataset",
+        label: "Enable Analytics Engine dataset",
+        action: `Enable dataset ${analyticsReport.dataset || DATASET} for Worker binding ${analyticsSink.binding || "FURSAY_EVENTS"}.`,
+        evidence: "Cloudflare dashboard accepts the dataset and the Worker can deploy with the analytics binding.",
+      },
+      {
+        id: "provide_credentials",
+        label: "Provide query credentials locally or in CI",
+        action: `Set ${requiredEnv.join(" plus ")} without printing or committing token values.`,
+        evidence: "credentialsPresent.accountId and credentialsPresent.analyticsToken are both true in the report JSON.",
+      },
+      {
+        id: "run_deploy_readiness",
+        label: "Run deploy readiness with Cloudflare requirements",
+        action: "npm run deploy:ready -- --require-cloudflare",
+        evidence: "deploy-readiness reports analyticsReport.ready=true and no Cloudflare credential failures.",
+      },
+      {
+        id: "run_event_report",
+        label: "Run the 7-day / 30-day event report",
+        action: analyticsReport.packageScript || "npm run report:events",
+        evidence: "event-analytics-report.json status=queried, queries=12, and decisionScoreboard.status=queried.",
+      },
+      {
+        id: "review_noor_signal",
+        label: "Review Noor subscriber signal",
+        action: "npm run noor:sprint:review",
+        evidence: "Noor review uses noor_growth_signals_7d aggregate rows and records only non-identifying signal evidence.",
+      },
+    ],
+  };
+}
+
 async function main() {
   const args = parseArgs();
   const release = await readJson("release.json");
@@ -283,6 +339,7 @@ async function main() {
   }
 
   const decisionScoreboard = buildDecisionScoreboard(conversionHealth, queryReports, canQuery);
+  const enablementHandoff = buildEnablementHandoff(conversionHealth, canQuery);
   if (decisionScoreboard.piiAllowed !== false) failures.push("decision_scoreboard_pii_allowed");
   if (decisionScoreboard.products.length !== (conversionHealth.monetization?.ownedProducts?.products || []).length) failures.push("decision_scoreboard_product_count_mismatch");
   if (decisionScoreboard.noorSprintVariants.length !== (conversionHealth.growth?.noorSprintVariants || []).length) failures.push("decision_scoreboard_noor_variant_count_mismatch");
@@ -295,6 +352,20 @@ async function main() {
     }
   }
   if (!decisionScoreboard.noorFirstSubscriber.goal) failures.push("decision_scoreboard_missing_noor_goal");
+  if (enablementHandoff.piiAllowed !== false) failures.push("enablement_handoff_pii_allowed");
+  if (enablementHandoff.dataset !== DATASET) failures.push("enablement_handoff_bad_dataset");
+  if (enablementHandoff.binding !== "FURSAY_EVENTS") failures.push("enablement_handoff_bad_binding");
+  if (!enablementHandoff.dashboardUrl.includes("/workers/analytics-engine")) failures.push("enablement_handoff_missing_dashboard_url");
+  if (enablementHandoff.reportCommand !== "npm run report:events") failures.push("enablement_handoff_bad_report_command");
+  if (!enablementHandoff.readinessCommand.includes("--require-cloudflare")) failures.push("enablement_handoff_missing_strict_readiness");
+  if (enablementHandoff.steps.length !== 5) failures.push("enablement_handoff_step_count");
+  for (const id of ["enable_dataset", "provide_credentials", "run_deploy_readiness", "run_event_report", "review_noor_signal"]) {
+    if (!enablementHandoff.steps.some((step) => step.id === id)) failures.push(`enablement_handoff_missing_step:${id}`);
+  }
+  if (!enablementHandoff.privacyBoundary.includes("aggregate only")) failures.push("enablement_handoff_missing_aggregate_boundary");
+  for (const forbidden of ["email", "name", "phone", "address", "subscriber IDs", "MailerLite IDs", "token values"]) {
+    if (!enablementHandoff.privacyBoundary.includes(forbidden)) failures.push(`enablement_handoff_missing_privacy_term:${forbidden}`);
+  }
 
   const status = canQuery ? "queried" : "pending_cloudflare_credentials_or_enablement";
   const report = {
@@ -313,6 +384,7 @@ async function main() {
     note: canQuery
       ? "Queried Cloudflare Analytics Engine SQL API."
       : "No Analytics Engine query was attempted; provide CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_ANALYTICS_TOKEN after enabling the dataset.",
+    enablementHandoff,
     decisionScoreboard,
     failures,
     queries: queryReports,
