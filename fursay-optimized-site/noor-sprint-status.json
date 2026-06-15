@@ -64,6 +64,7 @@
     "reportQuery": "noor_growth_signals_7d",
     "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
     "reviewCommand": "npm run noor:sprint:review",
+    "recorderPostedCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
     "recorderDryRunCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run",
     "privacyBoundary": "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     "analyticsStatus": "pending_cloudflare_credentials_or_enablement",

@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const LOG_FILE = "content/growth/noor-sprint-log.json";
 const TRAFFIC_LAUNCH_FILE = "fursay-optimized-site/traffic-launch.json";
-const ALLOWED_ENTRY_STATUSES = new Set(["completed", "skipped", "needs_retry"]);
+const ALLOWED_ENTRY_STATUSES = new Set(["posted", "completed", "skipped", "needs_retry"]);
 const EMAIL_VALUE = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
 const PRIVATE_WORDS = /\b(email|e-mail|phone|address|subscriber id|subscriberid|mailerlite|name)\b/i;
 

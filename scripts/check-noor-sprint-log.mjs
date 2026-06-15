@@ -1,5 +1,6 @@
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { spawnSync } from "node:child_process";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const LOG_FILE = "content/growth/noor-sprint-log.json";
@@ -11,7 +12,7 @@ const REVIEW_COMMAND = "npm run noor:sprint:review";
 const RECORDER_COMMAND = "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run";
 const DEFAULT_OUT = "/tmp/fursay-noor-sprint-log";
 const ALLOWED_STATUSES = new Set(["ready_to_start", "in_progress", "signal_observed", "safe_wait_subscriber_empty"]);
-const ALLOWED_ENTRY_STATUSES = new Set(["not_started", "completed", "skipped", "needs_retry"]);
+const ALLOWED_ENTRY_STATUSES = new Set(["not_started", "posted", "completed", "skipped", "needs_retry"]);
 const BLOCKED_KEYS = [
   "email",
   "name",
@@ -124,6 +125,8 @@ function validateStatus(status, log, failures) {
     if (!String(handoff.reportQuery || "").trim()) failures.push("handoff_missing_report_query");
     if (!String(handoff.expectedSignal || "").trim()) failures.push("handoff_missing_expected_signal");
     if (!String(handoff.reviewCommand || "").includes(REVIEW_COMMAND)) failures.push("handoff_missing_review_command");
+    if (!String(handoff.recorderPostedCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_recorder");
+    if (!String(handoff.recorderPostedCommand || "").includes("--dry-run")) failures.push("handoff_posted_recorder_must_be_dry_run");
     if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
     if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
     if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
@@ -144,6 +147,19 @@ async function main() {
     if (packageJson.scripts?.["noor:sprint:next"] !== `node ${NEXT_ACTION_SCRIPT}`) failures.push("missing_noor_sprint_next_package_script");
     if (packageJson.scripts?.["noor:sprint:review"] !== `node ${REVIEW_SCRIPT}`) failures.push("missing_noor_sprint_review_package_script");
     if (packageJson.scripts?.["noor:sprint:log"] !== `node ${RECORDER_SCRIPT}`) failures.push("missing_noor_sprint_log_package_script");
+    const postedDryRun = spawnSync("node", [
+      RECORDER_SCRIPT,
+      "--day", "1",
+      "--status", "posted",
+      "--notes", "shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report",
+      "--next-action", "run npm run noor:sprint:review after the event report is available",
+      "--dry-run",
+    ], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: "pipe",
+    });
+    if (postedDryRun.status !== 0) failures.push(`posted_dry_run_failed:${postedDryRun.stderr || postedDryRun.stdout}`);
   }
   validateStatus(status, log, failures);
   const html = args.baseUrl
@@ -156,6 +172,7 @@ async function main() {
   if (!html.includes("Day 1 handoff") && !html.includes("handoff")) failures.push("page_missing_handoff_heading");
   if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
+  if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
 
   await mkdir(args.outDir, { recursive: true });

@@ -1542,6 +1542,7 @@ function buildNoorSprintStatus(siteDir, source) {
     reportQuery: nextOpenDay.reportQuery || "noor_growth_signals_7d",
     expectedSignal: nextOpenDay.expectedSignal || "",
     reviewCommand: "npm run noor:sprint:review",
+    recorderPostedCommand: `npm run noor:sprint:log -- --day ${nextOpenDay.day || 1} --status posted --notes "shared ${nextOpenDay.reportQuery || "noor_growth_signals_7d"} tracked link; waiting for anonymous aggregate report" --next-action "run npm run noor:sprint:review after the event report is available" --dry-run`,
     recorderDryRunCommand: `npm run noor:sprint:log -- --day ${nextOpenDay.day || 1} --status needs_retry --notes "checked ${nextOpenDay.reportQuery || "noor_growth_signals_7d"} aggregate only" --next-action "wait for aggregate signal or retry the next planned placement" --dry-run`,
     privacyBoundary: "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     analyticsStatus,
@@ -1679,6 +1680,7 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
       </dl>
       <p><a href="${escapeHtml(handoff.primaryLink || "#")}">Open primary link</a>${handoff.followupLink ? ` <a href="${escapeHtml(handoff.followupLink)}">Open follow-up link</a>` : ""}</p>
       ${handoff.copy ? `<pre>${escapeHtml(handoff.copy)}</pre>` : ""}
+      <p>After sharing, log the pending report state with <code>${escapeHtml(handoff.recorderPostedCommand || "")}</code>.</p>
       <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>
       <p>${escapeHtml(handoff.privacyBoundary || manifest.privacy?.blockedFields?.join(", ") || "")}</p>
     </section>
