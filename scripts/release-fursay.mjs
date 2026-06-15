@@ -2969,7 +2969,7 @@ function writeZhProductsPage(siteDir) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay 親子可列印故事包等候名單</title>
-  <meta name="description" content="加入 Fursay 叩叩可列印故事包與努爾 3 分鐘學習單等候名單。先領免費故事包，付費版本尚未開放，今天不會收費。">
+  <meta name="description" content="加入 Fursay 叩叩可列印故事包與努爾 3 分鐘中文學習單等候名單。先看免費 PDF 樣張並領免費故事包，付費版本尚未開放，今天不會收費。">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/zh/products">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -3026,6 +3026,25 @@ function writeZhProductsPage(siteDir) {
           <p>如果興趣信號足夠，Fursay 才會公開定價、客服與退款說明。</p>
         </article>
       </div>
+    </section>
+    <section class="creator-kit-safety" data-zh-product-search-guide>
+      <h2>這些可列印包解決什麼問題</h2>
+      <p>很多家庭看完一集故事後，會卡在「接下來要做什麼」。Fursay 的產品驗證不是要立刻賣課程，而是先確認家長是否需要一張更安靜、更容易執行的故事後練習頁。</p>
+      <div class="creator-copy-blocks">
+        <article>
+          <h3>叩叩可列印故事包</h3>
+          <p>適合想用英文情緒詞陪孩子共讀的華語家庭。樣張會把一集森林故事整理成故事提示、三個情緒詞、親子提問和畫畫活動，讓英文練習停留在可理解的情境裡。</p>
+        </article>
+        <article>
+          <h3>努爾 3 分鐘中文學習單</h3>
+          <p>適合需要阿語提示與拼音輔助的家庭。學習單會用一個中文詞、一句阿語家長提示和一個很短的動作活動，幫孩子把中文帶回家庭日常。</p>
+        </article>
+        <article>
+          <h3>為什麼先等候名單</h3>
+          <p>目前只觀察樣張預覽、PDF 下載、產品興趣點擊和故事包訂閱信號。沒有價格、付款連結或 checkout；若未來要開放付費版本，會先公開支援與退款說明。</p>
+        </article>
+      </div>
+      <p>如果你只是想先試用，不需要加入任何付費流程。建議先打開免費樣張，確認活動長度是否適合你家的晚間節奏，再領免費故事包。等候名單的用途是幫我們判斷哪一種格式值得繼續製作：更多 Koko 情緒詞可列印頁，或更多 Noor 拼音與阿語提示學習單。</p>
     </section>
     <section class="creator-kit-safety" data-product-sample-previews>
       <h2>免費樣張預覽</h2>

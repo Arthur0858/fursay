@@ -5,13 +5,13 @@ const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-head-metadata";
 const PAGES = [
   { path: "/", file: "index.html", lang: "en", canonical: "https://fursay.com/", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/zh/", file: "zh/index.html", lang: "zh-TW", canonical: "https://fursay.com/zh/", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/zh/", file: "zh/index.html", lang: "zh-TW", canonical: "https://fursay.com/zh/", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/", file: "ar/index.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/koko", file: "koko.html", lang: "en", canonical: "https://fursay.com/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/zh/koko", file: "zh/koko.html", lang: "zh-TW", canonical: "https://fursay.com/zh/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/zh/koko", file: "zh/koko.html", lang: "zh-TW", canonical: "https://fursay.com/zh/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/koko", file: "ar/koko.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/arabic", file: "arabic.html", lang: "en", canonical: "https://fursay.com/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW", canonical: "https://fursay.com/zh/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW", canonical: "https://fursay.com/zh/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/links", file: "links.html", lang: "en", canonical: "https://fursay.com/links", ogImage: "https://fursay.com/og-image.png" },
   { path: "/share-kit", file: "share-kit.html", lang: "en", canonical: "https://fursay.com/share-kit", robots: "noindex,follow" },
@@ -22,7 +22,7 @@ const PAGES = [
   { path: "/conversion-health", file: "conversion-health.html", lang: "en", canonical: "https://fursay.com/conversion-health", robots: "noindex,follow" },
   { path: "/monetization-roadmap", file: "monetization-roadmap.html", lang: "en", canonical: "https://fursay.com/monetization-roadmap", robots: "noindex,follow" },
   { path: "/products", file: "products.html", lang: "en", canonical: "https://fursay.com/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", canonical: "https://fursay.com/zh/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", canonical: "https://fursay.com/zh/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/products", file: "ar/products.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/products", ogImage: "https://fursay.com/og-image.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", canonical: "https://fursay.com/product-samples/koko-printable", robots: "noindex,follow" },
   { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/product-samples/noor-worksheet", robots: "noindex,follow" },
@@ -125,7 +125,7 @@ function checkPage(page, html, failures) {
   if (icon !== "/favicon.svg") failures.push(`${page.path}:icon:${icon || "none"}`);
   if (!themeColor) failures.push(`${page.path}:missing_theme_color`);
   checkTextLength(failures, page, "title", title, 8, 80);
-  checkTextLength(failures, page, "description", description, 20, 180);
+  checkTextLength(failures, page, "description", description, page.minDescription || 20, 180);
 
   if (isNoindex) {
     if (robots !== page.robots) failures.push(`${page.path}:robots:${robots || "none"}`);
