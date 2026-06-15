@@ -30,20 +30,26 @@ function parseArgs() {
 
 function run(command, args, options = {}) {
   const label = [command, ...args].join(" ");
-  console.log(`\n$ ${label}`);
-  const result = spawnSync(command, args, {
-    cwd: process.cwd(),
-    encoding: "utf8",
-    stdio: options.capture ? "pipe" : "inherit",
-  });
-  if (result.status !== 0) {
+  const isLiveCheck = args.includes("--base-url")
+    || (command === "node" && args[0] === "audit-fursay.mjs" && /^https?:\/\//.test(args[1] || ""));
+  const retries = Number.isInteger(options.retries) ? options.retries : (isLiveCheck ? 1 : 0);
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    console.log(`\n$ ${label}${attempt > 0 ? ` (retry ${attempt}/${retries})` : ""}`);
+    const result = spawnSync(command, args, {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: options.capture ? "pipe" : "inherit",
+    });
+    if (result.status === 0) return result.stdout || "";
     if (options.capture) {
       if (result.stdout) process.stdout.write(result.stdout);
       if (result.stderr) process.stderr.write(result.stderr);
     }
-    throw new Error(`Command failed: ${label}`);
+    if (attempt < retries) {
+      console.warn(`Command failed; retrying once to rule out transient live network or browser timing: ${label}`);
+    }
   }
-  return result.stdout || "";
+  throw new Error(`Command failed: ${label}`);
 }
 
 function ensureOutDir(path) {
