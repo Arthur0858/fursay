@@ -151,6 +151,14 @@ function bookLinks(html) {
   return [...html.matchAll(/<a\b[^>]*class=["'][^"']*\bbook-link\b[^"']*["'][^>]*>/gi)].map((match) => match[0]);
 }
 
+function visibleContentLength(html) {
+  const visible = html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ");
+  return (visible.match(/[A-Za-z0-9\u4e00-\u9fff\u0600-\u06ff]/g) || []).length;
+}
+
 function checkEpisode(episode, html) {
   const failures = [];
   const htmlTag = html.match(/<html\b[^>]*>/i)?.[0] || "";
@@ -166,6 +174,11 @@ function checkEpisode(episode, html) {
   if (!html.includes("youtube-nocookie.com/embed/")) failures.push(`${episode.path}:missing_youtube_embed`);
   if (!html.includes("data-episode-video")) failures.push(`${episode.path}:missing_video_marker`);
   if (!html.includes("data-parent-activity")) failures.push(`${episode.path}:missing_parent_activity`);
+  if (episode.lang === "zh-TW") {
+    if (!html.includes("data-zh-episode-guide")) failures.push(`${episode.path}:missing_zh_episode_guide`);
+    const contentLength = visibleContentLength(html);
+    if (contentLength < 1000) failures.push(`${episode.path}:thin_zh_episode_content:${contentLength}<1000`);
+  }
   const words = [...html.matchAll(/data-episode-word=["']([^"']+)["']/g)].map((match) => match[1]);
   if (words.length !== 3) failures.push(`${episode.path}:word_count:${words.length}`);
   for (const word of episode.words) {
