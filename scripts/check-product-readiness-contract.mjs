@@ -73,6 +73,14 @@ const AR_PRODUCT_REQUIRED_COPY = [
   "هل سأدفع اليوم؟",
   "هل يمكنني الإلغاء لاحقا؟",
 ];
+const NOOR_SAMPLE_REQUIRED_COPY = [
+  "عينة ورقة نور في 3 دقائق",
+  "ثلاث كلمات صينية مع Pinyin",
+  "توجيه للوالدين",
+  "نشاط 3 دقائق",
+  "احصلوا على حزمة نور المجانية",
+  "لا يوجد دفع",
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -657,7 +665,16 @@ async function main() {
     if (!pageHtml.includes(`data-product-sample-preview-page="${sample.pack}"`)) failures.push(`sample_page_missing_body_marker:${sample.pack}`);
     if (!pageHtml.includes(`data-product-interest="${sample.pack}"`)) failures.push(`sample_page_missing_interest_button:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
-    if (!pageHtml.includes("No payment today")) failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
+    if (sample.pack === "noor") {
+      if (!pageHtml.includes('<html lang="ar" dir="rtl">')) failures.push("sample_page_noor_missing_ar_lang_dir");
+      for (const needle of NOOR_SAMPLE_REQUIRED_COPY) {
+        if (!pageHtml.includes(needle)) failures.push(`sample_page_noor_missing_arabic_copy:${needle}`);
+      }
+      if (!pageHtml.includes("/ar/arabic?subscribe=noor")) failures.push("sample_page_noor_missing_ar_story_pack_cta");
+    }
+    if (!pageHtml.includes("No payment today") && !pageHtml.includes("لا دفع اليوم") && !pageHtml.includes("لا يوجد دفع")) {
+      failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
+    }
     if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
     if (!pageHtml.includes(`href="${sample.downloadPath}"`)) failures.push(`sample_page_missing_pdf_download_href:${sample.pack}`);
     if (!pageHtml.includes(`data-product-sample-download="${sample.pack}"`)) failures.push(`sample_page_missing_pdf_download_tracking:${sample.pack}`);

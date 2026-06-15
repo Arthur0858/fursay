@@ -3277,24 +3277,41 @@ function samplePageSpec(product) {
     return {
       path: "product-samples/noor-worksheet.html",
       canonical: "https://fursay.com/product-samples/noor-worksheet",
-      lang: "en",
-      title: "Noor 3-minute worksheet sample preview",
-      description: "Preview the Noor 3-minute worksheet sample: three Chinese words with Pinyin, one Arabic parent prompt, and one tiny family activity.",
-      eyebrow: "Free sample preview",
-      h1: "Noor 3-minute worksheet sample",
-      intro: "This preview shows the kind of tiny worksheet Fursay may create after enough families join the Noor interest list. It is a sample preview only; paid access is not open.",
+      lang: "ar",
+      dir: "rtl",
+      title: "عينة ورقة نور في 3 دقائق",
+      description: "شاهدوا عينة ورقة نور في 3 دقائق: ثلاث كلمات صينية مع Pinyin، توجيه عربي للوالدين، ونشاط عائلي قصير.",
+      eyebrow: "عينة مجانية",
+      h1: "عينة ورقة نور في 3 دقائق",
+      intro: "هذه معاينة قصيرة لما يمكن أن تصبح عليه ورقة نور بعد أن تنضم عائلات كافية إلى قائمة الاهتمام. العينة مجانية، ولا يوجد دفع أو شراء اليوم.",
       sections: [
-        ["Word 1", "hong", "Red. Point to something red and say the word slowly with your child."],
-        ["Word 2", "lan", "Blue. Ask your child to find one blue object near the story space."],
-        ["Word 3", "lv", "Green. Let your child draw a green leaf for Noor and Zayd."],
+        ["الكلمة 1", "hong / 红", "أحمر. أشيروا إلى شيء أحمر وقولوا الكلمة ببطء مع الطفل."],
+        ["الكلمة 2", "lan / 蓝", "أزرق. اطلبوا من الطفل أن يجد شيئا أزرق قرب مكان القصة."],
+        ["الكلمة 3", "lv / 绿", "أخضر. دعوا الطفل يرسم ورقة خضراء صغيرة لنور وزيد."],
       ],
-      parentPrompt: "Arabic parent prompt: Read one word, point to one object, then stop while the activity still feels easy.",
-      activity: "Three-minute activity: choose one color, draw a tiny object, and say the word once more with Pinyin.",
-      storyCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
-      storyCtaLabel: "Get the free Noor story pack",
+      includeLabel: "ماذا تحتوي العينة؟",
+      includeNote: "هذه الصفحة مهيأة كعرض خفيف للطباعة. يمكن تنزيل عينة PDF أو استخدام أمر الطباعة في المتصفح لحفظ نسخة واحدة لاختبارها مع العائلة.",
+      printTitle: "تنزيل العينة أو طباعتها",
+      printCopy: "نزّلوا عينة PDF للمشاركة، أو افتحوا أمر الطباعة في المتصفح واختاروا Save as PDF. نسخة الطباعة تبقي بطاقات الكلمات، توجيه الوالدين، وخطوات النشاط فقط.",
+      noPaymentCopy: "لا يوجد checkout أو سعر أو رابط دفع متصل بهذه العينة. هي معاينة لبناء الثقة قبل وجود منتج مدفوع.",
+      testTitle: "كيف تجربونها مع الطفل؟",
+      parentPrompt: "توجيه للوالدين: اقرأوا كلمة واحدة، أشيروا إلى شيء واحد، ثم توقفوا بينما لا يزال النشاط سهلا وممتعا.",
+      activity: "نشاط 3 دقائق: اختاروا لونا واحدا، ارسموا شيئا صغيرا، ثم قولوا الكلمة مرة أخرى مع Pinyin.",
+      validationCopy: "هذه المعاينة موجودة لاختبار اهتمام العائلات قبل إنشاء منتج مدفوع. لا يوجد سعر أو زر شراء أو رابط دفع في هذه الصفحة.",
+      storyCta: "/ar/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
+      storyCtaLabel: "احصلوا على حزمة نور المجانية",
+      backLabel: "العودة إلى قائمة انتظار المنتجات",
+      trustLabels: ["لا دفع اليوم", "جاهزة للطباعة", "قائمة اهتمام فقط"],
+      downloadLabel: "تنزيل عينة PDF",
+      printLabel: "طباعة أو Save as PDF",
+      modalTitle: "انضموا إلى قائمة حزمة القصة",
+      modalSub: "ابدؤوا بالحزمة المجانية أولا. حزم العينات المدفوعة غير مفتوحة بعد.",
+      modalInterestLabel: "أنا مهتم بـ",
+      modalSubmit: "أرسلوا لي الحزمة الأسبوعية",
+      modalNote: "لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.",
       waitlistPack: "noor",
       waitlistSource: "sample_preview_noor_worksheet",
-      waitlistLabel: "Join Noor worksheet interest list",
+      waitlistLabel: "انضموا إلى قائمة اهتمام ورقة نور",
     };
   }
   return {
@@ -3313,8 +3330,24 @@ function samplePageSpec(product) {
     ],
     parentPrompt: "Parent prompt: Keep the practice short. Read one line, let your child draw, then stop before the activity feels heavy.",
     activity: "Five-minute activity: circle one feeling word and draw one forest detail that matches it.",
+    includeLabel: "What the sample would include",
+    includeNote: "This page is formatted as a lightweight print view. You can download the PDF sample or use the browser print command to save one copy for family testing.",
+    printTitle: "Download or print the sample",
+    printCopy: "Download the PDF sample for sharing, or open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.",
+    noPaymentCopy: "No checkout, price, or payment link is connected to this sample. It is only a trust-building preview before a paid pack exists.",
+    testTitle: "How to test it with a child",
+    validationCopy: "This preview is here to validate interest before a paid product exists. There is no price, purchase button, or payment link on this page.",
     storyCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
     storyCtaLabel: "Get the free Koko story pack",
+    backLabel: "Back to product waitlists",
+    trustLabels: ["No payment today", "Print-ready preview", "Interest validation"],
+    downloadLabel: "Download PDF sample",
+    printLabel: "Print or save as PDF",
+    modalTitle: "Join the story pack list",
+    modalSub: "Get the free story pack first. Paid sample packs are not open yet.",
+    modalInterestLabel: "I'm interested in",
+    modalSubmit: "Send me the weekly pack",
+    modalNote: "No spam, ever. Unsubscribe anytime.",
     waitlistPack: "koko",
     waitlistSource: "sample_preview_koko_printable",
     waitlistLabel: "Join Koko printable interest list",
@@ -3334,7 +3367,7 @@ function writeProductSamplePages(siteDir) {
             <p>${escapeHtml(body)}</p>
           </article>`).join("\n");
     const html = `<!DOCTYPE html>
-<html lang="${escapeHtml(spec.lang)}">
+<html lang="${escapeHtml(spec.lang)}"${spec.dir ? ` dir="${escapeHtml(spec.dir)}"` : ""}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3356,38 +3389,36 @@ function writeProductSamplePages(siteDir) {
       <h1>${escapeHtml(spec.h1)}</h1>
       <p>${escapeHtml(spec.intro)}</p>
       <div class="product-trust-strip" aria-label="Sample preview status">
-        <span>No payment today</span>
-        <span>Print-ready preview</span>
-        <span>Interest validation</span>
+        ${(spec.trustLabels || []).map((label) => `<span>${escapeHtml(label)}</span>`).join("\n        ")}
       </div>
       <div class="public-share-actions">
         <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
       </div>
     </header>
     <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
-      <h2>What the sample would include</h2>
-      <p class="product-sample-print-note">This page is formatted as a lightweight print view. You can download the PDF sample or use the browser print command to save one copy for family testing.</p>
+      <h2>${escapeHtml(spec.includeLabel)}</h2>
+      <p class="product-sample-print-note">${escapeHtml(spec.includeNote)}</p>
       <div class="creator-copy-blocks">
 ${cards}
       </div>
     </section>
     <section class="creator-kit-safety" data-product-sample-print-view="${escapeHtml(product.pack)}">
-      <h2>Download or print the sample</h2>
-      <p>Download the PDF sample for sharing, or open your browser print menu and choose Save as PDF. The printed view keeps the sample cards, parent prompt, and activity steps while hiding extra page chrome.</p>
-      <p>No checkout, price, or payment link is connected to this sample. It is only a trust-building preview before a paid pack exists.</p>
+      <h2>${escapeHtml(spec.printTitle)}</h2>
+      <p>${escapeHtml(spec.printCopy)}</p>
+      <p>${escapeHtml(spec.noPaymentCopy)}</p>
       <div class="public-share-actions">
-        <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadPath)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">Download PDF sample</a>
-        <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">Print or save as PDF</button>
+        <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadPath)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">${escapeHtml(spec.downloadLabel)}</a>
+        <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">${escapeHtml(spec.printLabel)}</button>
       </div>
     </section>
     <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
-      <h2>How to test it with a child</h2>
+      <h2>${escapeHtml(spec.testTitle)}</h2>
       <p>${escapeHtml(spec.parentPrompt)}</p>
       <p>${escapeHtml(spec.activity)}</p>
-      <p>This preview is here to validate interest before a paid product exists. There is no price, purchase button, or payment link on this page.</p>
+      <p>${escapeHtml(spec.validationCopy)}</p>
       <div class="public-share-actions">
         <a href="${escapeHtml(spec.storyCta)}">${escapeHtml(spec.storyCtaLabel)}</a>
-        <a href="/products?utm_source=sample_preview&utm_medium=site&utm_campaign=product_interest_validation&utm_content=${escapeHtml(spec.waitlistPack)}_sample_back_to_products">Back to product waitlists</a>
+        <a href="/products?utm_source=sample_preview&utm_medium=site&utm_campaign=product_interest_validation&utm_content=${escapeHtml(spec.waitlistPack)}_sample_back_to_products">${escapeHtml(spec.backLabel)}</a>
       </div>
     </section>
   </main>
@@ -3395,14 +3426,14 @@ ${cards}
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
-      <div class="modal-title">Join the story pack list</div>
-      <p class="modal-sub">Get the free story pack first. Paid sample packs are not open yet.</p>
+      <div class="modal-title">${escapeHtml(spec.modalTitle)}</div>
+      <p class="modal-sub">${escapeHtml(spec.modalSub)}</p>
       <form id="subscribeForm">
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
-        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+        <div class="modal-field"><label>${escapeHtml(spec.modalInterestLabel)}</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">${escapeHtml(spec.modalSubmit)}</button>
       </form>
-      <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+      <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
   <script src="/js/site-shared-20260615-sharekit1.js"></script>

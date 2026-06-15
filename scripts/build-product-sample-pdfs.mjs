@@ -1,18 +1,22 @@
 import { createServer } from "node:http";
-import { existsSync, mkdirSync, statSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
+import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DOWNLOAD_DIR = resolve(SITE_DIR, "downloads");
+const MANIFEST_PATH = resolve(process.cwd(), "data/product-sample-pdfs.json");
 const SAMPLES = [
   {
     path: "/product-samples/koko-printable",
+    source: "product-samples/koko-printable.html",
     output: "koko-printable-sample.pdf",
   },
   {
     path: "/product-samples/noor-worksheet",
+    source: "product-samples/noor-worksheet.html",
     output: "noor-worksheet-sample.pdf",
   },
 ];
@@ -69,15 +73,42 @@ function startServer() {
   });
 }
 
+function readManifest() {
+  if (!existsSync(MANIFEST_PATH)) return { samples: {} };
+  try {
+    return JSON.parse(String(readFileSync(MANIFEST_PATH)));
+  } catch {
+    return { samples: {} };
+  }
+}
+
+async function sourceHash(sample) {
+  const sourcePath = resolve(SITE_DIR, sample.source);
+  if (!existsSync(sourcePath)) return "";
+  const source = await readFile(sourcePath);
+  return createHash("sha256").update(source).digest("hex");
+}
+
 async function main() {
   mkdirSync(DOWNLOAD_DIR, { recursive: true });
-  const pending = SAMPLES.filter((sample) => !existsSync(resolve(DOWNLOAD_DIR, sample.output)));
+  mkdirSync(resolve(process.cwd(), "data"), { recursive: true });
+  const manifest = readManifest();
+  const samplesWithHashes = await Promise.all(SAMPLES.map(async (sample) => ({
+    ...sample,
+    hash: await sourceHash(sample),
+  })));
+  const pending = samplesWithHashes.filter((sample) => {
+    const outputPath = resolve(DOWNLOAD_DIR, sample.output);
+    if (!existsSync(outputPath)) return true;
+    if (!sample.hash) return false;
+    return manifest.samples?.[sample.output]?.sourceHash !== sample.hash;
+  });
   if (!pending.length) {
     console.log(JSON.stringify({
       ok: true,
       outputDir: "fursay-optimized-site/downloads",
       generated: [],
-      existing: SAMPLES.map((sample) => sample.output),
+      existing: samplesWithHashes.map((sample) => sample.output),
     }, null, 2));
     return;
   }
@@ -107,11 +138,23 @@ async function main() {
     await browser.close();
     await new Promise((resolveClose) => localServer.server.close(resolveClose));
   }
+  const nextManifest = {
+    updatedAt: new Date().toISOString(),
+    samples: Object.fromEntries(samplesWithHashes.map((sample) => {
+      const outputPath = resolve(DOWNLOAD_DIR, sample.output);
+      return [sample.output, {
+        source: sample.source,
+        sourceHash: sample.hash,
+        bytes: existsSync(outputPath) ? statSync(outputPath).size : 0,
+      }];
+    })),
+  };
+  await writeFile(MANIFEST_PATH, JSON.stringify(nextManifest, null, 2) + "\n");
   console.log(JSON.stringify({
     ok: true,
     outputDir: "fursay-optimized-site/downloads",
     generated: pending.map((sample) => sample.output),
-    existing: SAMPLES.filter((sample) => !pending.includes(sample)).map((sample) => sample.output),
+    existing: samplesWithHashes.filter((sample) => !pending.includes(sample)).map((sample) => sample.output),
   }, null, 2));
 }
 

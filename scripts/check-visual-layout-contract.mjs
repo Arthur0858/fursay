@@ -19,7 +19,7 @@ const PAGES = [
   { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", product: true },
   { path: "/ar/products", file: "ar/products.html", lang: "ar", rtl: true, product: true },
   { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", sample: true },
-  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "en", sample: true },
+  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "ar", rtl: true, sample: true },
 ];
 const VIEWPORTS = [
   { name: "desktop", width: 1366, height: 900, isMobile: false, deviceScaleFactor: 1 },
