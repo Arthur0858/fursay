@@ -50,6 +50,14 @@ function htmlContains(html, value) {
   return html.includes(value) || html.includes(String(value).replace(/&/g, "&amp;"));
 }
 
+function sectionBetween(text, startHeading, endHeading) {
+  const start = text.indexOf(`${startHeading}:\n`);
+  if (start === -1) return "";
+  const contentStart = start + startHeading.length + 2;
+  const end = text.indexOf(`\n${endHeading}:\n`, contentStart);
+  return text.slice(contentStart, end === -1 ? undefined : end);
+}
+
 function validateNoorSprintVariantLinks(noorSprint, failures, prefix) {
   const expected = {
     parent_group: {
@@ -1264,6 +1272,16 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (!llms.includes("https://fursay.com/share/koko") || !llms.includes("https://fursay.com/share/noor")) {
     failures.push("llms_missing_share_routes");
+  }
+  const familyActions = sectionBetween(llms, "Family actions", "Creator and sharing references");
+  if (!familyActions) failures.push("llms_missing_family_actions_section");
+  if (!llms.includes("Creator and sharing references:")) failures.push("llms_missing_creator_references_section");
+  if (!llms.includes("Operator and validation references:")) failures.push("llms_missing_operator_references_section");
+  for (const needle of ["Creator kit", "Traffic launch", "Noor sprint status", "Deploy readiness", "Conversion health", "Monetization roadmap", "manifest", ".json", "npm run"]) {
+    if (familyActions.includes(needle)) failures.push(`llms_family_actions_leaks_operator_reference:${needle}`);
+  }
+  for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor", "https://fursay.com/sample/koko", "https://fursay.com/sample/noor", "https://fursay.com/products", "https://fursay.com/zh/products", "https://fursay.com/ar/products"]) {
+    if (!familyActions.includes(route)) failures.push(`llms_family_actions_missing_route:${route}`);
   }
   if (!llms.includes("https://fursay.com/bio/koko") || !llms.includes("https://fursay.com/bio/noor")) {
     failures.push("llms_missing_bio_routes");

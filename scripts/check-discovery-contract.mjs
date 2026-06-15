@@ -70,6 +70,17 @@ const WORKER_ONLY_ROUTES = new Set([
   "/download/koko-printable-sample",
   "/download/noor-worksheet-sample",
 ]);
+const FAMILY_ACTION_FORBIDDEN_NEEDLES = [
+  "Creator kit",
+  "Traffic launch",
+  "Noor sprint status",
+  "Deploy readiness",
+  "Conversion health",
+  "Monetization roadmap",
+  "manifest",
+  ".json",
+  "npm run",
+];
 const TOOL_PAGES = [
   { page: "/links", manifest: "/links.json", requiresCommitBadge: false, requiresManifestLink: false },
   { page: "/share-kit", manifest: "/share-kit.json" },
@@ -160,6 +171,14 @@ function collectOwnUrls(value, urls = new Set()) {
     for (const item of Object.values(value)) collectOwnUrls(item, urls);
   }
   return urls;
+}
+
+function sectionBetween(text, startHeading, endHeading) {
+  const start = text.indexOf(`${startHeading}:\n`);
+  if (start === -1) return "";
+  const contentStart = start + startHeading.length + 2;
+  const end = text.indexOf(`\n${endHeading}:\n`, contentStart);
+  return text.slice(contentStart, end === -1 ? undefined : end);
 }
 
 function siteHealthRoutePaths(siteHealth) {
@@ -279,6 +298,16 @@ async function main() {
   ];
   for (const needle of commerceNeedles) {
     if (!llms.includes(needle)) failures.push(`llms_missing_commerce_policy:${needle}`);
+  }
+  const familyActions = sectionBetween(llms, "Family actions", "Creator and sharing references");
+  if (!familyActions) failures.push("llms_missing_family_actions_section");
+  if (!llms.includes("Creator and sharing references:")) failures.push("llms_missing_creator_references_section");
+  if (!llms.includes("Operator and validation references:")) failures.push("llms_missing_operator_references_section");
+  for (const needle of FAMILY_ACTION_FORBIDDEN_NEEDLES) {
+    if (familyActions.includes(needle)) failures.push(`llms_family_actions_leaks_operator_reference:${needle}`);
+  }
+  for (const route of ["/join/koko", "/join/noor", "/sample/koko", "/sample/noor", "/products", "/zh/products", "/ar/products"]) {
+    if (!familyActions.includes(`${ORIGIN}${route}`)) failures.push(`llms_family_actions_missing_route:${route}`);
   }
 
   for (const [pathname, manifest] of Object.entries(json)) {

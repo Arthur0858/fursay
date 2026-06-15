@@ -33,7 +33,7 @@ Episode landing pages:
   - Traditional Chinese: https://fursay.com/zh/episodes/noor-greetings
   - Arabic: https://fursay.com/ar/episodes/noor-greetings
 
-Useful actions:
+Family actions:
 - Choose a story world from the home page.
 - Watch one free story on YouTube.
 - Subscribe to the Koko or Noor weekly story pack.
@@ -46,6 +46,14 @@ Useful actions:
 - Share Noor's family sample link: https://fursay.com/share/noor
 - Koko social profile bio link: https://fursay.com/bio/koko
 - Noor social profile bio link: https://fursay.com/bio/noor
+- Social profile links page: https://fursay.com/links
+- Product waitlist page for families: https://fursay.com/products
+- Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
+- Arabic product waitlist page for families: https://fursay.com/ar/products
+- Koko printable sample preview: https://fursay.com/product-samples/koko-printable
+- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
+
+Creator and sharing references:
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
 - Creator link for Noor descriptions: https://fursay.com/creator/noor
 - Koko YouTube creator link: https://fursay.com/creator/koko/youtube
@@ -54,19 +62,16 @@ Useful actions:
 - Noor YouTube creator link: https://fursay.com/creator/noor/youtube
 - Noor social creator link: https://fursay.com/creator/noor/social
 - Noor newsletter creator link: https://fursay.com/creator/noor/newsletter
-- Creator kit page: https://fursay.com/creator-kit
 - Family share kit page: https://fursay.com/share-kit
+- Creator kit page: https://fursay.com/creator-kit
+
+Operator and validation references:
+- These pages are for launch, QA, growth, and monetization validation. They are noindex or machine-readable references, not the primary family entry points.
 - Traffic launch kit page: https://fursay.com/traffic-launch
 - Noor sprint status page: https://fursay.com/noor-sprint-status
-- Social profile links page: https://fursay.com/links
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Monetization roadmap: https://fursay.com/monetization-roadmap
-- Product waitlist page for families: https://fursay.com/products
-- Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
-- Arabic product waitlist page for families: https://fursay.com/ar/products
-- Koko printable sample preview: https://fursay.com/product-samples/koko-printable
-- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 - Product interest manifest: https://fursay.com/products.json
 - Monetization roadmap manifest: https://fursay.com/monetization-roadmap.json
 - Shortlink manifest: https://fursay.com/shortlinks.json
