@@ -1499,6 +1499,27 @@ function buildNoorSprintStatus(siteDir, source) {
   const skippedDays = days.filter((day) => day.status === "skipped").length;
   const subscriberSignalObserved = days.some((day) => day.signalObserved === true);
   const nextOpenDay = days.find((day) => !["completed", "skipped"].includes(day.status)) || days.at(-1) || {};
+  const nextVariant = (sprint.copyVariants || []).find((variant) => (
+    variant.link === nextOpenDay.link
+    || variant.storyLink === nextOpenDay.link
+    || (variant.placement && String(nextOpenDay.link || "").includes(`placement=${variant.placement}`))
+  )) || {};
+  const nextActionHandoff = {
+    day: nextOpenDay.day || 1,
+    label: nextOpenDay.label || "",
+    placement: nextVariant.placement || "",
+    action: nextOpenDay.action || "",
+    primaryLink: nextOpenDay.link || "",
+    followupLink: nextOpenDay.followupLink || nextVariant.storyLink || "",
+    copy: nextVariant.copy || "",
+    reportQuery: nextOpenDay.reportQuery || "noor_growth_signals_7d",
+    expectedSignal: nextOpenDay.expectedSignal || "",
+    reviewCommand: "npm run noor:sprint:review",
+    recorderDryRunCommand: `npm run noor:sprint:log -- --day ${nextOpenDay.day || 1} --status needs_retry --notes "checked ${nextOpenDay.reportQuery || "noor_growth_signals_7d"} aggregate only" --next-action "wait for aggregate signal or retry the next planned placement" --dry-run`,
+    privacyBoundary: "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+    analyticsStatus,
+    readinessStatus,
+  };
   return {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1540,6 +1561,7 @@ function buildNoorSprintStatus(siteDir, source) {
       nextDay: nextOpenDay.day || 1,
       nextAction: nextOpenDay.action || "",
     },
+    nextActionHandoff,
     blockedBy: [
       analyticsStatus,
       readinessStatus,
@@ -1557,6 +1579,7 @@ function buildNoorSprintStatus(siteDir, source) {
 }
 
 function writeNoorSprintStatusPage(siteDir, manifest) {
+  const handoff = manifest.nextActionHandoff || {};
   const rows = (manifest.days || []).map((day) => `
         <tr data-noor-sprint-status-day="${escapeHtml(day.day)}">
           <th scope="row">Day ${escapeHtml(day.day)}</th>
@@ -1614,6 +1637,23 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
         ${healthMetric("Subscriber signal", String(manifest.summary.subscriberSignalObserved))}
         ${healthMetric("Checkout enabled", String(manifest.summary.checkoutEnabled))}
       </dl>
+    </section>
+    <section class="creator-kit-safety" data-noor-sprint-next-action>
+      <p class="creator-eyebrow">Next action</p>
+      <h2>Day ${escapeHtml(handoff.day || manifest.summary.nextDay)} handoff</h2>
+      <p>${escapeHtml(handoff.action || manifest.summary.nextAction)}</p>
+      <dl>
+        ${healthMetric("Focus", handoff.label || "")}
+        ${healthMetric("Placement", handoff.placement || "manual_review")}
+        ${healthMetric("Report query", handoff.reportQuery || "")}
+        ${healthMetric("Expected signal", handoff.expectedSignal || "")}
+        ${healthMetric("Analytics", handoff.analyticsStatus || manifest.analyticsStatus)}
+        ${healthMetric("Readiness", handoff.readinessStatus || manifest.readinessStatus)}
+      </dl>
+      <p><a href="${escapeHtml(handoff.primaryLink || "#")}">Open primary link</a>${handoff.followupLink ? ` <a href="${escapeHtml(handoff.followupLink)}">Open follow-up link</a>` : ""}</p>
+      ${handoff.copy ? `<pre>${escapeHtml(handoff.copy)}</pre>` : ""}
+      <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>
+      <p>${escapeHtml(handoff.privacyBoundary || manifest.privacy?.blockedFields?.join(", ") || "")}</p>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-status-log>
       <h2>Daily log</h2>

@@ -53,6 +53,22 @@
     "nextDay": 1,
     "nextAction": "Post the parent-group copy in one warm Arabic-speaking parent group."
   },
+  "nextActionHandoff": {
+    "day": 1,
+    "label": "Parent group seed",
+    "placement": "parent_group",
+    "action": "Post the parent-group copy in one warm Arabic-speaking parent group.",
+    "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
+    "followupLink": "",
+    "copy": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
+    "reportQuery": "noor_growth_signals_7d",
+    "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
+    "reviewCommand": "npm run noor:sprint:review",
+    "recorderDryRunCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run",
+    "privacyBoundary": "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+    "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
+    "readinessStatus": "safe_wait_subscriber_empty"
+  },
   "blockedBy": [
     "pending_cloudflare_credentials_or_enablement",
     "safe_wait_subscriber_empty"

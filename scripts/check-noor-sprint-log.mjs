@@ -115,6 +115,19 @@ function validateStatus(status, log, failures) {
   if (status.summary?.completedDays !== completed) failures.push("status_completed_days_mismatch");
   if (status.summary?.skippedDays !== skipped) failures.push("status_skipped_days_mismatch");
   if (status.summary?.subscriberSignalObserved !== signalObserved) failures.push("status_signal_observed_mismatch");
+  if (!status.nextActionHandoff || typeof status.nextActionHandoff !== "object") failures.push("status_missing_next_action_handoff");
+  if (status.nextActionHandoff) {
+    const handoff = status.nextActionHandoff;
+    if (Number(handoff.day) !== Number(status.summary?.nextDay || 1)) failures.push("handoff_day_mismatch");
+    if (!String(handoff.action || "").trim()) failures.push("handoff_missing_action");
+    if (!String(handoff.primaryLink || "").startsWith("https://fursay.com/")) failures.push(`handoff_bad_primary_link:${handoff.primaryLink || "none"}`);
+    if (!String(handoff.reportQuery || "").trim()) failures.push("handoff_missing_report_query");
+    if (!String(handoff.expectedSignal || "").trim()) failures.push("handoff_missing_expected_signal");
+    if (!String(handoff.reviewCommand || "").includes(REVIEW_COMMAND)) failures.push("handoff_missing_review_command");
+    if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
+    if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
+    if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
+  }
 }
 
 async function main() {
@@ -139,6 +152,8 @@ async function main() {
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");
   if (!html.includes(LOG_FILE)) failures.push("page_missing_log_source");
+  if (!html.includes("data-noor-sprint-next-action")) failures.push("page_missing_next_action_handoff");
+  if (!html.includes("Day 1 handoff") && !html.includes("handoff")) failures.push("page_missing_handoff_heading");
   if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
