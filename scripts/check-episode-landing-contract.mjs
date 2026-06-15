@@ -148,6 +148,24 @@ function firstType(blocks, type) {
   return null;
 }
 
+function checkFaqSchema(blocks, episode, failures) {
+  const faq = firstType(blocks, "FAQPage");
+  if (!faq) {
+    failures.push(`${episode.path}:missing_faq_page`);
+    return;
+  }
+  if (!Array.isArray(faq.mainEntity) || faq.mainEntity.length < 3) {
+    failures.push(`${episode.path}:faq_question_count:${faq.mainEntity?.length || 0}<3`);
+    return;
+  }
+  for (const [index, item] of faq.mainEntity.entries()) {
+    if (item?.["@type"] !== "Question") failures.push(`${episode.path}:faq_question_type:${index}`);
+    if (!item?.name || String(item.name).replace(/\s+/g, "").length < 6) failures.push(`${episode.path}:faq_question_missing:${index}`);
+    if (item?.acceptedAnswer?.["@type"] !== "Answer") failures.push(`${episode.path}:faq_answer_type:${index}`);
+    if (!item?.acceptedAnswer?.text || String(item.acceptedAnswer.text).trim().length < 24) failures.push(`${episode.path}:faq_answer_missing:${index}`);
+  }
+}
+
 function bookLinks(html) {
   return [...html.matchAll(/<a\b[^>]*class=["'][^"']*\bbook-link\b[^"']*["'][^>]*>/gi)].map((match) => match[0]);
 }
@@ -206,6 +224,7 @@ function checkEpisode(episode, html) {
   const learning = firstType(blocks, "LearningResource");
   if (learning?.isPartOf?.name !== episode.schemaSeries) failures.push(`${episode.path}:learning_resource_series:${learning?.isPartOf?.name || "none"}`);
   if (!String(learning?.potentialAction?.target || "").includes(`subscribe=${episode.pack}`)) failures.push(`${episode.path}:schema_subscribe_target`);
+  checkFaqSchema(blocks, episode, failures);
   return { path: episode.path, ok: failures.length === 0, failures, words, bookLinks: links.length };
 }
 
@@ -232,7 +251,9 @@ async function main() {
     : await readFile(resolve(SITE_DIR, "sitemap.xml"), "utf8");
 
   if (release.liveExpectations?.episodeLandingPages !== EPISODES.length) failures.push(`release_episode_landing_pages:${release.liveExpectations?.episodeLandingPages || "none"}!=${EPISODES.length}`);
+  if (release.liveExpectations?.episodeFaqSchemaPages !== EPISODES.length) failures.push(`release_episode_faq_schema_pages:${release.liveExpectations?.episodeFaqSchemaPages || "none"}!=${EPISODES.length}`);
   if (siteHealth.growth?.episodeLandingPages !== EPISODES.length) failures.push(`site_health_episode_landing_pages:${siteHealth.growth?.episodeLandingPages || "none"}!=${EPISODES.length}`);
+  if (siteHealth.growth?.episodeFaqSchemaPages !== EPISODES.length) failures.push(`site_health_episode_faq_schema_pages:${siteHealth.growth?.episodeFaqSchemaPages || "none"}!=${EPISODES.length}`);
   const manifestEpisodes = videoDiscovery.episodeLandings || [];
   if (manifestEpisodes.length !== EPISODES.length) failures.push(`video_discovery_episode_landings:${manifestEpisodes.length}!=${EPISODES.length}`);
   for (const episode of EPISODES) {

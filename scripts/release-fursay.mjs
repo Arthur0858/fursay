@@ -278,6 +278,7 @@ function writeReleaseManifest() {
       eventAnalyticsReportComparisonWindows: [7, 30],
       latestStoryEntries: 12,
       episodeLandingPages: 9,
+      episodeFaqSchemaPages: 9,
       noorLeadMagnetPages: 3,
       noorSprintCopyVariants: 4,
       noorSprintStatusDays: 7,
@@ -2155,6 +2156,7 @@ function writeConversionHealth(siteDir, source) {
     growth: {
       latestStoryEntries: release.liveExpectations.latestStoryEntries,
       episodeLandingPages: release.liveExpectations.episodeLandingPages,
+      episodeFaqSchemaPages: release.liveExpectations.episodeFaqSchemaPages,
       noorLeadMagnetPages: release.liveExpectations.noorLeadMagnetPages,
       noorReadinessStatus: "safe_wait_subscriber_empty",
       noorSubscriberSignalGoal: 1,

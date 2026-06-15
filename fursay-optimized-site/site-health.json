@@ -401,6 +401,7 @@
   "growth": {
     "latestStoryEntries": 12,
     "episodeLandingPages": 9,
+    "episodeFaqSchemaPages": 9,
     "noorLeadMagnetPages": 3,
     "noorReadinessStatus": "safe_wait_subscriber_empty",
     "noorSubscriberSignalGoal": 1,
