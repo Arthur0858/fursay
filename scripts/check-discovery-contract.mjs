@@ -52,6 +52,7 @@ const DISCOVERY_FILES = [
   "/share-kit.json",
   "/traffic-launch.json",
   "/noor-sprint-status.json",
+  "/noor-sprint-action.json",
   "/links.json",
   "/conversion-health.json",
   "/products.json",

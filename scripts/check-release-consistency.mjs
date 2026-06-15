@@ -11,6 +11,7 @@ const JSON_MANIFESTS = [
   "/creator-kit.json",
   "/share-kit.json",
   "/traffic-launch.json",
+  "/noor-sprint-action.json",
   "/links.json",
   "/conversion-health.json",
   "/products.json",
@@ -18,6 +19,9 @@ const JSON_MANIFESTS = [
   "/video-discovery.json",
   "/shortlinks.json",
 ];
+const STATUS_MANIFESTS_WITHOUT_SOURCE = new Set([
+  "/noor-sprint-action.json",
+]);
 const BADGE_PAGES = [
   "/creator-kit",
   "/share-kit",
@@ -154,9 +158,10 @@ async function main() {
     const summary = manifest.source?.summary || "";
     const date = manifest.releasedAt || manifest.updatedAt || "";
     const itemFailures = [];
+    const requiresSource = !STATUS_MANIFESTS_WITHOUT_SOURCE.has(pathname);
     if (manifest.platform !== "cloudflare-workers-static-assets") itemFailures.push(`bad_platform:${manifest.platform || "none"}`);
-    if (commit !== expectedCommit) itemFailures.push(`bad_commit:${commit || "none"}`);
-    if (summary !== expectedSummary) itemFailures.push(`bad_summary:${summary || "none"}`);
+    if (requiresSource && commit !== expectedCommit) itemFailures.push(`bad_commit:${commit || "none"}`);
+    if (requiresSource && summary !== expectedSummary) itemFailures.push(`bad_summary:${summary || "none"}`);
     if (date !== expectedDate) itemFailures.push(`bad_date:${date || "none"}`);
     failures.push(...itemFailures.map((failure) => `${pathname}:${failure}`));
     manifests.push({ path: pathname, commit, summary, date, failed: itemFailures.length });

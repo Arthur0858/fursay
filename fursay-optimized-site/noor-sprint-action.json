@@ -1,0 +1,94 @@
+{
+  "site": "Fursay",
+  "origin": "https://fursay.com",
+  "platform": "cloudflare-workers-static-assets",
+  "updatedAt": "2026-06-15",
+  "purpose": "Minimal operator handoff for the next Noor first-subscriber sprint action.",
+  "statusManifest": "https://fursay.com/noor-sprint-status.json",
+  "statusPage": "https://fursay.com/noor-sprint-status",
+  "trafficLaunch": "https://fursay.com/traffic-launch.json",
+  "conversionHealth": "https://fursay.com/conversion-health.json",
+  "logSource": "content/growth/noor-sprint-log.json",
+  "piiAllowed": false,
+  "checkoutEnabled": false,
+  "paymentLinksAllowed": false,
+  "blockedBy": [
+    "pending_cloudflare_credentials_or_enablement",
+    "safe_wait_subscriber_empty"
+  ],
+  "sprint": {
+    "pack": "noor",
+    "status": "ready_to_start",
+    "readinessStatus": "safe_wait_subscriber_empty",
+    "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
+    "goal": "Get the first real Noor subscriber signal without sending a newsletter or enabling checkout.",
+    "successMetric": "at_least_one_noor_subscribe_submit_success",
+    "windowDays": 7,
+    "logStatus": "ready_to_start",
+    "logEntryCount": 0
+  },
+  "nextAction": {
+    "day": 1,
+    "label": "Parent group seed",
+    "placement": "parent_group",
+    "action": "Post the parent-group copy in one warm Arabic-speaking parent group.",
+    "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
+    "followupLink": "",
+    "reportQuery": "noor_growth_signals_7d",
+    "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
+    "localizedCopy": {
+      "ar": "نجرب هذا الأسبوع روتيناً صغيراً للأطفال: قصة نور الصينية في 3 دقائق.\nالحزمة المجانية: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nفيها قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل.",
+      "en": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity."
+    },
+    "copy": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
+    "reviewCommand": "npm run noor:sprint:review",
+    "recorderPostedCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
+    "recorderDryRunCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run"
+  },
+  "operatorChecklist": [
+    {
+      "id": "copy_confirm",
+      "label": "Copy the planned parent note",
+      "action": "Use the Arabic parent copy from the next-action handoff without adding price, checkout, or payment language.",
+      "evidence": "The shared message contains the planned tracked Fursay link and no personal subscriber data."
+    },
+    {
+      "id": "open_link_check",
+      "label": "Open the tracked link before sharing",
+      "action": "Open the primary link once and confirm it lands on the Noor story pack or sample preview with the expected source_id and placement.",
+      "evidence": "The URL remains on fursay.com and keeps the planned source_id, creator, and placement attribution."
+    },
+    {
+      "id": "record_posted",
+      "label": "Record the posted state",
+      "action": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
+      "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes."
+    },
+    {
+      "id": "review_report",
+      "label": "Review anonymous aggregate results",
+      "action": "npm run noor:sprint:review",
+      "evidence": "Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails."
+    }
+  ],
+  "privacy": {
+    "piiAllowed": false,
+    "boundary": "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+    "allowedEvidence": [
+      "anonymous event query name",
+      "source_id",
+      "placement",
+      "aggregate count",
+      "public URL",
+      "manual note without personal identity"
+    ],
+    "blockedFields": [
+      "email",
+      "name",
+      "phone",
+      "address",
+      "subscriberId",
+      "mailerLiteSubscriberId"
+    ]
+  }
+}

@@ -161,6 +161,7 @@ function writeReleaseManifest() {
       trafficLaunchPage: "https://fursay.com/traffic-launch",
       noorSprintStatusManifest: "https://fursay.com/noor-sprint-status.json",
       noorSprintStatusPage: "https://fursay.com/noor-sprint-status",
+      noorSprintActionManifest: "https://fursay.com/noor-sprint-action.json",
       linksManifest: "https://fursay.com/links.json",
       linksPage: "https://fursay.com/links",
       conversionHealthManifest: "https://fursay.com/conversion-health.json",
@@ -294,7 +295,7 @@ function writeReleaseManifest() {
       visualLayoutChecks: 28,
       checkoutGateRequirements: 4,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 69,
+      cacheHeaderChecks: 70,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -1837,7 +1838,61 @@ ${rows}
 function writeNoorSprintStatus(siteDir, source) {
   const manifest = buildNoorSprintStatus(siteDir, source);
   writeFileSync(resolve(siteDir, "noor-sprint-status.json"), JSON.stringify(manifest, null, 2) + "\n");
+  writeFileSync(resolve(siteDir, "noor-sprint-action.json"), JSON.stringify(buildNoorSprintActionManifest(manifest, source), null, 2) + "\n");
   writeNoorSprintStatusPage(siteDir, manifest);
+}
+
+function buildNoorSprintActionManifest(statusManifest, source) {
+  const handoff = statusManifest.nextActionHandoff || {};
+  return {
+    site: "Fursay",
+    origin: "https://fursay.com",
+    platform: "cloudflare-workers-static-assets",
+    updatedAt: statusManifest.updatedAt,
+    purpose: "Minimal operator handoff for the next Noor first-subscriber sprint action.",
+    statusManifest: statusManifest.manifest,
+    statusPage: statusManifest.page,
+    trafficLaunch: statusManifest.trafficLaunch,
+    conversionHealth: statusManifest.conversionHealth,
+    logSource: statusManifest.logSource,
+    piiAllowed: false,
+    checkoutEnabled: false,
+    paymentLinksAllowed: false,
+    blockedBy: statusManifest.blockedBy || [],
+    sprint: {
+      pack: "noor",
+      status: statusManifest.status,
+      readinessStatus: statusManifest.readinessStatus,
+      analyticsStatus: statusManifest.analyticsStatus,
+      goal: statusManifest.goal,
+      successMetric: statusManifest.successMetric,
+      windowDays: statusManifest.windowDays,
+      logStatus: statusManifest.logStatus,
+      logEntryCount: statusManifest.logEntryCount,
+    },
+    nextAction: {
+      day: handoff.day || statusManifest.summary?.nextDay || 1,
+      label: handoff.label || "",
+      placement: handoff.placement || "",
+      action: handoff.action || statusManifest.summary?.nextAction || "",
+      primaryLink: handoff.primaryLink || "",
+      followupLink: handoff.followupLink || "",
+      reportQuery: handoff.reportQuery || "noor_growth_signals_7d",
+      expectedSignal: handoff.expectedSignal || "",
+      localizedCopy: handoff.localizedCopy || {},
+      copy: handoff.copy || "",
+      reviewCommand: handoff.reviewCommand || statusManifest.reviewCommand,
+      recorderPostedCommand: handoff.recorderPostedCommand || "",
+      recorderDryRunCommand: handoff.recorderDryRunCommand || "",
+    },
+    operatorChecklist: statusManifest.operatorChecklist || [],
+    privacy: {
+      piiAllowed: false,
+      boundary: handoff.privacyBoundary || "Record anonymous aggregate evidence only.",
+      allowedEvidence: statusManifest.privacy?.allowedEvidence || [],
+      blockedFields: statusManifest.privacy?.blockedFields || [],
+    },
+  };
 }
 
 function buildVideoDiscoveryChannels() {
@@ -3901,6 +3956,7 @@ function writeSiteHealthManifest(siteDir) {
       ...current.deployment,
       noorSprintStatusManifest: "https://fursay.com/noor-sprint-status.json",
       noorSprintStatusPage: "https://fursay.com/noor-sprint-status",
+      noorSprintActionManifest: "https://fursay.com/noor-sprint-action.json",
     },
     generatedFrom: [
       "/data/site-structure.json",
@@ -3963,6 +4019,9 @@ function writeSiteHealthManifest(siteDir) {
       noorSprintStatus: [
         "https://fursay.com/noor-sprint-status",
         "https://fursay.com/noor-sprint-status.json",
+      ],
+      noorSprintAction: [
+        "https://fursay.com/noor-sprint-action.json",
       ],
     },
     funnels: {

@@ -32,7 +32,8 @@
     },
     "autoDeployWorkflow": ".github/workflows/deploy-worker.yml",
     "noorSprintStatusManifest": "https://fursay.com/noor-sprint-status.json",
-    "noorSprintStatusPage": "https://fursay.com/noor-sprint-status"
+    "noorSprintStatusPage": "https://fursay.com/noor-sprint-status",
+    "noorSprintActionManifest": "https://fursay.com/noor-sprint-action.json"
   },
   "routes": {
     "home": [
@@ -144,6 +145,9 @@
     "productSampleTrackedDownloads": [
       "https://fursay.com/download/koko-printable-sample?source_id=koko_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
       "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download"
+    ],
+    "noorSprintAction": [
+      "https://fursay.com/noor-sprint-action.json"
     ]
   },
   "funnels": {

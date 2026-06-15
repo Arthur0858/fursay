@@ -168,6 +168,7 @@ async function main() {
   const failures = [];
   const log = args.baseUrl ? null : await readLocalLog();
   const status = await readJson(args.baseUrl, "/noor-sprint-status.json");
+  const action = await readJson(args.baseUrl, "/noor-sprint-action.json");
   if (!args.baseUrl) validateLog(log, failures);
   if (!args.baseUrl) {
     const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
@@ -192,6 +193,22 @@ async function main() {
     if (postedDryRun.status !== 0) failures.push(`posted_dry_run_failed:${postedDryRun.stderr || postedDryRun.stdout}`);
   }
   validateStatus(status, log, failures);
+  if (action.statusManifest !== status.manifest) failures.push("action_status_manifest_mismatch");
+  if (action.statusPage !== status.page) failures.push("action_status_page_mismatch");
+  if (action.logSource !== LOG_FILE) failures.push(`action_bad_log_source:${action.logSource || "none"}`);
+  if (action.piiAllowed !== false) failures.push("action_pii_allowed_not_false");
+  if (action.checkoutEnabled !== false) failures.push("action_checkout_enabled_not_false");
+  if (action.paymentLinksAllowed !== false) failures.push("action_payment_links_allowed_not_false");
+  if (action.sprint?.pack !== "noor") failures.push(`action_bad_pack:${action.sprint?.pack || "none"}`);
+  if (action.sprint?.readinessStatus !== status.readinessStatus) failures.push("action_readiness_mismatch");
+  if (action.sprint?.analyticsStatus !== status.analyticsStatus) failures.push("action_analytics_mismatch");
+  if (Number(action.nextAction?.day) !== Number(status.nextActionHandoff?.day)) failures.push("action_day_mismatch");
+  if (action.nextAction?.primaryLink !== status.nextActionHandoff?.primaryLink) failures.push("action_primary_link_mismatch");
+  if (action.nextAction?.reportQuery !== status.nextActionHandoff?.reportQuery) failures.push("action_report_query_mismatch");
+  if (!String(action.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("action_missing_posted_recorder");
+  if (!String(action.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("action_posted_recorder_must_be_dry_run");
+  if (!String(action.privacy?.boundary || "").includes("anonymous aggregate evidence")) failures.push("action_missing_privacy_boundary");
+  scanForPrivateValues(action, failures, "action");
   const html = args.baseUrl
     ? await (await fetch(`${args.baseUrl}/noor-sprint-status`, { cache: "no-store" })).text()
     : await readFile(resolve(SITE_DIR, "noor-sprint-status.html"), "utf8");

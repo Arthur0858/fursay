@@ -69,6 +69,7 @@ Operator and validation references:
 - These pages are for launch, QA, growth, and monetization validation. They are noindex or machine-readable references, not the primary family entry points.
 - Traffic launch kit page: https://fursay.com/traffic-launch
 - Noor sprint status page: https://fursay.com/noor-sprint-status
+- Noor sprint next action manifest: https://fursay.com/noor-sprint-action.json
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Monetization roadmap: https://fursay.com/monetization-roadmap
@@ -103,6 +104,7 @@ Technical discovery:
 - Share kit: https://fursay.com/share-kit.json
 - Traffic launch kit: https://fursay.com/traffic-launch.json
 - Noor sprint status manifest: https://fursay.com/noor-sprint-status.json
+- Noor sprint next action manifest: https://fursay.com/noor-sprint-action.json
 - Social profile links manifest: https://fursay.com/links.json
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Conversion health manifest: https://fursay.com/conversion-health.json

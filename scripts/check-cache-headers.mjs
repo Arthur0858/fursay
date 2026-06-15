@@ -210,6 +210,12 @@ const CHECKS = [
     contentTypeIncludes: "application/json",
   },
   {
+    path: "/noor-sprint-action.json",
+    status: 200,
+    cacheIncludes: ["public", "max-age=3600"],
+    contentTypeIncludes: "application/json",
+  },
+  {
     path: "/links.json",
     status: 200,
     cacheIncludes: ["public", "max-age=3600"],

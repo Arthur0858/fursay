@@ -27,6 +27,7 @@ const PUBLIC_MANIFESTS = [
   "/share-kit.json",
   "/traffic-launch.json",
   "/noor-sprint-status.json",
+  "/noor-sprint-action.json",
   "/links.json",
   "/conversion-health.json",
   "/products.json",
@@ -36,6 +37,7 @@ const PUBLIC_MANIFESTS = [
 ];
 const STATUS_MANIFESTS_WITHOUT_SOURCE = new Set([
   "/noor-sprint-status.json",
+  "/noor-sprint-action.json",
 ]);
 const LIVE_SMOKE_EXCLUDES = new Set([
   "scripts/check-deploy-readiness.mjs",
@@ -213,6 +215,9 @@ async function checkLocalDocs(failures, details) {
     `${ORIGIN}/monetization-roadmap`,
     `${ORIGIN}/monetization-roadmap.json`,
   ], normalizeArray(siteHealth.routes?.monetizationRoadmap)));
+  failures.push(...exactArrayFailures("site_health_noor_sprint_action", [
+    `${ORIGIN}/noor-sprint-action.json`,
+  ], normalizeArray(siteHealth.routes?.noorSprintAction)));
   for (const pack of ["koko", "noor"]) {
     if (siteHealth.funnels?.[pack]?.campaign !== campaigns.campaigns?.[pack]?.campaign) {
       failures.push(`site_health_funnel_campaign:${pack}:${siteHealth.funnels?.[pack]?.campaign || "none"}`);

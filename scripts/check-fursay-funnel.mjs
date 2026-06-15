@@ -1121,6 +1121,7 @@ async function checkDiscoveryFiles(baseUrl) {
   const shareKitRaw = await readDiscoveryFile(baseUrl, "share-kit.json");
   const trafficLaunchRaw = await readDiscoveryFile(baseUrl, "traffic-launch.json");
   const noorSprintStatusRaw = await readDiscoveryFile(baseUrl, "noor-sprint-status.json");
+  const noorSprintActionRaw = await readDiscoveryFile(baseUrl, "noor-sprint-action.json");
   const linksRaw = await readDiscoveryFile(baseUrl, "links.json");
   const videoDiscoveryRaw = await readDiscoveryFile(baseUrl, "video-discovery.json");
   const shortlinksRaw = await readDiscoveryFile(baseUrl, "shortlinks.json");
@@ -1141,6 +1142,7 @@ async function checkDiscoveryFiles(baseUrl) {
   let shareKit = {};
   let trafficLaunch = {};
   let noorSprintStatus = {};
+  let noorSprintAction = {};
   let links = {};
   let videoDiscovery = {};
   let shortlinks = {};
@@ -1184,6 +1186,11 @@ async function checkDiscoveryFiles(baseUrl) {
     noorSprintStatus = JSON.parse(noorSprintStatusRaw);
   } catch {
     failures.push("noor_sprint_status_invalid_json");
+  }
+  try {
+    noorSprintAction = JSON.parse(noorSprintActionRaw);
+  } catch {
+    failures.push("noor_sprint_action_invalid_json");
   }
   try {
     links = JSON.parse(linksRaw);
@@ -1357,6 +1364,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (siteHealth.deployment?.noorSprintStatusPage !== "https://fursay.com/noor-sprint-status") {
     failures.push(`site_health_noor_sprint_status_page:${siteHealth.deployment?.noorSprintStatusPage || "none"}`);
   }
+  if (siteHealth.deployment?.noorSprintActionManifest !== "https://fursay.com/noor-sprint-action.json") {
+    failures.push(`site_health_noor_sprint_action_manifest:${siteHealth.deployment?.noorSprintActionManifest || "none"}`);
+  }
   if (siteHealth.deployment?.linksManifest !== "https://fursay.com/links.json") {
     failures.push(`site_health_links_manifest:${siteHealth.deployment?.linksManifest || "none"}`);
   }
@@ -1427,6 +1437,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.noorSprintStatusPage !== "https://fursay.com/noor-sprint-status") {
     failures.push(`release_noor_sprint_status_page:${release.deployment?.noorSprintStatusPage || "none"}`);
   }
+  if (release.deployment?.noorSprintActionManifest !== "https://fursay.com/noor-sprint-action.json") {
+    failures.push(`release_noor_sprint_action_manifest:${release.deployment?.noorSprintActionManifest || "none"}`);
+  }
   if (release.deployment?.linksManifest !== "https://fursay.com/links.json") {
     failures.push(`release_links_manifest:${release.deployment?.linksManifest || "none"}`);
   }
@@ -1485,7 +1498,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.monetizationRoadmapStages !== 4) failures.push(`release_monetization_roadmap_stages:${release.liveExpectations?.monetizationRoadmapStages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapProducts !== 2) failures.push(`release_monetization_roadmap_products:${release.liveExpectations?.monetizationRoadmapProducts || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 69) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 70) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");
@@ -1657,6 +1670,20 @@ async function checkDiscoveryFiles(baseUrl) {
     if (day.signalObserved !== false) failures.push(`noor_sprint_status_day_signal_should_start_false:${day.day || "none"}`);
     if (!day.nextAction) failures.push(`noor_sprint_status_day_missing_next_action:${day.day || "none"}`);
   }
+  if (noorSprintAction.platform !== "cloudflare-workers-static-assets") failures.push(`noor_sprint_action_platform:${noorSprintAction.platform || "none"}`);
+  if (noorSprintAction.statusManifest !== "https://fursay.com/noor-sprint-status.json") failures.push(`noor_sprint_action_status_manifest:${noorSprintAction.statusManifest || "none"}`);
+  if (noorSprintAction.statusPage !== "https://fursay.com/noor-sprint-status") failures.push(`noor_sprint_action_status_page:${noorSprintAction.statusPage || "none"}`);
+  if (noorSprintAction.logSource !== "content/growth/noor-sprint-log.json") failures.push(`noor_sprint_action_log_source:${noorSprintAction.logSource || "none"}`);
+  if (noorSprintAction.piiAllowed !== false) failures.push("noor_sprint_action_pii_allowed");
+  if (noorSprintAction.checkoutEnabled !== false || noorSprintAction.paymentLinksAllowed !== false) failures.push("noor_sprint_action_checkout_not_locked");
+  if (noorSprintAction.sprint?.pack !== "noor") failures.push(`noor_sprint_action_pack:${noorSprintAction.sprint?.pack || "none"}`);
+  if (noorSprintAction.sprint?.readinessStatus !== noorSprintStatus.readinessStatus) failures.push("noor_sprint_action_readiness_mismatch");
+  if (noorSprintAction.sprint?.analyticsStatus !== noorSprintStatus.analyticsStatus) failures.push("noor_sprint_action_analytics_mismatch");
+  if (Number(noorSprintAction.nextAction?.day) !== Number(noorSprintStatus.nextActionHandoff?.day)) failures.push("noor_sprint_action_day_mismatch");
+  if (noorSprintAction.nextAction?.primaryLink !== noorSprintStatus.nextActionHandoff?.primaryLink) failures.push("noor_sprint_action_primary_link_mismatch");
+  if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("noor_sprint_action_missing_posted_recorder");
+  if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("noor_sprint_action_posted_recorder_not_dry_run");
+  if (!String(noorSprintAction.privacy?.boundary || "").includes("anonymous aggregate evidence")) failures.push("noor_sprint_action_missing_privacy_boundary");
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
   if (links.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push("links_bad_subscription_endpoint");
@@ -2091,6 +2118,9 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   for (const route of ["https://fursay.com/noor-sprint-status", "https://fursay.com/noor-sprint-status.json"]) {
     if (!siteHealth.routes?.noorSprintStatus?.includes(route)) failures.push(`site_health_missing_noor_sprint_status_route:${route}`);
+  }
+  for (const route of ["https://fursay.com/noor-sprint-action.json"]) {
+    if (!siteHealth.routes?.noorSprintAction?.includes(route)) failures.push(`site_health_missing_noor_sprint_action_route:${route}`);
   }
   for (const route of ["https://fursay.com/links", "https://fursay.com/links.json"]) {
     if (!siteHealth.routes?.links?.includes(route)) failures.push(`site_health_missing_links_route:${route}`);

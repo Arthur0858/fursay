@@ -111,6 +111,7 @@ async function main() {
     "/share-kit.json",
     "/traffic-launch.json",
     "/noor-sprint-status.json",
+    "/noor-sprint-action.json",
     "/products.json",
     "/product-samples/koko-printable",
     "/product-samples/noor-worksheet",
