@@ -20,11 +20,13 @@ const EMAIL_VALUE = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
 function parseArgs() {
   const args = process.argv.slice(2);
   const parsed = {
+    log: LOG_FILE,
     report: DEFAULT_REPORT,
     windowDays: DEFAULT_WINDOW_DAYS,
   };
   for (let i = 0; i < args.length; i += 1) {
-    if (args[i] === "--report") parsed.report = args[++i];
+    if (args[i] === "--log") parsed.log = args[++i];
+    else if (args[i] === "--report") parsed.report = args[++i];
     else if (args[i] === "--window-days") parsed.windowDays = Number(args[++i]);
   }
   return parsed;
@@ -96,10 +98,11 @@ function rowsFor(report, family, windowDays) {
     .flatMap((query) => resultRows(query.result));
 }
 
-function nextOpenDay(log, sprint) {
+function nextOpenStep(log, sprint) {
   const completedStatuses = new Set(["completed", "skipped"]);
   const entriesByDay = new Map((log.entries || []).map((entry) => [Number(entry.day), entry]));
-  return (sprint.dailyPlan || []).find((day) => !completedStatuses.has(entriesByDay.get(Number(day.day))?.status)) || null;
+  const day = (sprint.dailyPlan || []).find((candidate) => !completedStatuses.has(entriesByDay.get(Number(candidate.day))?.status)) || null;
+  return day ? { day, entry: entriesByDay.get(Number(day.day)) || null } : null;
 }
 
 function countDayEvents(rows, sourceIds) {
@@ -137,7 +140,9 @@ function recorderCommand(day, status, notes, nextAction, signalEvidence = "") {
 }
 
 function buildReview({ log, sprint, report, windowDays }) {
-  const day = nextOpenDay(log, sprint);
+  const step = nextOpenStep(log, sprint);
+  const day = step?.day || null;
+  const currentEntry = step?.entry || null;
   if (!day) {
     return {
       status: "complete",
@@ -148,7 +153,20 @@ function buildReview({ log, sprint, report, windowDays }) {
   }
 
   const sourceIds = [day.link, day.followupLink].map(extractSourceId).filter(Boolean);
+  const postedAndWaiting = currentEntry?.status === "posted";
   if (!report) {
+    if (postedAndWaiting) {
+      return {
+        status: "awaiting_report_after_post",
+        day: day.day,
+        label: day.label,
+        sourceIds,
+        recommendation: "wait_for_anonymous_report",
+        recordStatus: "posted",
+        recommendedRecorderCommand: "",
+        nextCommand: "npm run report:events",
+      };
+    }
     return {
       status: "pending_report",
       day: day.day,
@@ -166,6 +184,19 @@ function buildReview({ log, sprint, report, windowDays }) {
   }
 
   if (report.status !== "queried") {
+    if (postedAndWaiting) {
+      return {
+        status: "awaiting_report_after_post",
+        day: day.day,
+        label: day.label,
+        sourceIds,
+        analyticsStatus: report.status || "pending",
+        recommendation: "wait_for_analytics_enablement",
+        recordStatus: "posted",
+        recommendedRecorderCommand: "",
+        nextCommand: "npm run report:events",
+      };
+    }
     return {
       status: report.status || "pending_analytics_query",
       day: day.day,
@@ -243,7 +274,7 @@ function buildReview({ log, sprint, report, windowDays }) {
 async function main() {
   const args = parseArgs();
   if (!Number.isInteger(args.windowDays) || args.windowDays < 1) throw new Error("--window-days must be a positive integer");
-  const log = await readJson(LOG_FILE);
+  const log = await readJson(args.log);
   const trafficLaunch = await readJson(TRAFFIC_LAUNCH_FILE);
   const report = await readJsonIfExists(args.report);
   const failures = [];
@@ -255,7 +286,7 @@ async function main() {
     ok: failures.length === 0,
     piiAllowed: false,
     reportFile: args.report,
-    logFile: LOG_FILE,
+    logFile: args.log,
     windowDays: args.windowDays,
     review,
     failures,

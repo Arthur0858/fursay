@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 
 const DEFAULT_OUT = "/tmp/fursay-noor-sprint-review";
 const REVIEW_SCRIPT = "scripts/review-noor-sprint-report.mjs";
+const BASE_LOG_FILE = "content/growth/noor-sprint-log.json";
 const REVIEW_COMMAND = "npm run noor:sprint:review";
 const NOOR_SOURCE_ID = "noor_first_subscriber_sprint_parent_group";
 
@@ -71,6 +72,22 @@ async function main() {
   const failures = [];
 
   const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
+  const baseLog = JSON.parse(await readFile(resolve(process.cwd(), BASE_LOG_FILE), "utf8"));
+  const postedLogPath = await writeReport(tmp, "posted-log.json", {
+    ...baseLog,
+    status: "in_progress",
+    entries: [
+      {
+        day: 1,
+        executedAt: "2026-06-15T00:00:00.000Z",
+        status: "posted",
+        signalObserved: false,
+        signalEvidence: "",
+        notes: "shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report",
+        nextAction: "run npm run noor:sprint:review after the event report is available",
+      },
+    ],
+  });
   if (packageJson.scripts?.["noor:sprint:review"] !== `node ${REVIEW_SCRIPT}`) failures.push("missing_noor_sprint_review_package_script");
   if (packageJson.scripts?.["noor:sprint:review"] && REVIEW_COMMAND !== "npm run noor:sprint:review") failures.push("bad_review_command_constant");
 
@@ -78,6 +95,12 @@ async function main() {
   if (missing.status !== 0) failures.push("missing_report_should_not_fail");
   if (missing.json?.review?.status !== "pending_report") failures.push(`missing_report_bad_status:${missing.json?.review?.status || "none"}`);
   if (!missing.json?.review?.recommendedRecorderCommand?.includes("--status needs_retry")) failures.push("missing_report_missing_retry_command");
+
+  const postedMissing = runReview(["--log", postedLogPath, "--report", resolve(tmp, "missing-report.json")]);
+  if (postedMissing.status !== 0) failures.push("posted_missing_report_should_not_fail");
+  if (postedMissing.json?.review?.status !== "awaiting_report_after_post") failures.push(`posted_missing_report_bad_status:${postedMissing.json?.review?.status || "none"}`);
+  if (postedMissing.json?.review?.recordStatus !== "posted") failures.push("posted_missing_report_bad_record_status");
+  if (postedMissing.json?.review?.recommendedRecorderCommand) failures.push("posted_missing_report_should_not_recommend_retry_command");
 
   const pendingPath = await writeReport(tmp, "pending-report.json", {
     ok: true,
@@ -89,6 +112,12 @@ async function main() {
   if (pending.status !== 0) failures.push("pending_report_should_not_fail");
   if (pending.json?.review?.status !== "pending_cloudflare_credentials_or_enablement") failures.push(`pending_report_bad_status:${pending.json?.review?.status || "none"}`);
   if (pending.json?.review?.recordStatus !== "needs_retry") failures.push("pending_report_bad_record_status");
+
+  const postedPending = runReview(["--log", postedLogPath, "--report", pendingPath]);
+  if (postedPending.status !== 0) failures.push("posted_pending_report_should_not_fail");
+  if (postedPending.json?.review?.status !== "awaiting_report_after_post") failures.push(`posted_pending_report_bad_status:${postedPending.json?.review?.status || "none"}`);
+  if (postedPending.json?.review?.recordStatus !== "posted") failures.push("posted_pending_report_bad_record_status");
+  if (postedPending.json?.review?.recommendedRecorderCommand) failures.push("posted_pending_report_should_not_recommend_retry_command");
 
   const signalPath = await writeReport(tmp, "signal-report.json", queriedReport([
     {
@@ -127,7 +156,9 @@ async function main() {
     failures,
     checks: [
       "missing_report_pending_review",
+      "posted_missing_report_waits",
       "pending_report_retry_review",
+      "posted_pending_report_waits",
       "subscriber_signal_review",
       "pii_report_rejected",
     ],
