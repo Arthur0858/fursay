@@ -78,6 +78,14 @@ function scanForPrivateValues(value, failures, path = "log") {
   if (typeof value === "string" && EMAIL_VALUE.test(value)) failures.push(`email_like_value:${path}`);
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function validateLog(log, failures) {
   if (log.site !== "Fursay") failures.push(`log_bad_site:${log.site || "none"}`);
   if (log.pack !== "noor") failures.push(`log_bad_pack:${log.pack || "none"}`);
@@ -123,9 +131,9 @@ function validateStatus(status, log, failures) {
   if (status.summary?.skippedDays !== skipped) failures.push("status_skipped_days_mismatch");
   if (status.summary?.subscriberSignalObserved !== signalObserved) failures.push("status_signal_observed_mismatch");
   if (status.executionState?.status !== "actionable_safe_wait") failures.push(`status_execution_state:${status.executionState?.status || "none"}`);
-  if (!String(status.executionState?.headline || "").includes("Day 1 outreach can start")) failures.push("status_execution_state_missing_actionable_headline");
+  const expectedNextDay = Number(status.summary?.nextDay || 1);
+  if (!String(status.executionState?.headline || "").includes(`Day ${expectedNextDay} outreach`)) failures.push("status_execution_state_missing_actionable_headline");
   for (const item of [
-    "Share only the Day 1 Arabic parent copy in one warm parent group.",
     "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
     "At least one real Noor subscriber signal before newsletter readiness changes.",
     "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
@@ -138,6 +146,10 @@ function validateStatus(status, log, failures) {
       ...(status.executionState?.mustNotDo || []),
     ];
     if (!values.includes(item)) failures.push(`status_execution_state_missing:${item}`);
+  }
+  const canDoNow = status.executionState?.canDoNow || [];
+  if (!canDoNow.some((item) => String(item || "").includes(`Day ${expectedNextDay}`))) {
+    failures.push("status_execution_state_missing_next_day_action");
   }
   if (!status.nextActionHandoff || typeof status.nextActionHandoff !== "object") failures.push("status_missing_next_action_handoff");
   if (status.nextActionHandoff) {
@@ -237,11 +249,11 @@ async function main() {
     ? await (await fetch(`${args.baseUrl}/noor-sprint-status`, { cache: "no-store" })).text()
     : await readFile(resolve(SITE_DIR, "noor-sprint-status.html"), "utf8");
   if (!html.includes('data-noor-sprint-execution-state="actionable_safe_wait"')) failures.push("page_missing_execution_state");
-  if (!html.includes("Day 1 outreach can start")) failures.push("page_missing_actionable_safe_wait_headline");
+  if (!html.includes(`Day ${status.summary?.nextDay || 1} outreach`)) failures.push("page_missing_actionable_safe_wait_headline");
   if (!html.includes("data-noor-sprint-can-do-now")) failures.push("page_missing_can_do_now");
   if (!html.includes("data-noor-sprint-waiting-for")) failures.push("page_missing_waiting_for");
   if (!html.includes("data-noor-sprint-must-not-do")) failures.push("page_missing_must_not_do");
-  if (!html.includes("Share only the Day 1 Arabic parent copy")) failures.push("page_missing_day_one_can_do_now");
+  if (!html.includes(`Share only the Day ${status.summary?.nextDay || 1}`)) failures.push("page_missing_next_day_can_do_now");
   if (!html.includes("At least one real Noor subscriber signal")) failures.push("page_missing_subscriber_wait_state");
   if (!html.includes("Do not send a Noor newsletter")) failures.push("page_missing_newsletter_do_not_do");
   if (!html.includes("Do not add payment, price, checkout, or product purchase language")) failures.push("page_missing_payment_do_not_do");
@@ -249,14 +261,15 @@ async function main() {
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");
   if (!html.includes(LOG_FILE)) failures.push("page_missing_log_source");
   if (!html.includes("data-noor-sprint-next-action")) failures.push("page_missing_next_action_handoff");
-  if (!html.includes("Day 1 handoff") && !html.includes("handoff")) failures.push("page_missing_handoff_heading");
+  if (!html.includes(`Day ${status.summary?.nextDay || 1} handoff`) && !html.includes("handoff")) failures.push("page_missing_handoff_heading");
   if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
   if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
   if (!html.includes("After the preview looks correct")) failures.push("page_missing_posted_apply_guidance");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
   if (!html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
-  if (!html.includes("قصة نور الصينية في 3 دقائق")) failures.push("page_missing_arabic_parent_copy");
+  const expectedHandoffCopy = status.nextActionHandoff?.localizedCopy?.ar || status.nextActionHandoff?.copy || "";
+  if (expectedHandoffCopy && !html.includes(escapeHtml(expectedHandoffCopy).slice(0, 24))) failures.push("page_missing_parent_copy");
   if (!html.includes("Copy Arabic copy")) failures.push("page_missing_arabic_copy_button");
   if (!html.includes("data-noor-sprint-operator-checklist")) failures.push("page_missing_operator_checklist");
   for (const id of REQUIRED_OPERATOR_STEPS) {

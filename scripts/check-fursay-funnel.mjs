@@ -1666,13 +1666,14 @@ async function checkDiscoveryFiles(baseUrl) {
   if (noorSprintStatus.summary?.subscriberSignalObserved !== noorStatusSignalObserved) failures.push("noor_sprint_status_signal_mismatch");
   if (noorSprintStatus.summary?.checkoutEnabled !== false || noorSprintStatus.summary?.paymentLinksAllowed !== false) failures.push("noor_sprint_status_checkout_not_locked");
   if (!Array.isArray(noorSprintStatus.days) || noorSprintStatus.days.length !== 7) failures.push(`noor_sprint_status_day_count:${noorSprintStatus.days?.length || 0}`);
+  const allowedNoorSprintDayStatuses = new Set(["not_started", "posted", "completed", "skipped", "needs_retry"]);
   for (const day of noorSprintStatus.days || []) {
     const planDay = (noorSprint.dailyPlan || []).find((entry) => entry.day === day.day) || {};
-    if (day.status !== "not_started") failures.push(`noor_sprint_status_day_status:${day.day || "none"}:${day.status || "none"}`);
+    if (!allowedNoorSprintDayStatuses.has(day.status)) failures.push(`noor_sprint_status_day_status:${day.day || "none"}:${day.status || "none"}`);
     if (day.link !== planDay.link) failures.push(`noor_sprint_status_day_link:${day.day || "none"}`);
     if ((day.followupLink || "") !== (planDay.followupLink || "")) failures.push(`noor_sprint_status_day_followup:${day.day || "none"}`);
     if (day.reportQuery !== planDay.reportQuery) failures.push(`noor_sprint_status_day_report:${day.day || "none"}`);
-    if (day.signalObserved !== false) failures.push(`noor_sprint_status_day_signal_should_start_false:${day.day || "none"}`);
+    if (day.signalObserved === true && !String(day.signalEvidence || "").trim()) failures.push(`noor_sprint_status_day_missing_signal_evidence:${day.day || "none"}`);
     if (!day.nextAction) failures.push(`noor_sprint_status_day_missing_next_action:${day.day || "none"}`);
   }
   if (noorSprintAction.platform !== "cloudflare-workers-static-assets") failures.push(`noor_sprint_action_platform:${noorSprintAction.platform || "none"}`);

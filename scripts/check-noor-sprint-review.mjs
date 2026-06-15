@@ -87,6 +87,11 @@ async function main() {
 
   const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
   const baseLog = JSON.parse(await readFile(resolve(process.cwd(), BASE_LOG_FILE), "utf8"));
+  const readyLogPath = await writeReport(tmp, "ready-log.json", {
+    ...baseLog,
+    status: "ready_to_start",
+    entries: [],
+  });
   const postedLogPath = await writeReport(tmp, "posted-log.json", {
     ...baseLog,
     status: "in_progress",
@@ -145,7 +150,7 @@ async function main() {
       events: 1,
     },
   ]));
-  const signal = runReview(["--report", signalPath]);
+  const signal = runReview(["--log", readyLogPath, "--report", signalPath]);
   if (signal.status !== 0) failures.push("signal_report_should_not_fail");
   if (signal.json?.review?.status !== "subscriber_signal_observed") failures.push(`signal_report_bad_status:${signal.json?.review?.status || "none"}`);
   if (signal.json?.review?.recordStatus !== "completed") failures.push("signal_report_bad_record_status");
@@ -164,14 +169,14 @@ async function main() {
       events: 2,
     },
   ]));
-  const engaged = runReview(["--report", engagedPath]);
+  const engaged = runReview(["--log", readyLogPath, "--report", engagedPath]);
   if (engaged.status !== 0) failures.push("engaged_report_should_not_fail");
   if (engaged.json?.review?.status !== "placement_engaged_no_subscriber_yet") failures.push(`engaged_report_bad_status:${engaged.json?.review?.status || "none"}`);
   if (engaged.json?.review?.recordStatus !== "completed") failures.push("engaged_report_bad_record_status");
   validateRecorderPair(engaged.json?.review, failures, "engaged_report");
 
   const zeroPath = await writeReport(tmp, "zero-report.json", queriedReport([]));
-  const zero = runReview(["--report", zeroPath]);
+  const zero = runReview(["--log", readyLogPath, "--report", zeroPath]);
   if (zero.status !== 0) failures.push("zero_report_should_not_fail");
   if (zero.json?.review?.status !== "no_signal_for_placement") failures.push(`zero_report_bad_status:${zero.json?.review?.status || "none"}`);
   if (zero.json?.review?.recordStatus !== "needs_retry") failures.push("zero_report_bad_record_status");

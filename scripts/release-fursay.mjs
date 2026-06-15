@@ -1659,10 +1659,10 @@ function buildNoorSprintStatus(siteDir, source) {
   ];
   const executionState = {
     status: "actionable_safe_wait",
-    headline: "Day 1 outreach can start while analytics and subscriber evidence remain in safe wait.",
+    headline: `Day ${nextActionHandoff.day} outreach can continue while analytics and subscriber evidence remain in safe wait.`,
     canDoNow: [
       "Open the planned tracked link once to confirm attribution.",
-      "Share only the Day 1 Arabic parent copy in one warm parent group.",
+      `Share only the Day ${nextActionHandoff.day} planned parent copy for ${nextActionHandoff.placement || "the current placement"}.`,
       "Record the posted state after previewing the no-PII log command.",
     ],
     waitingFor: [

@@ -2,7 +2,7 @@
   "site": "Fursay",
   "pack": "noor",
   "piiAllowed": false,
-  "status": "ready_to_start",
+  "status": "signal_observed",
   "privacy": {
     "allowedEvidence": [
       "anonymous event query name",
@@ -30,5 +30,15 @@
     "notes",
     "nextAction"
   ],
-  "entries": []
+  "entries": [
+    {
+      "day": 1,
+      "executedAt": "2026-06-15T12:49:04.907Z",
+      "status": "completed",
+      "signalObserved": true,
+      "signalEvidence": "noor_growth_signals_7d aggregate submit success count 6",
+      "notes": "noor_growth_signals_7d aggregate shows 6 Noor subscribe submit success signal(s)",
+      "nextAction": "prepare Noor newsletter readiness review without enabling checkout"
+    }
+  ]
 }

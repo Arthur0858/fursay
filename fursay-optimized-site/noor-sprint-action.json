@@ -18,10 +18,10 @@
   ],
   "executionState": {
     "status": "actionable_safe_wait",
-    "headline": "Day 1 outreach can start while analytics and subscriber evidence remain in safe wait.",
+    "headline": "Day 2 outreach can continue while analytics and subscriber evidence remain in safe wait.",
     "canDoNow": [
       "Open the planned tracked link once to confirm attribution.",
-      "Share only the Day 1 Arabic parent copy in one warm parent group.",
+      "Share only the Day 2 planned parent copy for direct_dm.",
       "Record the posted state after previewing the no-PII log command."
     ],
     "waitingFor": [
@@ -36,33 +36,33 @@
   },
   "sprint": {
     "pack": "noor",
-    "status": "ready_to_start",
+    "status": "signal_observed",
     "readinessStatus": "safe_wait_subscriber_empty",
     "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
     "goal": "Get the first real Noor subscriber signal without sending a newsletter or enabling checkout.",
     "successMetric": "at_least_one_noor_subscribe_submit_success",
     "windowDays": 7,
-    "logStatus": "ready_to_start",
-    "logEntryCount": 0
+    "logStatus": "signal_observed",
+    "logEntryCount": 1
   },
   "nextAction": {
-    "day": 1,
-    "label": "Parent group seed",
-    "placement": "parent_group",
-    "action": "Post the parent-group copy in one warm Arabic-speaking parent group.",
-    "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
+    "day": 2,
+    "label": "Direct family DM",
+    "placement": "direct_dm",
+    "action": "Send the direct DM copy to two families who already know the project.",
+    "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm",
     "followupLink": "",
     "reportQuery": "noor_growth_signals_7d",
-    "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
+    "expectedSignal": "A noor direct_dm open, modal open, or submit success signal.",
     "localizedCopy": {
-      "ar": "نجرب هذا الأسبوع روتيناً صغيراً للأطفال: قصة نور الصينية في 3 دقائق.\nالحزمة المجانية: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nفيها قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل.",
-      "en": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity."
+      "ar": "تذكرت أن عائلتكم قد تحب تجربة قصة نور القصيرة.\nحزمة عربية-صينية مجانية في 3 دقائق: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nلا يوجد دفع. نريد فقط معرفة إن كانت هذه الطريقة مفيدة للعائلات.",
+      "en": "I thought your family might like this tiny Noor story pack.\nFree 3-minute Arabic-Chinese story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nNo payment. It just helps test whether families want this kind of bilingual routine."
     },
-    "copy": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
+    "copy": "I thought your family might like this tiny Noor story pack.\nFree 3-minute Arabic-Chinese story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nNo payment. It just helps test whether families want this kind of bilingual routine.",
     "reviewCommand": "npm run noor:sprint:review",
-    "recorderPostedCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
-    "recorderPostedApplyCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
-    "recorderDryRunCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run"
+    "recorderPostedCommand": "npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
+    "recorderPostedApplyCommand": "npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
+    "recorderDryRunCommand": "npm run noor:sprint:log -- --day 2 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run"
   },
   "operatorChecklist": [
     {
@@ -80,7 +80,7 @@
     {
       "id": "record_posted",
       "label": "Record the posted state",
-      "action": "Preview: npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run | Apply after confirming the preview: npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
+      "action": "Preview: npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run | Apply after confirming the preview: npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
       "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run."
     },
     {
