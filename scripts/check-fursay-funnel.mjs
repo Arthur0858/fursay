@@ -780,6 +780,12 @@ async function checkSocialLinksLanding(browser, baseUrl) {
         h1: document.querySelector("h1")?.textContent.trim() || "",
         canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href") || "",
         manifestHref: document.querySelector('a[href="/links.json"]')?.getAttribute("href") || "",
+        bodyText: document.body.textContent.replace(/\s+/g, " ").trim(),
+        productLinks: [...document.querySelectorAll("[data-public-product-link]")].map((anchor) => ({
+          pack: anchor.getAttribute("data-public-product-link") || "",
+          href: anchor.href,
+          text: anchor.textContent.trim().replace(/\s+/g, " "),
+        })),
         cards: [...document.querySelectorAll("[data-social-links-pack]")].map((card) => card.getAttribute("data-social-links-pack")),
         primaryLinks: [...document.querySelectorAll("[data-social-primary-link]")].map((anchor) => ({
           pack: anchor.getAttribute("data-social-primary-link") || "",
@@ -791,7 +797,14 @@ async function checkSocialLinksLanding(browser, baseUrl) {
       if (staticData.bodyClass !== "picture-world creator-kit-page social-links-page") failures.push(`links_body_class:${staticData.bodyClass || "none"}`);
       if (staticData.h1 !== "Choose Your Story Pack") failures.push(`links_h1:${staticData.h1 || "none"}`);
       if (staticData.canonical !== "https://fursay.com/links") failures.push(`links_canonical:${staticData.canonical || "none"}`);
-      if (staticData.manifestHref !== "/links.json") failures.push("links_missing_manifest_link");
+      if (staticData.manifestHref) failures.push(`links_public_page_manifest_leak:${staticData.manifestHref}`);
+      for (const needle of ["JSON manifest", "Commit ", "Deploy readiness", "Traffic launch kit", "Creator kit", "Share kit", "Safety contract"]) {
+        if (staticData.bodyText.includes(needle)) failures.push(`links_public_page_internal_text:${needle}`);
+      }
+      if (staticData.productLinks.length !== 3) failures.push(`links_product_link_count:${staticData.productLinks.length}`);
+      for (const expected of ["products", "koko", "noor"]) {
+        if (!staticData.productLinks.some((link) => link.pack === expected)) failures.push(`links_missing_product_link:${expected}`);
+      }
       if (!staticData.cards.includes("koko") || !staticData.cards.includes("noor")) failures.push(`links_missing_cards:${staticData.cards.join(",") || "none"}`);
       const primary = staticData.primaryLinks.find((link) => link.pack === pack);
       if (!primary) failures.push(`links_missing_primary:${pack}`);
@@ -1745,7 +1758,12 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   if (!linksPage.includes('<body class="picture-world creator-kit-page social-links-page">')) failures.push("links_page_missing_body_class");
   if (!linksPage.includes("<h1>Choose Your Story Pack</h1>")) failures.push("links_page_missing_h1");
-  if (!linksPage.includes("/links.json")) failures.push("links_page_missing_json_manifest_link");
+  for (const needle of ["/links.json", "JSON manifest", "Commit ", "Deploy readiness", "Traffic launch kit", "Creator kit", "Share kit", "Safety contract"]) {
+    if (linksPage.includes(needle)) failures.push(`links_page_public_internal_leak:${needle}`);
+  }
+  for (const pack of ["products", "koko", "noor"]) {
+    if (!linksPage.includes(`data-public-product-link="${pack}"`)) failures.push(`links_page_missing_public_product_link:${pack}`);
+  }
   if (!linksPage.includes('data-social-links-pack="koko"')) failures.push("links_page_missing_koko_pack");
   if (!linksPage.includes('data-social-links-pack="noor"')) failures.push("links_page_missing_noor_pack");
   if (!linksPage.includes('data-social-primary-link="koko"') || !linksPage.includes('data-social-primary-link="noor"')) {

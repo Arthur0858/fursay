@@ -142,13 +142,13 @@ function validateNoorSprintVariantLink(failures, pageKey, variant) {
   }
 }
 
-function validateManifestBasics(key, manifest, html, failures) {
+function validateManifestBasics(key, manifest, html, failures, options = {}) {
   if (manifest.site !== "Fursay") failures.push(`${key}:bad_site:${manifest.site || "none"}`);
   if (manifest.origin !== "https://fursay.com") failures.push(`${key}:bad_origin:${manifest.origin || "none"}`);
   if (manifest.platform !== "cloudflare-workers-static-assets") failures.push(`${key}:bad_platform:${manifest.platform || "none"}`);
   if (manifest.safety?.subscriptionEndpoint !== "/api/subscribe") failures.push(`${key}:bad_subscription_endpoint`);
   if (manifest.safety?.smokeSubmitsToMailerLite !== false) failures.push(`${key}:bad_smoke_contract`);
-  if (!html.includes(`href="/${key}.json"`)) failures.push(`${key}:page_missing_json_link`);
+  if (options.requiresJsonLink !== false && !html.includes(`href="/${key}.json"`)) failures.push(`${key}:page_missing_json_link`);
   if (!html.includes("<h1>")) failures.push(`${key}:page_missing_h1`);
 }
 
@@ -156,10 +156,27 @@ function validateLinks(manifest, html, failures) {
   const pageKey = "links";
   const hrefSet = new Set(hrefValues(html));
   const copySet = new Set(copyValues(html, "data-copy-share-kit"));
-  validateManifestBasics(pageKey, manifest, html, failures);
+  validateManifestBasics(pageKey, manifest, html, failures, { requiresJsonLink: false });
   if (manifest.primaryRoute !== "https://fursay.com/links") failures.push("links:bad_primary_route");
   if (manifest.safety?.primaryLinksUseTrackedShortlinks !== true) failures.push("links:missing_tracked_shortlink_contract");
   if (copySet.size !== 6) failures.push(`links:copy_button_count:${copySet.size}`);
+  const internalNeedles = [
+    "JSON manifest",
+    "Commit ",
+    "Deploy readiness",
+    "Traffic launch kit",
+    "Creator kit",
+    "Share kit",
+    "Safety contract",
+    "/links.json",
+    "/deploy-readiness",
+    "/traffic-launch",
+    "/creator-kit",
+    "/share-kit",
+  ];
+  for (const needle of internalNeedles) {
+    if (html.includes(needle)) failures.push(`links:public_page_leaks_internal:${needle}`);
+  }
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {
     requireText(failures, pageKey, html, `${pack}:title`, item.title);
@@ -179,6 +196,7 @@ function validateLinks(manifest, html, failures) {
   }
 
   for (const [key, item] of Object.entries(manifest.operations || {})) {
+    if (!["productInterest", "zhProductInterest", "arProductInterest"].includes(key)) continue;
     requireHref(failures, pageKey, hrefSet, `operation:${key}`, item.url);
     requireText(failures, pageKey, html, `operation_label:${key}`, item.label);
   }

@@ -825,8 +825,9 @@ function writeLinksManifest(siteDir, source) {
   writeLinksPage(siteDir, links);
 }
 
-function linksActionRow(item) {
-  return `<a class="creator-link-copy" href="${escapeHtml(item.url)}">${escapeHtml(item.label)}</a>`;
+function linksActionRow(item, key = "") {
+  const productPack = key === "zhProductInterest" ? "koko" : (key === "arProductInterest" ? "noor" : "products");
+  return `<a class="creator-link-copy" href="${escapeHtml(item.url)}" data-public-product-link="${escapeHtml(productPack)}">${escapeHtml(item.label)}</a>`;
 }
 
 function linksValueRow(title, label, value) {
@@ -856,7 +857,10 @@ function linksPackCard(pack, item) {
 
 function writeLinksPage(siteDir, links) {
   const packCards = Object.entries(links.packs).map(([pack, item]) => linksPackCard(pack, item)).join("\n");
-  const operationLinks = Object.values(links.operations).map((item) => linksActionRow(item)).join("\n          ");
+  const publicProductLinks = ["productInterest", "zhProductInterest", "arProductInterest"]
+    .map((key) => links.operations?.[key] ? linksActionRow(links.operations[key], key) : "")
+    .filter(Boolean)
+    .join("\n          ");
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -888,28 +892,23 @@ function writeLinksPage(siteDir, links) {
       <p class="creator-eyebrow">Fursay start here</p>
       <h1>Choose Your Story Pack</h1>
       <p>Pick Koko for English story time or Noor for Arabic-Chinese story time. Each button opens a tracked signup path with the right pack preselected.</p>
-      <div class="creator-kit-meta">
-        <span>Updated ${escapeHtml(links.updatedAt)}</span>
-        <span>Commit ${escapeHtml(links.source.commit)}</span>
-        <a href="/links.json">JSON manifest</a>
-      </div>
     </header>
     <section class="creator-pack" data-social-links-page>
       <div class="creator-pack-copy">
         <p class="creator-eyebrow">Social profile landing</p>
         <h2>One link for family discovery</h2>
-        <p>Use <strong>fursay.com/links</strong> in bios, QR posters, and social profiles when families should choose a story world first.</p>
+        <p>Use <strong>fursay.com/links</strong> in bios, QR posters, and family messages when parents should choose a story world first.</p>
         <div class="public-share-actions">
-          ${operationLinks}
+          ${publicProductLinks}
         </div>
       </div>
       <div class="creator-copy-blocks">
 ${packCards}
       </div>
     </section>
-    <section class="creator-kit-safety">
-      <h2>Safety contract</h2>
-      <p>Smoke checks do not submit to MailerLite. Subscription traffic still flows through <code>${escapeHtml(links.safety.subscriptionEndpoint)}</code>.</p>
+    <section class="creator-kit-safety" data-public-links-note>
+      <h2>Free first, no payment today</h2>
+      <p>Start with the free story pack. Printable and worksheet packs are still interest lists, so families will not see a checkout or payment link here.</p>
     </section>
   </main>
 </body>

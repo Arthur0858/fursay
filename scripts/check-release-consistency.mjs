@@ -22,7 +22,6 @@ const BADGE_PAGES = [
   "/creator-kit",
   "/share-kit",
   "/traffic-launch",
-  "/links",
   "/deploy-readiness",
   "/conversion-health",
   "/monetization-roadmap",

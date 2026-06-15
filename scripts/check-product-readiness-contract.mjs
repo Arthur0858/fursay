@@ -623,7 +623,12 @@ async function main() {
   for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
     if (!healthDownloads.includes(sample.downloadUrl)) failures.push(`site_health_missing_sample_download:${sample.pack}`);
   }
-  if (!linksHtml.includes('href="/links.json"')) failures.push("links_page_missing_manifest_link");
+  for (const needle of ["/links.json", "JSON manifest", "Commit ", "Deploy readiness", "Traffic launch kit", "Creator kit", "Share kit", "Safety contract"]) {
+    if (linksHtml.includes(needle)) failures.push(`links_page_public_internal_leak:${needle}`);
+  }
+  for (const pack of ["products", "koko", "noor"]) {
+    if (!linksHtml.includes(`data-public-product-link="${pack}"`)) failures.push(`links_page_missing_public_product_link:${pack}`);
+  }
   if (!linksHtml.includes("Printable and worksheet packs")) failures.push("links_page_missing_product_interest_label");
   if (!linksHtml.includes("繁中產品等候名單")) failures.push("links_page_missing_zh_product_interest_label");
   if (!linksHtml.includes("قائمة انتظار حزم Fursay")) failures.push("links_page_missing_ar_product_interest_label");

@@ -67,7 +67,7 @@ const KNOWN_API_ROUTES = new Set([
   "/api/event",
 ]);
 const TOOL_PAGES = [
-  { page: "/links", manifest: "/links.json" },
+  { page: "/links", manifest: "/links.json", requiresCommitBadge: false, requiresManifestLink: false },
   { page: "/share-kit", manifest: "/share-kit.json" },
   { page: "/creator-kit", manifest: "/creator-kit.json" },
   { page: "/traffic-launch", manifest: "/traffic-launch.json" },
@@ -215,8 +215,13 @@ function checkToolPage(page, html, manifest, expectedCommit, failures, options =
   const canonical = [...html.matchAll(/<link\b[^>]*>/gi)]
     .find((match) => attr(match[0], "rel").toLowerCase() === "canonical")?.[0] || "";
   if (attr(canonical, "href") !== `${ORIGIN}${page}`) failures.push(`${page}:bad_canonical:${attr(canonical, "href") || "none"}`);
-  if (!html.includes(`href="${manifest}"`)) failures.push(`${page}:missing_manifest_link:${manifest}`);
+  if (options.requiresManifestLink !== false && !html.includes(`href="${manifest}"`)) failures.push(`${page}:missing_manifest_link:${manifest}`);
   if (options.requiresCommitBadge !== false && !html.includes(`Commit ${expectedCommit}`)) failures.push(`${page}:missing_commit_badge:${expectedCommit}`);
+  if (page === "/links") {
+    for (const needle of ["JSON manifest", "Commit ", "Deploy readiness", "Traffic launch kit", "Creator kit", "Share kit"]) {
+      if (html.includes(needle)) failures.push(`${page}:public_page_leaks_internal:${needle}`);
+    }
+  }
 }
 
 async function main() {
