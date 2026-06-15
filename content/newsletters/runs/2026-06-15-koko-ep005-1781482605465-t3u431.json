@@ -1,0 +1,18 @@
+{
+  "runId": "1781482605465-t3u431",
+  "channel": "koko",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-06-15T00:16:45.465Z",
+  "status": "failed",
+  "episodeNo": 5,
+  "videoId": "NsihhZepBz4",
+  "videoUrl": "https://www.youtube.com/watch?v=NsihhZepBz4",
+  "inputPath": "content/newsletters/pending/1781482568937-8b290g-koko-ep005.newsletter.json",
+  "qaErrors": [
+    "rendered email must include the creator-kit tracked site CTA URL"
+  ],
+  "error": "QA failed: rendered email must include the creator-kit tracked site CTA URL",
+  "providerErrorCode": "unknown",
+  "finishedAt": "2026-06-15T00:16:45.468Z"
+}

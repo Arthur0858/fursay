@@ -1,0 +1,52 @@
+{
+  "runId": "1781482568937-8b290g",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "audience": "families using Koko's Forest for gentle English learning",
+  "languageBrief": "English newsletter with Traditional Chinese parent support",
+  "contentRules": [
+    "Use warm, clear English as the main language.",
+    "Include Traditional Chinese parent guidance after the English learning content.",
+    "Keep the tone playful, calm, and practical for parents of young children.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 5,
+    "videoId": "NsihhZepBz4",
+    "title": "Koko and Boingy 🐸 Boingy's Rainy Song | English Bedtime Story | Koko's Forest Adventure",
+    "description": "Join Koko the squirrel and Boingy the frog as they celebrate joy and friendship in the rain! \n\n🌧️ In this episode, Boingy loves singing in the rain, but nobody wants to join him. When Koko hears his lonely song, she grabs a leaf umbrella and joins in. Soon all the forest animals come out to play, and the rain becomes a magical party!\n\n✨ Moral: Happiness grows bigger when you share it with a friend.\n\n📚 VOCABULARY:\n🌧️ Rain (雨 - yǔ)\n🤝 Share (分享 - fēnxiǎng)\n🎵 Sing (唱歌 - chànggē)\n\n🎯 Perfect for:\n✓ English learners (bilingual story)\n✓ Bedtime & relaxation\n✓ Social-emotional learning\n✓ Kids ages 3-8\n\n💚 Subscribe for more bilingual bedtime stories!\n\n#KokosForestAdventure #EnglishStories #BedtimeStories #BilingualLearning #ChildrensStories\n\n⏰ Chapters / 章節：\n0:00 Opening / 開場\n0:15 Story begins / 故事開始\n1:30 Adventure / 冒險開始\n3:30 The lesson / 今日小道理\n4:15 ⭐ Word Time / 單字時間\n5:00 Goodnight / 晚安時間 免費訂閱叩叩電子報 — 每週五收到故事精華、英文單字卡、親子活動，還有免費著色本 PDF！\nhttps://kokos-forest-adventure-g7f3ah.subscribepage.io 🌐 官方網站 / Official Website：https://fursay.com\n📖 更多親子英文資源：fursay.com",
+    "publishedAt": "2026-04-08T17:12:54Z",
+    "videoUrl": "https://www.youtube.com/watch?v=NsihhZepBz4",
+    "thumbnail": "https://i.ytimg.com/vi/NsihhZepBz4/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "content/newsletters/pending/1781482568937-8b290g-koko-ep005.newsletter.json",
+  "requiredSchema": {
+    "episodeNo": "number",
+    "videoId": "string",
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Koko's Forest.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}

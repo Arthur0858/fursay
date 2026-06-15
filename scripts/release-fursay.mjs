@@ -228,6 +228,7 @@ function writeReleaseManifest() {
       "scripts/check-monetization-roadmap-contract.mjs",
       "scripts/check-noor-subscriber-readiness.mjs",
       "scripts/check-noor-sprint-log.mjs",
+      "scripts/check-noor-sprint-review.mjs",
       "scripts/check-security-headers.mjs",
       "scripts/check-release-consistency.mjs",
       "scripts/check-doc-manifest-drift.mjs",
@@ -3890,6 +3891,7 @@ async function main() {
   run("node", ["--check", "scripts/check-monetization-roadmap-contract.mjs"]);
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-noor-sprint-log.mjs"]);
+  run("node", ["--check", "scripts/check-noor-sprint-review.mjs"]);
   run("node", ["--check", "scripts/next-noor-sprint-action.mjs"]);
   run("node", ["--check", "scripts/review-noor-sprint-report.mjs"]);
   run("node", ["--check", "scripts/record-noor-sprint-log.mjs"]);
@@ -3938,6 +3940,7 @@ async function main() {
   run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--out-dir", join(outRoot, "monetization-roadmap-local")]);
   run("node", ["scripts/check-noor-subscriber-readiness.mjs", "--out-dir", join(outRoot, "noor-readiness-local")]);
   run("node", ["scripts/check-noor-sprint-log.mjs", "--out-dir", join(outRoot, "noor-sprint-log-local")]);
+  run("node", ["scripts/check-noor-sprint-review.mjs", "--out-dir", join(outRoot, "noor-sprint-review-local")]);
   run("node", ["scripts/check-security-headers.mjs", "--out-dir", join(outRoot, "security-headers-local")]);
   run("node", ["scripts/check-release-consistency.mjs", "--out-dir", join(outRoot, "release-consistency-local")]);
   run("node", ["scripts/check-doc-manifest-drift.mjs", "--out-dir", join(outRoot, "doc-manifest-drift-local")]);

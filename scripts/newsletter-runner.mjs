@@ -248,10 +248,14 @@ async function syncEpisodes(channelKey, state) {
     .sort((a, b) => a.episodeNo - b.episodeNo || new Date(a.publishedAt) - new Date(b.publishedAt));
 
   state.channels[channelKey] ||= { lastSentEpisodeNo: 0, episodes: [] };
-  const sentByVideo = new Map((state.channels[channelKey].episodes || []).map((episode) => [episode.videoId, episode.sentAt || null]));
+  const previousDeliveryByVideo = new Map((state.channels[channelKey].episodes || []).map((episode) => [episode.videoId, {
+    sentAt: episode.sentAt || null,
+    campaignId: episode.campaignId || null,
+    deliveryMethod: episode.deliveryMethod || null,
+  }]));
   state.channels[channelKey].episodes = episodes.map((episode) => ({
     ...episode,
-    sentAt: sentByVideo.get(episode.videoId) || null
+    ...previousDeliveryByVideo.get(episode.videoId),
   }));
   state.channels[channelKey].lastSyncedAt = new Date().toISOString();
   return state.channels[channelKey].episodes;
@@ -476,7 +480,7 @@ function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTex
   if (!html.includes(episode.videoUrl) || !richTextBody.includes(episode.videoUrl)) {
     errors.push("rendered email must include the source video URL");
   }
-  if (!html.includes(trafficPack.trackedLandingUrl) || !richTextBody.includes(trafficPack.trackedLandingUrl)) {
+  if (!html.includes(escapeHtml(trafficPack.trackedLandingUrl)) || !richTextBody.includes(trafficPack.trackedLandingUrl)) {
     errors.push("rendered email must include the creator-kit tracked site CTA URL");
   }
   const newsletterShortlink = trafficPack.placementLinks.newsletterBlurb.shortlink;

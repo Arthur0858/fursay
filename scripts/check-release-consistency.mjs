@@ -33,6 +33,7 @@ const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
   "scripts/check-workspace-hygiene.mjs",
   "scripts/check-static-asset-structure.mjs",
   "scripts/check-deploy-readiness.mjs",
+  "scripts/check-noor-sprint-review.mjs",
 ]);
 const RELEASE_SCRIPT_UTILITY_RUNS = new Set([
   "scripts/build-product-sample-pdfs.mjs",

@@ -43,6 +43,7 @@ const LIVE_SMOKE_EXCLUDES = new Set([
   "scripts/check-render-jobs.mjs",
   "scripts/check-workspace-hygiene.mjs",
   "scripts/check-static-asset-structure.mjs",
+  "scripts/check-noor-sprint-review.mjs",
   "audit-fursay.mjs",
 ]);
 
