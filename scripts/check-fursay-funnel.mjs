@@ -1522,7 +1522,12 @@ async function checkDiscoveryFiles(baseUrl) {
   if (deployReadiness.deployment?.analyticsReport?.command !== "npm run report:events") failures.push("deploy_readiness_missing_report_command");
   if (deployReadiness.deployment?.analyticsReport?.piiAllowed !== false) failures.push("deploy_readiness_report_must_disallow_pii");
   if (deployReadiness.deployment?.analyticsEnablementHandoff?.runbook !== "docs/analytics-engine-enablement.md") failures.push("deploy_readiness_missing_analytics_runbook");
-  if (!deployReadiness.deployment?.analyticsEnablementHandoff?.doNotChangeBeforeEnablement?.includes("10089")) failures.push("deploy_readiness_missing_analytics_10089_guardrail");
+  if (deployReadiness.deployment?.analyticsEngine?.configured) {
+    if (!deployReadiness.deployment?.analyticsEnablementHandoff?.doNotChangeBeforeEnablement?.includes("binding is configured")) failures.push("deploy_readiness_missing_configured_analytics_boundary");
+    if (!deployReadiness.deployment?.analyticsEnablementHandoff?.doNotChangeBeforeEnablement?.includes("token values")) failures.push("deploy_readiness_missing_token_value_boundary");
+  } else if (!deployReadiness.deployment?.analyticsEnablementHandoff?.doNotChangeBeforeEnablement?.includes("10089")) {
+    failures.push("deploy_readiness_missing_analytics_10089_guardrail");
+  }
   for (const criterion of [
     "npm run deploy:ready -- --require-cloudflare passes",
     "npm run report:events returns status=queried",

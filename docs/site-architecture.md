@@ -11,7 +11,7 @@
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260615-sharekit1.js`; page HTML should not add inline event handlers.
-- Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints to Worker logs until the Cloudflare account enables Analytics Engine. The planned binding is `FURSAY_EVENTS` for dataset `fursay_events`, but it remains out of `wrangler.jsonc` so deployment is not blocked by Cloudflare error `10089`.
+- Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints through the `FURSAY_EVENTS` Analytics Engine binding for dataset `fursay_events`. Query reporting still requires `CLOUDFLARE_ACCOUNT_ID` plus `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`, and token values must stay out of files and public reports.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Immutable CSS/JS fingerprints are recorded in `/data/immutable-asset-fingerprints.json`; after changing any long-cache CSS/JS filename or content, run `npm run assets:fingerprints` and keep `npm run assets:fingerprints:check` clean.
 - Deployable image assets must be referenced by site HTML, CSS, JSON, XML, SVG, or text manifests; `scripts/check-image-assets.mjs` fails on unreferenced images.

@@ -1,30 +1,28 @@
 # Fursay Analytics Engine Enablement
 
-Fursay already records anonymous event intent through `/api/event`. The remaining external step is enabling Cloudflare Analytics Engine for the planned `FURSAY_EVENTS` binding and then running the report with account credentials.
+Fursay already records anonymous event intent through `/api/event`. The Worker binding `FURSAY_EVENTS` is configured in `wrangler.jsonc`; the remaining external step is providing Cloudflare Analytics Engine SQL API query credentials and then running the report.
 
 ## Current State
 
 - Dataset name: `fursay_events`
-- Planned Worker binding: `FURSAY_EVENTS`
+- Worker binding: `FURSAY_EVENTS`
 - Report command: `npm run report:events`
 - Handoff contract check: `npm run analytics:enablement:check`
 - Public status: `/deploy-readiness.json` and `/conversion-health.json`
 - Current expected blocker: `pending_cloudflare_credentials_or_enablement`
-- Last known Cloudflare deploy blocker when binding is added too early: `10089`
+- Historical deploy blocker when binding was added before account support was available: `10089`
 
-Do not add `analytics_engine_datasets` back to `wrangler.jsonc` until the Cloudflare dashboard can accept the Analytics Engine dataset for this account.
+Do not remove the `analytics_engine_datasets` binding unless Cloudflare deployment starts failing again. Keep token values out of files, logs, and public reports.
 
 ## Enablement Steps
 
-1. Open the Cloudflare Analytics Engine dashboard for the Fursay account.
-2. Enable Analytics Engine for dataset `fursay_events`.
-3. Add or confirm the Worker binding name `FURSAY_EVENTS`.
-4. Provide local or CI environment values:
+1. Confirm the deployed Worker accepts the `FURSAY_EVENTS` Analytics Engine binding.
+2. Provide local or CI environment values:
    - `CLOUDFLARE_ACCOUNT_ID`
    - `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`
-5. Run `npm run analytics:enablement:check`.
-6. Run `npm run deploy:ready -- --require-cloudflare`.
-7. Run `npm run report:events`.
+3. Run `npm run analytics:enablement:check`.
+4. Run `npm run deploy:ready -- --require-cloudflare`.
+5. Run `npm run report:events`.
 
 ## Report Handoff
 
@@ -32,7 +30,7 @@ Before Analytics Engine is enabled, `npm run report:events -- --dry-run` still w
 
 Use `enablementHandoff` in that JSON as the checklist for:
 
-- enabling dataset `fursay_events` for binding `FURSAY_EVENTS`
+- confirming dataset `fursay_events` is reachable through binding `FURSAY_EVENTS`
 - providing `CLOUDFLARE_ACCOUNT_ID` plus an analytics token without printing or committing secret values
 - confirming `.env.example`, `wrangler.jsonc`, and the handoff JSON still agree with `npm run analytics:enablement:check`
 - running `npm run deploy:ready -- --require-cloudflare`

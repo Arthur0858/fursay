@@ -221,10 +221,10 @@
     "analyticsSink": {
       "binding": "FURSAY_EVENTS",
       "dataset": "fursay_events",
-      "status": "pending_cloudflare_dashboard_enablement",
-      "writeMode": "worker_logs_until_dashboard_enabled",
-      "fallbackSink": "Cloudflare Worker logs",
-      "deployBlockerCode": "10089",
+      "status": "configured_in_wrangler",
+      "writeMode": "analytics_engine_binding",
+      "fallbackSink": "Cloudflare Analytics Engine dataset fursay_events",
+      "deployBlockerCode": "",
       "enablementUrl": "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
       "piiAllowed": false,
       "blobFields": [
