@@ -10,6 +10,7 @@
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "deploy": "node scripts/release-fursay.mjs",
     "deploy:push": "node scripts/release-fursay.mjs --push-git",
+    "analytics:enablement:check": "node scripts/check-analytics-enablement-contract.mjs",
     "noor:sprint:log": "node scripts/record-noor-sprint-log.mjs",
     "noor:sprint:next": "node scripts/next-noor-sprint-action.mjs",
     "noor:sprint:review": "node scripts/review-noor-sprint-report.mjs",

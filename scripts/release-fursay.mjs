@@ -220,6 +220,7 @@ function writeReleaseManifest() {
       "scripts/check-conversion-health-contract.mjs",
       "scripts/check-growth-dashboard-contract.mjs",
       "scripts/check-event-analytics-contract.mjs",
+      "scripts/check-analytics-enablement-contract.mjs",
       "scripts/query-event-analytics-report.mjs",
       "scripts/check-subscribe-api-contract.mjs",
       "scripts/check-content-structure-contract.mjs",
@@ -4325,6 +4326,7 @@ async function main() {
   run("node", ["--check", "scripts/check-conversion-health-contract.mjs"]);
   run("node", ["--check", "scripts/check-growth-dashboard-contract.mjs"]);
   run("node", ["--check", "scripts/check-event-analytics-contract.mjs"]);
+  run("node", ["--check", "scripts/check-analytics-enablement-contract.mjs"]);
   run("node", ["--check", "scripts/query-event-analytics-report.mjs"]);
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
@@ -4376,6 +4378,7 @@ async function main() {
   run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
   run("node", ["scripts/check-growth-dashboard-contract.mjs", "--out-dir", join(outRoot, "growth-dashboard-local")]);
   run("node", ["scripts/check-event-analytics-contract.mjs", "--out-dir", join(outRoot, "event-analytics-local")]);
+  run("node", ["scripts/check-analytics-enablement-contract.mjs", "--out-dir", join(outRoot, "analytics-enablement-local")]);
   run("node", ["scripts/query-event-analytics-report.mjs", "--dry-run", "--out-dir", join(outRoot, "event-analytics-report-local")]);
   run("node", ["scripts/check-subscribe-api-contract.mjs", "--out-dir", join(outRoot, "subscribe-api-local")]);
   run("node", ["scripts/check-content-structure-contract.mjs", "--out-dir", join(outRoot, "content-structure-local")]);

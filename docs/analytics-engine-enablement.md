@@ -7,6 +7,7 @@ Fursay already records anonymous event intent through `/api/event`. The remainin
 - Dataset name: `fursay_events`
 - Planned Worker binding: `FURSAY_EVENTS`
 - Report command: `npm run report:events`
+- Handoff contract check: `npm run analytics:enablement:check`
 - Public status: `/deploy-readiness.json` and `/conversion-health.json`
 - Current expected blocker: `pending_cloudflare_credentials_or_enablement`
 - Last known Cloudflare deploy blocker when binding is added too early: `10089`
@@ -21,8 +22,9 @@ Do not add `analytics_engine_datasets` back to `wrangler.jsonc` until the Cloudf
 4. Provide local or CI environment values:
    - `CLOUDFLARE_ACCOUNT_ID`
    - `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`
-5. Run `npm run deploy:ready -- --require-cloudflare`.
-6. Run `npm run report:events`.
+5. Run `npm run analytics:enablement:check`.
+6. Run `npm run deploy:ready -- --require-cloudflare`.
+7. Run `npm run report:events`.
 
 ## Report Handoff
 
@@ -32,6 +34,7 @@ Use `enablementHandoff` in that JSON as the checklist for:
 
 - enabling dataset `fursay_events` for binding `FURSAY_EVENTS`
 - providing `CLOUDFLARE_ACCOUNT_ID` plus an analytics token without printing or committing secret values
+- confirming `.env.example`, `wrangler.jsonc`, and the handoff JSON still agree with `npm run analytics:enablement:check`
 - running `npm run deploy:ready -- --require-cloudflare`
 - running `npm run report:events`
 - reviewing Noor aggregate signals with `npm run noor:sprint:review`
@@ -40,6 +43,7 @@ Use `enablementHandoff` in that JSON as the checklist for:
 
 The report is ready when `npm run report:events` writes `/tmp/fursay-event-analytics-report/event-analytics-report.json` with:
 
+- `npm run analytics:enablement:check` passing
 - `status` equal to `queried`
 - `enablementHandoff.status` equal to `queried`
 - `piiAllowed` equal to `false`

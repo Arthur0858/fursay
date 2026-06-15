@@ -27,6 +27,8 @@ Configure these in the repository before expecting push-to-deploy to run:
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_ANALYTICS_TOKEN` for post-deploy Analytics Engine reporting
 
+Do not print, commit, or publish token values.
+
 The workflow intentionally skips deployment when either secret is missing. This is fail-closed behavior.
 
 Analytics Engine enablement has its own handoff in `docs/analytics-engine-enablement.md`. Use it before re-adding the `FURSAY_EVENTS` binding to `wrangler.jsonc`.
