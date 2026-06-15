@@ -43,6 +43,17 @@ function postedRecorderCommand(day, reportQuery) {
   ].join(" ");
 }
 
+function postedRecorderApplyCommand(day, reportQuery) {
+  const note = `shared ${reportQuery || "noor_growth_signals_7d"} tracked link; waiting for anonymous aggregate report`;
+  return [
+    "npm run noor:sprint:log --",
+    `--day ${day}`,
+    "--status posted",
+    `--notes ${shellQuote(note)}`,
+    `--next-action ${shellQuote("run npm run noor:sprint:review after the event report is available")}`,
+  ].join(" ");
+}
+
 async function main() {
   const trafficLaunch = await readJson(TRAFFIC_LAUNCH_FILE);
   const log = await readJson(LOG_FILE);
@@ -82,6 +93,7 @@ async function main() {
       } : null,
       primaryShareCopy: variant?.localizedCopy?.ar || variant?.copy || "",
       recorderPostedCommand: postedRecorderCommand(nextDay.day, nextDay.reportQuery),
+      recorderPostedApplyCommand: postedRecorderApplyCommand(nextDay.day, nextDay.reportQuery),
       recorderDryRunCommand: recorderCommand(nextDay.day, nextDay.reportQuery),
     },
     safety: {

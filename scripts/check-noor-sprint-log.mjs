@@ -133,6 +133,8 @@ function validateStatus(status, log, failures) {
     if (!String(handoff.reviewCommand || "").includes(REVIEW_COMMAND)) failures.push("handoff_missing_review_command");
     if (!String(handoff.recorderPostedCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_recorder");
     if (!String(handoff.recorderPostedCommand || "").includes("--dry-run")) failures.push("handoff_posted_recorder_must_be_dry_run");
+    if (!String(handoff.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_apply_recorder");
+    if (String(handoff.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("handoff_posted_apply_recorder_must_write");
     if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
     if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
     if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
@@ -148,6 +150,8 @@ function validateStatus(status, log, failures) {
     if (!String(item.action || "").trim()) failures.push(`operator_step_missing_action:${item.id || "none"}`);
     if (!String(item.evidence || "").trim()) failures.push(`operator_step_missing_evidence:${item.id || "none"}`);
     if (item.id === "record_posted" && !String(item.action || "").includes("--status posted")) failures.push("operator_step_record_posted_missing_command");
+    if (item.id === "record_posted" && !String(item.action || "").includes("Apply after confirming the preview")) failures.push("operator_step_record_posted_missing_apply_boundary");
+    if (item.id === "record_posted" && !String(item.evidence || "").includes("without --dry-run")) failures.push("operator_step_record_posted_missing_apply_evidence");
     if (item.id === "review_report" && !String(item.action || "").includes(REVIEW_COMMAND)) failures.push("operator_step_review_report_missing_command");
     if (item.id === "review_report" && !String(item.evidence || "").includes("aggregate")) failures.push("operator_step_review_report_missing_aggregate_boundary");
     if (item.id === "copy_confirm" && !String(item.action || "").includes("without adding price")) failures.push("operator_step_copy_confirm_missing_no_price_boundary");
@@ -207,6 +211,8 @@ async function main() {
   if (action.nextAction?.reportQuery !== status.nextActionHandoff?.reportQuery) failures.push("action_report_query_mismatch");
   if (!String(action.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("action_missing_posted_recorder");
   if (!String(action.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("action_posted_recorder_must_be_dry_run");
+  if (!String(action.nextAction?.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("action_missing_posted_apply_recorder");
+  if (String(action.nextAction?.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("action_posted_apply_recorder_must_write");
   if (!String(action.privacy?.boundary || "").includes("anonymous aggregate evidence")) failures.push("action_missing_privacy_boundary");
   scanForPrivateValues(action, failures, "action");
   const html = args.baseUrl
@@ -220,6 +226,7 @@ async function main() {
   if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
   if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
+  if (!html.includes("After the preview looks correct")) failures.push("page_missing_posted_apply_guidance");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
   if (!html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
   if (!html.includes("قصة نور الصينية في 3 دقائق")) failures.push("page_missing_arabic_parent_copy");

@@ -69,6 +69,7 @@
     "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
     "reviewCommand": "npm run noor:sprint:review",
     "recorderPostedCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
+    "recorderPostedApplyCommand": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
     "recorderDryRunCommand": "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run",
     "privacyBoundary": "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
@@ -90,8 +91,8 @@
     {
       "id": "record_posted",
       "label": "Record the posted state",
-      "action": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
-      "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes."
+      "action": "Preview: npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run | Apply after confirming the preview: npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
+      "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run."
     },
     {
       "id": "review_report",
