@@ -66,6 +66,20 @@ function queriedReport(rows) {
   };
 }
 
+function validateRecorderPair(review, failures, label) {
+  const dryRun = review?.recommendedRecorderCommand || "";
+  const apply = review?.recommendedRecorderApplyCommand || "";
+  if (!dryRun) {
+    if (apply) failures.push(`${label}_apply_without_dry_run`);
+    return;
+  }
+  if (!dryRun.includes("--dry-run")) failures.push(`${label}_dry_run_missing_flag`);
+  if (!apply) failures.push(`${label}_missing_apply_command`);
+  if (apply.includes("--dry-run")) failures.push(`${label}_apply_must_not_be_dry_run`);
+  if (review?.recordStatus && !apply.includes(`--status ${review.recordStatus}`)) failures.push(`${label}_apply_missing_record_status`);
+  if (dryRun.replace(/\s--dry-run\b/g, "") !== apply) failures.push(`${label}_apply_not_matching_dry_run`);
+}
+
 async function main() {
   const args = parseArgs();
   const tmp = await mkdtemp(resolve(tmpdir(), "fursay-noor-review-"));
@@ -95,6 +109,7 @@ async function main() {
   if (missing.status !== 0) failures.push("missing_report_should_not_fail");
   if (missing.json?.review?.status !== "pending_report") failures.push(`missing_report_bad_status:${missing.json?.review?.status || "none"}`);
   if (!missing.json?.review?.recommendedRecorderCommand?.includes("--status needs_retry")) failures.push("missing_report_missing_retry_command");
+  validateRecorderPair(missing.json?.review, failures, "missing_report");
 
   const postedMissing = runReview(["--log", postedLogPath, "--report", resolve(tmp, "missing-report.json")]);
   if (postedMissing.status !== 0) failures.push("posted_missing_report_should_not_fail");
@@ -112,6 +127,7 @@ async function main() {
   if (pending.status !== 0) failures.push("pending_report_should_not_fail");
   if (pending.json?.review?.status !== "pending_cloudflare_credentials_or_enablement") failures.push(`pending_report_bad_status:${pending.json?.review?.status || "none"}`);
   if (pending.json?.review?.recordStatus !== "needs_retry") failures.push("pending_report_bad_record_status");
+  validateRecorderPair(pending.json?.review, failures, "pending_report");
 
   const postedPending = runReview(["--log", postedLogPath, "--report", pendingPath]);
   if (postedPending.status !== 0) failures.push("posted_pending_report_should_not_fail");
@@ -135,6 +151,31 @@ async function main() {
   if (signal.json?.review?.recordStatus !== "completed") failures.push("signal_report_bad_record_status");
   if (!signal.json?.review?.recommendedRecorderCommand?.includes("--signal-observed")) failures.push("signal_report_missing_signal_flag");
   if (!signal.json?.review?.recommendedRecorderCommand?.includes("submit success count 1")) failures.push("signal_report_missing_aggregate_evidence");
+  if (!signal.json?.review?.recommendedRecorderApplyCommand?.includes("--signal-observed")) failures.push("signal_report_apply_missing_signal_flag");
+  validateRecorderPair(signal.json?.review, failures, "signal_report");
+
+  const engagedPath = await writeReport(tmp, "engaged-report.json", queriedReport([
+    {
+      event: "fursay_subscribe_open_click",
+      path: "/arabic",
+      pack: "noor",
+      source_id: NOOR_SOURCE_ID,
+      placement: "parent_group",
+      events: 2,
+    },
+  ]));
+  const engaged = runReview(["--report", engagedPath]);
+  if (engaged.status !== 0) failures.push("engaged_report_should_not_fail");
+  if (engaged.json?.review?.status !== "placement_engaged_no_subscriber_yet") failures.push(`engaged_report_bad_status:${engaged.json?.review?.status || "none"}`);
+  if (engaged.json?.review?.recordStatus !== "completed") failures.push("engaged_report_bad_record_status");
+  validateRecorderPair(engaged.json?.review, failures, "engaged_report");
+
+  const zeroPath = await writeReport(tmp, "zero-report.json", queriedReport([]));
+  const zero = runReview(["--report", zeroPath]);
+  if (zero.status !== 0) failures.push("zero_report_should_not_fail");
+  if (zero.json?.review?.status !== "no_signal_for_placement") failures.push(`zero_report_bad_status:${zero.json?.review?.status || "none"}`);
+  if (zero.json?.review?.recordStatus !== "needs_retry") failures.push("zero_report_bad_record_status");
+  validateRecorderPair(zero.json?.review, failures, "zero_report");
 
   const piiPath = await writeReport(tmp, "pii-report.json", {
     ok: true,
@@ -160,6 +201,9 @@ async function main() {
       "pending_report_retry_review",
       "posted_pending_report_waits",
       "subscriber_signal_review",
+      "engaged_without_subscriber_review",
+      "zero_signal_review",
+      "review_apply_command_pair",
       "pii_report_rejected",
     ],
   };

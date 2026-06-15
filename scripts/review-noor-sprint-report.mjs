@@ -123,7 +123,7 @@ function shellQuote(value) {
   return `"${String(value).replace(/(["\\$`])/g, "\\$1")}"`;
 }
 
-function recorderCommand(day, status, notes, nextAction, signalEvidence = "") {
+function recorderCommand(day, status, notes, nextAction, signalEvidence = "", { dryRun = true } = {}) {
   const parts = [
     "npm run noor:sprint:log --",
     `--day ${day}`,
@@ -135,8 +135,15 @@ function recorderCommand(day, status, notes, nextAction, signalEvidence = "") {
     parts.push("--signal-observed");
     parts.push(`--signal-evidence ${shellQuote(signalEvidence)}`);
   }
-  parts.push("--dry-run");
+  if (dryRun) parts.push("--dry-run");
   return parts.join(" ");
+}
+
+function recorderCommandPair(day, status, notes, nextAction, signalEvidence = "") {
+  return {
+    recommendedRecorderCommand: recorderCommand(day, status, notes, nextAction, signalEvidence, { dryRun: true }),
+    recommendedRecorderApplyCommand: recorderCommand(day, status, notes, nextAction, signalEvidence, { dryRun: false }),
+  };
 }
 
 function buildReview({ log, sprint, report, windowDays }) {
@@ -174,7 +181,7 @@ function buildReview({ log, sprint, report, windowDays }) {
       sourceIds,
       recommendation: "run_event_report_first",
       recordStatus: "needs_retry",
-      recommendedRecorderCommand: recorderCommand(
+      ...recorderCommandPair(
         day.day,
         "needs_retry",
         `${NOOR_QUERY_FAMILY}_${windowDays}d report missing; no anonymous aggregate signal reviewed`,
@@ -204,7 +211,7 @@ function buildReview({ log, sprint, report, windowDays }) {
       sourceIds,
       recommendation: "wait_for_analytics_enablement_or_record_manual_retry",
       recordStatus: "needs_retry",
-      recommendedRecorderCommand: recorderCommand(
+      ...recorderCommandPair(
         day.day,
         "needs_retry",
         `${NOOR_QUERY_FAMILY}_${windowDays}d is ${report.status || "pending"}; no anonymous aggregate signal available`,
@@ -226,7 +233,7 @@ function buildReview({ log, sprint, report, windowDays }) {
       submitSuccess,
       recommendation: "record_completed_with_signal",
       recordStatus: "completed",
-      recommendedRecorderCommand: recorderCommand(
+      ...recorderCommandPair(
         day.day,
         "completed",
         `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows ${submitSuccess} Noor subscribe submit success signal(s)`,
@@ -245,7 +252,7 @@ function buildReview({ log, sprint, report, windowDays }) {
       submitSuccess,
       recommendation: "record_completed_then_continue_next_day",
       recordStatus: "completed",
-      recommendedRecorderCommand: recorderCommand(
+      ...recorderCommandPair(
         day.day,
         "completed",
         `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows ${dayEvents} event(s) for planned source_id`,
@@ -262,7 +269,7 @@ function buildReview({ log, sprint, report, windowDays }) {
     submitSuccess,
     recommendation: "record_needs_retry",
     recordStatus: "needs_retry",
-    recommendedRecorderCommand: recorderCommand(
+    ...recorderCommandPair(
       day.day,
       "needs_retry",
       `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows 0 events for planned source_id`,
