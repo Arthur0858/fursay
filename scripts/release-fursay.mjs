@@ -2814,14 +2814,12 @@ ${samplePreviews}
       <p class="creator-eyebrow">Next validation step</p>
       <h2>Test ${escapeHtml(nextHandoff.pack === "noor" ? "Noor worksheet interest" : "Koko printable interest")} first</h2>
       <p>${escapeHtml(nextHandoff.action || "Share one free sample preview, then send interested families to the free story pack.")}</p>
-      <dl>
-        ${healthMetric("Sample preview", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("Tracked PDF sample", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("PDF asset", nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("Free story pack", nextHandoff.freeStoryPackPath || "")}
-        ${healthMetric("Report command", nextHandoff.reportCommand || "npm run report:events")}
-        ${healthMetric("Checkout", nextHandoff.checkoutBlockedReason || "Checkout stays disabled during interest validation.")}
-      </dl>
+      ${productValidationPublicActions(nextHandoff, {
+        preview: "Open the sample preview",
+        download: "Download the free PDF sample",
+        story: "Get the free story pack",
+        note: nextHandoff.checkoutBlockedReason || "Checkout stays disabled during interest validation.",
+      })}
       <p>No payment link, price promise, or checkout provider is active. The next decision depends on product info clicks, waitlist clicks, and at least one real subscriber signal.</p>
     </section>
 ${products}
@@ -3040,14 +3038,12 @@ ${samplePreviews}
       <p class="creator-eyebrow">下一步驗證</p>
       <h2>先測努爾學習單需求</h2>
       <p>先把努爾學習單樣張分享給阿語家庭，再引導到免費努爾故事包；只有看到真實點擊與訂閱信號後，才考慮擴成完整產品。</p>
-      <dl>
-        ${healthMetric("樣張預覽", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("可追蹤 PDF 樣張", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("PDF 原始檔", nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("免費故事包", nextHandoff.freeStoryPackPath || "")}
-        ${healthMetric("報表命令", nextHandoff.reportCommand || "npm run report:events")}
-        ${healthMetric("付款狀態", "付款與 checkout 維持關閉，直到產品興趣點擊與至少一個訂閱信號可被檢視。")}
-      </dl>
+      ${productValidationPublicActions(nextHandoff, {
+        preview: "打開樣張預覽",
+        download: "下載免費 PDF 樣張",
+        story: "領取免費故事包",
+        note: "付款與 checkout 維持關閉，直到產品興趣點擊與至少一個訂閱信號可被檢視。",
+      })}
       <p>這裡不放付款連結、不承諾價格，也不選付款服務商；目前只驗證家庭是否真的想要故事後的可列印練習。</p>
     </section>
 ${products}
@@ -3225,14 +3221,12 @@ ${samplePreviews}
       <p class="creator-eyebrow">خطوة التحقق التالية</p>
       <h2>اختبار اهتمام ورقة نور أولا</h2>
       <p>شاركوا عينة ورقة نور مع عائلات عربية، ثم وجّهوهم إلى حزمة نور المجانية. لا نوسّعها إلى منتج كامل إلا بعد ظهور نقرات حقيقية وإشارة اشتراك واحدة على الأقل.</p>
-      <dl>
-        ${healthMetric("معاينة العينة", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("رابط عينة PDF قابل للقياس", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("ملف PDF الأصلي", nextHandoff.sampleDownloadUrl || "")}
-        ${healthMetric("حزمة القصة المجانية", nextHandoff.freeStoryPackPath || "")}
-        ${healthMetric("أمر التقرير", nextHandoff.reportCommand || "npm run report:events")}
-        ${healthMetric("حالة الدفع", "يبقى الدفع و checkout مغلقين حتى يمكن مراجعة نقرات الاهتمام وإشارة اشتراك واحدة على الأقل.")}
-      </dl>
+      ${productValidationPublicActions(nextHandoff, {
+        preview: "افتحوا معاينة العينة",
+        download: "نزّلوا عينة PDF المجانية",
+        story: "احصلوا على حزمة القصة المجانية",
+        note: "يبقى الدفع و checkout مغلقين حتى يمكن مراجعة نقرات الاهتمام وإشارة اشتراك واحدة على الأقل.",
+      })}
       <p>لا يوجد رابط دفع أو وعد بسعر أو مزود checkout هنا؛ الهدف الحالي هو قياس هل تريد العائلات نشاطا قابلا للطباعة بعد القصة.</p>
     </section>
 ${products}
@@ -3461,6 +3455,19 @@ function healthMetric(label, value, note = "") {
                 <dt>${escapeHtml(label)}</dt>
                 <dd>${escapeHtml(value)}${note ? ` <span>${escapeHtml(note)}</span>` : ""}</dd>
               </div>`;
+}
+
+function productValidationPublicActions(nextHandoff, labels) {
+  const pack = nextHandoff.pack || "noor";
+  const previewPath = nextHandoff.samplePreviewUrl ? new URL(nextHandoff.samplePreviewUrl).pathname : "/product-samples/noor-worksheet";
+  const downloadHref = nextHandoff.trackedSampleDownloadUrl || "";
+  const storyHref = `${nextHandoff.freeStoryPackPath || "/arabic"}?subscribe=${pack}&utm_source=products&utm_medium=site&utm_campaign=${pack}_story_funnel&utm_content=product_validation_handoff`;
+  return `<div class="public-share-actions product-validation-actions" data-product-validation-actions="${escapeHtml(pack)}">
+        <a href="${escapeHtml(previewPath)}" data-product-sample-preview="${escapeHtml(pack)}" data-product-info-link="${escapeHtml(pack)}" data-interest-stage="validation_sample_preview" data-signup-source="product_validation_preview_${escapeHtml(pack)}">${escapeHtml(labels.preview)}</a>
+        <a href="${escapeHtml(downloadHref)}" data-product-sample-download="${escapeHtml(pack)}" data-product-info-link="${escapeHtml(pack)}" data-interest-stage="validation_pdf_download" data-signup-source="product_validation_pdf_${escapeHtml(pack)}">${escapeHtml(labels.download)}</a>
+        <a href="${escapeHtml(storyHref)}">${escapeHtml(labels.story)}</a>
+      </div>
+      <p class="product-validation-note">${escapeHtml(labels.note)}</p>`;
 }
 
 function writeConversionHealthPage(siteDir) {

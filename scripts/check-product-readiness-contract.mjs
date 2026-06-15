@@ -513,8 +513,6 @@ async function main() {
   if (!arHtml.includes("data-product-validation-handoff")) failures.push("ar_products_page_missing_validation_handoff");
   if (!zhHtml.includes("先測努爾學習單需求")) failures.push("zh_products_page_missing_validation_handoff_copy");
   if (!arHtml.includes("اختبار اهتمام ورقة نور أولا")) failures.push("ar_products_page_missing_validation_handoff_copy");
-  if (!zhHtml.includes("npm run report:events")) failures.push("zh_products_page_missing_validation_report_command");
-  if (!arHtml.includes("npm run report:events")) failures.push("ar_products_page_missing_validation_report_command");
   if (!html.includes("data-product-sample-previews")) failures.push("products_page_missing_sample_preview_section");
   if (!zhHtml.includes("data-product-sample-previews")) failures.push("zh_products_page_missing_sample_preview_section");
   if (!arHtml.includes("data-product-sample-previews")) failures.push("ar_products_page_missing_sample_preview_section");
@@ -615,6 +613,12 @@ async function main() {
   if (!htmlIncludesUrl(html, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("products_page_missing_tracked_handoff_download");
   if (!htmlIncludesUrl(zhHtml, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("zh_products_page_missing_tracked_handoff_download");
   if (!htmlIncludesUrl(arHtml, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("ar_products_page_missing_tracked_handoff_download");
+  for (const [label, pageHtml] of [["products", html], ["zh_products", zhHtml], ["ar_products", arHtml]]) {
+    if (pageHtml.includes("npm run report:events")) failures.push(`${label}_public_handoff_leaks_report_command`);
+    if (pageHtml.includes("https://fursay.com/downloads/")) failures.push(`${label}_public_handoff_leaks_raw_pdf_url`);
+    if (!pageHtml.includes(`data-product-validation-actions="${products.nextValidationHandoff?.pack || "noor"}"`)) failures.push(`${label}_missing_public_validation_actions`);
+    if (!pageHtml.includes('data-interest-stage="validation_pdf_download"')) failures.push(`${label}_missing_public_handoff_pdf_tracking`);
+  }
   if (!products.nextValidationHandoff?.freeStoryPackPath?.startsWith("/")) failures.push("products_manifest_handoff_missing_free_bridge");
   if (products.nextValidationHandoff?.reportCommand !== "npm run report:events") failures.push("products_manifest_handoff_bad_report_command");
   if (!products.nextValidationHandoff?.checkoutBlockedReason?.includes("Checkout stays disabled")) failures.push("products_manifest_handoff_missing_checkout_guardrail");
