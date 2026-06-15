@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-discovery-contract";
 const ORIGIN = "https://fursay.com";
+const FETCH_TIMEOUT_MS = 15_000;
 const PACKS = ["koko", "noor"];
 const PUBLIC_PAGES = [
   "/",
@@ -95,7 +96,9 @@ function localFile(pathname) {
 
 async function readText(baseUrl, pathname) {
   if (baseUrl) {
-    const response = await fetch(`${baseUrl}${pathname}`);
+    const response = await fetch(`${baseUrl}${pathname}`, {
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
     if (!response.ok) throw new Error(`${pathname} status ${response.status}`);
     return response.text();
   }
@@ -116,7 +119,10 @@ async function existsLocal(pathname) {
 }
 
 async function existsLive(baseUrl, pathname) {
-  const response = await fetch(`${baseUrl}${pathname}`, { redirect: "manual" });
+  const response = await fetch(`${baseUrl}${pathname}`, {
+    redirect: "manual",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
   return response.status >= 200 && response.status < 400;
 }
 
@@ -359,6 +365,7 @@ async function main() {
     checks: checks.length,
   }, null, 2));
   if (!report.ok) process.exit(1);
+  process.exit(0);
 }
 
 main().catch((error) => {

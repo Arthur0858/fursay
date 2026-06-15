@@ -33,17 +33,22 @@ function run(command, args, options = {}) {
   const isLiveCheck = args.includes("--base-url")
     || (command === "node" && args[0] === "audit-fursay.mjs" && /^https?:\/\//.test(args[1] || ""));
   const retries = Number.isInteger(options.retries) ? options.retries : (isLiveCheck ? 1 : 0);
+  const timeout = Number.isInteger(options.timeout) ? options.timeout : (isLiveCheck ? 300_000 : undefined);
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     console.log(`\n$ ${label}${attempt > 0 ? ` (retry ${attempt}/${retries})` : ""}`);
     const result = spawnSync(command, args, {
       cwd: process.cwd(),
       encoding: "utf8",
       stdio: options.capture ? "pipe" : "inherit",
+      timeout,
     });
     if (result.status === 0) return result.stdout || "";
     if (options.capture) {
       if (result.stdout) process.stdout.write(result.stdout);
       if (result.stderr) process.stderr.write(result.stderr);
+    }
+    if (result.error?.code === "ETIMEDOUT") {
+      console.warn(`Command timed out after ${timeout}ms: ${label}`);
     }
     if (attempt < retries) {
       console.warn(`Command failed; retrying once to rule out transient live network or browser timing: ${label}`);
