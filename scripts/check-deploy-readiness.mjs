@@ -203,8 +203,12 @@ async function main() {
       analyticsEnablementHandoff: {
         runbook: "docs/analytics-engine-enablement.md",
         dashboardUrl: ANALYTICS_ENGINE_ENABLEMENT_URL,
-        nextSafeAction: "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
-        doNotChangeBeforeEnablement: "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
+        nextSafeAction: analyticsBinding
+          ? "Provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events."
+          : "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
+        doNotChangeBeforeEnablement: analyticsBinding
+          ? "Analytics Engine binding is configured in wrangler.jsonc; keep token values out of files and environment reports."
+          : "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
         successCriteria: [
           "npm run deploy:ready -- --require-cloudflare passes",
           "npm run report:events returns status=queried",

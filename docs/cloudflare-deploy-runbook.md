@@ -74,7 +74,7 @@ Live smoke must keep these invariants:
 - `/creator-kit`, `/share-kit`, `/traffic-launch`, `/noor-sprint-status`, `/conversion-health`, `/monetization-roadmap`, and `/products` render their public copy/launch/growth/product surfaces without calling MailerLite
 - `/deploy-readiness.json` publishes only boolean readiness evidence and required secret names, never secret values
 - `/api/event` receives anonymous conversion events and currently writes to Worker logs until the Cloudflare account enables Analytics Engine; no email, name, token, address, or subscriber payload is written
-- The planned Analytics Engine binding is `FURSAY_EVENTS` for dataset `fursay_events`. Do not add the binding back to `wrangler.jsonc` until the dashboard enablement step is complete, otherwise Cloudflare rejects deployment with code `10089`.
+- The Analytics Engine binding is `FURSAY_EVENTS` for dataset `fursay_events`. Keep the binding in `wrangler.jsonc`; if Cloudflare rejects deployment again, treat historical blocker code `10089` as the rollback clue.
 - `npm run report:events` is the post-enablement conversion report path; it queries 7-day and 30-day Analytics Engine summaries after dashboard enablement plus `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ANALYTICS_TOKEN` are available, including page intent, product interest, affiliate clicks, outbound clicks, and Noor variant attribution
 - `docs/analytics-engine-enablement.md` is the operator checklist for moving `pending_cloudflare_credentials_or_enablement` to a real queried report without publishing secret values.
 - owned-product checkout remains disabled until product-interest evidence, disclosure copy, refund/support copy, and checkout tracking are all present in `/conversion-health.json`
