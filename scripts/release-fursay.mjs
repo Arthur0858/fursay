@@ -1493,6 +1493,7 @@ function buildNoorSprintStatus(siteDir, source) {
     conversionHealth: "https://fursay.com/conversion-health.json",
     logSource: "content/growth/noor-sprint-log.json",
     nextActionCommand: "npm run noor:sprint:next",
+    reviewCommand: "npm run noor:sprint:review",
     recorderCommand: "npm run noor:sprint:log -- --day 1 --status needs_retry --notes \"anonymous aggregate note\" --dry-run",
     piiAllowed: false,
     status: sprintLog.status || "ready_to_log",
@@ -1579,7 +1580,7 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
     <section class="creator-kit-safety" data-noor-sprint-privacy>
       <h2>Logging boundary</h2>
       <p>This sprint log records anonymous execution status only. Do not store email, name, phone, address, subscriber IDs, or MailerLite IDs in <code>${escapeHtml(manifest.logSource)}</code>.</p>
-      <p>Use <code>${escapeHtml(manifest.nextActionCommand)}</code> to get the next share copy, then use <code>${escapeHtml(manifest.recorderCommand)}</code> first before recording an anonymous note.</p>
+      <p>Use <code>${escapeHtml(manifest.nextActionCommand)}</code> to get the next share copy, then use <code>${escapeHtml(manifest.reviewCommand)}</code> after the anonymous event report before recording an anonymous note with <code>${escapeHtml(manifest.recorderCommand)}</code>.</p>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-status-summary>
       <h2>Status</h2>
@@ -3890,6 +3891,7 @@ async function main() {
   run("node", ["--check", "scripts/check-noor-subscriber-readiness.mjs"]);
   run("node", ["--check", "scripts/check-noor-sprint-log.mjs"]);
   run("node", ["--check", "scripts/next-noor-sprint-action.mjs"]);
+  run("node", ["--check", "scripts/review-noor-sprint-report.mjs"]);
   run("node", ["--check", "scripts/record-noor-sprint-log.mjs"]);
   run("node", ["--check", "scripts/check-security-headers.mjs"]);
   run("node", ["--check", "scripts/check-release-consistency.mjs"]);
