@@ -22,6 +22,13 @@ function request(init = {}) {
   return new Request(`${ORIGIN}/api/event`, init);
 }
 
+function downloadRequest(path) {
+  return new Request(`${ORIGIN}${path}`, {
+    method: "GET",
+    redirect: "manual",
+  });
+}
+
 function jsonBody(value) {
   return {
     method: "POST",
@@ -131,6 +138,31 @@ async function runLocal() {
   if (invalidBody.success !== false) failures.push("invalid_event:success_not_false");
   checks.push({ name: "invalid_event", status: invalid.status, body: invalidBody });
 
+  const downloadPoints = [];
+  const trackedDownload = await worker.fetch(downloadRequest("/download/noor-worksheet-sample?source_id=noor_first_subscriber_sprint_pdf_sample_followup&creator=fursay&placement=pdf_sample_followup"), {
+    FURSAY_EVENTS: {
+      writeDataPoint(point) {
+        downloadPoints.push(point);
+      },
+    },
+  });
+  const downloadLocation = trackedDownload.headers.get("location") || "";
+  if (trackedDownload.status !== 302) failures.push(`tracked_download:status:${trackedDownload.status}`);
+  if (!downloadLocation.includes("/downloads/noor-worksheet-sample.pdf")) failures.push(`tracked_download:location:${downloadLocation || "none"}`);
+  if (downloadPoints.length !== 1) failures.push(`tracked_download:data_point_count:${downloadPoints.length}`);
+  const downloadPoint = downloadPoints[0] || {};
+  if (downloadPoint.blobs?.[0] !== "fursay_product_sample_download_click") failures.push(`tracked_download:event:${downloadPoint.blobs?.[0] || "none"}`);
+  if (downloadPoint.blobs?.[1] !== "/download/noor-worksheet-sample") failures.push(`tracked_download:path:${downloadPoint.blobs?.[1] || "none"}`);
+  if (downloadPoint.blobs?.[5] !== "noor") failures.push(`tracked_download:pack:${downloadPoint.blobs?.[5] || "none"}`);
+  if (downloadPoint.blobs?.[12] !== "noor") failures.push(`tracked_download:product_interest:${downloadPoint.blobs?.[12] || "none"}`);
+  if (downloadPoint.blobs?.[13] !== "direct_pdf_sample") failures.push(`tracked_download:interest_stage:${downloadPoint.blobs?.[13] || "none"}`);
+  if (downloadPoint.blobs?.[15] !== "noor_first_subscriber_sprint_pdf_sample_followup") failures.push(`tracked_download:source_id:${downloadPoint.blobs?.[15] || "none"}`);
+  if (downloadPoint.blobs?.[16] !== "fursay") failures.push(`tracked_download:creator:${downloadPoint.blobs?.[16] || "none"}`);
+  if (downloadPoint.blobs?.[17] !== "pdf_sample_followup") failures.push(`tracked_download:placement:${downloadPoint.blobs?.[17] || "none"}`);
+  const downloadPrivateValues = privateNeedles(downloadPoint);
+  if (downloadPrivateValues.length) failures.push(`tracked_download:private_values:${downloadPrivateValues.join(",")}`);
+  checks.push({ name: "tracked_sample_download_redirect", status: trackedDownload.status, location: downloadLocation, dataPoint: downloadPoint });
+
   return { mode: "local-worker", failures, checks };
 }
 
@@ -142,6 +174,14 @@ async function runLive(baseUrl) {
   failures.push(...commonResponseFailures("live_analytics", response, body));
   if (!["analytics_engine", "worker_logs"].includes(body.sink)) failures.push(`live_analytics:sink:${body.sink || "none"}`);
   checks.push({ name: "live_anonymous_event_sink", status: response.status, body });
+
+  const trackedDownload = await fetch(`${baseUrl}/download/noor-worksheet-sample?source_id=contract_pdf_sample&creator=fursay&placement=contract`, {
+    redirect: "manual",
+  });
+  const location = trackedDownload.headers.get("location") || "";
+  if (trackedDownload.status !== 302) failures.push(`live_tracked_download:status:${trackedDownload.status}`);
+  if (!location.includes("/downloads/noor-worksheet-sample.pdf")) failures.push(`live_tracked_download:location:${location || "none"}`);
+  checks.push({ name: "live_tracked_sample_download_redirect", status: trackedDownload.status, location });
   return { mode: "live", failures, checks };
 }
 

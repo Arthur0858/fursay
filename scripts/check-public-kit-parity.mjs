@@ -117,7 +117,7 @@ function validateNoorSprintVariantLink(failures, pageKey, variant) {
       storyPlacement: "worksheet_followup_story",
     },
     pdf_sample_followup: {
-      linkPath: "/downloads/noor-worksheet-sample.pdf",
+      linkPath: "/download/noor-worksheet-sample",
       sourceId: "noor_first_subscriber_sprint_pdf_sample_followup",
       placement: "pdf_sample_followup",
       storyLinkPath: "/share/noor",
@@ -213,7 +213,7 @@ function validateShareKit(manifest, html, failures) {
 
   for (const [pack, item] of Object.entries(manifest.packs || {})) {
     const expectedSamplePreviewPath = pack === "koko" ? "/product-samples/koko-printable" : "/product-samples/noor-worksheet";
-    const expectedSampleDownloadPath = pack === "koko" ? "/downloads/koko-printable-sample.pdf" : "/downloads/noor-worksheet-sample.pdf";
+    const expectedSampleDownloadPath = pack === "koko" ? "/download/koko-printable-sample" : "/download/noor-worksheet-sample";
     const values = {
       title: item.title,
       storyWorld: item.storyWorld,

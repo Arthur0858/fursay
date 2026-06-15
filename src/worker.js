@@ -16,6 +16,11 @@ export default {
       return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
     }
 
+    const sampleDownloadRedirect = sampleDownloadRedirectUrl(url, request, env);
+    if (sampleDownloadRedirect) {
+      return redirectWithHeaders(sampleDownloadRedirect, 302);
+    }
+
     const joinRedirect = joinRedirectUrl(url);
     if (joinRedirect) {
       return redirectWithHeaders(joinRedirect, 302);
@@ -29,6 +34,49 @@ export default {
     return serveAsset(request, env);
   }
 };
+
+function sampleDownloadRedirectUrl(url, request, env) {
+  const path = url.pathname.replace(/\/+$/, "").toLowerCase();
+  const downloadRoutes = {
+    "/download/koko-printable-sample": {
+      target: "/downloads/koko-printable-sample.pdf",
+      pack: "koko",
+      campaign: "koko_story_funnel",
+      signupSource: "koko_tracked_pdf_sample",
+    },
+    "/download/noor-worksheet-sample": {
+      target: "/downloads/noor-worksheet-sample.pdf",
+      pack: "noor",
+      campaign: "noor_story_funnel",
+      signupSource: "noor_tracked_pdf_sample",
+    },
+  };
+  const route = downloadRoutes[path];
+  if (!route) return null;
+
+  writeAnonymousEvent({
+    event: "fursay_product_sample_download_click",
+    detail: {
+      path: url.pathname,
+      page_pack: route.pack,
+      campaign: route.campaign,
+      pack: route.pack,
+      signup_source: url.searchParams.get("signup_source") || route.signupSource,
+      product_interest: route.pack,
+      interest_stage: url.searchParams.get("interest_stage") || "direct_pdf_sample",
+      source_id: url.searchParams.get("source_id") || "",
+      creator: url.searchParams.get("creator") || "",
+      placement: url.searchParams.get("placement") || "",
+    },
+  }, request, env);
+
+  const target = new URL(route.target, url.origin);
+  for (const key of SHORTLINK_PASSTHROUGH_PARAMS) {
+    const value = url.searchParams.get(key);
+    if (value) target.searchParams.set(key, value);
+  }
+  return target.toString();
+}
 
 function joinRedirectUrl(url) {
   const path = url.pathname.replace(/\/+$/, "").toLowerCase();

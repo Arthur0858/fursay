@@ -71,7 +71,7 @@ function validateNoorSprintVariantLinks(noorSprint, failures, prefix) {
       storyPlacement: "worksheet_followup_story",
     },
     pdf_sample_followup: {
-      linkPath: "/downloads/noor-worksheet-sample.pdf",
+      linkPath: "/download/noor-worksheet-sample",
       sourceId: "noor_first_subscriber_sprint_pdf_sample_followup",
       placement: "pdf_sample_followup",
       storyLinkPath: "/share/noor",
@@ -1814,7 +1814,7 @@ async function checkDiscoveryFiles(baseUrl) {
     const sharePack = shareKit.packs?.[pack] || {};
     const launchPack = trafficLaunch.packs?.[pack] || {};
     const expectedProductSamplePreview = `https://fursay.com/${pack === "koko" ? "product-samples/koko-printable" : "product-samples/noor-worksheet"}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
-    const expectedProductSampleDownload = `https://fursay.com/${pack === "koko" ? "downloads/koko-printable-sample.pdf" : "downloads/noor-worksheet-sample.pdf"}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
+    const expectedProductSampleDownload = `https://fursay.com/${pack === "koko" ? "download/koko-printable-sample" : "download/noor-worksheet-sample"}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     if (sharePack.sampleShortlink !== expectedSample) failures.push(`share_kit_${pack}_sample:${sharePack.sampleShortlink || "none"}`);
     if (sharePack.familyShareShortlink !== expectedShare) failures.push(`share_kit_${pack}_share:${sharePack.familyShareShortlink || "none"}`);
     if (sharePack.productSamplePreviewUrl !== expectedProductSamplePreview) failures.push(`share_kit_${pack}_product_sample_preview:${sharePack.productSamplePreviewUrl || "none"}`);

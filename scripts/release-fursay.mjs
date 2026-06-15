@@ -1007,7 +1007,7 @@ function writeShareKit(siteDir, source) {
   const packs = Object.fromEntries(Object.entries(campaignManifest.campaigns || {}).map(([pack, campaign]) => {
     const copy = campaign.copyKit || {};
     const productSamplePreviewPath = pack === "koko" ? "/product-samples/koko-printable" : "/product-samples/noor-worksheet";
-    const productSampleDownloadPath = pack === "koko" ? "/downloads/koko-printable-sample.pdf" : "/downloads/noor-worksheet-sample.pdf";
+    const productSampleDownloadPath = pack === "koko" ? "/download/koko-printable-sample" : "/download/noor-worksheet-sample";
     const productSamplePreviewUrl = `https://fursay.com${productSamplePreviewPath}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
     const productSampleDownloadUrl = `https://fursay.com${productSampleDownloadPath}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     return [pack, {
@@ -1078,7 +1078,7 @@ function buildNoorSubscriberSprint() {
   const sampleLink = "https://fursay.com/sample/noor?source_id=noor_first_subscriber_sprint&creator=fursay&placement=sample_followup";
   const worksheetPreview = "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint&creator=fursay&placement=worksheet_preview";
   const sprintLink = (path, sourceId, placement) => `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
-  const pdfSampleLink = (sourceId, placement) => `https://fursay.com/downloads/noor-worksheet-sample.pdf?source_id=${sourceId}&creator=fursay&placement=${placement}`;
+  const pdfSampleLink = (sourceId, placement) => `https://fursay.com/download/noor-worksheet-sample?source_id=${sourceId}&creator=fursay&placement=${placement}`;
   const variantLinks = {
     parentGroup: sprintLink("/share/noor", "noor_first_subscriber_sprint_parent_group", "parent_group"),
     directDm: sprintLink("/share/noor", "noor_first_subscriber_sprint_direct_dm", "direct_dm"),

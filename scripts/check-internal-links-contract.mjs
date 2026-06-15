@@ -7,6 +7,10 @@ const ORIGIN = "https://fursay.com";
 const ATTRIBUTES = new Set(["href", "src", "action"]);
 const EXTERNAL_SCHEMES = /^(mailto:|tel:|javascript:|data:)/i;
 const FETCH_TIMEOUT_MS = 8000;
+const WORKER_ONLY_PATHS = new Set([
+  "/download/koko-printable-sample",
+  "/download/noor-worksheet-sample",
+]);
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -147,6 +151,7 @@ async function checkReference({ baseUrl, pages, shortlinkPaths, caches, sourceRo
   if (url.origin !== ORIGIN) return failures;
   if (url.pathname.endsWith(".html")) failures.push(`${sourceRoute}:${attrName}:html_suffix:${rawValue}`);
   if (shortlinkPaths.has(url.pathname)) return failures;
+  if (WORKER_ONLY_PATHS.has(url.pathname)) return failures;
   if (url.pathname === "/api/subscribe") return failures;
 
   if (!caches.targets.has(url.pathname)) {

@@ -137,7 +137,7 @@
       "label": "Printable PDF follow-up",
       "status": "not_started",
       "action": "Share the PDF sample when a parent asks for printable or offline material.",
-      "link": "https://fursay.com/downloads/noor-worksheet-sample.pdf?source_id=noor_first_subscriber_sprint_pdf_sample_followup&creator=fursay&placement=pdf_sample_followup",
+      "link": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_first_subscriber_sprint_pdf_sample_followup&creator=fursay&placement=pdf_sample_followup",
       "followupLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_pdf_sample_story&creator=fursay&placement=pdf_sample_story",
       "reportQuery": "noor_growth_signals_7d",
       "expectedSignal": "A pdf_sample_followup event followed by a story-pack visit.",

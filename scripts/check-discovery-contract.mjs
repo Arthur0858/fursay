@@ -66,6 +66,10 @@ const PUBLIC_DOWNLOADS = [
 const KNOWN_API_ROUTES = new Set([
   "/api/event",
 ]);
+const WORKER_ONLY_ROUTES = new Set([
+  "/download/koko-printable-sample",
+  "/download/noor-worksheet-sample",
+]);
 const TOOL_PAGES = [
   { page: "/links", manifest: "/links.json", requiresCommitBadge: false, requiresManifestLink: false },
   { page: "/share-kit", manifest: "/share-kit.json" },
@@ -332,6 +336,7 @@ async function main() {
       || knownFiles.has(pathname)
       || shortlinkPaths.has(pathname)
       || KNOWN_API_ROUTES.has(pathname)
+      || WORKER_ONLY_ROUTES.has(pathname)
       || pathname.startsWith("/images/qr/");
     if (!known) unknownOwnUrls.push(url);
   }
