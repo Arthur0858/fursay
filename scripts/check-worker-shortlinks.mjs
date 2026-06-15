@@ -21,6 +21,15 @@ const BLOCKED_PROBE = {
   utm_campaign: "bad_campaign",
   utm_content: "bad_content",
 };
+const PRIVATE_PROBE = {
+  name: "Ada Parent",
+  phone: "+15550123456",
+  address: "1 Private Street",
+  token: "secret-token",
+  secret: "private-secret",
+  subscriberId: "sub_123",
+  mailerLiteSubscriberId: "ml_456",
+};
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -99,7 +108,7 @@ function compareWorkerSourceToManifest(workerData, shortlinks) {
 
 function probeUrl(origin, path) {
   const url = new URL(path, origin);
-  for (const [key, value] of Object.entries({ ...PASSTHROUGH_PROBE, ...BLOCKED_PROBE })) {
+  for (const [key, value] of Object.entries({ ...PASSTHROUGH_PROBE, ...BLOCKED_PROBE, ...PRIVATE_PROBE })) {
     url.searchParams.set(key, value);
   }
   return url;
@@ -153,6 +162,14 @@ function compareLocation(route, location) {
     }
   }
 
+  for (const key of route.blockedPrivateParams || []) {
+    if (actual.searchParams.has(key)) failures.push(`private_param_leaked:${route.path}:${key}`);
+    const value = PRIVATE_PROBE[key] || BLOCKED_PROBE[key] || "";
+    if (value && actual.toString().includes(encodeURIComponent(value))) {
+      failures.push(`private_value_leaked:${route.path}:${key}`);
+    }
+  }
+
   for (const key of ["subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
     if (actual.searchParams.get(key) !== expected.searchParams.get(key)) {
       failures.push(`target_mismatch:${route.path}:${key}:${actual.searchParams.get(key) || "none"}`);
@@ -170,6 +187,10 @@ async function main() {
 
   if (shortlinks.platform !== "cloudflare-workers-static-assets") failures.push(`bad_platform:${shortlinks.platform || "none"}`);
   if (shortlinks.safety?.ownedAttributionCannotBeOverridden !== true) failures.push("missing_owned_attribution_guard");
+  const blockedPrivateParams = shortlinks.safety?.blockedPrivateParams || [];
+  for (const key of Object.keys(PRIVATE_PROBE)) {
+    if (!blockedPrivateParams.includes(key)) failures.push(`manifest_missing_blocked_private_param:${key}`);
+  }
   if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) {
     failures.push(`bad_route_count:${shortlinks.routes?.length || 0}`);
   }
@@ -179,6 +200,9 @@ async function main() {
   }
 
   for (const route of shortlinks.routes || []) {
+    for (const key of Object.keys(PRIVATE_PROBE)) {
+      if (!(route.blockedPrivateParams || []).includes(key)) failures.push(`route_missing_blocked_private_param:${route.path}:${key}`);
+    }
     const response = await fetchShortlink(args.baseUrl, route.path);
     const location = response.headers.get("location") || "";
     const routeFailures = [];

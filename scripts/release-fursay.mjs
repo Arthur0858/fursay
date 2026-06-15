@@ -2033,6 +2033,8 @@ function writeVideoDiscovery(siteDir, source) {
 }
 
 function writeShortlinkManifest(siteDir, source) {
+  const blockedParams = ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"];
+  const blockedPrivateParams = ["email", "name", "phone", "address", "token", "secret", "subscriberId", "mailerLiteSubscriberId"];
   const routes = shortlinkRoutes().map((route) => {
     const landing = new URL(route.target, "https://fursay.com");
     landing.searchParams.set("subscribe", route.pack);
@@ -2056,7 +2058,8 @@ function writeShortlinkManifest(siteDir, source) {
         utm_content: route.content,
       },
       passthroughParams: SHORTLINK_PASSTHROUGH_PARAMS,
-      blockedParams: ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"],
+      blockedParams,
+      blockedPrivateParams,
     };
   });
   const manifest = {
@@ -2071,7 +2074,8 @@ function writeShortlinkManifest(siteDir, source) {
       smokeSubmitsToMailerLite: false,
       ownedAttributionCannotBeOverridden: true,
       passthroughParams: SHORTLINK_PASSTHROUGH_PARAMS,
-      blockedParams: ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"],
+      blockedParams,
+      blockedPrivateParams,
     },
     routes,
   };
