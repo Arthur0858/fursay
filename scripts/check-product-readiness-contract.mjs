@@ -15,6 +15,8 @@ const REQUIRED_SAMPLE_PREVIEWS = [
     canonical: "https://fursay.com/product-samples/koko-printable",
     downloadPath: "/downloads/koko-printable-sample.pdf",
     downloadUrl: "https://fursay.com/downloads/koko-printable-sample.pdf",
+    trackedDownloadPath: "/download/koko-printable-sample",
+    trackedDownloadUrl: "https://fursay.com/download/koko-printable-sample?source_id=koko_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
   },
   {
     pack: "noor",
@@ -22,6 +24,8 @@ const REQUIRED_SAMPLE_PREVIEWS = [
     canonical: "https://fursay.com/product-samples/noor-worksheet",
     downloadPath: "/downloads/noor-worksheet-sample.pdf",
     downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+    trackedDownloadPath: "/download/noor-worksheet-sample",
+    trackedDownloadUrl: "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
   },
 ];
 const REQUIRED_GATE_REQUIREMENTS = [
@@ -660,6 +664,9 @@ async function main() {
     if (manifestSample?.printReady !== true) failures.push(`products_manifest_sample_not_print_ready:${sample.pack}`);
     if (manifestSample?.downloadableFormat !== "pdf_and_browser_print") failures.push(`products_manifest_sample_bad_download_format:${sample.pack}:${manifestSample?.downloadableFormat || "none"}`);
     if (manifestSample?.downloadUrl !== sample.downloadUrl) failures.push(`products_manifest_sample_bad_download_url:${sample.pack}:${manifestSample?.downloadUrl || "none"}`);
+    if (manifestSample?.trackedDownloadUrl !== sample.trackedDownloadUrl) failures.push(`products_manifest_sample_bad_tracked_download_url:${sample.pack}:${manifestSample?.trackedDownloadUrl || "none"}`);
+    if (!manifestSample?.trackedDownloadUrl?.startsWith("https://fursay.com/download/")) failures.push(`products_manifest_sample_missing_tracked_download:${sample.pack}`);
+    if (!manifestSample?.trackedDownloadUrl?.includes("placement=sample_preview_pdf_download")) failures.push(`products_manifest_sample_bad_tracked_download_placement:${sample.pack}`);
     if ((manifestSample?.contents || []).length < 3) failures.push(`products_manifest_sample_missing_contents:${sample.pack}`);
     const pdf = await readBytes(args.baseUrl, sample.downloadPath);
     if (!pdf.ok) {
@@ -691,7 +698,9 @@ async function main() {
       failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
     }
     if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
-    if (!pageHtml.includes(`href="${sample.downloadPath}"`)) failures.push(`sample_page_missing_pdf_download_href:${sample.pack}`);
+    const trackedHref = new URL(sample.trackedDownloadUrl).pathname + new URL(sample.trackedDownloadUrl).search;
+    if (!htmlIncludesUrl(pageHtml, trackedHref)) failures.push(`sample_page_missing_tracked_pdf_download_href:${sample.pack}`);
+    if (pageHtml.includes(`href="${sample.downloadPath}"`)) failures.push(`sample_page_uses_raw_pdf_download_href:${sample.pack}`);
     if (!pageHtml.includes(`data-product-sample-download="${sample.pack}"`)) failures.push(`sample_page_missing_pdf_download_tracking:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_pdf_download"')) failures.push(`sample_page_missing_pdf_download_stage:${sample.pack}`);
     if (!pageHtml.includes(`data-signup-source="sample_pdf_download_${sample.pack}"`)) failures.push(`sample_page_missing_pdf_download_source:${sample.pack}`);

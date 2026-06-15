@@ -61,6 +61,12 @@ function ensureOutDir(path) {
   if (!existsSync(path)) mkdirSync(path, { recursive: true });
 }
 
+function productSampleTrackedDownloadUrl(product, placement = "product_validation_pdf_sample") {
+  const path = product.pack === "koko" ? "/download/koko-printable-sample" : "/download/noor-worksheet-sample";
+  const sourceId = product.pack === "koko" ? "koko_product_validation_pdf_sample" : "noor_product_validation_pdf_sample";
+  return `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
+}
+
 function gitRemote() {
   const result = spawnSync("git", ["remote", "get-url", "origin"], {
     cwd: process.cwd(),
@@ -2292,12 +2298,6 @@ function writeProductsManifest(siteDir, source) {
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
   const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
   const links = readJson(resolve(siteDir, "links.json"));
-  const trackedDownloadUrl = (product) => {
-    const path = product.pack === "koko" ? "/download/koko-printable-sample" : "/download/noor-worksheet-sample";
-    const sourceId = product.pack === "koko" ? "koko_product_validation_pdf_sample" : "noor_product_validation_pdf_sample";
-    const placement = product.pack === "koko" ? "product_validation_pdf_sample" : "product_validation_pdf_sample";
-    return `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
-  };
   const productValidationHandoffs = (ownedProducts.products || []).map((product) => ({
     productId: product.id,
     pack: product.pack,
@@ -2307,7 +2307,7 @@ function writeProductsManifest(siteDir, source) {
       : "Share the Koko printable sample with Mandarin-speaking families, then send them to the free Koko story pack.",
     samplePreviewUrl: product.samplePreview?.url || "",
     sampleDownloadUrl: product.samplePreview?.downloadUrl || "",
-    trackedSampleDownloadUrl: trackedDownloadUrl(product),
+    trackedSampleDownloadUrl: productSampleTrackedDownloadUrl(product),
     freeStoryPackPath: product.validationPlan?.freeBridge || "",
     reportCommand: "npm run report:events",
     requiredSignals: product.validationPlan?.signals || [],
@@ -2339,6 +2339,7 @@ function writeProductsManifest(siteDir, source) {
       productId: product.id,
       pack: product.pack,
       ...(product.samplePreview || {}),
+      trackedDownloadUrl: productSampleTrackedDownloadUrl(product, "sample_preview_pdf_download"),
     })),
     nextValidationHandoff: productValidationHandoffs[0] || null,
     productValidationHandoffs,
@@ -3368,7 +3369,8 @@ function writeProductSamplePages(siteDir) {
   mkdirSync(resolve(siteDir, "product-samples"), { recursive: true });
   for (const product of manifest.products || []) {
     const spec = samplePageSpec(product);
-    const downloadPath = product.samplePreview?.downloadUrl ? new URL(product.samplePreview.downloadUrl).pathname : "";
+    const trackedDownload = productSampleTrackedDownloadUrl(product, "sample_preview_pdf_download");
+    const downloadHref = new URL(trackedDownload).pathname + new URL(trackedDownload).search;
     const cards = spec.sections.map(([label, title, body]) => `
           <article class="creator-copy-block">
             <p class="creator-eyebrow">${escapeHtml(label)}</p>
@@ -3416,7 +3418,7 @@ ${cards}
       <p>${escapeHtml(spec.printCopy)}</p>
       <p>${escapeHtml(spec.noPaymentCopy)}</p>
       <div class="public-share-actions">
-        <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadPath)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">${escapeHtml(spec.downloadLabel)}</a>
+        <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadHref)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">${escapeHtml(spec.downloadLabel)}</a>
         <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">${escapeHtml(spec.printLabel)}</button>
       </div>
     </section>
