@@ -74,6 +74,32 @@
     "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
     "readinessStatus": "safe_wait_subscriber_empty"
   },
+  "operatorChecklist": [
+    {
+      "id": "copy_confirm",
+      "label": "Copy the planned parent note",
+      "action": "Use the Arabic parent copy from the next-action handoff without adding price, checkout, or payment language.",
+      "evidence": "The shared message contains the planned tracked Fursay link and no personal subscriber data."
+    },
+    {
+      "id": "open_link_check",
+      "label": "Open the tracked link before sharing",
+      "action": "Open the primary link once and confirm it lands on the Noor story pack or sample preview with the expected source_id and placement.",
+      "evidence": "The URL remains on fursay.com and keeps the planned source_id, creator, and placement attribution."
+    },
+    {
+      "id": "record_posted",
+      "label": "Record the posted state",
+      "action": "npm run noor:sprint:log -- --day 1 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
+      "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes."
+    },
+    {
+      "id": "review_report",
+      "label": "Review anonymous aggregate results",
+      "action": "npm run noor:sprint:review",
+      "evidence": "Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails."
+    }
+  ],
   "blockedBy": [
     "pending_cloudflare_credentials_or_enablement",
     "safe_wait_subscriber_empty"

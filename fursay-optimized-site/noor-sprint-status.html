@@ -120,6 +120,69 @@ It is short: one story, one Chinese phrase with Pinyin, and one parent-child act
       <p>Review with <code>npm run noor:sprint:review</code>, then record only anonymous aggregate evidence with <code>npm run noor:sprint:log -- --day 1 --status needs_retry --notes &quot;checked noor_growth_signals_7d aggregate only&quot; --next-action &quot;wait for aggregate signal or retry the next planned placement&quot; --dry-run</code>.</p>
       <p>Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.</p>
     </section>
+    <section class="creator-kit-safety" data-noor-sprint-operator-checklist>
+      <p class="creator-eyebrow">Operator checklist</p>
+      <h2>Run the next Noor sprint action</h2>
+      <p>Follow these steps in order so the outreach stays measurable, interest-only, and free of personal data.</p>
+      <div class="creator-copy-blocks">
+
+        <article class="creator-copy-block" data-noor-sprint-operator-step="copy_confirm">
+          <h3>Copy the planned parent note</h3>
+          <dl>
+            <div>
+                <dt>Action</dt>
+                <dd>Use the Arabic parent copy from the next-action handoff without adding price, checkout, or payment language.</dd>
+              </div>
+            <div>
+                <dt>Evidence</dt>
+                <dd>The shared message contains the planned tracked Fursay link and no personal subscriber data.</dd>
+              </div>
+          </dl>
+        </article>
+
+        <article class="creator-copy-block" data-noor-sprint-operator-step="open_link_check">
+          <h3>Open the tracked link before sharing</h3>
+          <dl>
+            <div>
+                <dt>Action</dt>
+                <dd>Open the primary link once and confirm it lands on the Noor story pack or sample preview with the expected source_id and placement.</dd>
+              </div>
+            <div>
+                <dt>Evidence</dt>
+                <dd>The URL remains on fursay.com and keeps the planned source_id, creator, and placement attribution.</dd>
+              </div>
+          </dl>
+        </article>
+
+        <article class="creator-copy-block" data-noor-sprint-operator-step="record_posted">
+          <h3>Record the posted state</h3>
+          <dl>
+            <div>
+                <dt>Action</dt>
+                <dd>npm run noor:sprint:log -- --day 1 --status posted --notes &quot;shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report&quot; --next-action &quot;run npm run noor:sprint:review after the event report is available&quot; --dry-run</dd>
+              </div>
+            <div>
+                <dt>Evidence</dt>
+                <dd>The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes.</dd>
+              </div>
+          </dl>
+        </article>
+
+        <article class="creator-copy-block" data-noor-sprint-operator-step="review_report">
+          <h3>Review anonymous aggregate results</h3>
+          <dl>
+            <div>
+                <dt>Action</dt>
+                <dd>npm run noor:sprint:review</dd>
+              </div>
+            <div>
+                <dt>Evidence</dt>
+                <dd>Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails.</dd>
+              </div>
+          </dl>
+        </article>
+      </div>
+    </section>
     <section class="creator-kit-safety" data-noor-sprint-status-log>
       <h2>Daily log</h2>
       <table>

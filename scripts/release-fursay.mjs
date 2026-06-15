@@ -1622,6 +1622,32 @@ function buildNoorSprintStatus(siteDir, source) {
     analyticsStatus,
     readinessStatus,
   };
+  const operatorChecklist = [
+    {
+      id: "copy_confirm",
+      label: "Copy the planned parent note",
+      action: "Use the Arabic parent copy from the next-action handoff without adding price, checkout, or payment language.",
+      evidence: "The shared message contains the planned tracked Fursay link and no personal subscriber data.",
+    },
+    {
+      id: "open_link_check",
+      label: "Open the tracked link before sharing",
+      action: "Open the primary link once and confirm it lands on the Noor story pack or sample preview with the expected source_id and placement.",
+      evidence: "The URL remains on fursay.com and keeps the planned source_id, creator, and placement attribution.",
+    },
+    {
+      id: "record_posted",
+      label: "Record the posted state",
+      action: nextActionHandoff.recorderPostedCommand,
+      evidence: "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes.",
+    },
+    {
+      id: "review_report",
+      label: "Review anonymous aggregate results",
+      action: nextActionHandoff.reviewCommand,
+      evidence: "Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails.",
+    },
+  ];
   return {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1664,6 +1690,7 @@ function buildNoorSprintStatus(siteDir, source) {
       nextAction: nextOpenDay.action || "",
     },
     nextActionHandoff,
+    operatorChecklist,
     blockedBy: [
       analyticsStatus,
       readinessStatus,
@@ -1682,6 +1709,14 @@ function buildNoorSprintStatus(siteDir, source) {
 
 function writeNoorSprintStatusPage(siteDir, manifest) {
   const handoff = manifest.nextActionHandoff || {};
+  const operatorChecklist = (manifest.operatorChecklist || []).map((item) => `
+        <article class="creator-copy-block" data-noor-sprint-operator-step="${escapeHtml(item.id)}">
+          <h3>${escapeHtml(item.label)}</h3>
+          <dl>
+            ${healthMetric("Action", item.action || "")}
+            ${healthMetric("Evidence", item.evidence || "")}
+          </dl>
+        </article>`).join("\n");
   const rows = (manifest.days || []).map((day) => `
         <tr data-noor-sprint-status-day="${escapeHtml(day.day)}">
           <th scope="row">Day ${escapeHtml(day.day)}</th>
@@ -1763,6 +1798,14 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
       <p>After sharing, log the pending report state with <code>${escapeHtml(handoff.recorderPostedCommand || "")}</code>.</p>
       <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>
       <p>${escapeHtml(handoff.privacyBoundary || manifest.privacy?.blockedFields?.join(", ") || "")}</p>
+    </section>
+    <section class="creator-kit-safety" data-noor-sprint-operator-checklist>
+      <p class="creator-eyebrow">Operator checklist</p>
+      <h2>Run the next Noor sprint action</h2>
+      <p>Follow these steps in order so the outreach stays measurable, interest-only, and free of personal data.</p>
+      <div class="creator-copy-blocks">
+${operatorChecklist}
+      </div>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-status-log>
       <h2>Daily log</h2>

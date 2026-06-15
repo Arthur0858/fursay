@@ -13,6 +13,12 @@ const RECORDER_COMMAND = "npm run noor:sprint:log -- --day 1 --status needs_retr
 const DEFAULT_OUT = "/tmp/fursay-noor-sprint-log";
 const ALLOWED_STATUSES = new Set(["ready_to_start", "in_progress", "signal_observed", "safe_wait_subscriber_empty"]);
 const ALLOWED_ENTRY_STATUSES = new Set(["not_started", "posted", "completed", "skipped", "needs_retry"]);
+const REQUIRED_OPERATOR_STEPS = [
+  "copy_confirm",
+  "open_link_check",
+  "record_posted",
+  "review_report",
+];
 const BLOCKED_KEYS = [
   "email",
   "name",
@@ -132,6 +138,21 @@ function validateStatus(status, log, failures) {
     if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
     if (Number(handoff.day) === 1 && !String(handoff.localizedCopy?.ar || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("handoff_missing_day_one_arabic_copy");
   }
+  if (!Array.isArray(status.operatorChecklist)) failures.push("status_missing_operator_checklist");
+  const operatorStepIds = new Set((status.operatorChecklist || []).map((item) => item.id));
+  for (const id of REQUIRED_OPERATOR_STEPS) {
+    if (!operatorStepIds.has(id)) failures.push(`status_missing_operator_step:${id}`);
+  }
+  for (const item of status.operatorChecklist || []) {
+    if (!String(item.label || "").trim()) failures.push(`operator_step_missing_label:${item.id || "none"}`);
+    if (!String(item.action || "").trim()) failures.push(`operator_step_missing_action:${item.id || "none"}`);
+    if (!String(item.evidence || "").trim()) failures.push(`operator_step_missing_evidence:${item.id || "none"}`);
+    if (item.id === "record_posted" && !String(item.action || "").includes("--status posted")) failures.push("operator_step_record_posted_missing_command");
+    if (item.id === "review_report" && !String(item.action || "").includes(REVIEW_COMMAND)) failures.push("operator_step_review_report_missing_command");
+    if (item.id === "review_report" && !String(item.evidence || "").includes("aggregate")) failures.push("operator_step_review_report_missing_aggregate_boundary");
+    if (item.id === "copy_confirm" && !String(item.action || "").includes("without adding price")) failures.push("operator_step_copy_confirm_missing_no_price_boundary");
+    if (item.id === "open_link_check" && !String(item.evidence || "").includes("source_id")) failures.push("operator_step_open_link_missing_source_id_evidence");
+  }
 }
 
 function htmlIncludesMetric(html, label, value) {
@@ -186,6 +207,12 @@ async function main() {
   if (!html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
   if (!html.includes("قصة نور الصينية في 3 دقائق")) failures.push("page_missing_arabic_parent_copy");
   if (!html.includes("Copy Arabic copy")) failures.push("page_missing_arabic_copy_button");
+  if (!html.includes("data-noor-sprint-operator-checklist")) failures.push("page_missing_operator_checklist");
+  for (const id of REQUIRED_OPERATOR_STEPS) {
+    if (!html.includes(`data-noor-sprint-operator-step="${id}"`)) failures.push(`page_missing_operator_step:${id}`);
+  }
+  if (!html.includes("without adding price")) failures.push("page_operator_checklist_missing_no_price_boundary");
+  if (!html.includes("aggregate counts")) failures.push("page_operator_checklist_missing_aggregate_counts_boundary");
   if (!htmlIncludesMetric(html, "Log entries", status.logEntryCount)) failures.push("page_log_entry_count_not_rendered");
   if (!htmlIncludesMetric(html, "Completed days", status.summary?.completedDays)) failures.push("page_completed_days_not_rendered");
 
