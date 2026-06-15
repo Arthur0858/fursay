@@ -491,6 +491,7 @@ async function main() {
   checkProductSitemapAlternates(sitemap, failures);
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
+  if (!html.includes("data-product-validation-handoff")) failures.push("products_page_missing_validation_handoff");
   if (!html.includes("data-product-sample-previews")) failures.push("products_page_missing_sample_preview_section");
   if (!zhHtml.includes("data-product-sample-previews")) failures.push("zh_products_page_missing_sample_preview_section");
   if (!arHtml.includes("data-product-sample-previews")) failures.push("ar_products_page_missing_sample_preview_section");
@@ -579,6 +580,16 @@ async function main() {
   if (products.interestOnly !== true) failures.push("products_manifest_interest_only_not_true");
   if (products.event !== "fursay_product_interest_click") failures.push(`products_manifest_event:${products.event || "none"}`);
   if (products.samplePreviews?.length !== release.liveExpectations?.productSamplePreviewPages) failures.push(`products_manifest_sample_preview_count:${products.samplePreviews?.length || 0}`);
+  if (!products.nextValidationHandoff) failures.push("products_manifest_missing_next_validation_handoff");
+  if ((products.productValidationHandoffs || []).length !== REQUIRED_PRODUCTS.length) failures.push(`products_manifest_validation_handoff_count:${products.productValidationHandoffs?.length || 0}`);
+  if (products.nextValidationHandoff?.pack !== "noor") failures.push(`products_manifest_next_handoff_pack:${products.nextValidationHandoff?.pack || "none"}`);
+  if (products.nextValidationHandoff?.paymentLinksAllowed !== false) failures.push("products_manifest_handoff_payment_links_allowed");
+  if (products.nextValidationHandoff?.piiAllowed !== false) failures.push("products_manifest_handoff_pii_allowed");
+  if (!products.nextValidationHandoff?.samplePreviewUrl?.startsWith("https://fursay.com/product-samples/")) failures.push("products_manifest_handoff_missing_sample_preview");
+  if (!products.nextValidationHandoff?.sampleDownloadUrl?.startsWith("https://fursay.com/downloads/")) failures.push("products_manifest_handoff_missing_sample_download");
+  if (!products.nextValidationHandoff?.freeStoryPackPath?.startsWith("/")) failures.push("products_manifest_handoff_missing_free_bridge");
+  if (products.nextValidationHandoff?.reportCommand !== "npm run report:events") failures.push("products_manifest_handoff_bad_report_command");
+  if (!products.nextValidationHandoff?.checkoutBlockedReason?.includes("Checkout stays disabled")) failures.push("products_manifest_handoff_missing_checkout_guardrail");
   if (products.subscribePayloadCompatibility !== "email/groups/attribution unchanged") failures.push("products_manifest_payload_contract_changed");
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_manifest_social_entry_mismatch");
   if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_manifest_zh_social_entry_mismatch");

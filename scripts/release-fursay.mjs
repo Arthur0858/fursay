@@ -2164,6 +2164,24 @@ function writeProductsManifest(siteDir, source) {
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
   const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
   const links = readJson(resolve(siteDir, "links.json"));
+  const productValidationHandoffs = (ownedProducts.products || []).map((product) => ({
+    productId: product.id,
+    pack: product.pack,
+    priority: product.pack === "noor" ? 1 : 2,
+    action: product.pack === "noor"
+      ? "Share the Noor worksheet sample with Arabic-speaking families, then send them to the free Noor story pack."
+      : "Share the Koko printable sample with Mandarin-speaking families, then send them to the free Koko story pack.",
+    samplePreviewUrl: product.samplePreview?.url || "",
+    sampleDownloadUrl: product.samplePreview?.downloadUrl || "",
+    freeStoryPackPath: product.validationPlan?.freeBridge || "",
+    reportCommand: "npm run report:events",
+    requiredSignals: product.validationPlan?.signals || [],
+    minimumSignals: product.validationPlan?.minimumSignals || {},
+    nextDecision: product.validationPlan?.nextDecision || "",
+    checkoutBlockedReason: "Checkout stays disabled until product interest clicks and at least one subscriber signal are reviewable.",
+    paymentLinksAllowed: false,
+    piiAllowed: false,
+  })).sort((a, b) => a.priority - b.priority);
   const manifest = {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -2187,6 +2205,8 @@ function writeProductsManifest(siteDir, source) {
       pack: product.pack,
       ...(product.samplePreview || {}),
     })),
+    nextValidationHandoff: productValidationHandoffs[0] || null,
+    productValidationHandoffs,
     subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
     checkoutGate: ownedProducts.checkoutGate || {},
     products: ownedProducts.products || [],
@@ -2533,6 +2553,7 @@ function arProductsJsonLd(manifest) {
 
 function writeProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const nextHandoff = manifest.nextValidationHandoff || {};
   const samplePreviews = (manifest.samplePreviews || [])
     .map((sample) => `
         <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
@@ -2650,6 +2671,19 @@ function writeProductsPage(siteDir) {
       <div class="creator-copy-blocks">
 ${samplePreviews}
       </div>
+    </section>
+    <section class="creator-kit-safety" data-product-validation-handoff>
+      <p class="creator-eyebrow">Next validation step</p>
+      <h2>Test ${escapeHtml(nextHandoff.pack === "noor" ? "Noor worksheet interest" : "Koko printable interest")} first</h2>
+      <p>${escapeHtml(nextHandoff.action || "Share one free sample preview, then send interested families to the free story pack.")}</p>
+      <dl>
+        ${healthMetric("Sample preview", nextHandoff.samplePreviewUrl || "")}
+        ${healthMetric("PDF sample", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("Free story pack", nextHandoff.freeStoryPackPath || "")}
+        ${healthMetric("Report command", nextHandoff.reportCommand || "npm run report:events")}
+        ${healthMetric("Checkout", nextHandoff.checkoutBlockedReason || "Checkout stays disabled during interest validation.")}
+      </dl>
+      <p>No payment link, price promise, or checkout provider is active. The next decision depends on product info clicks, waitlist clicks, and at least one real subscriber signal.</p>
     </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
