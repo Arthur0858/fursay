@@ -49,6 +49,7 @@ async function main() {
   const wrangler = await readJson("wrangler.jsonc");
   const workflow = await readText(".github/workflows/deploy-worker.yml");
   const deployRunbook = await readText("docs/cloudflare-deploy-runbook.md");
+  const analyticsRunbook = await readText("docs/analytics-engine-enablement.md");
   const branch = gitValue(["branch", "--show-current"]);
   const commit = gitValue(["rev-parse", "--short", "HEAD"]);
   const remote = gitValue(["remote", "get-url", "origin"]);
@@ -97,6 +98,7 @@ async function main() {
     "CLOUDFLARE_API_TOKEN",
     "CLOUDFLARE_ACCOUNT_ID",
     "CLOUDFLARE_ANALYTICS_TOKEN",
+    "docs/analytics-engine-enablement.md",
     "npm run deploy:ready -- --require-remote",
     "npm run deploy:ready -- --require-cloudflare",
     "npm run deploy:ready -- --require-remote --require-cloudflare",
@@ -118,6 +120,22 @@ async function main() {
     "never secret values",
   ]) {
     addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);
+  }
+
+  for (const needle of [
+    "Fursay Analytics Engine Enablement",
+    "FURSAY_EVENTS",
+    "fursay_events",
+    "pending_cloudflare_credentials_or_enablement",
+    "10089",
+    "npm run deploy:ready -- --require-cloudflare",
+    "npm run report:events",
+    "status` equal to `queried",
+    "queries` count equal to `12",
+    "decisionScoreboard.status` equal to `queried",
+    "Do not print, commit, or publish token values",
+  ]) {
+    addIssue(failures, analyticsRunbook.includes(needle), "analytics_runbook_missing", needle);
   }
 
   if (!remote) {
@@ -178,6 +196,20 @@ async function main() {
           ? "ready_to_query_after_dashboard_enablement"
           : "pending_cloudflare_credentials_or_enablement",
         piiAllowed: false,
+      },
+      analyticsEnablementHandoff: {
+        runbook: "docs/analytics-engine-enablement.md",
+        dashboardUrl: ANALYTICS_ENGINE_ENABLEMENT_URL,
+        nextSafeAction: "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
+        doNotChangeBeforeEnablement: "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
+        successCriteria: [
+          "npm run deploy:ready -- --require-cloudflare passes",
+          "npm run report:events returns status=queried",
+          "event-analytics-report.json keeps piiAllowed=false",
+          "event-analytics-report.json includes 12 queries",
+          "decisionScoreboard.status is queried",
+          "noor_growth_signals_7d and noor_growth_signals_30d are present",
+        ],
       },
     },
     failures,

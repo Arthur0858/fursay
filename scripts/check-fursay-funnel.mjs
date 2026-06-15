@@ -1468,6 +1468,20 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!deployReadiness.requiredSecrets?.includes("CLOUDFLARE_ANALYTICS_TOKEN")) failures.push("deploy_readiness_missing_analytics_token_name");
   if (deployReadiness.deployment?.analyticsReport?.command !== "npm run report:events") failures.push("deploy_readiness_missing_report_command");
   if (deployReadiness.deployment?.analyticsReport?.piiAllowed !== false) failures.push("deploy_readiness_report_must_disallow_pii");
+  if (deployReadiness.deployment?.analyticsEnablementHandoff?.runbook !== "docs/analytics-engine-enablement.md") failures.push("deploy_readiness_missing_analytics_runbook");
+  if (!deployReadiness.deployment?.analyticsEnablementHandoff?.doNotChangeBeforeEnablement?.includes("10089")) failures.push("deploy_readiness_missing_analytics_10089_guardrail");
+  for (const criterion of [
+    "npm run deploy:ready -- --require-cloudflare passes",
+    "npm run report:events returns status=queried",
+    "event-analytics-report.json keeps piiAllowed=false",
+    "event-analytics-report.json includes 12 queries",
+    "decisionScoreboard.status is queried",
+    "noor_growth_signals_7d and noor_growth_signals_30d are present",
+  ]) {
+    if (!deployReadiness.deployment?.analyticsEnablementHandoff?.successCriteria?.includes(criterion)) {
+      failures.push(`deploy_readiness_missing_analytics_success_criterion:${criterion}`);
+    }
+  }
   if (deployReadiness.evidence?.tokenValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_token_values");
   if (deployReadiness.evidence?.accountValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_account_values");
   if (deployReadiness.evidence?.analyticsTokenValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_analytics_token_values");
@@ -1481,6 +1495,10 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!deployReadinessPage.includes("/deploy-readiness.json")) failures.push("deploy_readiness_page_missing_json_link");
   if (!deployReadinessPage.includes("GitHub push deploy proven")) failures.push("deploy_readiness_page_missing_push_status");
   if (!deployReadinessPage.includes("Analytics report")) failures.push("deploy_readiness_page_missing_analytics_report_status");
+  if (!deployReadinessPage.includes('data-deploy-readiness-section="analytics-enablement"')) failures.push("deploy_readiness_page_missing_analytics_handoff_section");
+  if (!deployReadinessPage.includes("docs/analytics-engine-enablement.md")) failures.push("deploy_readiness_page_missing_analytics_runbook");
+  if (!deployReadinessPage.includes("status=queried")) failures.push("deploy_readiness_page_missing_analytics_queried_gate");
+  if (!deployReadinessPage.includes("piiAllowed=false")) failures.push("deploy_readiness_page_missing_analytics_pii_gate");
   if (!deployReadinessPage.includes("npm run deploy:ready -- --require-remote --require-cloudflare")) failures.push("deploy_readiness_page_missing_push_gate");
   if (
     deployReadinessPage.includes("CLOUDFLARE_API_TOKEN=")

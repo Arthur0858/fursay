@@ -349,6 +349,20 @@ function writeDeployReadinessManifest(siteDir, source) {
         status: "pending_cloudflare_credentials_or_enablement",
         piiAllowed: false,
       },
+      analyticsEnablementHandoff: {
+        runbook: "docs/analytics-engine-enablement.md",
+        dashboardUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
+        nextSafeAction: "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
+        doNotChangeBeforeEnablement: "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
+        successCriteria: [
+          "npm run deploy:ready -- --require-cloudflare passes",
+          "npm run report:events returns status=queried",
+          "event-analytics-report.json keeps piiAllowed=false",
+          "event-analytics-report.json includes 12 queries",
+          "decisionScoreboard.status is queried",
+          "noor_growth_signals_7d and noor_growth_signals_30d are present",
+        ],
+      },
     },
     requiredSecrets: [
       "CLOUDFLARE_API_TOKEN",
@@ -442,8 +456,21 @@ function writeDeployReadinessPage(siteDir, manifest) {
         ${deployReadinessRow("Last Analytics deploy blocker", manifest.deployment.analyticsEngine.lastDeployBlockerCode)}
         ${deployReadinessRow("Analytics report", manifest.deployment.analyticsReport.status)}
         ${deployReadinessRow("Analytics report command", manifest.deployment.analyticsReport.command)}
+        ${deployReadinessRow("Analytics runbook", manifest.deployment.analyticsEnablementHandoff.runbook)}
         ${deployReadinessRow("Push deploy proof", manifest.strictGates.requirePushDeploy)}
       </dl>
+    </section>
+    <section class="creator-kit-safety" data-deploy-readiness-section="analytics-enablement">
+      <h2>Analytics enablement handoff</h2>
+      <p>${escapeHtml(manifest.deployment.analyticsEnablementHandoff.nextSafeAction)}</p>
+      <p>${escapeHtml(manifest.deployment.analyticsEnablementHandoff.doNotChangeBeforeEnablement)}</p>
+      <dl>
+        ${deployReadinessRow("Dashboard", manifest.deployment.analyticsEnablementHandoff.dashboardUrl)}
+        ${deployReadinessRow("Runbook", manifest.deployment.analyticsEnablementHandoff.runbook)}
+      </dl>
+      <ul>
+${manifest.deployment.analyticsEnablementHandoff.successCriteria.map((item) => `        <li>${escapeHtml(item)}</li>`).join("\n")}
+      </ul>
     </section>
     <section class="creator-kit-safety">
       <h2>Warnings</h2>

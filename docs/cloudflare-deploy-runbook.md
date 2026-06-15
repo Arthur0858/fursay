@@ -25,8 +25,11 @@ Configure these in the repository before expecting push-to-deploy to run:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_ANALYTICS_TOKEN` for post-deploy Analytics Engine reporting
 
 The workflow intentionally skips deployment when either secret is missing. This is fail-closed behavior.
+
+Analytics Engine enablement has its own handoff in `docs/analytics-engine-enablement.md`. Use it before re-adding the `FURSAY_EVENTS` binding to `wrangler.jsonc`.
 
 ## Local Gates
 
@@ -71,6 +74,7 @@ Live smoke must keep these invariants:
 - `/api/event` receives anonymous conversion events and currently writes to Worker logs until the Cloudflare account enables Analytics Engine; no email, name, token, address, or subscriber payload is written
 - The planned Analytics Engine binding is `FURSAY_EVENTS` for dataset `fursay_events`. Do not add the binding back to `wrangler.jsonc` until the dashboard enablement step is complete, otherwise Cloudflare rejects deployment with code `10089`.
 - `npm run report:events` is the post-enablement conversion report path; it queries 7-day and 30-day Analytics Engine summaries after dashboard enablement plus `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ANALYTICS_TOKEN` are available, including page intent, product interest, affiliate clicks, outbound clicks, and Noor variant attribution
+- `docs/analytics-engine-enablement.md` is the operator checklist for moving `pending_cloudflare_credentials_or_enablement` to a real queried report without publishing secret values.
 - owned-product checkout remains disabled until product-interest evidence, disclosure copy, refund/support copy, and checkout tracking are all present in `/conversion-health.json`
 - product sample previews remain noindex interest-validation pages and do not include price, purchase, or payment links
 - versioned CSS/JS and image assets use long cache headers
