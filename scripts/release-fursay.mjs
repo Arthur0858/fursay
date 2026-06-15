@@ -253,7 +253,7 @@ function writeReleaseManifest() {
       productInfoEventTrackingPages: 18,
       eventTrackingSubmitPages: 3,
       anonymousConversionEvents: 15,
-      conversionDashboardSections: 6,
+      conversionDashboardSections: 7,
       eventAnalyticsBlobFields: 18,
       eventAnalyticsDoubleFields: 1,
       eventAnalyticsReportQueries: 12,
@@ -2056,6 +2056,32 @@ function writeConversionHealth(siteDir, source) {
       productInterestLinks: release.liveExpectations.productInterestLinks,
       productInfoLinks: release.liveExpectations.productInfoLinks,
     },
+    decisionChecklist: [
+      {
+        id: "enable_analytics_report",
+        label: "Enable the 7-day / 30-day event report",
+        status: "blocked_external",
+        ownerAction: "Enable Cloudflare Analytics Engine for FURSAY_EVENTS and provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN.",
+        evidence: "npm run report:events returns status=queried and includes noor_growth_signals_7d plus noor_growth_signals_30d.",
+        unlocks: "Review real product-interest, affiliate, outbound, and subscribe signals instead of dry-run status.",
+      },
+      {
+        id: "capture_first_noor_signal",
+        label: "Capture the first Noor subscriber signal",
+        status: "active_after_analytics",
+        ownerAction: "Run the Noor sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
+        evidence: "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Noor source_id.",
+        unlocks: "Move Noor from safe_wait_subscriber_empty to newsletter readiness review.",
+      },
+      {
+        id: "evaluate_owned_product_upgrade",
+        label: "Evaluate whether owned products can move past interest validation",
+        status: "locked_until_signals",
+        ownerAction: "Compare product info clicks, waitlist clicks, and subscriber signals against the product validation minimums.",
+        evidence: "Each product has productInfoClicks >= 10, productInterestClicks >= 5, and subscriberSignals >= 1.",
+        unlocks: "Draft pre-checkout disclosure and refund/support copy before choosing a checkout provider.",
+      },
+    ],
     monetization: {
       affiliate: {
         amazonLinks: release.liveExpectations.amazonAffiliateLinks,
@@ -3344,6 +3370,18 @@ function writeConversionHealthPage(siteDir) {
               </dl>
             </article>`)
     .join("\n");
+  const decisionChecklistCards = (health.decisionChecklist || [])
+    .map((item) => `
+            <article class="creator-copy-block" data-growth-decision-check="${escapeHtml(item.id)}">
+              <h3>${escapeHtml(item.label)}</h3>
+              <dl>
+                ${healthMetric("Status", item.status || "unknown")}
+                ${healthMetric("Owner action", item.ownerAction || "none")}
+                ${healthMetric("Evidence", item.evidence || "none")}
+                ${healthMetric("Unlocks", item.unlocks || "none")}
+              </dl>
+            </article>`)
+    .join("\n");
   const socialEntries = productsManifest.trafficEntryPoints || {};
   const validationDashboard = health.monetization?.ownedProducts?.validationDashboard || {};
   const html = `<!DOCTYPE html>
@@ -3432,6 +3470,13 @@ ${noorSprintVariantCards}
       <p>${escapeHtml(health.monetization?.ownedProducts?.checkoutGate?.refundSupportCopy || "")}</p>
       <div class="creator-copy-blocks">
         ${ownedProducts}
+      </div>
+    </section>
+    <section class="creator-kit-safety" data-growth-dashboard-section="decision-checklist">
+      <h2>Decision checklist</h2>
+      <p>Use this sequence before changing newsletter readiness, product status, checkout copy, or payment-provider selection. It keeps growth decisions tied to anonymous aggregate evidence.</p>
+      <div class="creator-copy-blocks">
+${decisionChecklistCards}
       </div>
     </section>
     <section class="creator-kit-safety" data-growth-dashboard-section="product-validation">

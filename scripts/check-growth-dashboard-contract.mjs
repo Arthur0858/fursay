@@ -10,6 +10,7 @@ const REQUIRED_SECTIONS = [
   "coverage",
   "growth",
   "monetization",
+  "decision-checklist",
   "product-validation",
   "events",
 ];
@@ -197,6 +198,19 @@ async function main() {
   if (!htmlIncludesValue(html, products.trafficEntryPoints?.zhSocialProfileLinks || "missing")) failures.push("dashboard_missing_zh_product_social_entry");
   if (!htmlIncludesValue(html, products.trafficEntryPoints?.arSocialProfileLinks || "missing")) failures.push("dashboard_missing_ar_product_social_entry");
   if (!html.includes("Checkout links allowed")) failures.push("dashboard_missing_checkout_links_allowed");
+  if (!Array.isArray(conversionHealth.decisionChecklist) || conversionHealth.decisionChecklist.length !== 3) failures.push("decision_checklist_count_mismatch");
+  for (const item of conversionHealth.decisionChecklist || []) {
+    if (!html.includes(`data-growth-decision-check="${item.id}"`)) failures.push(`dashboard_missing_decision_check:${item.id || "none"}`);
+    if (!item.status) failures.push(`decision_check_missing_status:${item.id || "none"}`);
+    if (!item.ownerAction) failures.push(`decision_check_missing_owner_action:${item.id || "none"}`);
+    if (!item.evidence) failures.push(`decision_check_missing_evidence:${item.id || "none"}`);
+    if (!item.unlocks) failures.push(`decision_check_missing_unlocks:${item.id || "none"}`);
+  }
+  for (const id of ["enable_analytics_report", "capture_first_noor_signal", "evaluate_owned_product_upgrade"]) {
+    if (!html.includes(`data-growth-decision-check="${id}"`)) failures.push(`dashboard_missing_required_decision:${id}`);
+  }
+  if (!html.includes("noor_growth_signals_7d")) failures.push("decision_checklist_missing_noor_query");
+  if (!html.includes("productInfoClicks &gt;= 10") && !html.includes("productInfoClicks >= 10")) failures.push("decision_checklist_missing_product_threshold");
   for (const product of conversionHealth.monetization?.ownedProducts?.products || []) {
     const minimumSignals = product.validationPlan?.minimumSignals || {};
     if (!html.includes(`data-product-validation-scorecard="${product.id}"`)) failures.push(`dashboard_missing_product_scorecard:${product.id}`);
