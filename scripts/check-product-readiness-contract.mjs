@@ -492,6 +492,12 @@ async function main() {
   if (!html.includes("data-product-readiness-summary")) failures.push("products_page_missing_summary");
   if (!html.includes("data-product-readiness-gate")) failures.push("products_page_missing_gate");
   if (!html.includes("data-product-validation-handoff")) failures.push("products_page_missing_validation_handoff");
+  if (!zhHtml.includes("data-product-validation-handoff")) failures.push("zh_products_page_missing_validation_handoff");
+  if (!arHtml.includes("data-product-validation-handoff")) failures.push("ar_products_page_missing_validation_handoff");
+  if (!zhHtml.includes("先測努爾學習單需求")) failures.push("zh_products_page_missing_validation_handoff_copy");
+  if (!arHtml.includes("اختبار اهتمام ورقة نور أولا")) failures.push("ar_products_page_missing_validation_handoff_copy");
+  if (!zhHtml.includes("npm run report:events")) failures.push("zh_products_page_missing_validation_report_command");
+  if (!arHtml.includes("npm run report:events")) failures.push("ar_products_page_missing_validation_report_command");
   if (!html.includes("data-product-sample-previews")) failures.push("products_page_missing_sample_preview_section");
   if (!zhHtml.includes("data-product-sample-previews")) failures.push("zh_products_page_missing_sample_preview_section");
   if (!arHtml.includes("data-product-sample-previews")) failures.push("ar_products_page_missing_sample_preview_section");

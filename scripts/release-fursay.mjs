@@ -2777,6 +2777,7 @@ function zhProductCopy(product) {
 
 function writeZhProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const nextHandoff = manifest.nextValidationHandoff || {};
   const samplePreviews = (manifest.samplePreviews || [])
     .map((sample) => `
         <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
@@ -2896,6 +2897,19 @@ function writeZhProductsPage(siteDir) {
 ${samplePreviews}
       </div>
     </section>
+    <section class="creator-kit-safety" data-product-validation-handoff>
+      <p class="creator-eyebrow">下一步驗證</p>
+      <h2>先測努爾學習單需求</h2>
+      <p>先把努爾學習單樣張分享給阿語家庭，再引導到免費努爾故事包；只有看到真實點擊與訂閱信號後，才考慮擴成完整產品。</p>
+      <dl>
+        ${healthMetric("樣張預覽", nextHandoff.samplePreviewUrl || "")}
+        ${healthMetric("PDF 樣張", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("免費故事包", nextHandoff.freeStoryPackPath || "")}
+        ${healthMetric("報表命令", nextHandoff.reportCommand || "npm run report:events")}
+        ${healthMetric("付款狀態", "付款與 checkout 維持關閉，直到產品興趣點擊與至少一個訂閱信號可被檢視。")}
+      </dl>
+      <p>這裡不放付款連結、不承諾價格，也不選付款服務商；目前只驗證家庭是否真的想要故事後的可列印練習。</p>
+    </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
       <h2>付費包開放前</h2>
@@ -2947,6 +2961,7 @@ ${products}
 
 function writeArProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
+  const nextHandoff = manifest.nextValidationHandoff || {};
   const samplePreviews = (manifest.samplePreviews || [])
     .map((sample) => `
         <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
@@ -3065,6 +3080,19 @@ function writeArProductsPage(siteDir) {
       <div class="creator-copy-blocks">
 ${samplePreviews}
       </div>
+    </section>
+    <section class="creator-kit-safety" data-product-validation-handoff>
+      <p class="creator-eyebrow">خطوة التحقق التالية</p>
+      <h2>اختبار اهتمام ورقة نور أولا</h2>
+      <p>شاركوا عينة ورقة نور مع عائلات عربية، ثم وجّهوهم إلى حزمة نور المجانية. لا نوسّعها إلى منتج كامل إلا بعد ظهور نقرات حقيقية وإشارة اشتراك واحدة على الأقل.</p>
+      <dl>
+        ${healthMetric("معاينة العينة", nextHandoff.samplePreviewUrl || "")}
+        ${healthMetric("عينة PDF", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("حزمة القصة المجانية", nextHandoff.freeStoryPackPath || "")}
+        ${healthMetric("أمر التقرير", nextHandoff.reportCommand || "npm run report:events")}
+        ${healthMetric("حالة الدفع", "يبقى الدفع و checkout مغلقين حتى يمكن مراجعة نقرات الاهتمام وإشارة اشتراك واحدة على الأقل.")}
+      </dl>
+      <p>لا يوجد رابط دفع أو وعد بسعر أو مزود checkout هنا؛ الهدف الحالي هو قياس هل تريد العائلات نشاطا قابلا للطباعة بعد القصة.</p>
     </section>
 ${products}
     <section class="creator-kit-safety" data-product-readiness-gate>
