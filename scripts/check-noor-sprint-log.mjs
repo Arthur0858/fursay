@@ -133,6 +133,14 @@ function validateStatus(status, log, failures) {
   }
 }
 
+function htmlIncludesMetric(html, label, value) {
+  const pattern = new RegExp(
+    `<dt>\\s*${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*</dt>\\s*<dd>\\s*${String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*</dd>`,
+    "i",
+  );
+  return pattern.test(html);
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
@@ -174,6 +182,8 @@ async function main() {
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
   if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
+  if (!htmlIncludesMetric(html, "Log entries", status.logEntryCount)) failures.push("page_log_entry_count_not_rendered");
+  if (!htmlIncludesMetric(html, "Completed days", status.summary?.completedDays)) failures.push("page_completed_days_not_rendered");
 
   await mkdir(args.outDir, { recursive: true });
   const report = {
