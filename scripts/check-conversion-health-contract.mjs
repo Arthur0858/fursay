@@ -186,9 +186,8 @@ async function main() {
   if (conversionHealth.measurement?.externalAnalytics !== "worker_event_endpoint") failures.push("bad_external_analytics");
   if (conversionHealth.measurement?.analyticsSink?.binding !== "FURSAY_EVENTS") failures.push("bad_analytics_binding");
   if (conversionHealth.measurement?.analyticsSink?.dataset !== "fursay_events") failures.push("bad_analytics_dataset");
-  if (!["pending_cloudflare_dashboard_enablement", "configured_in_wrangler"].includes(conversionHealth.measurement?.analyticsSink?.status)) failures.push("bad_analytics_status");
-  if (conversionHealth.measurement?.analyticsSink?.status === "pending_cloudflare_dashboard_enablement" && conversionHealth.measurement?.analyticsSink?.deployBlockerCode !== "10089") failures.push("bad_analytics_deploy_blocker_code");
-  if (conversionHealth.measurement?.analyticsSink?.status === "configured_in_wrangler" && conversionHealth.measurement?.analyticsSink?.writeMode !== "analytics_engine_binding") failures.push("bad_configured_analytics_write_mode");
+  if (conversionHealth.measurement?.analyticsSink?.status !== "pending_cloudflare_dashboard_enablement") failures.push("bad_analytics_status");
+  if (conversionHealth.measurement?.analyticsSink?.deployBlockerCode !== "10089") failures.push("bad_analytics_deploy_blocker_code");
   if (!conversionHealth.measurement?.analyticsSink?.enablementUrl?.includes("/workers/analytics-engine")) failures.push("bad_analytics_enablement_url");
   if (conversionHealth.measurement?.analyticsSink?.piiAllowed !== false) failures.push("analytics_pii_allowed_not_false");
   if (conversionHealth.measurement?.analyticsSink?.blobFields?.length !== release.liveExpectations?.eventAnalyticsBlobFields) failures.push("analytics_blob_field_count_mismatch");

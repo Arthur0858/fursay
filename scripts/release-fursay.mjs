@@ -326,13 +326,11 @@ function writeReleaseManifest() {
 
 function writeDeployReadinessManifest(siteDir, source) {
   const remote = gitRemote();
-  const wrangler = JSON.parse(readFileSync(resolve(process.cwd(), "wrangler.jsonc"), "utf8"));
-  const analyticsBinding = (wrangler.analytics_engine_datasets || []).find((item) => item.binding === "FURSAY_EVENTS");
   const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
   const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const hasAnalyticsReportToken = Boolean(process.env.CLOUDFLARE_ANALYTICS_TOKEN || process.env.CLOUDFLARE_API_TOKEN);
   const warnings = [];
-  if (!analyticsBinding) warnings.push("analytics_engine_dashboard_enablement_required");
+  warnings.push("analytics_engine_dashboard_enablement_required");
   if (!remote) warnings.push("git_missing_origin_remote");
   if (!hasCloudflareToken) warnings.push("missing_CLOUDFLARE_API_TOKEN");
   if (!hasCloudflareAccount) warnings.push("missing_CLOUDFLARE_ACCOUNT_ID");
@@ -355,10 +353,10 @@ function writeDeployReadinessManifest(siteDir, source) {
       analyticsEngine: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
-        configured: Boolean(analyticsBinding),
-        status: analyticsBinding ? "configured_in_wrangler" : "pending_cloudflare_dashboard_enablement",
+        configured: false,
+        status: "pending_cloudflare_dashboard_enablement",
         enablementUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
-        lastDeployBlockerCode: analyticsBinding ? "" : "10089",
+        lastDeployBlockerCode: "10089",
       },
       analyticsReport: {
         command: "npm run report:events",
@@ -374,12 +372,8 @@ function writeDeployReadinessManifest(siteDir, source) {
       analyticsEnablementHandoff: {
         runbook: "docs/analytics-engine-enablement.md",
         dashboardUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
-        nextSafeAction: analyticsBinding
-          ? "Provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events."
-          : "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
-        doNotChangeBeforeEnablement: analyticsBinding
-          ? "Analytics Engine binding is configured in wrangler.jsonc; keep token values out of files and environment reports."
-          : "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
+        nextSafeAction: "Enable Analytics Engine for dataset fursay_events, then provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN before running npm run report:events.",
+        doNotChangeBeforeEnablement: "Do not add analytics_engine_datasets back to wrangler.jsonc until Cloudflare accepts the dataset; adding it too early previously failed with blocker code 10089.",
         successCriteria: [
           "npm run deploy:ready -- --require-cloudflare passes",
           "npm run report:events returns status=queried",
@@ -2198,8 +2192,6 @@ function writeShortlinkManifest(siteDir, source) {
 function writeConversionHealth(siteDir, source) {
   const release = readJson(resolve(siteDir, "release.json"));
   const trafficLaunch = readJson(resolve(siteDir, "traffic-launch.json"));
-  const wrangler = JSON.parse(readFileSync(resolve(process.cwd(), "wrangler.jsonc"), "utf8"));
-  const analyticsBinding = (wrangler.analytics_engine_datasets || []).find((item) => item.binding === "FURSAY_EVENTS");
   const noorSprint = trafficLaunch.activationSprints?.noorFirstSubscriber || {};
   const trackedNoorSprintVariants = (noorSprint.copyVariants || []).map((variant) => {
     const link = variant.link || "";
@@ -2232,10 +2224,10 @@ function writeConversionHealth(siteDir, source) {
       analyticsSink: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
-        status: analyticsBinding ? "configured_in_wrangler" : "pending_cloudflare_dashboard_enablement",
-        writeMode: analyticsBinding ? "analytics_engine_binding" : "worker_logs_until_dashboard_enabled",
-        fallbackSink: analyticsBinding ? "Cloudflare Analytics Engine dataset fursay_events" : "Cloudflare Worker logs",
-        deployBlockerCode: analyticsBinding ? "" : "10089",
+        status: "pending_cloudflare_dashboard_enablement",
+        writeMode: "worker_logs_until_dashboard_enabled",
+        fallbackSink: "Cloudflare Worker logs",
+        deployBlockerCode: "10089",
         enablementUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
         piiAllowed: false,
         blobFields: [
