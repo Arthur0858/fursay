@@ -130,6 +130,7 @@ function validateStatus(status, log, failures) {
     if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
     if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
     if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
+    if (Number(handoff.day) === 1 && !String(handoff.localizedCopy?.ar || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("handoff_missing_day_one_arabic_copy");
   }
 }
 
@@ -182,6 +183,9 @@ async function main() {
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
   if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
+  if (!html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
+  if (!html.includes("قصة نور الصينية في 3 دقائق")) failures.push("page_missing_arabic_parent_copy");
+  if (!html.includes("Copy Arabic copy")) failures.push("page_missing_arabic_copy_button");
   if (!htmlIncludesMetric(html, "Log entries", status.logEntryCount)) failures.push("page_log_entry_count_not_rendered");
   if (!htmlIncludesMetric(html, "Completed days", status.summary?.completedDays)) failures.push("page_completed_days_not_rendered");
 

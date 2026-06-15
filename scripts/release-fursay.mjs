@@ -1088,6 +1088,33 @@ function buildNoorSubscriberSprint() {
     pdfSampleFollowup: pdfSampleLink("noor_first_subscriber_sprint_pdf_sample_followup", "pdf_sample_followup"),
     pdfSampleStory: sprintLink("/share/noor", "noor_first_subscriber_sprint_pdf_sample_story", "pdf_sample_story"),
   };
+  const arabicCopy = {
+    main: [
+      "نجرب هذا الأسبوع روتيناً صغيراً للأطفال: قصة نور الصينية في 3 دقائق.",
+      `الحزمة المجانية: ${primaryLink}`,
+      "فيها قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل.",
+    ].join("\n"),
+    parentGroup: [
+      "نجرب هذا الأسبوع روتيناً صغيراً للأطفال: قصة نور الصينية في 3 دقائق.",
+      `الحزمة المجانية: ${variantLinks.parentGroup}`,
+      "فيها قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل.",
+    ].join("\n"),
+    directDm: [
+      "تذكرت أن عائلتكم قد تحب تجربة قصة نور القصيرة.",
+      `حزمة عربية-صينية مجانية في 3 دقائق: ${variantLinks.directDm}`,
+      "لا يوجد دفع. نريد فقط معرفة إن كانت هذه الطريقة مفيدة للعائلات.",
+    ].join("\n"),
+    worksheetFollowup: [
+      "هذه معاينة ورقة نور التي ذكرتها.",
+      `المعاينة: ${variantLinks.worksheetFollowup}`,
+      `إذا كانت مفيدة، ابدؤوا من حزمة القصة المجانية هنا: ${variantLinks.worksheetFollowupStory}`,
+    ].join("\n"),
+    pdfSampleFollowup: [
+      "هذه عينة PDF قابلة للطباعة من نور.",
+      `التحميل: ${variantLinks.pdfSampleFollowup}`,
+      `إذا كان نشاط 3 دقائق مناسباً لكم، ابدؤوا من حزمة قصة نور المجانية هنا: ${variantLinks.pdfSampleStory}`,
+    ].join("\n"),
+  };
   return {
     pack: "noor",
     status: "subscriber_signal_needed",
@@ -1102,12 +1129,23 @@ function buildNoorSubscriberSprint() {
       `Free Noor 3-minute story pack: ${primaryLink}`,
       "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
     ].join("\n"),
+    localizedCopy: {
+      ar: arabicCopy.main,
+      en: [
+        "Trying a tiny Arabic-Chinese routine with kids this week.",
+        `Free Noor 3-minute story pack: ${primaryLink}`,
+        "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
+      ].join("\n"),
+    },
     copyVariants: [
       {
         id: "parent_group",
         label: "Parent group post",
         placement: "parent_group",
         link: variantLinks.parentGroup,
+        localizedCopy: {
+          ar: arabicCopy.parentGroup,
+        },
         copy: [
           "Trying a tiny Arabic-Chinese routine with kids this week.",
           `Free Noor 3-minute story pack: ${variantLinks.parentGroup}`,
@@ -1119,6 +1157,9 @@ function buildNoorSubscriberSprint() {
         label: "Direct family DM",
         placement: "direct_dm",
         link: variantLinks.directDm,
+        localizedCopy: {
+          ar: arabicCopy.directDm,
+        },
         copy: [
           "I thought your family might like this tiny Noor story pack.",
           `Free 3-minute Arabic-Chinese story pack: ${variantLinks.directDm}`,
@@ -1131,6 +1172,9 @@ function buildNoorSubscriberSprint() {
         placement: "worksheet_followup",
         link: variantLinks.worksheetFollowup,
         storyLink: variantLinks.worksheetFollowupStory,
+        localizedCopy: {
+          ar: arabicCopy.worksheetFollowup,
+        },
         copy: [
           "Here is the Noor worksheet preview I mentioned.",
           `Preview: ${variantLinks.worksheetFollowup}`,
@@ -1143,6 +1187,9 @@ function buildNoorSubscriberSprint() {
         placement: "pdf_sample_followup",
         link: variantLinks.pdfSampleFollowup,
         storyLink: variantLinks.pdfSampleStory,
+        localizedCopy: {
+          ar: arabicCopy.pdfSampleFollowup,
+        },
         copy: [
           "Here is the printable Noor PDF sample.",
           `Download: ${variantLinks.pdfSampleFollowup}`,
@@ -1225,13 +1272,16 @@ function trafficLaunchSprintSection(sprint) {
           <article class="creator-copy-block" data-noor-sprint-copy-variant="${escapeHtml(variant.id)}">
             <div class="creator-copy-heading">
               <h3>${escapeHtml(variant.label)}</h3>
-              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(variant.copy)}">Copy variant</button>
+              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(variant.localizedCopy?.ar || variant.copy)}">Copy Arabic variant</button>
+              <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(variant.copy)}">Copy English note</button>
             </div>
             <p>Placement: ${escapeHtml(variant.placement)}</p>
             <dl>
               ${shareKitLinkRow("Variant link", variant.link)}
               ${variant.storyLink ? shareKitLinkRow("Story pack link", variant.storyLink) : ""}
             </dl>
+            ${variant.localizedCopy?.ar ? `<p class="creator-eyebrow">Arabic parent copy</p><pre dir="rtl" lang="ar">${escapeHtml(variant.localizedCopy.ar)}</pre>` : ""}
+            <p class="creator-eyebrow">English operator note</p>
             <pre>${escapeHtml(variant.copy)}</pre>
           </article>`).join("\n");
   const dailyPlan = (sprint.dailyPlan || []).map((day) => `
@@ -1260,8 +1310,11 @@ function trafficLaunchSprintSection(sprint) {
       <div class="creator-copy-block">
         <div class="creator-copy-heading">
           <h3>Parent-to-parent copy</h3>
-          <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(sprint.copy)}">Copy sprint copy</button>
+          <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(sprint.localizedCopy?.ar || sprint.copy)}">Copy Arabic sprint copy</button>
+          <button type="button" class="creator-copy-button" data-copy-traffic-launch data-copy-value="${escapeHtml(sprint.copy)}">Copy English note</button>
         </div>
+        ${sprint.localizedCopy?.ar ? `<p class="creator-eyebrow">Arabic parent copy</p><pre dir="rtl" lang="ar">${escapeHtml(sprint.localizedCopy.ar)}</pre>` : ""}
+        <p class="creator-eyebrow">English operator note</p>
         <pre>${escapeHtml(sprint.copy)}</pre>
       </div>
       <div class="creator-copy-blocks" data-noor-sprint-copy-variants>
@@ -1550,6 +1603,10 @@ function buildNoorSprintStatus(siteDir, source) {
     primaryLink: nextOpenDay.link || "",
     followupLink: nextOpenDay.followupLink || nextVariant.storyLink || "",
     copy: nextVariant.copy || "",
+    localizedCopy: {
+      ar: nextVariant.localizedCopy?.ar || "",
+      en: nextVariant.copy || "",
+    },
     reportQuery: nextOpenDay.reportQuery || "noor_growth_signals_7d",
     expectedSignal: nextOpenDay.expectedSignal || "",
     reviewCommand: "npm run noor:sprint:review",
@@ -1690,7 +1747,13 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
         ${healthMetric("Readiness", handoff.readinessStatus || manifest.readinessStatus)}
       </dl>
       <p><a href="${escapeHtml(handoff.primaryLink || "#")}">Open primary link</a>${handoff.followupLink ? ` <a href="${escapeHtml(handoff.followupLink)}">Open follow-up link</a>` : ""}</p>
-      ${handoff.copy ? `<pre>${escapeHtml(handoff.copy)}</pre>` : ""}
+      ${handoff.localizedCopy?.ar ? `
+      <div class="creator-copy-heading" data-noor-sprint-arabic-handoff>
+        <h3>Arabic parent copy</h3>
+        <button type="button" class="creator-copy-button" data-copy-share-kit data-copy-value="${escapeHtml(handoff.localizedCopy.ar)}">Copy Arabic copy</button>
+      </div>
+      <pre dir="rtl" lang="ar">${escapeHtml(handoff.localizedCopy.ar)}</pre>` : ""}
+      ${handoff.copy ? `<p class="creator-eyebrow">English operator note</p><pre>${escapeHtml(handoff.copy)}</pre>` : ""}
       <p>After sharing, log the pending report state with <code>${escapeHtml(handoff.recorderPostedCommand || "")}</code>.</p>
       <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>
       <p>${escapeHtml(handoff.privacyBoundary || manifest.privacy?.blockedFields?.join(", ") || "")}</p>

@@ -1557,6 +1557,10 @@ async function checkDiscoveryFiles(baseUrl) {
   }
   for (const variant of noorSprint.copyVariants || []) {
     if (!variant.link) failures.push(`traffic_launch_noor_sprint_variant_missing_link:${variant.id || "none"}`);
+    if (!variant.localizedCopy?.ar) failures.push(`traffic_launch_noor_sprint_variant_missing_arabic_copy:${variant.id || "none"}`);
+    if (variant.id === "parent_group" && !String(variant.localizedCopy?.ar || "").includes("قصة نور الصينية في 3 دقائق")) {
+      failures.push("traffic_launch_noor_sprint_parent_group_missing_arabic_offer");
+    }
   }
   validateNoorSprintVariantLinks(noorSprint, failures, "traffic_launch_noor_sprint");
   if (!Array.isArray(noorSprint.checklist) || noorSprint.checklist.length < 4) failures.push("traffic_launch_noor_sprint_short_checklist");
@@ -1699,7 +1703,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!trafficLaunchPage.includes('data-traffic-launch-pack="noor"')) failures.push("traffic_launch_page_missing_noor_pack");
   if (!trafficLaunchPage.includes("/traffic-launch.json")) failures.push("traffic_launch_page_missing_json_manifest_link");
   if ((trafficLaunchPage.match(/data-traffic-launch-channel=/g) || []).length !== 10) failures.push("traffic_launch_page_bad_channel_count");
-  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 15) failures.push("traffic_launch_page_bad_copy_button_count");
+  if ((trafficLaunchPage.match(/<button[^>]+data-copy-traffic-launch/g) || []).length !== 20) failures.push("traffic_launch_page_bad_copy_button_count");
   if (!trafficLaunchPage.includes('data-noor-subscriber-sprint="subscriber_signal_needed"')) failures.push("traffic_launch_page_missing_noor_sprint");
   if ((trafficLaunchPage.match(/data-noor-sprint-copy-variant=/g) || []).length !== 4) failures.push("traffic_launch_page_bad_noor_sprint_variant_count");
   if (!trafficLaunchPage.includes("data-noor-sprint-daily-plan")) failures.push("traffic_launch_page_missing_noor_daily_plan");
@@ -1716,6 +1720,7 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const variant of noorSprint.copyVariants || []) {
     if (!trafficLaunchPage.includes(`data-noor-sprint-copy-variant="${escapeHtml(variant.id || "")}"`)) failures.push(`traffic_launch_page_missing_noor_variant:${variant.id || "none"}`);
     if (!htmlContains(trafficLaunchPage, variant.copy || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_copy:${variant.id || "none"}`);
+    if (variant.localizedCopy?.ar && !htmlContains(trafficLaunchPage, variant.localizedCopy.ar)) failures.push(`traffic_launch_page_missing_noor_variant_arabic_copy:${variant.id || "none"}`);
     if (!htmlContains(trafficLaunchPage, variant.link || "missing")) failures.push(`traffic_launch_page_missing_noor_variant_link:${variant.id || "none"}`);
     if (variant.storyLink && !htmlContains(trafficLaunchPage, variant.storyLink)) failures.push(`traffic_launch_page_missing_noor_variant_story_link:${variant.id || "none"}`);
   }
@@ -1728,6 +1733,8 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprintStatusPage.includes("content/growth/noor-sprint-log.json")) failures.push("noor_sprint_status_page_missing_log_source");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-summary")) failures.push("noor_sprint_status_page_missing_summary");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-log")) failures.push("noor_sprint_status_page_missing_log");
+  if (!noorSprintStatusPage.includes("data-noor-sprint-arabic-handoff")) failures.push("noor_sprint_status_page_missing_arabic_handoff");
+  if (!htmlContains(noorSprintStatusPage, noorSprintStatus.nextActionHandoff?.localizedCopy?.ar || "missing")) failures.push("noor_sprint_status_page_missing_arabic_parent_copy");
   if ((noorSprintStatusPage.match(/data-noor-sprint-status-day=/g) || []).length !== 7) failures.push("noor_sprint_status_page_bad_day_count");
   for (const day of noorSprintStatus.days || []) {
     if (!noorSprintStatusPage.includes(`data-noor-sprint-status-day="${escapeHtml(day.day || "")}"`)) failures.push(`noor_sprint_status_page_missing_day:${day.day || "none"}`);

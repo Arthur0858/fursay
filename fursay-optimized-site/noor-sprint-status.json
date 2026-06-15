@@ -61,6 +61,10 @@
     "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
     "followupLink": "",
     "copy": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
+    "localizedCopy": {
+      "ar": "نجرب هذا الأسبوع روتيناً صغيراً للأطفال: قصة نور الصينية في 3 دقائق.\nالحزمة المجانية: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nفيها قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل.",
+      "en": "Trying a tiny Arabic-Chinese routine with kids this week.\nFree Noor 3-minute story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group\nIt is short: one story, one Chinese phrase with Pinyin, and one parent-child activity."
+    },
     "reportQuery": "noor_growth_signals_7d",
     "expectedSignal": "fursay_subscribe_open_click or fursay_subscribe_submit_success from parent_group.",
     "reviewCommand": "npm run noor:sprint:review",
