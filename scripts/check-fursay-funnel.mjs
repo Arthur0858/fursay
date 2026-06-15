@@ -417,6 +417,9 @@ async function checkPage(browser, baseUrl, path) {
       noorLeadMagnetItems: qa(".noor-lead-magnet li").length,
       noorSampleCtaSource: document.querySelector(".noor-sample-cta")?.getAttribute("data-signup-source") || "",
       noorSampleCtaGroup: document.querySelector(".noor-sample-cta")?.getAttribute("data-open-subscribe") || "",
+      noorSampleDownloadHref: document.querySelector(".noor-sample-download")?.getAttribute("href") || "",
+      noorSampleDownloadStage: document.querySelector(".noor-sample-download")?.getAttribute("data-interest-stage") || "",
+      noorSampleDownloadSource: document.querySelector(".noor-sample-download")?.getAttribute("data-signup-source") || "",
       youtubeLinks: qa('a[href*="youtube.com/"], a[href*="youtu.be/"]').map((anchor) => anchor.href),
       shareStrip: !!document.querySelector(".share-strip"),
       shareUrl: document.querySelector("[data-share-fursay]")?.getAttribute("data-share-url") || "",
@@ -546,6 +549,12 @@ async function checkPage(browser, baseUrl, path) {
     if (data.noorLeadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${data.noorLeadMagnetItems}`);
     if (data.noorSampleCtaSource !== "arabic_sample_pack_cta") failures.push(`missing_noor_sample_cta_source:${data.noorSampleCtaSource || "none"}`);
     if (data.noorSampleCtaGroup !== "noor") failures.push(`bad_noor_sample_cta_group:${data.noorSampleCtaGroup || "none"}`);
+    if (data.noorSampleDownloadHref !== "/download/noor-worksheet-sample?source_id=noor_lead_magnet_pdf&creator=fursay&placement=noor_lead_magnet_pdf") {
+      failures.push(`bad_noor_sample_download_href:${data.noorSampleDownloadHref || "none"}`);
+    }
+    if (data.noorSampleDownloadHref.startsWith("/downloads/")) failures.push(`raw_noor_sample_download_href:${data.noorSampleDownloadHref}`);
+    if (data.noorSampleDownloadStage !== "noor_lead_magnet_pdf") failures.push(`bad_noor_sample_download_stage:${data.noorSampleDownloadStage || "none"}`);
+    if (data.noorSampleDownloadSource !== "noor_lead_magnet_pdf") failures.push(`bad_noor_sample_download_source:${data.noorSampleDownloadSource || "none"}`);
     if (!/(sample pack|樣張|نموذج)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_sample_copy");
     if (!/(ready|準備好|جاهزة)/i.test(data.noorLeadMagnetText)) failures.push("noor_lead_magnet_missing_delivery_copy");
   }

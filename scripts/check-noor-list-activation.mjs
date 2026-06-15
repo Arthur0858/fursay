@@ -149,7 +149,9 @@ async function checkPage(browser, baseUrl, path) {
   if (staticChecks.leadMagnetVariant !== "weekly-sample-v2") failures.push(`bad_lead_magnet_variant:${staticChecks.leadMagnetVariant || "none"}`);
   if (staticChecks.leadMagnetItems < 6) failures.push(`short_noor_lead_magnet:${staticChecks.leadMagnetItems}`);
   if (staticChecks.sampleCtaGroup !== "noor") failures.push(`bad_sample_cta_group:${staticChecks.sampleCtaGroup || "none"}`);
-  if (staticChecks.sampleDownload.href !== "/downloads/noor-worksheet-sample.pdf") failures.push(`bad_sample_download_href:${staticChecks.sampleDownload.href || "none"}`);
+  const expectedDownloadHref = "/download/noor-worksheet-sample?source_id=noor_lead_magnet_pdf&creator=fursay&placement=noor_lead_magnet_pdf";
+  if (staticChecks.sampleDownload.href !== expectedDownloadHref) failures.push(`bad_sample_download_href:${staticChecks.sampleDownload.href || "none"}`);
+  if (staticChecks.sampleDownload.href?.startsWith("/downloads/")) failures.push(`sample_download_uses_raw_pdf_href:${staticChecks.sampleDownload.href}`);
   if (!staticChecks.sampleDownload.download) failures.push("sample_download_missing_download_attr");
   if (staticChecks.sampleDownload.stage !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_stage:${staticChecks.sampleDownload.stage || "none"}`);
   if (staticChecks.sampleDownload.source !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_source:${staticChecks.sampleDownload.source || "none"}`);
