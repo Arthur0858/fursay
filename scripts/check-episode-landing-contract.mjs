@@ -201,6 +201,7 @@ function checkEpisode(episode, html) {
     if (!alternates.some((match) => match[1] === lang)) failures.push(`${episode.path}:missing_hreflang:${lang}`);
   }
   if (!html.includes(`data-episode-landing="${episode.pack}"`)) failures.push(`${episode.path}:missing_episode_marker`);
+  if (!html.includes('href="#faq"')) failures.push(`${episode.path}:missing_faq_nav_anchor`);
   if (!html.includes("youtube-nocookie.com/embed/")) failures.push(`${episode.path}:missing_youtube_embed`);
   if (!html.includes("data-episode-video")) failures.push(`${episode.path}:missing_video_marker`);
   if (!html.includes("data-parent-activity")) failures.push(`${episode.path}:missing_parent_activity`);
