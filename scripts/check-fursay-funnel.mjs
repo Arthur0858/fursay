@@ -1760,7 +1760,8 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedWhatsappShare = `${expectedShare}?ref=whatsapp&placement=direct_social_share`;
     const expectedLineShare = `${expectedShare}?ref=line&placement=direct_social_share`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
-    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedWhatsappShare}`)}`;
+    const expectedWhatsappLabel = pack === "koko" ? "Koko weekly story pack" : "قصة نور الصينية في 3 دقائق";
+    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${expectedWhatsappLabel}: ${expectedWhatsappShare}`)}`;
     const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedLineShare)}`;
     const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
     const expectedShareQr = `https://fursay.com/images/qr/share-${pack}.svg`;
@@ -1808,6 +1809,11 @@ async function checkDiscoveryFiles(baseUrl) {
     if (sharePack.shareQrSvg !== expectedShareQr) failures.push(`share_kit_${pack}_share_qr:${sharePack.shareQrSvg || "none"}`);
     if (!sharePack.familyShareMessage?.includes(expectedShare)) failures.push(`share_kit_${pack}_family_message_missing_share`);
     if (!sharePack.bioProfileCopy?.includes(`https://fursay.com/bio/${pack}`)) failures.push(`share_kit_${pack}_bio_profile_missing_bio`);
+    if (pack === "noor") {
+      if (!sharePack.familyShareMessage?.includes("قصة نور الصينية في 3 دقائق")) failures.push("share_kit_noor_family_message_missing_arabic_copy");
+      if (!sharePack.bioProfileCopy?.includes("عائلات") && !sharePack.bioProfileCopy?.includes("العائلات")) failures.push("share_kit_noor_bio_profile_missing_arabic_copy");
+      if (!decodeURIComponent(sharePack.whatsappShareUrl || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("share_kit_noor_whatsapp_missing_arabic_copy");
+    }
     if (sharePack.attribution?.utm_source !== "family_share" || sharePack.attribution?.utm_medium !== "share") failures.push(`share_kit_${pack}_bad_attribution_source`);
     if (!shareKitPage.includes(sharePack.familyShareMessage || "")) failures.push(`share_kit_page_missing_family_message:${pack}`);
     if (!shareKitPage.includes(sharePack.bioProfileCopy || "")) failures.push(`share_kit_page_missing_bio_profile:${pack}`);

@@ -266,7 +266,8 @@ async function main() {
     const expectedLineShare = `${expectedShare}?ref=line&placement=direct_social_share`;
     const expectedBio = `https://fursay.com/bio/${pack}`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
-    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack"}: ${expectedWhatsappShare}`)}`;
+    const expectedWhatsappLabel = pack === "koko" ? "Koko weekly story pack" : "قصة نور الصينية في 3 دقائق";
+    const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${expectedWhatsappLabel}: ${expectedWhatsappShare}`)}`;
     const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedLineShare)}`;
     const expectedYoutubePlacement = `${expectedCreator}/youtube`;
     const expectedSocialPlacement = `${expectedCreator}/social`;

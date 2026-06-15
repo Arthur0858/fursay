@@ -612,7 +612,7 @@ function socialShareUrls(pack) {
   const shareUrl = `https://fursay.com/share/${pack}`;
   const whatsappUrl = `${shareUrl}?ref=whatsapp&placement=direct_social_share`;
   const lineUrl = `${shareUrl}?ref=line&placement=direct_social_share`;
-  const label = pack === "koko" ? "Koko weekly story pack" : "Noor 3-minute story pack";
+  const label = pack === "koko" ? "Koko weekly story pack" : "قصة نور الصينية في 3 دقائق";
   return {
     whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${label}: ${whatsappUrl}`)}`,
     line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`,
@@ -622,7 +622,7 @@ function socialShareUrls(pack) {
 function bioProfileCopy(pack) {
   return pack === "koko"
     ? "Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: https://fursay.com/bio/koko"
-    : "Noor's Arabic Kids Chinese: 3-minute Chinese story packs for Arabic-speaking families. Start here: https://fursay.com/bio/noor";
+    : "قصة نور الصينية في 3 دقائق للعائلات العربية: قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط. ابدؤوا هنا: https://fursay.com/bio/noor";
 }
 
 function writeCampaignManifest(siteDir, source) {
@@ -690,8 +690,8 @@ function writeCampaignManifest(siteDir, source) {
         qrLabel: "Noor 3-minute story pack",
         shortHeadline: "Get Noor's 3-minute Chinese story pack",
         videoDescription: "Get the free Noor 3-minute story pack: https://fursay.com/sample/noor",
-        familyShareText: "Noor's Arabic Kids Chinese 3-minute pack is ready for family story time: https://fursay.com/sample/noor",
-        familyShareMessage: "Noor's Arabic Kids Chinese 3-minute pack is ready for family story time: https://fursay.com/share/noor",
+        familyShareText: "قصة نور الصينية في 3 دقائق جاهزة لوقت القصة مع الأطفال: https://fursay.com/sample/noor",
+        familyShareMessage: "نجرب هذا الأسبوع قصة نور الصينية في 3 دقائق: قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل. https://fursay.com/share/noor",
         bioProfileCopy: bioProfileCopy("noor"),
         primaryShortlink: "https://fursay.com/sample/noor",
         shareShortlink: "https://fursay.com/share/noor",
