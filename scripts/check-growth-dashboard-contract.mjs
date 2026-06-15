@@ -218,6 +218,8 @@ async function main() {
     if (!html.includes(String(minimumSignals.productInfoClicks))) failures.push(`dashboard_missing_info_threshold:${product.id}`);
     if (!html.includes(String(minimumSignals.productInterestClicks))) failures.push(`dashboard_missing_interest_threshold:${product.id}`);
     if (!html.includes(String(minimumSignals.subscriberSignals))) failures.push(`dashboard_missing_subscriber_threshold:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.startsWith("https://fursay.com/download/")) failures.push(`owned_product_missing_tracked_sample_download:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.includes("placement=sample_preview_pdf_download")) failures.push(`owned_product_bad_tracked_sample_download:${product.id}`);
   }
   if (!conversionHealth.monetization?.affiliate?.localePolicy?.includes("zh-TW pages use Books.com.tw")) failures.push("missing_locale_affiliate_policy");
 

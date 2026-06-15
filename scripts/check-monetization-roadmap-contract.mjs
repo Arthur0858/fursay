@@ -145,6 +145,8 @@ async function main() {
     if (!product.samplePreview?.url?.startsWith(`${ORIGIN}/product-samples/`)) failures.push(`missing_sample_preview:${product.id}`);
     if (product.samplePreview?.noindex !== true) failures.push(`sample_preview_not_noindex:${product.id}`);
     if (!product.samplePreview?.downloadUrl?.startsWith(`${ORIGIN}/downloads/`)) failures.push(`missing_sample_download:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.startsWith(`${ORIGIN}/download/`)) failures.push(`missing_tracked_sample_download:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.includes("placement=sample_preview_pdf_download")) failures.push(`bad_tracked_sample_download_placement:${product.id}`);
     if (product.samplePreview?.downloadableFormat !== "pdf_and_browser_print") failures.push(`sample_download_format:${product.id}:${product.samplePreview?.downloadableFormat || "none"}`);
     const minimumSignals = product.validationPlan?.minimumSignals || {};
     if (!minimumSignals.productInfoClicks || !minimumSignals.productInterestClicks || !minimumSignals.subscriberSignals) {

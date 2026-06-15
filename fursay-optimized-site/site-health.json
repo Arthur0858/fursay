@@ -140,6 +140,10 @@
     "noorSprintStatus": [
       "https://fursay.com/noor-sprint-status",
       "https://fursay.com/noor-sprint-status.json"
+    ],
+    "productSampleTrackedDownloads": [
+      "https://fursay.com/download/koko-printable-sample?source_id=koko_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
+      "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download"
     ]
   },
   "funnels": {
@@ -514,6 +518,7 @@
             "printReady": true,
             "downloadableFormat": "pdf_and_browser_print",
             "downloadUrl": "https://fursay.com/downloads/koko-printable-sample.pdf",
+            "trackedDownloadUrl": "https://fursay.com/download/koko-printable-sample?source_id=koko_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
             "contents": [
               "Story moment prompt",
               "Three feeling words",
@@ -556,6 +561,7 @@
             "printReady": true,
             "downloadableFormat": "pdf_and_browser_print",
             "downloadUrl": "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+            "trackedDownloadUrl": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
             "contents": [
               "Three Chinese words with Pinyin",
               "Arabic parent prompt",

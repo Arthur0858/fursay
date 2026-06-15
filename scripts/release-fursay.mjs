@@ -2242,6 +2242,7 @@ function writeConversionHealth(siteDir, source) {
               printReady: true,
               downloadableFormat: "pdf_and_browser_print",
               downloadUrl: "https://fursay.com/downloads/koko-printable-sample.pdf",
+              trackedDownloadUrl: productSampleTrackedDownloadUrl({ pack: "koko" }, "sample_preview_pdf_download"),
               contents: ["Story moment prompt", "Three feeling words", "Draw-and-tell activity"],
               nextCta: "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview",
             },
@@ -2272,6 +2273,7 @@ function writeConversionHealth(siteDir, source) {
               printReady: true,
               downloadableFormat: "pdf_and_browser_print",
               downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+              trackedDownloadUrl: productSampleTrackedDownloadUrl({ pack: "noor" }, "sample_preview_pdf_download"),
               contents: ["Three Chinese words with Pinyin", "Arabic parent prompt", "One 3-minute activity"],
               nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
             },
@@ -3874,6 +3876,10 @@ function writeSiteHealthManifest(siteDir) {
       productSampleDownloads: [
         "https://fursay.com/downloads/koko-printable-sample.pdf",
         "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+      ],
+      productSampleTrackedDownloads: [
+        productSampleTrackedDownloadUrl({ pack: "koko" }, "sample_preview_pdf_download"),
+        productSampleTrackedDownloadUrl({ pack: "noor" }, "sample_preview_pdf_download"),
       ],
       monetizationRoadmap: [
         "https://fursay.com/monetization-roadmap",

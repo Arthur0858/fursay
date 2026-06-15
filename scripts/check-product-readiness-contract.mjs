@@ -634,6 +634,7 @@ async function main() {
     failures.push(`release_product_sample_download_files:${release.liveExpectations?.productSampleDownloadFiles || "none"}`);
   }
   const healthDownloads = siteHealth.routes?.productSampleDownloads || [];
+  const healthTrackedDownloads = siteHealth.routes?.productSampleTrackedDownloads || [];
   for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
     if (!healthDownloads.includes(sample.downloadUrl)) failures.push(`site_health_missing_sample_download:${sample.pack}`);
   }
@@ -718,6 +719,8 @@ async function main() {
     if (product.checkoutStatus !== "not_enabled") failures.push(`product_checkout_status:${product.id}:${product.checkoutStatus || "none"}`);
     if ((product.plannedIncludes || []).length < 3) failures.push(`product_missing_planned_includes:${product.id}`);
     if (!product.samplePreview?.url?.startsWith("https://fursay.com/product-samples/")) failures.push(`product_missing_sample_preview:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.startsWith("https://fursay.com/download/")) failures.push(`product_missing_tracked_sample_download:${product.id}`);
+    if (!product.samplePreview?.trackedDownloadUrl?.includes("placement=sample_preview_pdf_download")) failures.push(`product_bad_tracked_sample_download:${product.id}`);
     const plan = product.validationPlan || {};
     const sampleIsPrintReady = product.samplePreview?.status === "print_ready_preview" && product.samplePreview?.printReady === true;
     if (!html.includes(`data-product-validation-plan="${product.id}"`)) failures.push(`products_page_missing_validation_plan:${product.id}`);
@@ -761,6 +764,9 @@ async function main() {
   if (!siteHealth.generatedFrom?.includes("/products.json")) failures.push("site_health_missing_products_generated_from");
   if (siteHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("site_health_checkout_enabled");
   if (conversionHealth.monetization?.ownedProducts?.checkoutEnabled !== false) failures.push("conversion_health_checkout_enabled");
+  for (const sample of REQUIRED_SAMPLE_PREVIEWS) {
+    if (!healthTrackedDownloads.includes(sample.trackedDownloadUrl)) failures.push(`site_health_missing_tracked_sample_download:${sample.pack}`);
+  }
 
   try {
     if (args.baseUrl) {
