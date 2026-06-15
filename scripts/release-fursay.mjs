@@ -4016,13 +4016,19 @@ function shareKitLinkRow(title, value, attrs = {}) {
               </div>`;
 }
 
+function isArabicText(value) {
+  return /[\u0600-\u06FF]/.test(String(value || ""));
+}
+
 function shareKitCopyBlock(title, value) {
-  return `<article>
+  const textAttrs = isArabicText(value) ? ' dir="rtl" lang="ar"' : "";
+  const articleAttrs = isArabicText(value) ? ' data-share-kit-copy-locale="ar"' : "";
+  return `<article${articleAttrs}>
             <div class="creator-copy-heading">
               <h3>${escapeHtml(title)}</h3>
               <button type="button" class="creator-copy-button" data-copy-share-kit data-copy-value="${escapeHtml(value)}">Copy</button>
             </div>
-            <pre>${escapeHtml(value)}</pre>
+            <pre${textAttrs}>${escapeHtml(value)}</pre>
           </article>`;
 }
 

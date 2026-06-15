@@ -1813,6 +1813,8 @@ async function checkDiscoveryFiles(baseUrl) {
       if (!sharePack.familyShareMessage?.includes("قصة نور الصينية في 3 دقائق")) failures.push("share_kit_noor_family_message_missing_arabic_copy");
       if (!sharePack.bioProfileCopy?.includes("عائلات") && !sharePack.bioProfileCopy?.includes("العائلات")) failures.push("share_kit_noor_bio_profile_missing_arabic_copy");
       if (!decodeURIComponent(sharePack.whatsappShareUrl || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("share_kit_noor_whatsapp_missing_arabic_copy");
+      if (!shareKitPage.includes('data-share-kit-copy-locale="ar"')) failures.push("share_kit_page_missing_arabic_copy_locale");
+      if (!shareKitPage.includes('<pre dir="rtl" lang="ar">')) failures.push("share_kit_page_missing_arabic_rtl_pre");
     }
     if (sharePack.attribution?.utm_source !== "family_share" || sharePack.attribution?.utm_medium !== "share") failures.push(`share_kit_${pack}_bad_attribution_source`);
     if (!shareKitPage.includes(sharePack.familyShareMessage || "")) failures.push(`share_kit_page_missing_family_message:${pack}`);
