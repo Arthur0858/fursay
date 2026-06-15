@@ -308,6 +308,11 @@ function payloadHasPrivateNeedle(payload) {
   return PRIVATE_NEEDLES.filter((needle) => text.includes(needle));
 }
 
+function htmlIncludesUrl(html, url) {
+  if (!url) return false;
+  return html.includes(url) || html.includes(url.replaceAll("&", "&amp;"));
+}
+
 async function clickProductInterest(page, pack) {
   return page.evaluate((targetPack) => {
     const button = document.querySelector(`[data-product-interest="${targetPack}"]`);
@@ -601,6 +606,11 @@ async function main() {
   if (products.nextValidationHandoff?.piiAllowed !== false) failures.push("products_manifest_handoff_pii_allowed");
   if (!products.nextValidationHandoff?.samplePreviewUrl?.startsWith("https://fursay.com/product-samples/")) failures.push("products_manifest_handoff_missing_sample_preview");
   if (!products.nextValidationHandoff?.sampleDownloadUrl?.startsWith("https://fursay.com/downloads/")) failures.push("products_manifest_handoff_missing_sample_download");
+  if (!products.nextValidationHandoff?.trackedSampleDownloadUrl?.startsWith("https://fursay.com/download/")) failures.push("products_manifest_handoff_missing_tracked_sample_download");
+  if (!products.nextValidationHandoff?.trackedSampleDownloadUrl?.includes("source_id=")) failures.push("products_manifest_handoff_tracked_download_missing_source_id");
+  if (!htmlIncludesUrl(html, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("products_page_missing_tracked_handoff_download");
+  if (!htmlIncludesUrl(zhHtml, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("zh_products_page_missing_tracked_handoff_download");
+  if (!htmlIncludesUrl(arHtml, products.nextValidationHandoff?.trackedSampleDownloadUrl)) failures.push("ar_products_page_missing_tracked_handoff_download");
   if (!products.nextValidationHandoff?.freeStoryPackPath?.startsWith("/")) failures.push("products_manifest_handoff_missing_free_bridge");
   if (products.nextValidationHandoff?.reportCommand !== "npm run report:events") failures.push("products_manifest_handoff_bad_report_command");
   if (!products.nextValidationHandoff?.checkoutBlockedReason?.includes("Checkout stays disabled")) failures.push("products_manifest_handoff_missing_checkout_guardrail");

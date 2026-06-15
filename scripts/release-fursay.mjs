@@ -2292,6 +2292,12 @@ function writeProductsManifest(siteDir, source) {
   const conversionHealth = readJson(resolve(siteDir, "conversion-health.json"));
   const ownedProducts = conversionHealth.monetization?.ownedProducts || {};
   const links = readJson(resolve(siteDir, "links.json"));
+  const trackedDownloadUrl = (product) => {
+    const path = product.pack === "koko" ? "/download/koko-printable-sample" : "/download/noor-worksheet-sample";
+    const sourceId = product.pack === "koko" ? "koko_product_validation_pdf_sample" : "noor_product_validation_pdf_sample";
+    const placement = product.pack === "koko" ? "product_validation_pdf_sample" : "product_validation_pdf_sample";
+    return `https://fursay.com${path}?source_id=${sourceId}&creator=fursay&placement=${placement}`;
+  };
   const productValidationHandoffs = (ownedProducts.products || []).map((product) => ({
     productId: product.id,
     pack: product.pack,
@@ -2301,6 +2307,7 @@ function writeProductsManifest(siteDir, source) {
       : "Share the Koko printable sample with Mandarin-speaking families, then send them to the free Koko story pack.",
     samplePreviewUrl: product.samplePreview?.url || "",
     sampleDownloadUrl: product.samplePreview?.downloadUrl || "",
+    trackedSampleDownloadUrl: trackedDownloadUrl(product),
     freeStoryPackPath: product.validationPlan?.freeBridge || "",
     reportCommand: "npm run report:events",
     requiredSignals: product.validationPlan?.signals || [],
@@ -2806,7 +2813,8 @@ ${samplePreviews}
       <p>${escapeHtml(nextHandoff.action || "Share one free sample preview, then send interested families to the free story pack.")}</p>
       <dl>
         ${healthMetric("Sample preview", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("PDF sample", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("Tracked PDF sample", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("PDF asset", nextHandoff.sampleDownloadUrl || "")}
         ${healthMetric("Free story pack", nextHandoff.freeStoryPackPath || "")}
         ${healthMetric("Report command", nextHandoff.reportCommand || "npm run report:events")}
         ${healthMetric("Checkout", nextHandoff.checkoutBlockedReason || "Checkout stays disabled during interest validation.")}
@@ -3031,7 +3039,8 @@ ${samplePreviews}
       <p>先把努爾學習單樣張分享給阿語家庭，再引導到免費努爾故事包；只有看到真實點擊與訂閱信號後，才考慮擴成完整產品。</p>
       <dl>
         ${healthMetric("樣張預覽", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("PDF 樣張", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("可追蹤 PDF 樣張", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("PDF 原始檔", nextHandoff.sampleDownloadUrl || "")}
         ${healthMetric("免費故事包", nextHandoff.freeStoryPackPath || "")}
         ${healthMetric("報表命令", nextHandoff.reportCommand || "npm run report:events")}
         ${healthMetric("付款狀態", "付款與 checkout 維持關閉，直到產品興趣點擊與至少一個訂閱信號可被檢視。")}
@@ -3215,7 +3224,8 @@ ${samplePreviews}
       <p>شاركوا عينة ورقة نور مع عائلات عربية، ثم وجّهوهم إلى حزمة نور المجانية. لا نوسّعها إلى منتج كامل إلا بعد ظهور نقرات حقيقية وإشارة اشتراك واحدة على الأقل.</p>
       <dl>
         ${healthMetric("معاينة العينة", nextHandoff.samplePreviewUrl || "")}
-        ${healthMetric("عينة PDF", nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("رابط عينة PDF قابل للقياس", nextHandoff.trackedSampleDownloadUrl || nextHandoff.sampleDownloadUrl || "")}
+        ${healthMetric("ملف PDF الأصلي", nextHandoff.sampleDownloadUrl || "")}
         ${healthMetric("حزمة القصة المجانية", nextHandoff.freeStoryPackPath || "")}
         ${healthMetric("أمر التقرير", nextHandoff.reportCommand || "npm run report:events")}
         ${healthMetric("حالة الدفع", "يبقى الدفع و checkout مغلقين حتى يمكن مراجعة نقرات الاهتمام وإشارة اشتراك واحدة على الأقل.")}
