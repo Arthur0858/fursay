@@ -308,11 +308,13 @@ function writeDeployReadinessManifest(siteDir, source) {
   const remote = gitRemote();
   const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
   const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
+  const hasAnalyticsReportToken = Boolean(process.env.CLOUDFLARE_ANALYTICS_TOKEN || process.env.CLOUDFLARE_API_TOKEN);
   const warnings = [];
   warnings.push("analytics_engine_dashboard_enablement_required");
   if (!remote) warnings.push("git_missing_origin_remote");
   if (!hasCloudflareToken) warnings.push("missing_CLOUDFLARE_API_TOKEN");
   if (!hasCloudflareAccount) warnings.push("missing_CLOUDFLARE_ACCOUNT_ID");
+  if (!hasAnalyticsReportToken) warnings.push("missing_CLOUDFLARE_ANALYTICS_TOKEN_or_CLOUDFLARE_API_TOKEN");
   const manifest = {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -336,17 +338,31 @@ function writeDeployReadinessManifest(siteDir, source) {
         enablementUrl: "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
         lastDeployBlockerCode: "10089",
       },
+      analyticsReport: {
+        command: "npm run report:events",
+        script: "scripts/query-event-analytics-report.mjs",
+        dataset: "fursay_events",
+        requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN"],
+        hasCloudflareAccount,
+        hasAnalyticsReportToken,
+        ready: false,
+        status: "pending_cloudflare_credentials_or_enablement",
+        piiAllowed: false,
+      },
     },
     requiredSecrets: [
       "CLOUDFLARE_API_TOKEN",
       "CLOUDFLARE_ACCOUNT_ID",
+      "CLOUDFLARE_ANALYTICS_TOKEN",
     ],
     evidence: {
       hasOriginRemote: Boolean(remote),
       hasCloudflareToken,
       hasCloudflareAccount,
+      hasAnalyticsReportToken,
       tokenValuesPublished: false,
       accountValuesPublished: false,
+      analyticsTokenValuesPublished: false,
     },
     strictGates: {
       requireRemote: "npm run deploy:ready -- --require-remote",
@@ -424,6 +440,8 @@ function writeDeployReadinessPage(siteDir, manifest) {
         ${deployReadinessRow("Analytics binding", `${manifest.deployment.analyticsEngine.binding} / ${manifest.deployment.analyticsEngine.dataset}`)}
         ${deployReadinessRow("Analytics enablement", manifest.deployment.analyticsEngine.enablementUrl)}
         ${deployReadinessRow("Last Analytics deploy blocker", manifest.deployment.analyticsEngine.lastDeployBlockerCode)}
+        ${deployReadinessRow("Analytics report", manifest.deployment.analyticsReport.status)}
+        ${deployReadinessRow("Analytics report command", manifest.deployment.analyticsReport.command)}
         ${deployReadinessRow("Push deploy proof", manifest.strictGates.requirePushDeploy)}
       </dl>
     </section>

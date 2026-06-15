@@ -1465,8 +1465,12 @@ async function checkDiscoveryFiles(baseUrl) {
   if (deployReadiness.deployment?.runbook !== "docs/cloudflare-deploy-runbook.md") failures.push("deploy_readiness_bad_runbook");
   if (!deployReadiness.requiredSecrets?.includes("CLOUDFLARE_API_TOKEN")) failures.push("deploy_readiness_missing_token_name");
   if (!deployReadiness.requiredSecrets?.includes("CLOUDFLARE_ACCOUNT_ID")) failures.push("deploy_readiness_missing_account_name");
+  if (!deployReadiness.requiredSecrets?.includes("CLOUDFLARE_ANALYTICS_TOKEN")) failures.push("deploy_readiness_missing_analytics_token_name");
+  if (deployReadiness.deployment?.analyticsReport?.command !== "npm run report:events") failures.push("deploy_readiness_missing_report_command");
+  if (deployReadiness.deployment?.analyticsReport?.piiAllowed !== false) failures.push("deploy_readiness_report_must_disallow_pii");
   if (deployReadiness.evidence?.tokenValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_token_values");
   if (deployReadiness.evidence?.accountValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_account_values");
+  if (deployReadiness.evidence?.analyticsTokenValuesPublished !== false) failures.push("deploy_readiness_must_not_publish_analytics_token_values");
   if (deployReadiness.safety?.failClosed !== true) failures.push("deploy_readiness_fail_closed_not_true");
   if (deployReadiness.safety?.smokeSubmitsToMailerLite !== false) failures.push("deploy_readiness_bad_mailerlite_smoke_contract");
   if (deployReadiness.strictGates?.requireCloudflare !== "npm run deploy:ready -- --require-cloudflare") failures.push("deploy_readiness_missing_strict_cloudflare_gate");
@@ -1476,8 +1480,13 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!deployReadinessPage.includes("<h1>Deploy Readiness</h1>")) failures.push("deploy_readiness_page_missing_h1");
   if (!deployReadinessPage.includes("/deploy-readiness.json")) failures.push("deploy_readiness_page_missing_json_link");
   if (!deployReadinessPage.includes("GitHub push deploy proven")) failures.push("deploy_readiness_page_missing_push_status");
+  if (!deployReadinessPage.includes("Analytics report")) failures.push("deploy_readiness_page_missing_analytics_report_status");
   if (!deployReadinessPage.includes("npm run deploy:ready -- --require-remote --require-cloudflare")) failures.push("deploy_readiness_page_missing_push_gate");
-  if (deployReadinessPage.includes("CLOUDFLARE_API_TOKEN=") || deployReadinessPage.includes("CLOUDFLARE_ACCOUNT_ID=")) {
+  if (
+    deployReadinessPage.includes("CLOUDFLARE_API_TOKEN=")
+    || deployReadinessPage.includes("CLOUDFLARE_ACCOUNT_ID=")
+    || deployReadinessPage.includes("CLOUDFLARE_ANALYTICS_TOKEN=")
+  ) {
     failures.push("deploy_readiness_page_leaks_secret_value_shape");
   }
   if (campaigns.platform !== "cloudflare-workers-static-assets") failures.push(`campaigns_platform:${campaigns.platform || "none"}`);
@@ -1616,7 +1625,11 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!workflowRaw.includes("npx playwright install --with-deps chromium")) failures.push("workflow_missing_browser_runtime");
     if (!workflowRaw.includes("concurrency:")) failures.push("workflow_missing_concurrency");
     if (!workflowRaw.includes("actions/upload-artifact@v4") || !workflowRaw.includes("/tmp/fursay-release-*")) failures.push("workflow_missing_release_artifact_upload");
-    if (!deployReadinessScriptRaw.includes("requireCloudflare") || !deployReadinessScriptRaw.includes("missing_CLOUDFLARE_API_TOKEN")) {
+    if (
+      !deployReadinessScriptRaw.includes("requireCloudflare")
+      || !deployReadinessScriptRaw.includes("missing_CLOUDFLARE_API_TOKEN")
+      || !deployReadinessScriptRaw.includes("missing_CLOUDFLARE_ANALYTICS_TOKEN_or_CLOUDFLARE_API_TOKEN")
+    ) {
       failures.push("deploy_readiness_missing_cloudflare_gate");
     }
     if (!deployReadinessScriptRaw.includes("actions/upload-artifact@v4") || !deployReadinessScriptRaw.includes("/tmp/fursay-release-*")) {

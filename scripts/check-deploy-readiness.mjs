@@ -54,6 +54,7 @@ async function main() {
   const remote = gitValue(["remote", "get-url", "origin"]);
   const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
   const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
+  const hasAnalyticsReportToken = Boolean(process.env.CLOUDFLARE_ANALYTICS_TOKEN || process.env.CLOUDFLARE_API_TOKEN);
 
   addIssue(failures, packageJson.scripts?.check === "node scripts/release-fursay.mjs --check-only", "package_bad_check_script");
   addIssue(failures, packageJson.scripts?.deploy === "node scripts/release-fursay.mjs", "package_bad_deploy_script");
@@ -95,6 +96,7 @@ async function main() {
     "Cloudflare Workers Static Assets",
     "CLOUDFLARE_API_TOKEN",
     "CLOUDFLARE_ACCOUNT_ID",
+    "CLOUDFLARE_ANALYTICS_TOKEN",
     "npm run deploy:ready -- --require-remote",
     "npm run deploy:ready -- --require-cloudflare",
     "npm run deploy:ready -- --require-remote --require-cloudflare",
@@ -130,6 +132,12 @@ async function main() {
     const issue = "missing_CLOUDFLARE_ACCOUNT_ID";
     (args.requireCloudflare ? failures : warnings).push(issue);
   }
+  if (!hasAnalyticsReportToken) {
+    const issue = "missing_CLOUDFLARE_ANALYTICS_TOKEN_or_CLOUDFLARE_API_TOKEN";
+    (args.requireCloudflare ? failures : warnings).push(issue);
+  }
+
+  const analyticsReportReady = Boolean(analyticsBinding && hasCloudflareAccount && hasAnalyticsReportToken);
 
   const report = {
     ok: failures.length === 0,
@@ -149,6 +157,7 @@ async function main() {
       hasOriginRemote: Boolean(remote),
       hasCloudflareToken,
       hasCloudflareAccount,
+      hasAnalyticsReportToken,
       analyticsEngine: {
         binding: "FURSAY_EVENTS",
         dataset: "fursay_events",
@@ -156,6 +165,19 @@ async function main() {
         status: analyticsBinding ? "configured_in_wrangler" : "pending_cloudflare_dashboard_enablement",
         enablementUrl: ANALYTICS_ENGINE_ENABLEMENT_URL,
         lastDeployBlockerCode: analyticsBinding ? "" : "10089",
+      },
+      analyticsReport: {
+        command: "npm run report:events",
+        script: "scripts/query-event-analytics-report.mjs",
+        dataset: "fursay_events",
+        requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN"],
+        hasCloudflareAccount,
+        hasAnalyticsReportToken,
+        ready: analyticsReportReady,
+        status: analyticsReportReady
+          ? "ready_to_query_after_dashboard_enablement"
+          : "pending_cloudflare_credentials_or_enablement",
+        piiAllowed: false,
       },
     },
     failures,
