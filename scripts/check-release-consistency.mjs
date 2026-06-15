@@ -85,8 +85,13 @@ function commitBadge(html) {
 async function smokeLiveGateCoverage(release) {
   const packageJson = JSON.parse(await readFile(resolve(process.cwd(), "package.json"), "utf8"));
   const smokeScript = packageJson.scripts?.["smoke:live"] || "";
-  const smokeGates = [...smokeScript.matchAll(/node (scripts\/[\w-]+\.mjs|audit-fursay\.mjs)\b/g)]
+  let smokeGates = [...smokeScript.matchAll(/node (scripts\/[\w-]+\.mjs|audit-fursay\.mjs)\b/g)]
     .map((match) => match[1]);
+  if (smokeScript === "node scripts/smoke-live.mjs") {
+    const smokeRunner = await readFile(resolve(process.cwd(), "scripts/smoke-live.mjs"), "utf8");
+    smokeGates = [...smokeRunner.matchAll(/args:\s*\["(scripts\/[\w-]+\.mjs|audit-fursay\.mjs)"\]/g)]
+      .map((match) => match[1]);
+  }
   const qualityGates = Array.isArray(release.qualityGates) ? release.qualityGates : [];
   const expectedLiveGates = qualityGates.filter((gate) => !LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS.has(gate));
   const missing = expectedLiveGates.filter((gate) => !smokeGates.includes(gate));

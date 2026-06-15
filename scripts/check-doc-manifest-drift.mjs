@@ -106,7 +106,11 @@ function findVersionedAssetRefs(text) {
   return [...text.matchAll(/\/(?:css|js)\/[a-z0-9-]+-\d{8}-[a-z0-9]+[a-z0-9-]*\.(?:css|js)/gi)].map((match) => match[0]);
 }
 
-function scriptsInSmokeCommand(command) {
+async function scriptsInSmokeCommand(command) {
+  if (command === "node scripts/smoke-live.mjs") {
+    const source = await readFile(resolve(process.cwd(), "scripts/smoke-live.mjs"), "utf8");
+    return [...source.matchAll(/args:\s*\["(scripts\/[^"]+?\.mjs)"\]/g)].map((match) => match[1]);
+  }
   return [...command.matchAll(/node (scripts\/[^ ]+?\.mjs)/g)].map((match) => match[1]);
 }
 
@@ -147,7 +151,7 @@ async function checkLocalDocs(failures, details) {
   const releaseScript = await readFile(resolve(process.cwd(), "scripts/release-fursay.mjs"), "utf8");
   const scriptGates = releaseScriptQualityGates(releaseScript);
   const releaseGates = normalizeArray(release.qualityGates);
-  const smokeScripts = scriptsInSmokeCommand(packageJson.scripts?.["smoke:live"] || "");
+  const smokeScripts = await scriptsInSmokeCommand(packageJson.scripts?.["smoke:live"] || "");
   const expectedSmokeScripts = releaseGates.filter((gate) => gate.startsWith("scripts/") && !LIVE_SMOKE_EXCLUDES.has(gate));
 
   for (const gate of releaseGates) {

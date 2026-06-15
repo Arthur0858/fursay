@@ -4106,6 +4106,7 @@ async function main() {
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
+  run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
 
   run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);

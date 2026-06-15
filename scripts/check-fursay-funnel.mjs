@@ -1627,7 +1627,8 @@ async function checkDiscoveryFiles(baseUrl) {
     if (packageJson.scripts?.check !== "node scripts/release-fursay.mjs --check-only") failures.push("package_bad_check_script");
     if (packageJson.scripts?.["deploy:ready"] !== "node scripts/check-deploy-readiness.mjs") failures.push("package_bad_deploy_ready_script");
     if (packageJson.scripts?.deploy !== "node scripts/release-fursay.mjs") failures.push("package_bad_deploy_script");
-    if (!packageJson.scripts?.["smoke:live"]?.includes("audit-fursay.mjs https://fursay.com")) failures.push("package_bad_live_smoke_script");
+    if (packageJson.scripts?.["smoke:live"] !== "node scripts/smoke-live.mjs") failures.push("package_bad_live_smoke_script");
+    if (!existsSync(resolve(process.cwd(), "scripts/smoke-live.mjs"))) failures.push("missing_live_smoke_runner");
     if (!packageJson.devDependencies?.wrangler) failures.push("package_missing_wrangler");
     if (!packageJson.devDependencies?.playwright) failures.push("package_missing_playwright");
     if (!workflowRaw.includes("npm run check")) failures.push("workflow_missing_local_gate");
