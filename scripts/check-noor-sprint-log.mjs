@@ -122,6 +122,23 @@ function validateStatus(status, log, failures) {
   if (status.summary?.completedDays !== completed) failures.push("status_completed_days_mismatch");
   if (status.summary?.skippedDays !== skipped) failures.push("status_skipped_days_mismatch");
   if (status.summary?.subscriberSignalObserved !== signalObserved) failures.push("status_signal_observed_mismatch");
+  if (status.executionState?.status !== "actionable_safe_wait") failures.push(`status_execution_state:${status.executionState?.status || "none"}`);
+  if (!String(status.executionState?.headline || "").includes("Day 1 outreach can start")) failures.push("status_execution_state_missing_actionable_headline");
+  for (const item of [
+    "Share only the Day 1 Arabic parent copy in one warm parent group.",
+    "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
+    "At least one real Noor subscriber signal before newsletter readiness changes.",
+    "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+    "Do not add payment, price, checkout, or product purchase language.",
+    "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+  ]) {
+    const values = [
+      ...(status.executionState?.canDoNow || []),
+      ...(status.executionState?.waitingFor || []),
+      ...(status.executionState?.mustNotDo || []),
+    ];
+    if (!values.includes(item)) failures.push(`status_execution_state_missing:${item}`);
+  }
   if (!status.nextActionHandoff || typeof status.nextActionHandoff !== "object") failures.push("status_missing_next_action_handoff");
   if (status.nextActionHandoff) {
     const handoff = status.nextActionHandoff;
@@ -203,6 +220,7 @@ async function main() {
   if (action.piiAllowed !== false) failures.push("action_pii_allowed_not_false");
   if (action.checkoutEnabled !== false) failures.push("action_checkout_enabled_not_false");
   if (action.paymentLinksAllowed !== false) failures.push("action_payment_links_allowed_not_false");
+  if (action.executionState?.status !== status.executionState?.status) failures.push("action_execution_state_mismatch");
   if (action.sprint?.pack !== "noor") failures.push(`action_bad_pack:${action.sprint?.pack || "none"}`);
   if (action.sprint?.readinessStatus !== status.readinessStatus) failures.push("action_readiness_mismatch");
   if (action.sprint?.analyticsStatus !== status.analyticsStatus) failures.push("action_analytics_mismatch");
@@ -218,6 +236,15 @@ async function main() {
   const html = args.baseUrl
     ? await (await fetch(`${args.baseUrl}/noor-sprint-status`, { cache: "no-store" })).text()
     : await readFile(resolve(SITE_DIR, "noor-sprint-status.html"), "utf8");
+  if (!html.includes('data-noor-sprint-execution-state="actionable_safe_wait"')) failures.push("page_missing_execution_state");
+  if (!html.includes("Day 1 outreach can start")) failures.push("page_missing_actionable_safe_wait_headline");
+  if (!html.includes("data-noor-sprint-can-do-now")) failures.push("page_missing_can_do_now");
+  if (!html.includes("data-noor-sprint-waiting-for")) failures.push("page_missing_waiting_for");
+  if (!html.includes("data-noor-sprint-must-not-do")) failures.push("page_missing_must_not_do");
+  if (!html.includes("Share only the Day 1 Arabic parent copy")) failures.push("page_missing_day_one_can_do_now");
+  if (!html.includes("At least one real Noor subscriber signal")) failures.push("page_missing_subscriber_wait_state");
+  if (!html.includes("Do not send a Noor newsletter")) failures.push("page_missing_newsletter_do_not_do");
+  if (!html.includes("Do not add payment, price, checkout, or product purchase language")) failures.push("page_missing_payment_do_not_do");
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");
   if (!html.includes(LOG_FILE)) failures.push("page_missing_log_source");

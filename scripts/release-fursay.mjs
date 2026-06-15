@@ -1651,6 +1651,24 @@ function buildNoorSprintStatus(siteDir, source) {
       evidence: "Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails.",
     },
   ];
+  const executionState = {
+    status: "actionable_safe_wait",
+    headline: "Day 1 outreach can start while analytics and subscriber evidence remain in safe wait.",
+    canDoNow: [
+      "Open the planned tracked link once to confirm attribution.",
+      "Share only the Day 1 Arabic parent copy in one warm parent group.",
+      "Record the posted state after previewing the no-PII log command.",
+    ],
+    waitingFor: [
+      "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
+      "At least one real Noor subscriber signal before newsletter readiness changes.",
+    ],
+    mustNotDo: [
+      "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+      "Do not add payment, price, checkout, or product purchase language.",
+      "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+    ],
+  };
   return {
     site: "Fursay",
     origin: "https://fursay.com",
@@ -1692,6 +1710,7 @@ function buildNoorSprintStatus(siteDir, source) {
       nextDay: nextOpenDay.day || 1,
       nextAction: nextOpenDay.action || "",
     },
+    executionState,
     nextActionHandoff,
     operatorChecklist,
     blockedBy: [
@@ -1712,6 +1731,10 @@ function buildNoorSprintStatus(siteDir, source) {
 
 function writeNoorSprintStatusPage(siteDir, manifest) {
   const handoff = manifest.nextActionHandoff || {};
+  const executionState = manifest.executionState || {};
+  const canDoNow = (executionState.canDoNow || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n");
+  const waitingFor = (executionState.waitingFor || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n");
+  const mustNotDo = (executionState.mustNotDo || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("\n");
   const operatorChecklist = (manifest.operatorChecklist || []).map((item) => `
         <article class="creator-copy-block" data-noor-sprint-operator-step="${escapeHtml(item.id)}">
           <h3>${escapeHtml(item.label)}</h3>
@@ -1759,6 +1782,30 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
         <a href="/traffic-launch">Traffic launch kit</a>
       </div>
     </header>
+    <section class="creator-kit-safety" data-noor-sprint-execution-state="${escapeHtml(executionState.status || "")}">
+      <p class="creator-eyebrow">Actionable safe wait</p>
+      <h2>${escapeHtml(executionState.headline || "Day 1 outreach can start safely.")}</h2>
+      <div class="creator-copy-blocks">
+        <article class="creator-copy-block" data-noor-sprint-can-do-now>
+          <h3>Can do now</h3>
+          <ul>
+${canDoNow}
+          </ul>
+        </article>
+        <article class="creator-copy-block" data-noor-sprint-waiting-for>
+          <h3>Waiting for evidence</h3>
+          <ul>
+${waitingFor}
+          </ul>
+        </article>
+        <article class="creator-copy-block" data-noor-sprint-must-not-do>
+          <h3>Do not do yet</h3>
+          <ul>
+${mustNotDo}
+          </ul>
+        </article>
+      </div>
+    </section>
     <section class="creator-kit-safety" data-noor-sprint-privacy>
       <h2>Logging boundary</h2>
       <p>This sprint log records anonymous execution status only. Do not store email, name, phone, address, subscriber IDs, or MailerLite IDs in <code>${escapeHtml(manifest.logSource)}</code>.</p>
@@ -1862,6 +1909,7 @@ function buildNoorSprintActionManifest(statusManifest, source) {
     checkoutEnabled: false,
     paymentLinksAllowed: false,
     blockedBy: statusManifest.blockedBy || [],
+    executionState: statusManifest.executionState || {},
     sprint: {
       pack: "noor",
       status: statusManifest.status,

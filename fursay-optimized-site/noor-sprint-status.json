@@ -53,6 +53,24 @@
     "nextDay": 1,
     "nextAction": "Post the parent-group copy in one warm Arabic-speaking parent group."
   },
+  "executionState": {
+    "status": "actionable_safe_wait",
+    "headline": "Day 1 outreach can start while analytics and subscriber evidence remain in safe wait.",
+    "canDoNow": [
+      "Open the planned tracked link once to confirm attribution.",
+      "Share only the Day 1 Arabic parent copy in one warm parent group.",
+      "Record the posted state after previewing the no-PII log command."
+    ],
+    "waitingFor": [
+      "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
+      "At least one real Noor subscriber signal before newsletter readiness changes."
+    ],
+    "mustNotDo": [
+      "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+      "Do not add payment, price, checkout, or product purchase language.",
+      "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs."
+    ]
+  },
   "nextActionHandoff": {
     "day": 1,
     "label": "Parent group seed",
