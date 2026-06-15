@@ -4116,6 +4116,7 @@ function writeShareKitPage(siteDir, kit) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Share Kit</title>
   <meta name="description" content="Copy-ready Fursay family share links, social captions, QR assets, and story-pack shortlinks for Koko and Noor.">
+  <meta name="robots" content="noindex,follow">
   <meta property="og:title" content="Fursay Share Kit">
   <meta property="og:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
   <meta property="og:url" content="https://fursay.com/share-kit">

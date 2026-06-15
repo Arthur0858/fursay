@@ -14,7 +14,7 @@ const PAGES = [
   { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW", canonical: "https://fursay.com/zh/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/links", file: "links.html", lang: "en", canonical: "https://fursay.com/links", ogImage: "https://fursay.com/og-image.png" },
-  { path: "/share-kit", file: "share-kit.html", lang: "en", canonical: "https://fursay.com/share-kit", ogImage: "https://fursay.com/og-image.png" },
+  { path: "/share-kit", file: "share-kit.html", lang: "en", canonical: "https://fursay.com/share-kit", robots: "noindex,follow" },
   { path: "/creator-kit", file: "creator-kit.html", lang: "en", canonical: "https://fursay.com/creator-kit", robots: "noindex,follow" },
   { path: "/traffic-launch", file: "traffic-launch.html", lang: "en", canonical: "https://fursay.com/traffic-launch", robots: "noindex,follow" },
   { path: "/noor-sprint-status", file: "noor-sprint-status.html", lang: "en", canonical: "https://fursay.com/noor-sprint-status", robots: "noindex,follow" },
