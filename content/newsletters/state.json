@@ -5620,7 +5620,9 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 2,
@@ -5631,7 +5633,9 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=_kA6Im_vi-0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 3,
@@ -5642,7 +5646,9 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=fFn3okid6EI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 4,
@@ -5653,7 +5659,9 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=aeNdBYbTGhk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 5,
@@ -5664,7 +5672,9 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=7xX0HJ3fN-A",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 6,
@@ -5675,7 +5685,9 @@
           "publishedAt": "2026-04-20T12:20:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=_0QjiT9fwpo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 7,
@@ -5686,7 +5698,9 @@
           "publishedAt": "2026-04-20T12:32:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=beVmg4r37hs",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 8,
@@ -5697,7 +5711,9 @@
           "publishedAt": "2026-04-21T02:06:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=8l7QhDyI7Bw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 9,
@@ -5708,7 +5724,9 @@
           "publishedAt": "2026-04-22T02:08:38Z",
           "videoUrl": "https://www.youtube.com/watch?v=nw_cY_B373w",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 10,
@@ -5719,7 +5737,9 @@
           "publishedAt": "2026-04-23T00:01:57Z",
           "videoUrl": "https://www.youtube.com/watch?v=vfd7cKsYEjc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 11,
@@ -5730,7 +5750,9 @@
           "publishedAt": "2026-04-23T02:06:53Z",
           "videoUrl": "https://www.youtube.com/watch?v=J64LBs2JF_g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 12,
@@ -5741,7 +5763,9 @@
           "publishedAt": "2026-04-24T02:06:32Z",
           "videoUrl": "https://www.youtube.com/watch?v=ycybKGiOcLw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 13,
@@ -5752,7 +5776,9 @@
           "publishedAt": "2026-04-25T02:07:19Z",
           "videoUrl": "https://www.youtube.com/watch?v=KjQom7NjEtc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 14,
@@ -5763,7 +5789,9 @@
           "publishedAt": "2026-04-26T02:05:41Z",
           "videoUrl": "https://www.youtube.com/watch?v=3b5iz4PniBk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 15,
@@ -5774,7 +5802,9 @@
           "publishedAt": "2026-04-27T02:07:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=4LHzfpargWw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 16,
@@ -5785,7 +5815,9 @@
           "publishedAt": "2026-04-28T10:11:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=rxJ8neseJi0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 17,
@@ -5796,7 +5828,9 @@
           "publishedAt": "2026-04-29T02:10:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=UdrW24imxOU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 18,
@@ -5807,7 +5841,9 @@
           "publishedAt": "2026-04-30T04:11:44Z",
           "videoUrl": "https://www.youtube.com/watch?v=xVWbdk8T6Y4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 19,
@@ -5818,7 +5854,9 @@
           "publishedAt": "2026-05-01T01:43:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=MeD6Y6TaLk0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 20,
@@ -5829,7 +5867,9 @@
           "publishedAt": "2026-05-01T03:18:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=UyfreKH1qyk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 21,
@@ -5840,7 +5880,9 @@
           "publishedAt": "2026-05-02T03:43:03Z",
           "videoUrl": "https://www.youtube.com/watch?v=SHBRaRFufQA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 22,
@@ -5851,7 +5893,9 @@
           "publishedAt": "2026-05-05T03:06:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=EPUq2eLnqKs",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 23,
@@ -5862,7 +5906,9 @@
           "publishedAt": "2026-05-06T03:08:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=T2go6XGjIcQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 24,
@@ -5873,7 +5919,9 @@
           "publishedAt": "2026-05-09T03:08:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=ekqzXvjaPtg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 25,
@@ -5884,7 +5932,9 @@
           "publishedAt": "2026-05-12T03:07:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=Pj-HM6PqZPM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 26,
@@ -5895,7 +5945,9 @@
           "publishedAt": "2026-05-13T03:07:20Z",
           "videoUrl": "https://www.youtube.com/watch?v=D-szNrmNhyQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 27,
@@ -5906,7 +5958,9 @@
           "publishedAt": "2026-05-14T03:08:28Z",
           "videoUrl": "https://www.youtube.com/watch?v=ykhxpOtE1Qw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 28,
@@ -5917,7 +5971,9 @@
           "publishedAt": "2026-05-16T03:14:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=ERgAMXDU5yQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 29,
@@ -5928,7 +5984,9 @@
           "publishedAt": "2026-05-17T03:11:50Z",
           "videoUrl": "https://www.youtube.com/watch?v=UNGVBdSQRxg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 30,
@@ -5939,7 +5997,9 @@
           "publishedAt": "2026-05-18T03:17:48Z",
           "videoUrl": "https://www.youtube.com/watch?v=-FCqO2V82Zc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 31,
@@ -5950,7 +6010,9 @@
           "publishedAt": "2026-05-19T03:23:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=7H5RETTebS8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 32,
@@ -5961,7 +6023,9 @@
           "publishedAt": "2026-05-20T03:03:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=YLBRoBycs0w",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 33,
@@ -5972,7 +6036,9 @@
           "publishedAt": "2026-05-21T03:03:30Z",
           "videoUrl": "https://www.youtube.com/watch?v=KjeLChooCNI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 34,
@@ -5983,7 +6049,9 @@
           "publishedAt": "2026-05-22T03:03:12Z",
           "videoUrl": "https://www.youtube.com/watch?v=p_eEYOPO5j8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 35,
@@ -5994,7 +6062,9 @@
           "publishedAt": "2026-05-23T03:03:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=A-SJdHv4OuY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 36,
@@ -6005,7 +6075,9 @@
           "publishedAt": "2026-05-24T03:03:09Z",
           "videoUrl": "https://www.youtube.com/watch?v=eG7dKsZRc1M",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 37,
@@ -6016,7 +6088,9 @@
           "publishedAt": "2026-05-25T03:03:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=ezos1j5jl7o",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 38,
@@ -6027,7 +6101,9 @@
           "publishedAt": "2026-05-26T03:03:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=Py_ArZ1BMm0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 39,
@@ -6038,7 +6114,9 @@
           "publishedAt": "2026-05-27T03:03:12Z",
           "videoUrl": "https://www.youtube.com/watch?v=FGGpYOHn7ig",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 40,
@@ -6049,7 +6127,9 @@
           "publishedAt": "2026-05-28T03:03:34Z",
           "videoUrl": "https://www.youtube.com/watch?v=W2tRj6TwaOU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 41,
@@ -6060,7 +6140,9 @@
           "publishedAt": "2026-05-29T03:03:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=WHN3u9bh8N4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 42,
@@ -6071,7 +6153,9 @@
           "publishedAt": "2026-05-30T03:03:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=By-v_dMV6Ag",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 43,
@@ -6082,7 +6166,9 @@
           "publishedAt": "2026-05-31T03:03:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=LCOtfM7wUcY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 44,
@@ -6093,7 +6179,9 @@
           "publishedAt": "2026-06-01T03:03:17Z",
           "videoUrl": "https://www.youtube.com/watch?v=Q_8VacVb82k",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 45,
@@ -6104,7 +6192,9 @@
           "publishedAt": "2026-06-02T03:03:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=J8Hdv0OkRm0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 46,
@@ -6115,7 +6205,9 @@
           "publishedAt": "2026-06-03T03:03:37Z",
           "videoUrl": "https://www.youtube.com/watch?v=c8-_pDtfvfE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 47,
@@ -6126,7 +6218,9 @@
           "publishedAt": "2026-06-04T03:03:30Z",
           "videoUrl": "https://www.youtube.com/watch?v=Nmwjq9wQM9M",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 48,
@@ -6137,7 +6231,9 @@
           "publishedAt": "2026-06-05T03:03:34Z",
           "videoUrl": "https://www.youtube.com/watch?v=8YS7EuB7BaY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 49,
@@ -6148,7 +6244,9 @@
           "publishedAt": "2026-06-06T03:03:27Z",
           "videoUrl": "https://www.youtube.com/watch?v=zs13cTvgSGk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 50,
@@ -6159,7 +6257,9 @@
           "publishedAt": "2026-06-07T03:03:34Z",
           "videoUrl": "https://www.youtube.com/watch?v=H1QgzTakVFw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 51,
@@ -6170,7 +6270,9 @@
           "publishedAt": "2026-06-08T03:03:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=cPxYNeNwI1w",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 52,
@@ -6181,7 +6283,79 @@
           "publishedAt": "2026-06-09T03:03:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=nAyXKA3XkCk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
+        },
+        {
+          "episodeNo": 53,
+          "videoId": "tSn9GjkCvwo",
+          "title": "跑跳走看聽 الجري والقفز | 學中文 EP053 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/tSn9GjkCvwo/maxresdefault.jpg",
+          "publishedAt": "2026-06-10T03:03:03Z",
+          "videoUrl": "https://www.youtube.com/watch?v=tSn9GjkCvwo",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 54,
+          "videoId": "Z9P271fo7Mk",
+          "title": "上下裡外 الاتجاهات | 學中文 EP054 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/Z9P271fo7Mk/maxresdefault.jpg",
+          "publishedAt": "2026-06-11T03:03:08Z",
+          "videoUrl": "https://www.youtube.com/watch?v=Z9P271fo7Mk",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 55,
+          "videoId": "qBO1KHzw7Qk",
+          "title": "大和小 الكبير والصغير | 學中文 EP055 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/qBO1KHzw7Qk/maxresdefault.jpg",
+          "publishedAt": "2026-06-12T03:03:20Z",
+          "videoUrl": "https://www.youtube.com/watch?v=qBO1KHzw7Qk",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 56,
+          "videoId": "ds20RtefIZc",
+          "title": "等朋友來 ننتظر الأصدقاء | 學中文 EP056 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/ds20RtefIZc/maxresdefault.jpg",
+          "publishedAt": "2026-06-13T03:03:13Z",
+          "videoUrl": "https://www.youtube.com/watch?v=ds20RtefIZc",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 57,
+          "videoId": "EIdcpzU_i2c",
+          "title": "綠洲好涼 الواحة باردة | 學中文 EP057 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/EIdcpzU_i2c/maxresdefault.jpg",
+          "publishedAt": "2026-06-14T03:03:31Z",
+          "videoUrl": "https://www.youtube.com/watch?v=EIdcpzU_i2c",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 58,
+          "videoId": "gOSkN7K5Ck4",
+          "title": "夜空真美 السماء جميلة | 學中文 EP058 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/gOSkN7K5Ck4/maxresdefault.jpg",
+          "publishedAt": "2026-06-15T03:03:26Z",
+          "videoUrl": "https://www.youtube.com/watch?v=gOSkN7K5Ck4",
+          "source": "parsed"
+        },
+        {
+          "episodeNo": 59,
+          "videoId": "oTohXXm3Q9Q",
+          "title": "廚房的味道 نكهات المطبخ | 學中文 EP059 | صيني للأطفال",
+          "description": "🌟 تعلّم الصينية مع نور وزيد! | 和努爾、扎伊德一起學中文！\n\nنساعد الأطفال العرب على تعلم اللغة الصينية (الماندرين) بطريقة ممتعة وسهلة من خلال قصص مصورة وأغاني رائعة.\n\n✅ مناسب للأطفال من 3 إلى 8 سنوات\n✅ دروس باللغة العربية والصينية\n✅ شخصيات محبوبة: نور وزيد\n\nاشترك الآن 👇\nhttps://www.youtube.com/@ArabicKidsChinese\n\n\n🌐 الموقع الرسمي | Official Website: https://fursay.com\n📧 تواصل معنا | Contact: contact@fursay.com\n\n#صيني_للأطفال #تعلم_الصينية #الماندرين #Chinese_for_Kids #LearnChinese #ArabicKids",
+          "thumbnail": "https://i.ytimg.com/vi/oTohXXm3Q9Q/maxresdefault.jpg",
+          "publishedAt": "2026-06-16T03:03:28Z",
+          "videoUrl": "https://www.youtube.com/watch?v=oTohXXm3Q9Q",
+          "source": "parsed"
         },
         {
           "episodeNo": 461,
@@ -6192,7 +6366,9 @@
           "publishedAt": "2026-05-21T13:36:09Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ajmj6P46BuQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 585,
@@ -6203,7 +6379,9 @@
           "publishedAt": "2026-05-21T13:36:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=e8KqX05kE9E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 666,
@@ -6214,7 +6392,9 @@
           "publishedAt": "2026-05-21T13:37:41Z",
           "videoUrl": "https://www.youtube.com/watch?v=1ReeXtpxolQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 667,
@@ -6225,7 +6405,9 @@
           "publishedAt": "2026-05-21T13:38:19Z",
           "videoUrl": "https://www.youtube.com/watch?v=qh6McUi-jk0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 668,
@@ -6236,7 +6418,9 @@
           "publishedAt": "2026-05-21T13:38:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=K1nBikE-fng",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 780,
@@ -6247,7 +6431,9 @@
           "publishedAt": "2026-05-21T11:00:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=g-9AGDYB7cA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 781,
@@ -6258,7 +6444,9 @@
           "publishedAt": "2026-05-21T11:00:52Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ev-nbzNFZeY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 782,
@@ -6269,7 +6457,9 @@
           "publishedAt": "2026-05-21T11:01:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=HiekReV3K6E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 783,
@@ -6280,7 +6470,9 @@
           "publishedAt": "2026-05-21T11:02:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=gErdZKCVr_0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 784,
@@ -6291,7 +6483,9 @@
           "publishedAt": "2026-05-21T11:03:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=Z5zh6TEU9vQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 785,
@@ -6302,7 +6496,9 @@
           "publishedAt": "2026-05-21T11:03:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=L6Pz9JiedHg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 786,
@@ -6313,7 +6509,9 @@
           "publishedAt": "2026-05-21T11:04:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ke3X1TwLZaw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 787,
@@ -6324,7 +6522,9 @@
           "publishedAt": "2026-05-21T11:05:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=KL5uGIveOi0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 788,
@@ -6335,7 +6535,9 @@
           "publishedAt": "2026-05-21T11:06:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=-AtoPxxJ2d4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 789,
@@ -6346,7 +6548,9 @@
           "publishedAt": "2026-05-21T11:06:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=Q4foqD_DkrI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 790,
@@ -6357,7 +6561,9 @@
           "publishedAt": "2026-05-21T11:07:33Z",
           "videoUrl": "https://www.youtube.com/watch?v=AsCtUHqc1B8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 791,
@@ -6368,7 +6574,9 @@
           "publishedAt": "2026-05-21T11:08:13Z",
           "videoUrl": "https://www.youtube.com/watch?v=yUQBXfwcsL4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 792,
@@ -6379,7 +6587,9 @@
           "publishedAt": "2026-05-21T11:08:51Z",
           "videoUrl": "https://www.youtube.com/watch?v=uaMTv0ll0AM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 793,
@@ -6390,7 +6600,9 @@
           "publishedAt": "2026-05-21T11:09:37Z",
           "videoUrl": "https://www.youtube.com/watch?v=DxYm4GBf5Ow",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 794,
@@ -6401,7 +6613,9 @@
           "publishedAt": "2026-05-21T11:10:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=NbfwNniFIoA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 795,
@@ -6412,7 +6626,9 @@
           "publishedAt": "2026-05-21T11:10:52Z",
           "videoUrl": "https://www.youtube.com/watch?v=g-VDKEwnw8g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 796,
@@ -6423,7 +6639,9 @@
           "publishedAt": "2026-05-21T11:11:37Z",
           "videoUrl": "https://www.youtube.com/watch?v=hOewS3aXF1U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 797,
@@ -6434,7 +6652,9 @@
           "publishedAt": "2026-05-21T11:12:17Z",
           "videoUrl": "https://www.youtube.com/watch?v=G4z2SyxcY1Y",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 798,
@@ -6445,7 +6665,9 @@
           "publishedAt": "2026-05-21T11:12:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=6TxP8iNkLd0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 799,
@@ -6456,7 +6678,9 @@
           "publishedAt": "2026-05-21T11:14:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=sZokImpu9JY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 800,
@@ -6467,7 +6691,9 @@
           "publishedAt": "2026-05-21T11:15:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=K0JjHV927PE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 801,
@@ -6478,7 +6704,9 @@
           "publishedAt": "2026-05-21T11:15:38Z",
           "videoUrl": "https://www.youtube.com/watch?v=_HN4KGsSPKo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 802,
@@ -6489,7 +6717,9 @@
           "publishedAt": "2026-05-21T11:16:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=xTrj0EI6bJY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 803,
@@ -6500,7 +6730,9 @@
           "publishedAt": "2026-05-21T11:17:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=1aWZ2wQGzZk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 804,
@@ -6511,7 +6743,9 @@
           "publishedAt": "2026-05-21T11:17:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=v_TZPV9nuYY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 805,
@@ -6522,7 +6756,9 @@
           "publishedAt": "2026-05-21T11:18:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ja30GwrsZMg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 806,
@@ -6533,7 +6769,9 @@
           "publishedAt": "2026-05-21T11:19:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=3f2501gp6BA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 807,
@@ -6544,7 +6782,9 @@
           "publishedAt": "2026-05-21T11:19:40Z",
           "videoUrl": "https://www.youtube.com/watch?v=MLtJzVd9bdE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 808,
@@ -6555,7 +6795,9 @@
           "publishedAt": "2026-05-21T11:20:28Z",
           "videoUrl": "https://www.youtube.com/watch?v=LeoEzqkQ7c4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 809,
@@ -6566,7 +6808,9 @@
           "publishedAt": "2026-05-21T11:21:05Z",
           "videoUrl": "https://www.youtube.com/watch?v=OMf4d0lOMt4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 810,
@@ -6577,7 +6821,9 @@
           "publishedAt": "2026-05-21T11:21:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=m0qwLaOC9io",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 811,
@@ -6588,7 +6834,9 @@
           "publishedAt": "2026-05-21T11:22:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=IH6YRAsNDYg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 812,
@@ -6599,7 +6847,9 @@
           "publishedAt": "2026-05-21T11:23:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=2m7cRKpF6K0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 813,
@@ -6610,7 +6860,9 @@
           "publishedAt": "2026-05-21T11:23:54Z",
           "videoUrl": "https://www.youtube.com/watch?v=GcGA1opgqYs",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 814,
@@ -6621,7 +6873,9 @@
           "publishedAt": "2026-05-21T11:24:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=Xo6wH6vJleY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 815,
@@ -6632,7 +6886,9 @@
           "publishedAt": "2026-05-21T11:25:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=9PKbGfsH6fo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 816,
@@ -6643,7 +6899,9 @@
           "publishedAt": "2026-05-21T11:25:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=IxOKuYrKsMY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 817,
@@ -6654,7 +6912,9 @@
           "publishedAt": "2026-05-21T11:26:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=N3FnbOW287U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 818,
@@ -6665,7 +6925,9 @@
           "publishedAt": "2026-05-21T11:27:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=54AHy6vwgOc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 819,
@@ -6676,7 +6938,9 @@
           "publishedAt": "2026-05-21T11:28:03Z",
           "videoUrl": "https://www.youtube.com/watch?v=93teV2UcQEg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 820,
@@ -6687,7 +6951,9 @@
           "publishedAt": "2026-05-21T11:29:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=W92jF82MKmo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 821,
@@ -6698,7 +6964,9 @@
           "publishedAt": "2026-05-21T11:29:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=N2ZsBJAZzt0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 822,
@@ -6709,7 +6977,9 @@
           "publishedAt": "2026-05-21T11:30:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=jFaH69fe37o",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 823,
@@ -6720,7 +6990,9 @@
           "publishedAt": "2026-05-21T11:31:09Z",
           "videoUrl": "https://www.youtube.com/watch?v=-gyk5ip5j6M",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 824,
@@ -6731,7 +7003,9 @@
           "publishedAt": "2026-05-21T11:31:47Z",
           "videoUrl": "https://www.youtube.com/watch?v=nA2Dh9O8B3o",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 825,
@@ -6742,7 +7016,9 @@
           "publishedAt": "2026-05-21T11:32:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=cbIO-B88kUQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 826,
@@ -6753,7 +7029,9 @@
           "publishedAt": "2026-05-21T11:33:10Z",
           "videoUrl": "https://www.youtube.com/watch?v=U9qBsQZc1Ls",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 827,
@@ -6764,7 +7042,9 @@
           "publishedAt": "2026-05-21T11:33:47Z",
           "videoUrl": "https://www.youtube.com/watch?v=X4eeZnQRFUU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 828,
@@ -6775,7 +7055,9 @@
           "publishedAt": "2026-05-21T11:34:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=QBOgK9lldNk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 829,
@@ -6786,7 +7068,9 @@
           "publishedAt": "2026-05-21T11:35:10Z",
           "videoUrl": "https://www.youtube.com/watch?v=5Fn2icc2Sds",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 830,
@@ -6797,7 +7081,9 @@
           "publishedAt": "2026-05-21T11:35:48Z",
           "videoUrl": "https://www.youtube.com/watch?v=dJe0CED84-A",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 831,
@@ -6808,7 +7094,9 @@
           "publishedAt": "2026-05-21T11:36:26Z",
           "videoUrl": "https://www.youtube.com/watch?v=iElhGO3AY1Y",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 832,
@@ -6819,7 +7107,9 @@
           "publishedAt": "2026-05-21T11:37:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=vzCsToktl18",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 833,
@@ -6830,7 +7120,9 @@
           "publishedAt": "2026-05-21T11:37:51Z",
           "videoUrl": "https://www.youtube.com/watch?v=bCY8IyZHVNc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 834,
@@ -6841,7 +7133,9 @@
           "publishedAt": "2026-05-21T11:38:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=OkTmugAi3pI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 835,
@@ -6852,7 +7146,9 @@
           "publishedAt": "2026-05-21T11:39:19Z",
           "videoUrl": "https://www.youtube.com/watch?v=fJJXz5jNNVA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 836,
@@ -6863,7 +7159,9 @@
           "publishedAt": "2026-05-21T11:39:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=6XkXGx3jNvY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 837,
@@ -6874,7 +7172,9 @@
           "publishedAt": "2026-05-21T11:40:34Z",
           "videoUrl": "https://www.youtube.com/watch?v=H3rGT8rek1I",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 838,
@@ -6885,7 +7185,9 @@
           "publishedAt": "2026-05-21T11:41:19Z",
           "videoUrl": "https://www.youtube.com/watch?v=pPZsi4soWEc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 839,
@@ -6896,7 +7198,9 @@
           "publishedAt": "2026-05-21T11:41:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=QcA_WBU19UM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 840,
@@ -6907,7 +7211,9 @@
           "publishedAt": "2026-05-21T11:42:36Z",
           "videoUrl": "https://www.youtube.com/watch?v=vh-QCjVHVv0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 841,
@@ -6918,7 +7224,9 @@
           "publishedAt": "2026-05-21T11:43:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=Dze5uZmobWU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 842,
@@ -6929,7 +7237,9 @@
           "publishedAt": "2026-05-21T11:44:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=q_-GIdCzh-g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 843,
@@ -6940,7 +7250,9 @@
           "publishedAt": "2026-05-21T11:45:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=A00ciC4B57c",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 844,
@@ -6951,7 +7263,9 @@
           "publishedAt": "2026-05-21T11:45:45Z",
           "videoUrl": "https://www.youtube.com/watch?v=UOqQV1M7t4k",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 845,
@@ -6962,7 +7276,9 @@
           "publishedAt": "2026-05-21T11:46:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=Jqlg3HvyiFE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 846,
@@ -6973,7 +7289,9 @@
           "publishedAt": "2026-05-21T11:47:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=ONyMEq3iRks",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 847,
@@ -6984,7 +7302,9 @@
           "publishedAt": "2026-05-21T11:47:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=zR_egFmXVPM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 848,
@@ -6995,7 +7315,9 @@
           "publishedAt": "2026-05-21T11:48:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=oY0a4OLBgIk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 849,
@@ -7006,7 +7328,9 @@
           "publishedAt": "2026-05-21T11:49:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=M9vwVsjTCcQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 850,
@@ -7017,7 +7341,9 @@
           "publishedAt": "2026-05-21T11:49:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=7Gh-R2Nix0Q",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 851,
@@ -7028,7 +7354,9 @@
           "publishedAt": "2026-05-21T11:50:27Z",
           "videoUrl": "https://www.youtube.com/watch?v=1OIK7LbWY2I",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 852,
@@ -7039,7 +7367,9 @@
           "publishedAt": "2026-05-21T11:51:04Z",
           "videoUrl": "https://www.youtube.com/watch?v=vPoJ0UK7B7c",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 853,
@@ -7050,7 +7380,9 @@
           "publishedAt": "2026-05-21T11:51:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=OiKZKt_RYqE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 854,
@@ -7061,7 +7393,9 @@
           "publishedAt": "2026-05-21T11:52:26Z",
           "videoUrl": "https://www.youtube.com/watch?v=ithvjLvXQ-U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 855,
@@ -7072,7 +7406,9 @@
           "publishedAt": "2026-05-21T11:53:04Z",
           "videoUrl": "https://www.youtube.com/watch?v=_yqWLtQu2PM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 856,
@@ -7083,7 +7419,9 @@
           "publishedAt": "2026-05-21T11:53:53Z",
           "videoUrl": "https://www.youtube.com/watch?v=lyXfhtHu098",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 857,
@@ -7094,7 +7432,9 @@
           "publishedAt": "2026-05-21T11:54:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=t-U-_3nvv_E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 858,
@@ -7105,7 +7445,9 @@
           "publishedAt": "2026-05-21T11:55:12Z",
           "videoUrl": "https://www.youtube.com/watch?v=nZmJPBEuAF8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 859,
@@ -7116,7 +7458,9 @@
           "publishedAt": "2026-05-21T11:55:59Z",
           "videoUrl": "https://www.youtube.com/watch?v=y7IkVa9in5U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 860,
@@ -7127,7 +7471,9 @@
           "publishedAt": "2026-05-21T11:56:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=jp1kTX-nDWk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 861,
@@ -7138,7 +7484,9 @@
           "publishedAt": "2026-05-21T11:57:17Z",
           "videoUrl": "https://www.youtube.com/watch?v=OmfmVHcggZk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 862,
@@ -7149,7 +7497,9 @@
           "publishedAt": "2026-05-21T11:58:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=QfSp8N7bF0U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 863,
@@ -7160,7 +7510,9 @@
           "publishedAt": "2026-05-21T11:58:59Z",
           "videoUrl": "https://www.youtube.com/watch?v=11GfbQ6ZDoI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 864,
@@ -7171,7 +7523,9 @@
           "publishedAt": "2026-05-21T11:59:36Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ye_uhnbHIyo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 865,
@@ -7182,7 +7536,9 @@
           "publishedAt": "2026-05-21T12:00:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=wxw6JFiP-L0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 866,
@@ -7193,7 +7549,9 @@
           "publishedAt": "2026-05-21T12:01:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=dySLDJevlIM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 867,
@@ -7204,7 +7562,9 @@
           "publishedAt": "2026-05-21T12:01:38Z",
           "videoUrl": "https://www.youtube.com/watch?v=bJEbbgx1xvM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 868,
@@ -7215,7 +7575,9 @@
           "publishedAt": "2026-05-21T12:02:23Z",
           "videoUrl": "https://www.youtube.com/watch?v=cUMvqLQZHjQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 869,
@@ -7226,7 +7588,9 @@
           "publishedAt": "2026-05-21T12:03:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=2INGdw4cKxc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 870,
@@ -7237,7 +7601,9 @@
           "publishedAt": "2026-05-21T12:03:38Z",
           "videoUrl": "https://www.youtube.com/watch?v=GoOrPDp18r4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 871,
@@ -7248,7 +7614,9 @@
           "publishedAt": "2026-05-21T12:04:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=N74K-G3bCBQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 872,
@@ -7259,7 +7627,9 @@
           "publishedAt": "2026-05-21T12:05:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=T6rHYUVSkyM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 873,
@@ -7270,7 +7640,9 @@
           "publishedAt": "2026-05-21T12:05:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=KAGPSOsLSBg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 874,
@@ -7281,7 +7653,9 @@
           "publishedAt": "2026-05-21T12:06:27Z",
           "videoUrl": "https://www.youtube.com/watch?v=PmjSbPKv0aw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 875,
@@ -7292,7 +7666,9 @@
           "publishedAt": "2026-05-21T12:07:05Z",
           "videoUrl": "https://www.youtube.com/watch?v=gVOV5FPUKJ4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 876,
@@ -7303,7 +7679,9 @@
           "publishedAt": "2026-05-21T12:07:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=vmyRFoL2N2k",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 877,
@@ -7314,7 +7692,9 @@
           "publishedAt": "2026-05-21T12:08:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=Q1MDCns77NE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 878,
@@ -7325,7 +7705,9 @@
           "publishedAt": "2026-05-21T12:09:09Z",
           "videoUrl": "https://www.youtube.com/watch?v=c4uRsBsn2yA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 879,
@@ -7336,7 +7718,9 @@
           "publishedAt": "2026-05-21T12:09:47Z",
           "videoUrl": "https://www.youtube.com/watch?v=m1QGY0hUZFM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 880,
@@ -7347,7 +7731,9 @@
           "publishedAt": "2026-05-21T12:10:34Z",
           "videoUrl": "https://www.youtube.com/watch?v=vQhwUoUO7GY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 881,
@@ -7358,7 +7744,9 @@
           "publishedAt": "2026-05-21T12:11:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=frcA4GbHeAM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 882,
@@ -7369,7 +7757,9 @@
           "publishedAt": "2026-05-21T12:11:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=Spvnd4WMJ8I",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 883,
@@ -7380,7 +7770,9 @@
           "publishedAt": "2026-05-21T13:42:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=D-ZkGo3GCGo",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 884,
@@ -7391,7 +7783,9 @@
           "publishedAt": "2026-05-21T12:12:54Z",
           "videoUrl": "https://www.youtube.com/watch?v=uwi-f6gJJfw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 885,
@@ -7402,7 +7796,9 @@
           "publishedAt": "2026-05-21T12:13:30Z",
           "videoUrl": "https://www.youtube.com/watch?v=idBfDtipyLY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 886,
@@ -7413,7 +7809,9 @@
           "publishedAt": "2026-05-21T12:14:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=M_PtW0d03vE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 887,
@@ -7424,7 +7822,9 @@
           "publishedAt": "2026-05-21T12:14:52Z",
           "videoUrl": "https://www.youtube.com/watch?v=QL9xM1gDzDw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 888,
@@ -7435,7 +7835,9 @@
           "publishedAt": "2026-05-21T12:15:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=Ko7ODDDnEms",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 889,
@@ -7446,7 +7848,9 @@
           "publishedAt": "2026-05-21T12:16:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=suSu5KETM1Q",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 890,
@@ -7457,7 +7861,9 @@
           "publishedAt": "2026-05-21T12:16:55Z",
           "videoUrl": "https://www.youtube.com/watch?v=YUK45abBbsE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 891,
@@ -7468,7 +7874,9 @@
           "publishedAt": "2026-05-21T12:17:32Z",
           "videoUrl": "https://www.youtube.com/watch?v=Pbp6n7_i1gE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 892,
@@ -7479,7 +7887,9 @@
           "publishedAt": "2026-05-21T12:18:10Z",
           "videoUrl": "https://www.youtube.com/watch?v=z_fcw2BMavA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 893,
@@ -7490,7 +7900,9 @@
           "publishedAt": "2026-05-21T12:18:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=AOfugvnjZpc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 894,
@@ -7501,7 +7913,9 @@
           "publishedAt": "2026-05-21T12:19:33Z",
           "videoUrl": "https://www.youtube.com/watch?v=brSzpQpHzJQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 895,
@@ -7512,7 +7926,9 @@
           "publishedAt": "2026-05-21T12:20:10Z",
           "videoUrl": "https://www.youtube.com/watch?v=iKxD7onFHqA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 896,
@@ -7523,7 +7939,9 @@
           "publishedAt": "2026-05-21T12:20:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=8XbZuEcG-1I",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 897,
@@ -7534,7 +7952,9 @@
           "publishedAt": "2026-05-21T12:21:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=IMxKdJkSwwU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 898,
@@ -7545,7 +7965,9 @@
           "publishedAt": "2026-05-21T12:22:13Z",
           "videoUrl": "https://www.youtube.com/watch?v=SHK6nGNxF9E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 899,
@@ -7556,7 +7978,9 @@
           "publishedAt": "2026-05-21T12:23:14Z",
           "videoUrl": "https://www.youtube.com/watch?v=H2mbzaI5mjE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 900,
@@ -7567,7 +7991,9 @@
           "publishedAt": "2026-05-21T12:23:52Z",
           "videoUrl": "https://www.youtube.com/watch?v=4URCmfKLVVk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 901,
@@ -7578,7 +8004,9 @@
           "publishedAt": "2026-05-21T12:24:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=XcydS1Kx6bY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 902,
@@ -7589,7 +8017,9 @@
           "publishedAt": "2026-05-21T12:25:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=vG1rGhBMIg4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 903,
@@ -7600,7 +8030,9 @@
           "publishedAt": "2026-05-21T12:25:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=vu0ZIqHk7To",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 904,
@@ -7611,7 +8043,9 @@
           "publishedAt": "2026-05-21T12:26:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=2eJJkCKUXqc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 905,
@@ -7622,7 +8056,9 @@
           "publishedAt": "2026-05-21T12:27:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=onCWwpBD1m8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 906,
@@ -7633,7 +8069,9 @@
           "publishedAt": "2026-05-21T12:27:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=ZMEX_uMDieU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 907,
@@ -7644,7 +8082,9 @@
           "publishedAt": "2026-05-21T12:28:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=NkPGhS6VIq8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 908,
@@ -7655,7 +8095,9 @@
           "publishedAt": "2026-05-21T13:02:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=dJZD7k7SQBk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 909,
@@ -7666,7 +8108,9 @@
           "publishedAt": "2026-05-21T12:29:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=MLcVE6JDFKM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 910,
@@ -7677,7 +8121,9 @@
           "publishedAt": "2026-05-21T12:29:59Z",
           "videoUrl": "https://www.youtube.com/watch?v=Zgym4p6qTJU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 911,
@@ -7688,7 +8134,9 @@
           "publishedAt": "2026-05-21T12:30:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=1yOmwQNBcIk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 912,
@@ -7699,7 +8147,9 @@
           "publishedAt": "2026-05-21T12:31:26Z",
           "videoUrl": "https://www.youtube.com/watch?v=9RhGKezz6Wg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 913,
@@ -7710,7 +8160,9 @@
           "publishedAt": "2026-05-21T12:32:03Z",
           "videoUrl": "https://www.youtube.com/watch?v=jabpWL5oy-c",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 914,
@@ -7721,7 +8173,9 @@
           "publishedAt": "2026-05-21T12:33:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=4cYt5x2g1Sw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 915,
@@ -7732,7 +8186,9 @@
           "publishedAt": "2026-05-21T12:33:44Z",
           "videoUrl": "https://www.youtube.com/watch?v=ghzFu2RRMeM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 916,
@@ -7743,7 +8199,9 @@
           "publishedAt": "2026-05-21T12:34:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=IqDGQmpprK4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 917,
@@ -7754,7 +8212,9 @@
           "publishedAt": "2026-05-21T12:35:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=WaKcE4Y47-w",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 918,
@@ -7765,7 +8225,9 @@
           "publishedAt": "2026-05-21T12:35:49Z",
           "videoUrl": "https://www.youtube.com/watch?v=fIhYaFklA_4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 919,
@@ -7776,7 +8238,9 @@
           "publishedAt": "2026-05-21T12:36:26Z",
           "videoUrl": "https://www.youtube.com/watch?v=VoO5whO7cpM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 920,
@@ -7787,7 +8251,9 @@
           "publishedAt": "2026-05-21T12:37:14Z",
           "videoUrl": "https://www.youtube.com/watch?v=rT6N-1mp7AI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 921,
@@ -7798,7 +8264,9 @@
           "publishedAt": "2026-05-21T12:37:51Z",
           "videoUrl": "https://www.youtube.com/watch?v=HHD35rALRKU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 922,
@@ -7809,7 +8277,9 @@
           "publishedAt": "2026-05-21T12:38:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=erumjfQtbqc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 923,
@@ -7820,7 +8290,9 @@
           "publishedAt": "2026-05-21T12:39:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=EcAAIvLZ2to",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 924,
@@ -7831,7 +8303,9 @@
           "publishedAt": "2026-05-21T12:39:52Z",
           "videoUrl": "https://www.youtube.com/watch?v=qY_jhKGsHis",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 925,
@@ -7842,7 +8316,9 @@
           "publishedAt": "2026-05-21T12:40:29Z",
           "videoUrl": "https://www.youtube.com/watch?v=Lki6Xh8wIR8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 926,
@@ -7853,7 +8329,9 @@
           "publishedAt": "2026-05-21T12:41:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=DY4Ex1mJEi0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 927,
@@ -7864,7 +8342,9 @@
           "publishedAt": "2026-05-21T12:41:54Z",
           "videoUrl": "https://www.youtube.com/watch?v=ri6t5ANRk40",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 928,
@@ -7875,7 +8355,9 @@
           "publishedAt": "2026-05-21T12:42:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=bIMXdHsNcWY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 929,
@@ -7886,7 +8368,9 @@
           "publishedAt": "2026-05-21T12:43:18Z",
           "videoUrl": "https://www.youtube.com/watch?v=z6-IUaNjNwY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 930,
@@ -7897,7 +8381,9 @@
           "publishedAt": "2026-05-21T12:43:55Z",
           "videoUrl": "https://www.youtube.com/watch?v=Agc11Yrkuzg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 931,
@@ -7908,7 +8394,9 @@
           "publishedAt": "2026-05-21T12:44:32Z",
           "videoUrl": "https://www.youtube.com/watch?v=fpM1KEHL3P0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 932,
@@ -7919,7 +8407,9 @@
           "publishedAt": "2026-05-21T12:45:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=qAu_44qzUtU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 933,
@@ -7930,7 +8420,9 @@
           "publishedAt": "2026-05-21T12:46:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=bP8O6EOwZOk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 934,
@@ -7941,7 +8433,9 @@
           "publishedAt": "2026-05-21T12:46:53Z",
           "videoUrl": "https://www.youtube.com/watch?v=1GN-Zm7Dz4E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 935,
@@ -7952,7 +8446,9 @@
           "publishedAt": "2026-05-21T12:47:40Z",
           "videoUrl": "https://www.youtube.com/watch?v=DgeSuTo6S2Y",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 936,
@@ -7963,7 +8459,9 @@
           "publishedAt": "2026-05-21T12:48:18Z",
           "videoUrl": "https://www.youtube.com/watch?v=-8UwlvxO1E4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 937,
@@ -7974,7 +8472,9 @@
           "publishedAt": "2026-05-21T12:48:55Z",
           "videoUrl": "https://www.youtube.com/watch?v=yuObAGzfZl4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 938,
@@ -7985,7 +8485,9 @@
           "publishedAt": "2026-05-21T12:49:44Z",
           "videoUrl": "https://www.youtube.com/watch?v=QnhgcNJfYr4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 939,
@@ -7996,7 +8498,9 @@
           "publishedAt": "2026-05-21T12:50:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=EFdi0fS9Ggg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 940,
@@ -8007,7 +8511,9 @@
           "publishedAt": "2026-05-21T12:50:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=YGebvrhJf6A",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 941,
@@ -8018,7 +8524,9 @@
           "publishedAt": "2026-05-21T12:51:47Z",
           "videoUrl": "https://www.youtube.com/watch?v=PsM_AyOuTi4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 942,
@@ -8029,7 +8537,9 @@
           "publishedAt": "2026-05-21T12:52:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=nZ8_vWQzyto",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 943,
@@ -8040,7 +8550,9 @@
           "publishedAt": "2026-05-21T12:53:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=X1BbxZXA6yA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 944,
@@ -8051,7 +8563,9 @@
           "publishedAt": "2026-05-21T12:53:48Z",
           "videoUrl": "https://www.youtube.com/watch?v=gtnQfErkOeU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 945,
@@ -8062,7 +8576,9 @@
           "publishedAt": "2026-05-21T12:54:25Z",
           "videoUrl": "https://www.youtube.com/watch?v=WAqafBvMn4Y",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 946,
@@ -8073,7 +8589,9 @@
           "publishedAt": "2026-05-21T12:55:03Z",
           "videoUrl": "https://www.youtube.com/watch?v=5qcMh-aVJIE",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 947,
@@ -8084,7 +8602,9 @@
           "publishedAt": "2026-05-21T12:55:54Z",
           "videoUrl": "https://www.youtube.com/watch?v=LApysnE4irk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 948,
@@ -8095,7 +8615,9 @@
           "publishedAt": "2026-05-21T12:56:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=6X55rOuqHLY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 949,
@@ -8106,7 +8628,9 @@
           "publishedAt": "2026-05-21T12:57:11Z",
           "videoUrl": "https://www.youtube.com/watch?v=9F5cOOykKa0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 950,
@@ -8117,7 +8641,9 @@
           "publishedAt": "2026-05-21T12:57:57Z",
           "videoUrl": "https://www.youtube.com/watch?v=kap3kPQgr6A",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 951,
@@ -8128,7 +8654,9 @@
           "publishedAt": "2026-05-21T12:58:35Z",
           "videoUrl": "https://www.youtube.com/watch?v=B61qwYAaqIk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 952,
@@ -8139,7 +8667,9 @@
           "publishedAt": "2026-05-21T12:59:12Z",
           "videoUrl": "https://www.youtube.com/watch?v=O6jfoKtGiaI",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 953,
@@ -8150,7 +8680,9 @@
           "publishedAt": "2026-05-21T13:00:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=ZVcajoOuWxU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 954,
@@ -8161,7 +8693,9 @@
           "publishedAt": "2026-05-21T13:00:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=JU6lBQ5vlvM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 955,
@@ -8172,7 +8706,9 @@
           "publishedAt": "2026-05-21T13:01:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=PGGqK-xTqTA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 956,
@@ -8183,7 +8719,9 @@
           "publishedAt": "2026-05-21T13:03:00Z",
           "videoUrl": "https://www.youtube.com/watch?v=9_u_sj7M_ek",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 957,
@@ -8194,7 +8732,9 @@
           "publishedAt": "2026-05-21T13:03:37Z",
           "videoUrl": "https://www.youtube.com/watch?v=YyyUepCv3tw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 958,
@@ -8205,7 +8745,9 @@
           "publishedAt": "2026-05-21T13:04:14Z",
           "videoUrl": "https://www.youtube.com/watch?v=U3a6eCgrXnk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 959,
@@ -8216,7 +8758,9 @@
           "publishedAt": "2026-05-21T13:04:58Z",
           "videoUrl": "https://www.youtube.com/watch?v=u0NZ_0-bJGA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 960,
@@ -8227,7 +8771,9 @@
           "publishedAt": "2026-05-21T13:05:36Z",
           "videoUrl": "https://www.youtube.com/watch?v=16ERxZsj7II",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 961,
@@ -8238,7 +8784,9 @@
           "publishedAt": "2026-05-21T13:06:13Z",
           "videoUrl": "https://www.youtube.com/watch?v=RSxXEUjF9yg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 962,
@@ -8249,7 +8797,9 @@
           "publishedAt": "2026-05-21T13:07:04Z",
           "videoUrl": "https://www.youtube.com/watch?v=uIrUzxQesfg",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 963,
@@ -8260,7 +8810,9 @@
           "publishedAt": "2026-05-21T13:07:41Z",
           "videoUrl": "https://www.youtube.com/watch?v=K3NLPj7k99A",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 964,
@@ -8271,7 +8823,9 @@
           "publishedAt": "2026-05-21T13:08:21Z",
           "videoUrl": "https://www.youtube.com/watch?v=A4nNCsQkB0g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 965,
@@ -8282,7 +8836,9 @@
           "publishedAt": "2026-05-21T13:09:09Z",
           "videoUrl": "https://www.youtube.com/watch?v=DLteCS_Mp1I",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 966,
@@ -8293,7 +8849,9 @@
           "publishedAt": "2026-05-21T13:09:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=9cBl8Vmqg-8",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 967,
@@ -8304,7 +8862,9 @@
           "publishedAt": "2026-05-21T13:10:24Z",
           "videoUrl": "https://www.youtube.com/watch?v=tfxJputa_pk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 968,
@@ -8315,7 +8875,9 @@
           "publishedAt": "2026-05-21T13:11:31Z",
           "videoUrl": "https://www.youtube.com/watch?v=t3DsLCofohQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 969,
@@ -8326,7 +8888,9 @@
           "publishedAt": "2026-05-21T13:12:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=H8kCi2Cra7g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 970,
@@ -8337,7 +8901,9 @@
           "publishedAt": "2026-05-21T13:12:45Z",
           "videoUrl": "https://www.youtube.com/watch?v=rBZfdhSamgA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 971,
@@ -8348,7 +8914,9 @@
           "publishedAt": "2026-05-21T13:13:50Z",
           "videoUrl": "https://www.youtube.com/watch?v=4PEFAykTOUQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 972,
@@ -8359,7 +8927,9 @@
           "publishedAt": "2026-05-21T13:14:30Z",
           "videoUrl": "https://www.youtube.com/watch?v=u2IFUHb9asQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 973,
@@ -8370,7 +8940,9 @@
           "publishedAt": "2026-05-21T13:15:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=G2SGL6wTHoA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 974,
@@ -8381,7 +8953,9 @@
           "publishedAt": "2026-05-21T13:15:56Z",
           "videoUrl": "https://www.youtube.com/watch?v=XkXd0syof_g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 975,
@@ -8392,7 +8966,9 @@
           "publishedAt": "2026-05-21T13:16:33Z",
           "videoUrl": "https://www.youtube.com/watch?v=LaiECXs54FQ",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 976,
@@ -8403,7 +8979,9 @@
           "publishedAt": "2026-05-21T13:17:14Z",
           "videoUrl": "https://www.youtube.com/watch?v=ImgdCnMDZpY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 977,
@@ -8414,7 +8992,9 @@
           "publishedAt": "2026-05-21T13:17:59Z",
           "videoUrl": "https://www.youtube.com/watch?v=xoN5U3H2JS4",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 978,
@@ -8425,7 +9005,9 @@
           "publishedAt": "2026-05-21T13:18:36Z",
           "videoUrl": "https://www.youtube.com/watch?v=eCcG_jgNPxY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 979,
@@ -8436,7 +9018,9 @@
           "publishedAt": "2026-05-21T13:19:13Z",
           "videoUrl": "https://www.youtube.com/watch?v=u0hzGDAO7pU",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 980,
@@ -8447,7 +9031,9 @@
           "publishedAt": "2026-05-21T13:19:59Z",
           "videoUrl": "https://www.youtube.com/watch?v=ihWGcGJER5s",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 981,
@@ -8458,7 +9044,9 @@
           "publishedAt": "2026-05-21T13:20:36Z",
           "videoUrl": "https://www.youtube.com/watch?v=1SaAcXCLS28",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 982,
@@ -8469,7 +9057,9 @@
           "publishedAt": "2026-05-21T13:21:14Z",
           "videoUrl": "https://www.youtube.com/watch?v=ldzJgG3Ss8U",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 983,
@@ -8480,7 +9070,9 @@
           "publishedAt": "2026-05-21T13:22:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=XRBIQzct-_g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 984,
@@ -8491,7 +9083,9 @@
           "publishedAt": "2026-05-21T13:22:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=a_QHbcIOUuY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 985,
@@ -8502,7 +9096,9 @@
           "publishedAt": "2026-05-21T13:23:16Z",
           "videoUrl": "https://www.youtube.com/watch?v=O2VNUZgLM34",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 986,
@@ -8513,7 +9109,9 @@
           "publishedAt": "2026-05-21T13:24:01Z",
           "videoUrl": "https://www.youtube.com/watch?v=7WQnV7w4B5Q",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 987,
@@ -8524,7 +9122,9 @@
           "publishedAt": "2026-05-21T13:24:39Z",
           "videoUrl": "https://www.youtube.com/watch?v=o1DKE12C790",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 988,
@@ -8535,7 +9135,9 @@
           "publishedAt": "2026-05-21T13:25:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=WaUkhBoaXYk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 989,
@@ -8546,7 +9148,9 @@
           "publishedAt": "2026-05-21T13:26:02Z",
           "videoUrl": "https://www.youtube.com/watch?v=voqsHjDEw7E",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 990,
@@ -8557,7 +9161,9 @@
           "publishedAt": "2026-05-21T13:26:42Z",
           "videoUrl": "https://www.youtube.com/watch?v=3BrStJqVmOw",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 991,
@@ -8568,7 +9174,9 @@
           "publishedAt": "2026-05-21T13:27:20Z",
           "videoUrl": "https://www.youtube.com/watch?v=DDox3o5tX_0",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 992,
@@ -8579,7 +9187,9 @@
           "publishedAt": "2026-05-21T13:28:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=CsYlLxjbtKk",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 993,
@@ -8590,7 +9200,9 @@
           "publishedAt": "2026-05-21T13:28:45Z",
           "videoUrl": "https://www.youtube.com/watch?v=_S4Y229jpSY",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 994,
@@ -8601,7 +9213,9 @@
           "publishedAt": "2026-05-21T13:29:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=G0A-0mwDj3g",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 995,
@@ -8612,7 +9226,9 @@
           "publishedAt": "2026-05-21T13:30:07Z",
           "videoUrl": "https://www.youtube.com/watch?v=2xXWxfJrxng",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 996,
@@ -8623,7 +9239,9 @@
           "publishedAt": "2026-05-21T13:30:45Z",
           "videoUrl": "https://www.youtube.com/watch?v=qUDW7O9dOOM",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 997,
@@ -8634,7 +9252,9 @@
           "publishedAt": "2026-05-21T13:31:22Z",
           "videoUrl": "https://www.youtube.com/watch?v=AN4KejC8DLA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 998,
@@ -8645,7 +9265,9 @@
           "publishedAt": "2026-05-21T13:32:08Z",
           "videoUrl": "https://www.youtube.com/watch?v=BGoueJXIYbA",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         },
         {
           "episodeNo": 999,
@@ -8656,13 +9278,79 @@
           "publishedAt": "2026-05-21T13:32:46Z",
           "videoUrl": "https://www.youtube.com/watch?v=V6ls0xJegzc",
           "source": "parsed",
-          "sentAt": null
+          "sentAt": null,
+          "campaignId": null,
+          "deliveryMethod": null
         }
       ],
-      "lastSyncedAt": "2026-06-09T13:31:08.649Z"
+      "lastSyncedAt": "2026-06-16T13:32:14.313Z"
     }
   },
   "runs": [
+    {
+      "runId": "1781616784230-t2jz1x",
+      "channel": "arabic",
+      "mode": "chrome-result",
+      "episodeNo": 1,
+      "status": "chrome_publish_failed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": null,
+      "providerErrorCode": "subscriber_empty",
+      "warnings": [],
+      "error": "Target group \"Noor subscribers\" has 0 active subscribers",
+      "startedAt": "2026-06-16T13:33:04.230Z",
+      "finishedAt": "2026-06-16T13:33:04.232Z"
+    },
+    {
+      "runId": "1781616777957-prkpeg",
+      "channel": "arabic",
+      "mode": "chrome-handoff",
+      "episodeNo": 1,
+      "status": "chrome_handoff_ready",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-17T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [
+        "Target group \"Noor subscribers\" has 0 active subscribers"
+      ],
+      "error": null,
+      "startedAt": "2026-06-16T13:32:57.957Z",
+      "finishedAt": "2026-06-16T13:32:58.483Z"
+    },
+    {
+      "runId": "1781616771695-3bylgi",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-17T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [
+        "Target group \"Noor subscribers\" has 0 active subscribers"
+      ],
+      "error": null,
+      "startedAt": "2026-06-16T13:32:51.695Z",
+      "finishedAt": "2026-06-16T13:32:52.309Z"
+    },
+    {
+      "runId": "1781616731896-h7litz",
+      "channel": "arabic",
+      "mode": "prepare",
+      "episodeNo": 1,
+      "status": "prepared",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": null,
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-16T13:32:11.896Z",
+      "finishedAt": "2026-06-16T13:32:14.316Z"
+    },
     {
       "runId": "1781482697107-mkjc24",
       "channel": "koko",
@@ -9368,59 +10056,6 @@
       "error": null,
       "startedAt": "2026-05-26T13:03:33.172Z",
       "finishedAt": "2026-05-26T13:03:33.687Z"
-    },
-    {
-      "runId": "1779800557553-7x9bnc",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": null,
-      "error": null,
-      "startedAt": "2026-05-26T13:02:37.553Z",
-      "finishedAt": "2026-05-26T13:02:38.497Z"
-    },
-    {
-      "runId": "1779585442921-a79mwg",
-      "channel": "koko",
-      "mode": "send",
-      "episodeNo": 1,
-      "status": "dry_run_passed",
-      "dryRun": true,
-      "campaignId": null,
-      "scheduledAt": "2026-05-25T09:00:00+08:00",
-      "error": null,
-      "startedAt": "2026-05-24T01:17:22.921Z",
-      "finishedAt": "2026-05-24T01:17:22.951Z"
-    },
-    {
-      "runId": "1779585415430-qganvw",
-      "channel": "koko",
-      "mode": "prepare",
-      "episodeNo": 1,
-      "status": "prepared",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "error": null,
-      "startedAt": "2026-05-24T01:16:55.430Z",
-      "finishedAt": "2026-05-24T01:16:58.328Z"
-    },
-    {
-      "runId": "1779499882448-dfx5m0",
-      "channel": "arabic",
-      "mode": "send",
-      "episodeNo": 1,
-      "status": "dry_run_passed",
-      "dryRun": true,
-      "campaignId": null,
-      "scheduledAt": "2026-05-24T09:00:00+08:00",
-      "error": null,
-      "startedAt": "2026-05-23T01:31:22.448Z",
-      "finishedAt": "2026-05-23T01:31:22.486Z"
     }
   ]
 }
