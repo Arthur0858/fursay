@@ -9288,6 +9288,36 @@
   },
   "runs": [
     {
+      "runId": "1782055508289-b4d75j",
+      "channel": "koko",
+      "mode": "chrome-handoff",
+      "episodeNo": 5,
+      "status": "chrome_handoff_ready",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T15:25:08.289Z",
+      "finishedAt": "2026-06-21T15:25:08.793Z"
+    },
+    {
+      "runId": "1782055507642-1t3ya3",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T15:25:07.642Z",
+      "finishedAt": "2026-06-21T15:25:08.224Z"
+    },
+    {
       "runId": "1782055050799-1gcq6b",
       "channel": "koko",
       "mode": "chrome-handoff",
@@ -10022,36 +10052,6 @@
       "error": null,
       "startedAt": "2026-06-07T05:32:33.104Z",
       "finishedAt": "2026-06-07T05:32:33.601Z"
-    },
-    {
-      "runId": "1780810314193-0d3oll",
-      "channel": "koko",
-      "mode": "prepare",
-      "episodeNo": 2,
-      "status": "prepared",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-07T05:31:54.193Z",
-      "finishedAt": "2026-06-07T05:31:58.007Z"
-    },
-    {
-      "runId": "1780743376634-7tjkih",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-08T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-06T10:56:16.634Z",
-      "finishedAt": "2026-06-06T10:56:17.633Z"
     }
   ]
 }
