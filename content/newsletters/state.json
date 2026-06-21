@@ -9288,6 +9288,36 @@
   },
   "runs": [
     {
+      "runId": "1782058506275-5irexz",
+      "channel": "koko",
+      "mode": "chrome-handoff",
+      "episodeNo": 5,
+      "status": "chrome_handoff_ready",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T16:15:06.275Z",
+      "finishedAt": "2026-06-21T16:15:06.819Z"
+    },
+    {
+      "runId": "1782058505565-00wqd0",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T16:15:05.566Z",
+      "finishedAt": "2026-06-21T16:15:06.181Z"
+    },
+    {
       "runId": "1782057960354-8yy2rk",
       "channel": "koko",
       "mode": "chrome-handoff",
@@ -10022,36 +10052,6 @@
       "error": null,
       "startedAt": "2026-06-09T13:31:06.331Z",
       "finishedAt": "2026-06-09T13:31:08.653Z"
-    },
-    {
-      "runId": "1780890172627-i5x6xz",
-      "channel": "koko",
-      "mode": "chrome-result",
-      "episodeNo": null,
-      "status": "failed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": "unknown",
-      "warnings": [],
-      "error": "Episode already sent: koko ep4",
-      "startedAt": "2026-06-08T03:42:52.627Z",
-      "finishedAt": "2026-06-08T03:42:52.633Z"
-    },
-    {
-      "runId": "1780886843292-q3b9nr",
-      "channel": "koko",
-      "mode": "chrome-result",
-      "episodeNo": 4,
-      "status": "scheduled_by_chrome",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-15T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-08T02:47:23.292Z",
-      "finishedAt": "2026-06-08T02:47:23.333Z"
     }
   ]
 }
