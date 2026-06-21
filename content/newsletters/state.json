@@ -9288,6 +9288,38 @@
   },
   "runs": [
     {
+      "runId": "1782044474444-d0yibi",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T12:21:14.444Z",
+      "finishedAt": "2026-06-21T12:21:14.973Z"
+    },
+    {
+      "runId": "1782044131797-318od8",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-24T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [
+        "Target group \"Noor subscribers\" has 0 active subscribers"
+      ],
+      "error": null,
+      "startedAt": "2026-06-21T12:15:31.797Z",
+      "finishedAt": "2026-06-21T12:15:32.748Z"
+    },
+    {
       "runId": "1781616784230-t2jz1x",
       "channel": "arabic",
       "mode": "chrome-result",
@@ -10026,36 +10058,6 @@
       "error": null,
       "startedAt": "2026-05-26T13:04:32.246Z",
       "finishedAt": "2026-05-26T13:04:32.260Z"
-    },
-    {
-      "runId": "1779800661767-amt8ul",
-      "channel": "arabic",
-      "mode": "send",
-      "episodeNo": 1,
-      "status": "dry_run_passed",
-      "dryRun": true,
-      "campaignId": null,
-      "scheduledAt": "2026-05-27T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-05-26T13:04:21.767Z",
-      "finishedAt": "2026-05-26T13:04:21.782Z"
-    },
-    {
-      "runId": "1779800613172-otbptd",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-01T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-05-26T13:03:33.172Z",
-      "finishedAt": "2026-05-26T13:03:33.687Z"
     }
   ]
 }
