@@ -9288,6 +9288,36 @@
   },
   "runs": [
     {
+      "runId": "1782068978666-f7cz1b",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T19:09:38.666Z",
+      "finishedAt": "2026-06-21T19:09:39.273Z"
+    },
+    {
+      "runId": "1782068949485-gtylv2",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T19:09:09.485Z",
+      "finishedAt": "2026-06-21T19:09:10.147Z"
+    },
+    {
       "runId": "1782061834294-iwbp43",
       "channel": "koko",
       "mode": "chrome-handoff",
@@ -10020,36 +10050,6 @@
       "error": null,
       "startedAt": "2026-06-11T01:00:47.601Z",
       "finishedAt": "2026-06-11T01:00:48.040Z"
-    },
-    {
-      "runId": "1781139647009-osh1zr",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-15T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-11T01:00:47.009Z",
-      "finishedAt": "2026-06-11T01:00:47.544Z"
-    },
-    {
-      "runId": "1781011928228-5tuezq",
-      "channel": "arabic",
-      "mode": "chrome-result",
-      "episodeNo": 1,
-      "status": "chrome_publish_failed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": "subscriber_empty",
-      "warnings": [],
-      "error": "Target group \"Noor subscribers\" has 0 active subscribers",
-      "startedAt": "2026-06-09T13:32:08.228Z",
-      "finishedAt": "2026-06-09T13:32:08.230Z"
     }
   ]
 }
