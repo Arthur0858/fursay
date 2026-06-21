@@ -9288,6 +9288,36 @@
   },
   "runs": [
     {
+      "runId": "1782057896651-1o48cd",
+      "channel": "koko",
+      "mode": "chrome-handoff",
+      "episodeNo": 5,
+      "status": "chrome_handoff_ready",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T16:04:56.651Z",
+      "finishedAt": "2026-06-21T16:04:57.235Z"
+    },
+    {
+      "runId": "1782057895960-90teja",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-21T16:04:55.961Z",
+      "finishedAt": "2026-06-21T16:04:56.597Z"
+    },
+    {
       "runId": "1782057825025-fsl6m1",
       "channel": "koko",
       "mode": "api-preflight",
@@ -10022,41 +10052,6 @@
       "error": null,
       "startedAt": "2026-06-08T02:39:05.163Z",
       "finishedAt": "2026-06-08T02:39:05.178Z"
-    },
-    {
-      "runId": "1780886337988-kwuete",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-15T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-08T02:38:57.988Z",
-      "finishedAt": "2026-06-08T02:38:58.600Z"
-    },
-    {
-      "runId": "1780886304097-i3zesk",
-      "channel": "koko",
-      "mode": "prepare",
-      "episodeNo": 4,
-      "status": "prepared",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-08T02:38:24.097Z",
-      "finishedAt": "2026-06-08T02:38:28.273Z"
-    }
-  ]
-}
-08T02:38:24.097Z",
-      "finishedAt": "2026-06-08T02:38:28.273Z"
     }
   ]
 }
