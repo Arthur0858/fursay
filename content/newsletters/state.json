@@ -9290,6 +9290,23 @@
   },
   "runs": [
     {
+      "runId": "1782135067630-50dbnu",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-24T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [
+        "Target group \"Noor subscribers\" has 0 active subscribers"
+      ],
+      "error": null,
+      "startedAt": "2026-06-22T13:31:07.630Z",
+      "finishedAt": "2026-06-22T13:31:08.261Z"
+    },
+    {
       "runId": "1782123621015-655bgn",
       "channel": "koko",
       "mode": "api-preflight",
@@ -10033,21 +10050,6 @@
       "error": "Visible blocker: MailerLite opened https://accounts.mailerlite.com/ with page title 'Sign in to your MailerLite account'; no logged-in Fursay/Koko workspace session available.",
       "startedAt": "2026-06-15T00:18:17.107Z",
       "finishedAt": "2026-06-15T00:18:17.109Z"
-    },
-    {
-      "runId": "1781482661495-17pawt",
-      "channel": "koko",
-      "mode": "chrome-handoff",
-      "episodeNo": 5,
-      "status": "chrome_handoff_ready",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-22T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-15T00:17:41.495Z",
-      "finishedAt": "2026-06-15T00:17:42.069Z"
     }
   ]
 }
