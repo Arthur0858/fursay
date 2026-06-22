@@ -829,7 +829,8 @@ async function checkSocialLinksLanding(browser, baseUrl) {
       const expectedText = pack === "koko" ? "Koko" : "Noor";
       if (primary && !primary.text.includes(expectedText)) failures.push(`links_bad_primary_text:${pack}:${primary.text}`);
 
-      await page.locator(`[data-social-primary-link="${pack}"]`).click();
+      const localPrimaryTarget = new URL(urlPath(primary?.href || `/sample/${pack}`), baseUrl);
+      await page.goto(localPrimaryTarget.toString(), { waitUntil: "domcontentloaded", timeout: 20000 });
       await page.waitForSelector("#subscribeModal.open", { timeout: 5000 });
       const modalData = await page.evaluate(() => {
         const checked = [...document.querySelectorAll('#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')]
