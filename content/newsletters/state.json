@@ -9290,6 +9290,21 @@
   },
   "runs": [
     {
+      "runId": "1782122422677-kw1pzh",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-22T10:00:22.677Z",
+      "finishedAt": "2026-06-22T10:00:23.276Z"
+    },
+    {
       "runId": "1782107110953-zltybs",
       "channel": "koko",
       "mode": "api-preflight",
@@ -10033,21 +10048,6 @@
       "error": null,
       "startedAt": "2026-06-15T00:17:36.553Z",
       "finishedAt": "2026-06-15T00:17:36.569Z"
-    },
-    {
-      "runId": "1781482605465-t3u431",
-      "channel": "koko",
-      "mode": "send",
-      "episodeNo": 5,
-      "status": "failed",
-      "dryRun": true,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": "unknown",
-      "warnings": [],
-      "error": "QA failed: rendered email must include the creator-kit tracked site CTA URL",
-      "startedAt": "2026-06-15T00:16:45.465Z",
-      "finishedAt": "2026-06-15T00:16:45.468Z"
     }
   ]
 }
