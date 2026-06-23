@@ -9290,6 +9290,21 @@
   },
   "runs": [
     {
+      "runId": "1782172958139-rr2im1",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-06-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-23T00:02:38.139Z",
+      "finishedAt": "2026-06-23T00:02:38.782Z"
+    },
+    {
       "runId": "1782135067630-50dbnu",
       "channel": "arabic",
       "mode": "api-preflight",
@@ -10035,21 +10050,11 @@
       "error": null,
       "startedAt": "2026-06-16T13:32:11.896Z",
       "finishedAt": "2026-06-16T13:32:14.316Z"
-    },
-    {
-      "runId": "1781482697107-mkjc24",
-      "channel": "koko",
-      "mode": "chrome-result",
-      "episodeNo": 5,
-      "status": "chrome_publish_failed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": null,
-      "providerErrorCode": "login_required",
-      "warnings": [],
-      "error": "Visible blocker: MailerLite opened https://accounts.mailerlite.com/ with page title 'Sign in to your MailerLite account'; no logged-in Fursay/Koko workspace session available.",
-      "startedAt": "2026-06-15T00:18:17.107Z",
-      "finishedAt": "2026-06-15T00:18:17.109Z"
+    }
+  ]
+}
+16T13:32:11.896Z",
+      "finishedAt": "2026-06-16T13:32:14.316Z"
     }
   ]
 }
