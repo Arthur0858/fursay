@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-06-27",
+  "updatedAt": "2026-06-28",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
