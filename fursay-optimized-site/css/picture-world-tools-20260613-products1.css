@@ -296,6 +296,9 @@ body.picture-world .share-kit-interest-button {
   margin-top: 4px !important;
   white-space: normal !important;
 }
+body.picture-world .product-sample-after-pdf-interest {
+  white-space: normal !important;
+}
 body.picture-world .product-interest-nudge {
   max-width: 760px !important;
   margin: 10px 0 12px !important;

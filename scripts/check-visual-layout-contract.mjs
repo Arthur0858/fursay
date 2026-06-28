@@ -302,7 +302,8 @@ function checkLayout(spec, viewport, layout) {
   if (!heroCtas.length) failures.push(`${prefix}:hero_subscribe_cta_missing`);
   for (const cta of heroCtas) {
     checkRectInsideViewport(failures, `${prefix}:cta_${cta.pack || cta.index}`, cta.rect, viewport, 8);
-    if (!spec.product && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
+    const mustBeInFirstView = !spec.product && (!spec.sample || cta.stage === "sample_preview_waitlist");
+    if (mustBeInFirstView && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
     if (cta.rect.width < 44 || cta.rect.height < 36) failures.push(`${prefix}:cta_touch_target:${cta.pack || cta.index}:${Math.round(cta.rect.width)}x${Math.round(cta.rect.height)}`);
     if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
     if (spec.product && !["waitlist", "validation_pdf_interest"].includes(cta.stage)) failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
@@ -310,7 +311,7 @@ function checkLayout(spec, viewport, layout) {
       failures.push(`${prefix}:product_validation_cta_contract:${cta.pack || "none"}:${cta.source || "none"}`);
     }
     if (spec.product && cta.overflowX) failures.push(`${prefix}:product_cta_text_overflow:${cta.pack || cta.index}`);
-    if (spec.sample && cta.stage !== "sample_preview_waitlist") failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.sample && !["sample_preview_waitlist", "sample_after_pdf_interest"].includes(cta.stage)) failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.sample && cta.overflowX) failures.push(`${prefix}:sample_cta_text_overflow:${cta.pack || cta.index}`);
   }
 
@@ -340,7 +341,10 @@ function checkLayout(spec, viewport, layout) {
       checkRectInsideViewport(failures, `${prefix}:sample_activity`, sample.activity.rect, viewport, 8);
       if (sample.activity.overflowX) failures.push(`${prefix}:sample_activity_overflow`);
     }
-    if (sample.buttons.length !== 1) failures.push(`${prefix}:sample_button_count:${sample.buttons.length}`);
+    const waitlistButtons = sample.buttons.filter((button) => button.stage === "sample_preview_waitlist");
+    const afterPdfButtons = sample.buttons.filter((button) => button.stage === "sample_after_pdf_interest");
+    if (waitlistButtons.length !== 1) failures.push(`${prefix}:sample_button_count:${waitlistButtons.length}`);
+    if (afterPdfButtons.length !== 1) failures.push(`${prefix}:sample_after_pdf_button_count:${afterPdfButtons.length}`);
     for (const button of sample.buttons) {
       if (button.pack !== sample.pack) failures.push(`${prefix}:sample_button_pack:${button.pack || "none"}!=${sample.pack || "none"}`);
     }

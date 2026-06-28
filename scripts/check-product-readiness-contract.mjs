@@ -463,12 +463,51 @@ async function checkSamplePrintInteraction(baseUrl) {
       const privateHits = payloadHasPrivateNeedle(eventPayloads);
       if (privateHits.length) failures.push(`sample_print:${sample.pack}:event_payload_private_needles:${privateHits.join(",")}`);
       if (!eventPayloads.some((payload) => payload.event === "fursay_product_info_click")) failures.push(`sample_print:${sample.pack}:api_event_missing_product_info`);
+
+      const interestMeta = await page.evaluate((pack) => {
+        const button = document.querySelector(`[data-product-interest="${pack}"][data-interest-stage="sample_after_pdf_interest"]`);
+        if (!button) return null;
+        button.click();
+        const modal = document.querySelector("#subscribeModal");
+        const checkedGroups = [...document.querySelectorAll('#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')]
+          .map((input) => input.value === "arabic" ? "noor" : input.value);
+        return {
+          pack: button.getAttribute("data-product-interest") || "",
+          stage: button.getAttribute("data-interest-stage") || "",
+          signupSource: button.getAttribute("data-signup-source") || "",
+          modalOpen: modal?.classList.contains("open") || false,
+          modalSignupSource: modal?.dataset.signupSource || "",
+          modalPreselect: modal?.dataset.preselect || "",
+          checkedGroups,
+        };
+      }, sample.pack);
+      await page.waitForTimeout(250);
+      const interestState = await page.evaluate(() => ({
+        events: window.fursayEvents || [],
+        dataLayer: window.dataLayer || [],
+      }));
+      if (!interestMeta) failures.push(`sample_after_pdf_interest:${sample.pack}:missing_button`);
+      const interestEvent = [...interestState.events].reverse().find((event) => event.event === "fursay_product_interest_click");
+      const modalEvent = [...interestState.events].reverse().find((event) => event.event === "fursay_subscribe_modal_open");
+      if (!interestEvent) failures.push(`sample_after_pdf_interest:${sample.pack}:missing_product_interest_event`);
+      if (interestEvent?.detail?.path !== sample.path) failures.push(`sample_after_pdf_interest:${sample.pack}:event_path:${interestEvent?.detail?.path || "none"}`);
+      if (interestEvent?.detail?.product_interest !== sample.pack) failures.push(`sample_after_pdf_interest:${sample.pack}:event_interest:${interestEvent?.detail?.product_interest || "none"}`);
+      if (interestEvent?.detail?.interest_stage !== "sample_after_pdf_interest") failures.push(`sample_after_pdf_interest:${sample.pack}:event_stage:${interestEvent?.detail?.interest_stage || "none"}`);
+      if (interestEvent?.detail?.signup_source !== `sample_after_pdf_interest_${sample.pack}`) failures.push(`sample_after_pdf_interest:${sample.pack}:event_source:${interestEvent?.detail?.signup_source || "none"}`);
+      if (!modalEvent) failures.push(`sample_after_pdf_interest:${sample.pack}:missing_modal_event`);
+      if (interestMeta && !interestMeta.modalOpen) failures.push(`sample_after_pdf_interest:${sample.pack}:modal_not_open`);
+      if (interestMeta && interestMeta.modalSignupSource !== `sample_after_pdf_interest_${sample.pack}`) failures.push(`sample_after_pdf_interest:${sample.pack}:modal_source:${interestMeta.modalSignupSource || "none"}`);
+      if (interestMeta && interestMeta.modalPreselect !== sample.pack) failures.push(`sample_after_pdf_interest:${sample.pack}:modal_preselect:${interestMeta.modalPreselect || "none"}`);
+      if (interestMeta && !interestMeta.checkedGroups.includes(sample.pack)) failures.push(`sample_after_pdf_interest:${sample.pack}:modal_group:${interestMeta.checkedGroups.join(",") || "none"}`);
+      if (!interestState.dataLayer.some((event) => event.event === "fursay_product_interest_click")) failures.push(`sample_after_pdf_interest:${sample.pack}:data_layer_missing_product_interest`);
+      if (!eventPayloads.some((payload) => payload.event === "fursay_product_interest_click")) failures.push(`sample_after_pdf_interest:${sample.pack}:api_event_missing_product_interest`);
       checks.push({
         path: sample.path,
         pack: sample.pack,
         clickMeta,
+        interestMeta,
         printCalls: state.printCalls,
-        events: state.events.map((event) => event.event),
+        events: interestState.events.map((event) => event.event),
         apiEvents: eventPayloads.map((payload) => payload.event),
       });
       await page.close();
@@ -706,6 +745,8 @@ async function main() {
     if (!pageHtml.includes(`data-product-sample-preview-page="${sample.pack}"`)) failures.push(`sample_page_missing_body_marker:${sample.pack}`);
     if (!pageHtml.includes(`data-product-interest="${sample.pack}"`)) failures.push(`sample_page_missing_interest_button:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="sample_after_pdf_interest"')) failures.push(`sample_page_missing_after_pdf_interest_stage:${sample.pack}`);
+    if (!pageHtml.includes(`data-signup-source="sample_after_pdf_interest_${sample.pack}"`)) failures.push(`sample_page_missing_after_pdf_interest_source:${sample.pack}`);
     if (sample.pack === "noor") {
       if (!pageHtml.includes('<html lang="ar" dir="rtl">')) failures.push("sample_page_noor_missing_ar_lang_dir");
       for (const needle of NOOR_SAMPLE_REQUIRED_COPY) {

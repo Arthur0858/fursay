@@ -3572,6 +3572,7 @@ function samplePageSpec(product) {
       trustLabels: ["لا دفع اليوم", "جاهزة للطباعة", "قائمة اهتمام فقط"],
       downloadLabel: "تنزيل عينة PDF",
       printLabel: "طباعة أو Save as PDF",
+      afterPdfInterestLabel: "أخبروني بعد تنزيل أو طباعة العينة",
       modalTitle: "انضموا إلى قائمة حزمة القصة",
       modalSub: "ابدؤوا بالحزمة المجانية أولا. حزم العينات المدفوعة غير مفتوحة بعد.",
       modalInterestLabel: "أنا مهتم بـ",
@@ -3612,6 +3613,7 @@ function samplePageSpec(product) {
     trustLabels: ["No payment today", "Print-ready preview", "Interest validation"],
     downloadLabel: "Download PDF sample",
     printLabel: "Print or save as PDF",
+    afterPdfInterestLabel: "Notify me after downloading or printing the sample",
     modalTitle: "Join the story pack list",
     modalSub: "Get the free story pack first. Paid sample packs are not open yet.",
     modalInterestLabel: "I'm interested in",
@@ -3681,6 +3683,7 @@ ${cards}
       <div class="public-share-actions">
         <a class="creator-copy-button product-sample-download-link" href="${escapeHtml(downloadHref)}" download data-product-sample-download="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_pdf_download" data-signup-source="sample_pdf_download_${escapeHtml(product.pack)}">${escapeHtml(spec.downloadLabel)}</a>
         <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">${escapeHtml(spec.printLabel)}</button>
+        <button class="creator-copy-button product-interest-primary product-sample-after-pdf-interest" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="sample_after_pdf_interest" data-signup-source="sample_after_pdf_interest_${escapeHtml(product.pack)}">${escapeHtml(spec.afterPdfInterestLabel)}</button>
       </div>
     </section>
     <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
