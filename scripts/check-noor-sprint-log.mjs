@@ -127,19 +127,35 @@ function validateStatus(status, log, failures) {
   const completed = (status.days || []).filter((day) => day.status === "completed").length;
   const skipped = (status.days || []).filter((day) => day.status === "skipped").length;
   const signalObserved = (status.days || []).some((day) => day.signalObserved === true);
+  const readinessReview = signalObserved && status.readinessStatus === "safe_wait_subscriber_empty";
   if (status.summary?.completedDays !== completed) failures.push("status_completed_days_mismatch");
   if (status.summary?.skippedDays !== skipped) failures.push("status_skipped_days_mismatch");
   if (status.summary?.subscriberSignalObserved !== signalObserved) failures.push("status_signal_observed_mismatch");
-  if (status.executionState?.status !== "actionable_safe_wait") failures.push(`status_execution_state:${status.executionState?.status || "none"}`);
+  const expectedExecutionState = readinessReview ? "readiness_review_required" : "actionable_safe_wait";
+  if (status.executionState?.status !== expectedExecutionState) failures.push(`status_execution_state:${status.executionState?.status || "none"}`);
   const expectedNextDay = Number(status.summary?.nextDay || 1);
-  if (!String(status.executionState?.headline || "").includes(`Day ${expectedNextDay} outreach`)) failures.push("status_execution_state_missing_actionable_headline");
-  for (const item of [
+  if (readinessReview) {
+    if (!String(status.executionState?.headline || "").includes("review readiness before more outreach")) failures.push("status_execution_state_missing_readiness_headline");
+  } else if (!String(status.executionState?.headline || "").includes(`Day ${expectedNextDay} outreach`)) {
+    failures.push("status_execution_state_missing_actionable_headline");
+  }
+  const requiredExecutionItems = readinessReview ? [
+    "Run the anonymous 7-day and 30-day event report.",
+    "Run the Noor sprint review and keep only aggregate evidence.",
+    "Prepare a Noor subscriber readiness review without sending a newsletter yet.",
+    "Noor subscriber list readiness confirmation before newsletter changes.",
+    "Aggregate attribution review before marking a new outreach day complete.",
+    "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+    "Do not add payment, price, checkout, or product purchase language.",
+    "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+  ] : [
     "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
     "At least one real Noor subscriber signal before newsletter readiness changes.",
     "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
     "Do not add payment, price, checkout, or product purchase language.",
     "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
-  ]) {
+  ];
+  for (const item of requiredExecutionItems) {
     const values = [
       ...(status.executionState?.canDoNow || []),
       ...(status.executionState?.waitingFor || []),
@@ -148,7 +164,7 @@ function validateStatus(status, log, failures) {
     if (!values.includes(item)) failures.push(`status_execution_state_missing:${item}`);
   }
   const canDoNow = status.executionState?.canDoNow || [];
-  if (!canDoNow.some((item) => String(item || "").includes(`Day ${expectedNextDay}`))) {
+  if (!readinessReview && !canDoNow.some((item) => String(item || "").includes(`Day ${expectedNextDay}`))) {
     failures.push("status_execution_state_missing_next_day_action");
   }
   if (!status.nextActionHandoff || typeof status.nextActionHandoff !== "object") failures.push("status_missing_next_action_handoff");
@@ -160,11 +176,18 @@ function validateStatus(status, log, failures) {
     if (!String(handoff.reportQuery || "").trim()) failures.push("handoff_missing_report_query");
     if (!String(handoff.expectedSignal || "").trim()) failures.push("handoff_missing_expected_signal");
     if (!String(handoff.reviewCommand || "").includes(REVIEW_COMMAND)) failures.push("handoff_missing_review_command");
-    if (!String(handoff.recorderPostedCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_recorder");
-    if (!String(handoff.recorderPostedCommand || "").includes("--dry-run")) failures.push("handoff_posted_recorder_must_be_dry_run");
-    if (!String(handoff.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_apply_recorder");
-    if (String(handoff.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("handoff_posted_apply_recorder_must_write");
-    if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
+    if (readinessReview) {
+      if (String(handoff.recorderPostedCommand || "").trim()) failures.push("handoff_readiness_review_should_not_emit_posted_recorder");
+      if (String(handoff.recorderPostedApplyCommand || "").trim()) failures.push("handoff_readiness_review_should_not_emit_apply_recorder");
+      if (String(handoff.recorderDryRunCommand || "").trim()) failures.push("handoff_readiness_review_should_not_emit_dry_run_recorder");
+      if (handoff.placement !== "readiness_review") failures.push(`handoff_bad_readiness_placement:${handoff.placement || "none"}`);
+    } else {
+      if (!String(handoff.recorderPostedCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_recorder");
+      if (!String(handoff.recorderPostedCommand || "").includes("--dry-run")) failures.push("handoff_posted_recorder_must_be_dry_run");
+      if (!String(handoff.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("handoff_missing_posted_apply_recorder");
+      if (String(handoff.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("handoff_posted_apply_recorder_must_write");
+      if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
+    }
     if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
     if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
     if (Number(handoff.day) === 1 && !String(handoff.localizedCopy?.ar || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("handoff_missing_day_one_arabic_copy");
@@ -178,9 +201,10 @@ function validateStatus(status, log, failures) {
     if (!String(item.label || "").trim()) failures.push(`operator_step_missing_label:${item.id || "none"}`);
     if (!String(item.action || "").trim()) failures.push(`operator_step_missing_action:${item.id || "none"}`);
     if (!String(item.evidence || "").trim()) failures.push(`operator_step_missing_evidence:${item.id || "none"}`);
-    if (item.id === "record_posted" && !String(item.action || "").includes("--status posted")) failures.push("operator_step_record_posted_missing_command");
-    if (item.id === "record_posted" && !String(item.action || "").includes("Apply after confirming the preview")) failures.push("operator_step_record_posted_missing_apply_boundary");
-    if (item.id === "record_posted" && !String(item.evidence || "").includes("without --dry-run")) failures.push("operator_step_record_posted_missing_apply_evidence");
+    if (item.id === "record_posted" && readinessReview && !String(item.action || "").includes("Do not record a new posted outreach day")) failures.push("operator_step_record_posted_missing_readiness_boundary");
+    if (item.id === "record_posted" && !readinessReview && !String(item.action || "").includes("--status posted")) failures.push("operator_step_record_posted_missing_command");
+    if (item.id === "record_posted" && !readinessReview && !String(item.action || "").includes("Apply after confirming the preview")) failures.push("operator_step_record_posted_missing_apply_boundary");
+    if (item.id === "record_posted" && !readinessReview && !String(item.evidence || "").includes("without --dry-run")) failures.push("operator_step_record_posted_missing_apply_evidence");
     if (item.id === "review_report" && !String(item.action || "").includes(REVIEW_COMMAND)) failures.push("operator_step_review_report_missing_command");
     if (item.id === "review_report" && !String(item.evidence || "").includes("aggregate")) failures.push("operator_step_review_report_missing_aggregate_boundary");
     if (item.id === "copy_confirm" && !String(item.action || "").includes("without adding price")) failures.push("operator_step_copy_confirm_missing_no_price_boundary");
@@ -226,6 +250,7 @@ async function main() {
     if (postedDryRun.status !== 0) failures.push(`posted_dry_run_failed:${postedDryRun.stderr || postedDryRun.stdout}`);
   }
   validateStatus(status, log, failures);
+  const readinessReview = status.executionState?.status === "readiness_review_required";
   if (action.statusManifest !== status.manifest) failures.push("action_status_manifest_mismatch");
   if (action.statusPage !== status.page) failures.push("action_status_page_mismatch");
   if (action.logSource !== LOG_FILE) failures.push(`action_bad_log_source:${action.logSource || "none"}`);
@@ -239,22 +264,36 @@ async function main() {
   if (Number(action.nextAction?.day) !== Number(status.nextActionHandoff?.day)) failures.push("action_day_mismatch");
   if (action.nextAction?.primaryLink !== status.nextActionHandoff?.primaryLink) failures.push("action_primary_link_mismatch");
   if (action.nextAction?.reportQuery !== status.nextActionHandoff?.reportQuery) failures.push("action_report_query_mismatch");
-  if (!String(action.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("action_missing_posted_recorder");
-  if (!String(action.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("action_posted_recorder_must_be_dry_run");
-  if (!String(action.nextAction?.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("action_missing_posted_apply_recorder");
-  if (String(action.nextAction?.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("action_posted_apply_recorder_must_write");
+  if (readinessReview) {
+    if (String(action.nextAction?.recorderPostedCommand || "").trim()) failures.push("action_readiness_review_should_not_emit_posted_recorder");
+    if (String(action.nextAction?.recorderPostedApplyCommand || "").trim()) failures.push("action_readiness_review_should_not_emit_apply_recorder");
+  } else {
+    if (!String(action.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("action_missing_posted_recorder");
+    if (!String(action.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("action_posted_recorder_must_be_dry_run");
+    if (!String(action.nextAction?.recorderPostedApplyCommand || "").includes("--status posted")) failures.push("action_missing_posted_apply_recorder");
+    if (String(action.nextAction?.recorderPostedApplyCommand || "").includes("--dry-run")) failures.push("action_posted_apply_recorder_must_write");
+  }
   if (!String(action.privacy?.boundary || "").includes("anonymous aggregate evidence")) failures.push("action_missing_privacy_boundary");
   scanForPrivateValues(action, failures, "action");
   const html = args.baseUrl
     ? await (await fetch(`${args.baseUrl}/noor-sprint-status`, { cache: "no-store" })).text()
     : await readFile(resolve(SITE_DIR, "noor-sprint-status.html"), "utf8");
-  if (!html.includes('data-noor-sprint-execution-state="actionable_safe_wait"')) failures.push("page_missing_execution_state");
-  if (!html.includes(`Day ${status.summary?.nextDay || 1} outreach`)) failures.push("page_missing_actionable_safe_wait_headline");
+  if (!html.includes(`data-noor-sprint-execution-state="${status.executionState?.status}"`)) failures.push("page_missing_execution_state");
+  if (readinessReview) {
+    if (!html.includes("review readiness before more outreach")) failures.push("page_missing_readiness_review_headline");
+  } else if (!html.includes(`Day ${status.summary?.nextDay || 1} outreach`)) {
+    failures.push("page_missing_actionable_safe_wait_headline");
+  }
   if (!html.includes("data-noor-sprint-can-do-now")) failures.push("page_missing_can_do_now");
   if (!html.includes("data-noor-sprint-waiting-for")) failures.push("page_missing_waiting_for");
   if (!html.includes("data-noor-sprint-must-not-do")) failures.push("page_missing_must_not_do");
-  if (!html.includes(`Share only the Day ${status.summary?.nextDay || 1}`)) failures.push("page_missing_next_day_can_do_now");
-  if (!html.includes("At least one real Noor subscriber signal")) failures.push("page_missing_subscriber_wait_state");
+  if (readinessReview) {
+    if (!html.includes("Run the anonymous 7-day and 30-day event report")) failures.push("page_missing_readiness_can_do_now");
+    if (!html.includes("Do not record a new posted outreach day")) failures.push("page_missing_readiness_record_boundary");
+  } else {
+    if (!html.includes(`Share only the Day ${status.summary?.nextDay || 1}`)) failures.push("page_missing_next_day_can_do_now");
+    if (!html.includes("At least one real Noor subscriber signal")) failures.push("page_missing_subscriber_wait_state");
+  }
   if (!html.includes("Do not send a Noor newsletter")) failures.push("page_missing_newsletter_do_not_do");
   if (!html.includes("Do not add payment, price, checkout, or product purchase language")) failures.push("page_missing_payment_do_not_do");
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
@@ -264,13 +303,13 @@ async function main() {
   if (!html.includes(`Day ${status.summary?.nextDay || 1} handoff`) && !html.includes("handoff")) failures.push("page_missing_handoff_heading");
   if (!html.includes(NEXT_ACTION_COMMAND)) failures.push("page_missing_next_action_command");
   if (!html.includes(REVIEW_COMMAND)) failures.push("page_missing_review_command");
-  if (!html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
-  if (!html.includes("After the preview looks correct")) failures.push("page_missing_posted_apply_guidance");
+  if (!readinessReview && !html.includes("--status posted")) failures.push("page_missing_posted_recorder_command");
+  if (!readinessReview && !html.includes("After the preview looks correct")) failures.push("page_missing_posted_apply_guidance");
   if (!html.includes(RECORDER_COMMAND.replace(/"/g, "&quot;")) && !html.includes(RECORDER_COMMAND)) failures.push("page_missing_recorder_command");
-  if (!html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
+  if (!readinessReview && !html.includes("data-noor-sprint-arabic-handoff")) failures.push("page_missing_arabic_handoff");
   const expectedHandoffCopy = status.nextActionHandoff?.localizedCopy?.ar || status.nextActionHandoff?.copy || "";
   if (expectedHandoffCopy && !html.includes(escapeHtml(expectedHandoffCopy).slice(0, 24))) failures.push("page_missing_parent_copy");
-  if (!html.includes("Copy Arabic copy")) failures.push("page_missing_arabic_copy_button");
+  if (!readinessReview && !html.includes("Copy Arabic copy")) failures.push("page_missing_arabic_copy_button");
   if (!html.includes("data-noor-sprint-operator-checklist")) failures.push("page_missing_operator_checklist");
   for (const id of REQUIRED_OPERATOR_STEPS) {
     if (!html.includes(`data-noor-sprint-operator-step="${id}"`)) failures.push(`page_missing_operator_step:${id}`);

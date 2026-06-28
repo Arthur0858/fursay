@@ -1663,6 +1663,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (noorSprintStatus.summary?.totalDays !== 7) failures.push(`noor_sprint_status_total_days:${noorSprintStatus.summary?.totalDays || "none"}`);
   const noorStatusCompletedDays = (noorSprintStatus.days || []).filter((day) => day.status === "completed").length;
   const noorStatusSignalObserved = (noorSprintStatus.days || []).some((day) => day.signalObserved === true);
+  const noorReadinessReview = noorStatusSignalObserved && noorSprintStatus.executionState?.status === "readiness_review_required";
   if (noorSprintStatus.summary?.completedDays !== noorStatusCompletedDays) failures.push(`noor_sprint_status_completed_days:${noorSprintStatus.summary?.completedDays || "none"}`);
   if (noorSprintStatus.summary?.subscriberSignalObserved !== noorStatusSignalObserved) failures.push("noor_sprint_status_signal_mismatch");
   if (noorSprintStatus.summary?.checkoutEnabled !== false || noorSprintStatus.summary?.paymentLinksAllowed !== false) failures.push("noor_sprint_status_checkout_not_locked");
@@ -1688,8 +1689,14 @@ async function checkDiscoveryFiles(baseUrl) {
   if (noorSprintAction.sprint?.analyticsStatus !== noorSprintStatus.analyticsStatus) failures.push("noor_sprint_action_analytics_mismatch");
   if (Number(noorSprintAction.nextAction?.day) !== Number(noorSprintStatus.nextActionHandoff?.day)) failures.push("noor_sprint_action_day_mismatch");
   if (noorSprintAction.nextAction?.primaryLink !== noorSprintStatus.nextActionHandoff?.primaryLink) failures.push("noor_sprint_action_primary_link_mismatch");
-  if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("noor_sprint_action_missing_posted_recorder");
-  if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("noor_sprint_action_posted_recorder_not_dry_run");
+  if (noorReadinessReview) {
+    if (String(noorSprintAction.nextAction?.recorderPostedCommand || "").trim()) failures.push("noor_sprint_action_readiness_should_not_emit_posted_recorder");
+    if (String(noorSprintAction.nextAction?.recorderPostedApplyCommand || "").trim()) failures.push("noor_sprint_action_readiness_should_not_emit_apply_recorder");
+    if (noorSprintAction.nextAction?.placement !== "readiness_review") failures.push(`noor_sprint_action_readiness_bad_placement:${noorSprintAction.nextAction?.placement || "none"}`);
+  } else {
+    if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--status posted")) failures.push("noor_sprint_action_missing_posted_recorder");
+    if (!String(noorSprintAction.nextAction?.recorderPostedCommand || "").includes("--dry-run")) failures.push("noor_sprint_action_posted_recorder_not_dry_run");
+  }
   if (!String(noorSprintAction.privacy?.boundary || "").includes("anonymous aggregate evidence")) failures.push("noor_sprint_action_missing_privacy_boundary");
   if (links.platform !== "cloudflare-workers-static-assets") failures.push(`links_platform:${links.platform || "none"}`);
   if (!/^[0-9a-f]{7,40}$/.test(links.source?.commit || "")) failures.push(`links_commit:${links.source?.commit || "none"}`);
@@ -1807,8 +1814,13 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprintStatusPage.includes("content/growth/noor-sprint-log.json")) failures.push("noor_sprint_status_page_missing_log_source");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-summary")) failures.push("noor_sprint_status_page_missing_summary");
   if (!noorSprintStatusPage.includes("data-noor-sprint-status-log")) failures.push("noor_sprint_status_page_missing_log");
-  if (!noorSprintStatusPage.includes("data-noor-sprint-arabic-handoff")) failures.push("noor_sprint_status_page_missing_arabic_handoff");
-  if (!htmlContains(noorSprintStatusPage, noorSprintStatus.nextActionHandoff?.localizedCopy?.ar || "missing")) failures.push("noor_sprint_status_page_missing_arabic_parent_copy");
+  if (noorReadinessReview) {
+    if (!noorSprintStatusPage.includes("readiness before more outreach")) failures.push("noor_sprint_status_page_missing_readiness_review_copy");
+    if (!noorSprintStatusPage.includes("Do not record a new posted outreach day")) failures.push("noor_sprint_status_page_missing_readiness_record_boundary");
+  } else {
+    if (!noorSprintStatusPage.includes("data-noor-sprint-arabic-handoff")) failures.push("noor_sprint_status_page_missing_arabic_handoff");
+    if (!htmlContains(noorSprintStatusPage, noorSprintStatus.nextActionHandoff?.localizedCopy?.ar || "missing")) failures.push("noor_sprint_status_page_missing_arabic_parent_copy");
+  }
   if ((noorSprintStatusPage.match(/data-noor-sprint-status-day=/g) || []).length !== 7) failures.push("noor_sprint_status_page_bad_day_count");
   for (const day of noorSprintStatus.days || []) {
     if (!noorSprintStatusPage.includes(`data-noor-sprint-status-day="${escapeHtml(day.day || "")}"`)) failures.push(`noor_sprint_status_page_missing_day:${day.day || "none"}`);

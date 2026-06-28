@@ -1618,7 +1618,8 @@ function buildNoorSprintStatus(siteDir, source) {
     || variant.storyLink === nextOpenDay.link
     || (variant.placement && String(nextOpenDay.link || "").includes(`placement=${variant.placement}`))
   )) || {};
-  const nextActionHandoff = {
+  const needsReadinessReview = subscriberSignalObserved && readinessStatus === "safe_wait_subscriber_empty";
+  let nextActionHandoff = {
     day: nextOpenDay.day || 1,
     label: nextOpenDay.label || "",
     placement: nextVariant.placement || "",
@@ -1640,6 +1641,30 @@ function buildNoorSprintStatus(siteDir, source) {
     analyticsStatus,
     readinessStatus,
   };
+  if (needsReadinessReview) {
+    nextActionHandoff = {
+      day: nextOpenDay.day || 1,
+      label: "Noor readiness review",
+      placement: "readiness_review",
+      action: "Review Noor subscriber readiness and aggregate attribution before running more outreach.",
+      primaryLink: "https://fursay.com/conversion-health",
+      followupLink: "https://fursay.com/noor-sprint-status",
+      copy: "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
+      localizedCopy: {
+        ar: "",
+        en: "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
+      },
+      reportQuery: "noor_growth_signals_7d",
+      expectedSignal: "Existing Noor submit success aggregate evidence remains non-identifying and should be reviewed before new outreach is marked complete.",
+      reviewCommand: "npm run noor:sprint:review",
+      recorderPostedCommand: "",
+      recorderPostedApplyCommand: "",
+      recorderDryRunCommand: "",
+      privacyBoundary: "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+      analyticsStatus,
+      readinessStatus,
+    };
+  }
   const operatorChecklist = [
     {
       id: "copy_confirm",
@@ -1656,8 +1681,12 @@ function buildNoorSprintStatus(siteDir, source) {
     {
       id: "record_posted",
       label: "Record the posted state",
-      action: `Preview: ${nextActionHandoff.recorderPostedCommand} | Apply after confirming the preview: ${nextActionHandoff.recorderPostedApplyCommand}`,
-      evidence: "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run.",
+      action: needsReadinessReview
+        ? "Do not record a new posted outreach day until the Noor readiness review is complete."
+        : `Preview: ${nextActionHandoff.recorderPostedCommand} | Apply after confirming the preview: ${nextActionHandoff.recorderPostedApplyCommand}`,
+      evidence: needsReadinessReview
+        ? "The current log already has an aggregate subscriber signal; avoid attributing it to a new unposted placement."
+        : "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run.",
     },
     {
       id: "review_report",
@@ -1666,7 +1695,24 @@ function buildNoorSprintStatus(siteDir, source) {
       evidence: "Use noor_growth_signals_7d or the listed report query; record signal evidence only as aggregate counts, never names or emails.",
     },
   ];
-  const executionState = {
+  const executionState = needsReadinessReview ? {
+    status: "readiness_review_required",
+    headline: "Noor subscriber signal is observed; review readiness before more outreach.",
+    canDoNow: [
+      "Run the anonymous 7-day and 30-day event report.",
+      "Run the Noor sprint review and keep only aggregate evidence.",
+      "Prepare a Noor subscriber readiness review without sending a newsletter yet.",
+    ],
+    waitingFor: [
+      "Noor subscriber list readiness confirmation before newsletter changes.",
+      "Aggregate attribution review before marking a new outreach day complete.",
+    ],
+    mustNotDo: [
+      "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+      "Do not add payment, price, checkout, or product purchase language.",
+      "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
+    ],
+  } : {
     status: "actionable_safe_wait",
     headline: `Day ${nextActionHandoff.day} outreach can continue while analytics and subscriber evidence remain in safe wait.`,
     canDoNow: [
@@ -1723,13 +1769,13 @@ function buildNoorSprintStatus(siteDir, source) {
       checkoutEnabled: false,
       paymentLinksAllowed: false,
       nextDay: nextOpenDay.day || 1,
-      nextAction: nextOpenDay.action || "",
+      nextAction: nextActionHandoff.action || nextOpenDay.action || "",
     },
     executionState,
     nextActionHandoff,
     operatorChecklist,
     blockedBy: [
-      analyticsStatus,
+      ...(needsReadinessReview ? ["readiness_review_required"] : [analyticsStatus]),
       readinessStatus,
     ],
     logFields: [
@@ -1860,9 +1906,12 @@ ${mustNotDo}
       </div>
       <pre dir="rtl" lang="ar">${escapeHtml(handoff.localizedCopy.ar)}</pre>` : ""}
       ${handoff.copy ? `<p class="creator-eyebrow">English operator note</p><pre>${escapeHtml(handoff.copy)}</pre>` : ""}
+      ${handoff.placement === "readiness_review" ? `
+      <p>Do not record a new posted outreach day yet. Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code> and keep the evidence aggregate-only.</p>
+      <p>Use the review to decide whether Noor can move out of <code>${escapeHtml(manifest.readinessStatus)}</code> without sending a newsletter prematurely.</p>` : `
       <p>After sharing, preview the pending report log entry with <code>${escapeHtml(handoff.recorderPostedCommand || "")}</code>.</p>
       <p>After the preview looks correct and contains no personal data, write the log with <code>${escapeHtml(handoff.recorderPostedApplyCommand || "")}</code>.</p>
-      <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>
+      <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>`}
       <p>${escapeHtml(handoff.privacyBoundary || manifest.privacy?.blockedFields?.join(", ") || "")}</p>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-operator-checklist>

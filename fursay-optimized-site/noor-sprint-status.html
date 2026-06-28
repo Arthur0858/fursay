@@ -26,23 +26,23 @@
         <a href="/traffic-launch">Traffic launch kit</a>
       </div>
     </header>
-    <section class="creator-kit-safety" data-noor-sprint-execution-state="actionable_safe_wait">
+    <section class="creator-kit-safety" data-noor-sprint-execution-state="readiness_review_required">
       <p class="creator-eyebrow">Actionable safe wait</p>
-      <h2>Day 2 outreach can continue while analytics and subscriber evidence remain in safe wait.</h2>
+      <h2>Noor subscriber signal is observed; review readiness before more outreach.</h2>
       <div class="creator-copy-blocks">
         <article class="creator-copy-block" data-noor-sprint-can-do-now>
           <h3>Can do now</h3>
           <ul>
-<li>Open the planned tracked link once to confirm attribution.</li>
-<li>Share only the Day 2 planned parent copy for direct_dm.</li>
-<li>Record the posted state after previewing the no-PII log command.</li>
+<li>Run the anonymous 7-day and 30-day event report.</li>
+<li>Run the Noor sprint review and keep only aggregate evidence.</li>
+<li>Prepare a Noor subscriber readiness review without sending a newsletter yet.</li>
           </ul>
         </article>
         <article class="creator-copy-block" data-noor-sprint-waiting-for>
           <h3>Waiting for evidence</h3>
           <ul>
-<li>Cloudflare Analytics Engine credentials or enablement for aggregate reporting.</li>
-<li>At least one real Noor subscriber signal before newsletter readiness changes.</li>
+<li>Noor subscriber list readiness confirmation before newsletter changes.</li>
+<li>Aggregate attribution review before marking a new outreach day complete.</li>
           </ul>
         </article>
         <article class="creator-copy-block" data-noor-sprint-must-not-do>
@@ -104,15 +104,15 @@
     <section class="creator-kit-safety" data-noor-sprint-next-action>
       <p class="creator-eyebrow">Next action</p>
       <h2>Day 2 handoff</h2>
-      <p>Send the direct DM copy to two families who already know the project.</p>
+      <p>Review Noor subscriber readiness and aggregate attribution before running more outreach.</p>
       <dl>
         <div>
                 <dt>Focus</dt>
-                <dd>Direct family DM</dd>
+                <dd>Noor readiness review</dd>
               </div>
         <div>
                 <dt>Placement</dt>
-                <dd>direct_dm</dd>
+                <dd>readiness_review</dd>
               </div>
         <div>
                 <dt>Report query</dt>
@@ -120,7 +120,7 @@
               </div>
         <div>
                 <dt>Expected signal</dt>
-                <dd>A noor direct_dm open, modal open, or submit success signal.</dd>
+                <dd>Existing Noor submit success aggregate evidence remains non-identifying and should be reviewed before new outreach is marked complete.</dd>
               </div>
         <div>
                 <dt>Analytics</dt>
@@ -131,23 +131,12 @@
                 <dd>safe_wait_subscriber_empty</dd>
               </div>
       </dl>
-      <p><a href="https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&amp;creator=fursay&amp;placement=direct_dm">Open primary link</a></p>
+      <p><a href="https://fursay.com/conversion-health">Open primary link</a> <a href="https://fursay.com/noor-sprint-status">Open follow-up link</a></p>
       
-      <div class="creator-copy-heading" data-noor-sprint-arabic-handoff>
-        <h3>Arabic parent copy</h3>
-        <button type="button" class="creator-copy-button" data-copy-share-kit data-copy-value="تذكرت أن عائلتكم قد تحب تجربة قصة نور القصيرة.
-حزمة عربية-صينية مجانية في 3 دقائق: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&amp;creator=fursay&amp;placement=direct_dm
-لا يوجد دفع. نريد فقط معرفة إن كانت هذه الطريقة مفيدة للعائلات.">Copy Arabic copy</button>
-      </div>
-      <pre dir="rtl" lang="ar">تذكرت أن عائلتكم قد تحب تجربة قصة نور القصيرة.
-حزمة عربية-صينية مجانية في 3 دقائق: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&amp;creator=fursay&amp;placement=direct_dm
-لا يوجد دفع. نريد فقط معرفة إن كانت هذه الطريقة مفيدة للعائلات.</pre>
-      <p class="creator-eyebrow">English operator note</p><pre>I thought your family might like this tiny Noor story pack.
-Free 3-minute Arabic-Chinese story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&amp;creator=fursay&amp;placement=direct_dm
-No payment. It just helps test whether families want this kind of bilingual routine.</pre>
-      <p>After sharing, preview the pending report log entry with <code>npm run noor:sprint:log -- --day 2 --status posted --notes &quot;shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report&quot; --next-action &quot;run npm run noor:sprint:review after the event report is available&quot; --dry-run</code>.</p>
-      <p>After the preview looks correct and contains no personal data, write the log with <code>npm run noor:sprint:log -- --day 2 --status posted --notes &quot;shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report&quot; --next-action &quot;run npm run noor:sprint:review after the event report is available&quot;</code>.</p>
-      <p>Review with <code>npm run noor:sprint:review</code>, then record only anonymous aggregate evidence with <code>npm run noor:sprint:log -- --day 2 --status needs_retry --notes &quot;checked noor_growth_signals_7d aggregate only&quot; --next-action &quot;wait for aggregate signal or retry the next planned placement&quot; --dry-run</code>.</p>
+      <p class="creator-eyebrow">English operator note</p><pre>A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.</pre>
+      
+      <p>Do not record a new posted outreach day yet. Review with <code>npm run noor:sprint:review</code> and keep the evidence aggregate-only.</p>
+      <p>Use the review to decide whether Noor can move out of <code>safe_wait_subscriber_empty</code> without sending a newsletter prematurely.</p>
       <p>Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.</p>
     </section>
     <section class="creator-kit-safety" data-noor-sprint-operator-checklist>
@@ -189,11 +178,11 @@ No payment. It just helps test whether families want this kind of bilingual rout
           <dl>
             <div>
                 <dt>Action</dt>
-                <dd>Preview: npm run noor:sprint:log -- --day 2 --status posted --notes &quot;shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report&quot; --next-action &quot;run npm run noor:sprint:review after the event report is available&quot; --dry-run | Apply after confirming the preview: npm run noor:sprint:log -- --day 2 --status posted --notes &quot;shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report&quot; --next-action &quot;run npm run noor:sprint:review after the event report is available&quot;</dd>
+                <dd>Do not record a new posted outreach day until the Noor readiness review is complete.</dd>
               </div>
             <div>
                 <dt>Evidence</dt>
-                <dd>The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run.</dd>
+                <dd>The current log already has an aggregate subscriber signal; avoid attributing it to a new unposted placement.</dd>
               </div>
           </dl>
         </article>

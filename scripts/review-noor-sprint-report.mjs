@@ -105,6 +105,10 @@ function nextOpenStep(log, sprint) {
   return day ? { day, entry: entriesByDay.get(Number(day.day)) || null } : null;
 }
 
+function priorSubscriberSignalObserved(log) {
+  return (log.entries || []).some((entry) => entry?.signalObserved === true);
+}
+
 function countDayEvents(rows, sourceIds) {
   const ids = new Set(sourceIds.filter(Boolean));
   if (!ids.size) return 0;
@@ -223,7 +227,8 @@ function buildReview({ log, sprint, report, windowDays }) {
   const rows = rowsFor(report, NOOR_QUERY_FAMILY, windowDays);
   const dayEvents = countDayEvents(rows, sourceIds);
   const submitSuccess = countNoorSubmitSuccess(rows);
-  if (submitSuccess > 0) {
+  const priorSignalObserved = priorSubscriberSignalObserved(log);
+  if (submitSuccess > 0 && dayEvents > 0) {
     return {
       status: "subscriber_signal_observed",
       day: day.day,
@@ -240,6 +245,36 @@ function buildReview({ log, sprint, report, windowDays }) {
         "prepare Noor newsletter readiness review without enabling checkout",
         `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate submit success count ${submitSuccess}`,
       ),
+    };
+  }
+  if (submitSuccess > 0 && priorSignalObserved) {
+    return {
+      status: "subscriber_signal_already_observed",
+      day: day.day,
+      label: day.label,
+      sourceIds,
+      dayEvents,
+      submitSuccess,
+      recommendation: "review_noor_readiness_before_more_outreach",
+      recordStatus: "",
+      recommendedRecorderCommand: "",
+      recommendedRecorderApplyCommand: "",
+      nextAction: "prepare Noor newsletter readiness review without attributing the aggregate signal to an unposted placement",
+    };
+  }
+  if (submitSuccess > 0) {
+    return {
+      status: "subscriber_signal_observed_unattributed",
+      day: day.day,
+      label: day.label,
+      sourceIds,
+      dayEvents,
+      submitSuccess,
+      recommendation: "record_manual_review_not_day_completion",
+      recordStatus: "",
+      recommendedRecorderCommand: "",
+      recommendedRecorderApplyCommand: "",
+      nextAction: "review attribution before marking a planned placement completed",
     };
   }
   if (dayEvents > 0) {

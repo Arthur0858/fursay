@@ -51,19 +51,19 @@
     "checkoutEnabled": false,
     "paymentLinksAllowed": false,
     "nextDay": 2,
-    "nextAction": "Send the direct DM copy to two families who already know the project."
+    "nextAction": "Review Noor subscriber readiness and aggregate attribution before running more outreach."
   },
   "executionState": {
-    "status": "actionable_safe_wait",
-    "headline": "Day 2 outreach can continue while analytics and subscriber evidence remain in safe wait.",
+    "status": "readiness_review_required",
+    "headline": "Noor subscriber signal is observed; review readiness before more outreach.",
     "canDoNow": [
-      "Open the planned tracked link once to confirm attribution.",
-      "Share only the Day 2 planned parent copy for direct_dm.",
-      "Record the posted state after previewing the no-PII log command."
+      "Run the anonymous 7-day and 30-day event report.",
+      "Run the Noor sprint review and keep only aggregate evidence.",
+      "Prepare a Noor subscriber readiness review without sending a newsletter yet."
     ],
     "waitingFor": [
-      "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
-      "At least one real Noor subscriber signal before newsletter readiness changes."
+      "Noor subscriber list readiness confirmation before newsletter changes.",
+      "Aggregate attribution review before marking a new outreach day complete."
     ],
     "mustNotDo": [
       "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
@@ -73,22 +73,22 @@
   },
   "nextActionHandoff": {
     "day": 2,
-    "label": "Direct family DM",
-    "placement": "direct_dm",
-    "action": "Send the direct DM copy to two families who already know the project.",
-    "primaryLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm",
-    "followupLink": "",
-    "copy": "I thought your family might like this tiny Noor story pack.\nFree 3-minute Arabic-Chinese story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nNo payment. It just helps test whether families want this kind of bilingual routine.",
+    "label": "Noor readiness review",
+    "placement": "readiness_review",
+    "action": "Review Noor subscriber readiness and aggregate attribution before running more outreach.",
+    "primaryLink": "https://fursay.com/conversion-health",
+    "followupLink": "https://fursay.com/noor-sprint-status",
+    "copy": "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
     "localizedCopy": {
-      "ar": "تذكرت أن عائلتكم قد تحب تجربة قصة نور القصيرة.\nحزمة عربية-صينية مجانية في 3 دقائق: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nلا يوجد دفع. نريد فقط معرفة إن كانت هذه الطريقة مفيدة للعائلات.",
-      "en": "I thought your family might like this tiny Noor story pack.\nFree 3-minute Arabic-Chinese story pack: https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm\nNo payment. It just helps test whether families want this kind of bilingual routine."
+      "ar": "",
+      "en": "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter."
     },
     "reportQuery": "noor_growth_signals_7d",
-    "expectedSignal": "A noor direct_dm open, modal open, or submit success signal.",
+    "expectedSignal": "Existing Noor submit success aggregate evidence remains non-identifying and should be reviewed before new outreach is marked complete.",
     "reviewCommand": "npm run noor:sprint:review",
-    "recorderPostedCommand": "npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run",
-    "recorderPostedApplyCommand": "npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
-    "recorderDryRunCommand": "npm run noor:sprint:log -- --day 2 --status needs_retry --notes \"checked noor_growth_signals_7d aggregate only\" --next-action \"wait for aggregate signal or retry the next planned placement\" --dry-run",
+    "recorderPostedCommand": "",
+    "recorderPostedApplyCommand": "",
+    "recorderDryRunCommand": "",
     "privacyBoundary": "Record anonymous aggregate evidence only; do not store email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
     "readinessStatus": "safe_wait_subscriber_empty"
@@ -109,8 +109,8 @@
     {
       "id": "record_posted",
       "label": "Record the posted state",
-      "action": "Preview: npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\" --dry-run | Apply after confirming the preview: npm run noor:sprint:log -- --day 2 --status posted --notes \"shared noor_growth_signals_7d tracked link; waiting for anonymous aggregate report\" --next-action \"run npm run noor:sprint:review after the event report is available\"",
-      "evidence": "The log records only posted/awaiting-report status, public source_id, placement, and non-identifying notes; the apply command is the same command without --dry-run."
+      "action": "Do not record a new posted outreach day until the Noor readiness review is complete.",
+      "evidence": "The current log already has an aggregate subscriber signal; avoid attributing it to a new unposted placement."
     },
     {
       "id": "review_report",
@@ -120,7 +120,7 @@
     }
   ],
   "blockedBy": [
-    "pending_cloudflare_credentials_or_enablement",
+    "readiness_review_required",
     "safe_wait_subscriber_empty"
   ],
   "logFields": [

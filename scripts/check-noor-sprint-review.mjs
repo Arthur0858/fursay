@@ -159,6 +159,38 @@ async function main() {
   if (!signal.json?.review?.recommendedRecorderApplyCommand?.includes("--signal-observed")) failures.push("signal_report_apply_missing_signal_flag");
   validateRecorderPair(signal.json?.review, failures, "signal_report");
 
+  const priorSignalLogPath = await writeReport(tmp, "prior-signal-log.json", {
+    ...baseLog,
+    status: "signal_observed",
+    entries: [
+      {
+        day: 1,
+        executedAt: "2026-06-15T00:00:00.000Z",
+        status: "completed",
+        signalObserved: true,
+        signalEvidence: "noor_growth_signals_7d aggregate submit success count 1",
+        notes: "noor_growth_signals_7d aggregate shows 1 Noor subscribe submit success signal(s)",
+        nextAction: "prepare Noor newsletter readiness review without enabling checkout",
+      },
+    ],
+  });
+  const unattributedSignalPath = await writeReport(tmp, "unattributed-signal-report.json", queriedReport([
+    {
+      event: "fursay_subscribe_submit_success",
+      path: "/arabic",
+      pack: "noor",
+      source_id: NOOR_SOURCE_ID,
+      placement: "parent_group",
+      events: 2,
+    },
+  ]));
+  const priorSignal = runReview(["--log", priorSignalLogPath, "--report", unattributedSignalPath]);
+  if (priorSignal.status !== 0) failures.push("prior_signal_report_should_not_fail");
+  if (priorSignal.json?.review?.status !== "subscriber_signal_already_observed") failures.push(`prior_signal_bad_status:${priorSignal.json?.review?.status || "none"}`);
+  if (priorSignal.json?.review?.day !== 2) failures.push("prior_signal_should_review_next_open_day");
+  if (priorSignal.json?.review?.recordStatus) failures.push("prior_signal_should_not_record_day_completion");
+  if (priorSignal.json?.review?.recommendedRecorderCommand) failures.push("prior_signal_should_not_emit_recorder_command");
+
   const engagedPath = await writeReport(tmp, "engaged-report.json", queriedReport([
     {
       event: "fursay_subscribe_open_click",
@@ -206,6 +238,7 @@ async function main() {
       "pending_report_retry_review",
       "posted_pending_report_waits",
       "subscriber_signal_review",
+      "prior_signal_does_not_complete_next_day",
       "engaged_without_subscriber_review",
       "zero_signal_review",
       "review_apply_command_pair",
