@@ -262,6 +262,9 @@ function validateShareKit(manifest, html, failures) {
     if (!downloadAnchor.includes(`data-product-info-link="${pack}"`)) failures.push(`share-kit:${pack}:download_missing_product_info_tracking`);
     if (!downloadAnchor.includes('data-interest-stage="share_kit_pdf_sample"')) failures.push(`share-kit:${pack}:download_bad_interest_stage`);
     if (!downloadAnchor.includes(`data-signup-source="share_kit_pdf_sample_${pack}"`)) failures.push(`share-kit:${pack}:download_bad_signup_source`);
+    if (!html.includes(`data-product-interest="${pack}" data-interest-stage="share_kit_after_pdf" data-signup-source="share_kit_interest_after_pdf_${pack}"`)) {
+      failures.push(`share-kit:${pack}:missing_after_pdf_interest_button`);
+    }
     if (item.attribution?.utm_campaign !== `${pack === "koko" ? "koko" : "noor"}_story_funnel`) {
       failures.push(`share-kit:${pack}:bad_campaign:${item.attribution?.utm_campaign || "none"}`);
     }

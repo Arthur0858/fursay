@@ -4331,14 +4331,37 @@ function attrsToString(attrs = {}) {
     .join("");
 }
 
-function shareKitLinkRow(title, value, attrs = {}) {
+function shareKitLinkRow(title, value, attrs = {}, extra = "") {
   return `<div>
                 <dt>${escapeHtml(title)}</dt>
                 <dd>
                   <a href="${escapeHtml(value)}"${attrsToString(attrs)}>${escapeHtml(value)}</a>
                   <button type="button" class="creator-link-copy" data-copy-share-kit data-copy-value="${escapeHtml(value)}">Copy</button>
+                  ${extra}
                 </dd>
               </div>`;
+}
+
+function shareKitInterestButton(pack) {
+  const label = pack === "noor" ? "Notify me after sharing the Noor sample" : "Notify me after sharing the Koko sample";
+  return `<button type="button" class="creator-copy-button product-interest-primary share-kit-interest-button" data-product-interest="${escapeHtml(pack)}" data-interest-stage="share_kit_after_pdf" data-signup-source="share_kit_interest_after_pdf_${escapeHtml(pack)}">${escapeHtml(label)}</button>`;
+}
+
+function shareKitSubscribeModal() {
+  return `<div class="modal-overlay" id="subscribeModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
+      <span class="modal-emoji">📬</span>
+      <div class="modal-title">Join the story pack list</div>
+      <p class="modal-sub">Pick Koko or Noor and get updates after sharing a sample. No payment today.</p>
+      <form id="subscribeForm">
+        <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
+        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+      </form>
+      <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+    </div>
+  </div>`;
 }
 
 function isArabicText(value) {
@@ -4378,7 +4401,7 @@ function writeShareKitPage(siteDir, kit) {
               "data-product-info-link": pack,
               "data-interest-stage": "share_kit_pdf_sample",
               "data-signup-source": `share_kit_pdf_sample_${pack}`,
-            })}
+            }, shareKitInterestButton(pack))}
             ${shareKitLinkRow("Bio link", item.bioShortlink)}
             ${shareKitLinkRow("Creator link", item.creatorShortlink)}
             ${shareKitLinkRow("WhatsApp share URL", item.whatsappShareUrl)}
@@ -4444,6 +4467,7 @@ function writeShareKitPage(siteDir, kit) {
     </header>
 ${packCards}
   </main>
+  ${shareKitSubscribeModal()}
   <script src="/js/site-shared-20260615-sharekit1.js"></script>
 </body>
 </html>`;

@@ -516,6 +516,47 @@ async function checkShareKitSampleTracking(browser, baseUrl) {
     if (!copyState.dataLayer.some((entry) => entry.event === "fursay_kit_copy_click")) failures.push("share-kit:data_layer_missing_kit_copy_click");
   }
 
+  const interestMeta = await page.evaluate(() => {
+    const button = document.querySelector('[data-product-interest="noor"][data-interest-stage="share_kit_after_pdf"]')
+      || document.querySelector('[data-product-interest][data-interest-stage="share_kit_after_pdf"]');
+    if (!button) return null;
+    button.click();
+    const modal = document.querySelector("#subscribeModal");
+    const checkedGroups = [...document.querySelectorAll('#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')]
+      .map((input) => input.value === "arabic" ? "noor" : input.value);
+    return {
+      interest: button.getAttribute("data-product-interest") || "",
+      stage: button.getAttribute("data-interest-stage") || "",
+      signupSource: button.getAttribute("data-signup-source") || "",
+      modalOpen: modal?.classList.contains("open") || false,
+      modalSignupSource: modal?.dataset.signupSource || "",
+      modalPreselect: modal?.dataset.preselect || "",
+      checkedGroups,
+    };
+  });
+  await page.waitForTimeout(120);
+  const interestState = await page.evaluate(() => ({
+    events: window.fursayEvents || [],
+    dataLayer: window.dataLayer || [],
+  }));
+
+  if (!interestMeta) {
+    failures.push("share-kit:missing_after_pdf_interest_button");
+  } else {
+    const productEvent = [...interestState.events].reverse().find((event) => event.event === "fursay_product_interest_click");
+    const modalEvent = [...interestState.events].reverse().find((event) => event.event === "fursay_subscribe_modal_open");
+    if (!productEvent) failures.push("share-kit:missing_product_interest_event");
+    if (productEvent?.detail?.product_interest !== interestMeta.interest) failures.push(`share-kit:product_interest:${productEvent?.detail?.product_interest || "none"}`);
+    if (productEvent?.detail?.interest_stage !== interestMeta.stage) failures.push(`share-kit:product_interest_stage:${productEvent?.detail?.interest_stage || "none"}`);
+    if (productEvent?.detail?.signup_source !== interestMeta.signupSource) failures.push(`share-kit:product_interest_source:${productEvent?.detail?.signup_source || "none"}`);
+    if (!modalEvent) failures.push("share-kit:missing_interest_modal_event");
+    if (!interestMeta.modalOpen) failures.push("share-kit:interest_modal_not_open");
+    if (interestMeta.modalSignupSource !== interestMeta.signupSource) failures.push(`share-kit:interest_modal_source:${interestMeta.modalSignupSource || "none"}`);
+    if (interestMeta.modalPreselect !== interestMeta.interest) failures.push(`share-kit:interest_modal_preselect:${interestMeta.modalPreselect || "none"}`);
+    if (!interestMeta.checkedGroups.includes(interestMeta.interest)) failures.push(`share-kit:interest_modal_group:${interestMeta.checkedGroups.join(",") || "none"}`);
+    if (!interestState.dataLayer.some((entry) => entry.event === "fursay_product_interest_click")) failures.push("share-kit:data_layer_missing_product_interest_click");
+  }
+
   await page.close();
   return {
     path: "/share-kit",
@@ -523,6 +564,7 @@ async function checkShareKitSampleTracking(browser, baseUrl) {
     failures,
     sampleDownloadEvent: Boolean(sampleDownloadMeta),
     copyEvent: Boolean(copyMeta),
+    interestEvent: Boolean(interestMeta),
   };
 }
 
