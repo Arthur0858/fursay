@@ -2530,10 +2530,13 @@ function writeProductsManifest(siteDir, source) {
   const productValidationHandoffs = (ownedProducts.products || []).map((product) => ({
     productId: product.id,
     pack: product.pack,
-    priority: product.pack === "noor" ? 1 : 2,
+    priority: product.pack === "koko" ? 1 : 2,
+    priorityReason: product.pack === "koko"
+      ? "Koko has sample-download and subscriber signals, but product-interest clicks are still the missing validation signal."
+      : "Noor remains active, but it already has stronger product-interest and subscriber signals in the current analytics report.",
     action: product.pack === "noor"
       ? "Share the Noor worksheet sample with Arabic-speaking families, then send them to the free Noor story pack."
-      : "Share the Koko printable sample with Mandarin-speaking families, then send them to the free Koko story pack.",
+      : "Share the Koko printable sample with Mandarin-speaking families, then ask them to click the interest button after previewing the sample.",
     samplePreviewUrl: product.samplePreview?.url || "",
     sampleDownloadUrl: product.samplePreview?.downloadUrl || "",
     trackedSampleDownloadUrl: productSampleTrackedDownloadUrl(product),
@@ -2842,6 +2845,19 @@ function zhProductsJsonLd(manifest) {
   });
 }
 
+function zhValidationHandoffCopy(nextHandoff = {}) {
+  if (nextHandoff.pack === "koko") {
+    return {
+      title: "先測叩叩可列印包需求",
+      body: "先把叩叩可列印樣張分享給華語家庭，請家長看完後點擊興趣按鈕；目前 Koko 已有樣張下載與訂閱信號，缺的是產品興趣點擊。",
+    };
+  }
+  return {
+    title: "先測努爾學習單需求",
+    body: "先把努爾學習單樣張分享給阿語家庭，再引導到免費努爾故事包；只有看到真實點擊與訂閱信號後，才考慮擴成完整產品。",
+  };
+}
+
 function arProductCopy(product) {
   if (product.pack === "noor") {
     return {
@@ -2940,6 +2956,19 @@ function arProductsJsonLd(manifest) {
       },
     ],
   });
+}
+
+function arValidationHandoffCopy(nextHandoff = {}) {
+  if (nextHandoff.pack === "koko") {
+    return {
+      title: "اختبار اهتمام حزمة كوكو أولا",
+      body: "شاركوا عينة كوكو القابلة للطباعة مع عائلات ناطقة بالصينية، ثم اطلبوا منهم الضغط على زر الاهتمام بعد مشاهدة العينة. لدى كوكو تنزيلات واشتراكات، والإشارة الناقصة الآن هي نقرات الاهتمام بالمنتج.",
+    };
+  }
+  return {
+    title: "اختبار اهتمام ورقة نور أولا",
+    body: "شاركوا عينة ورقة نور مع عائلات عربية، ثم وجّهوهم إلى حزمة نور المجانية. لا نوسّعها إلى منتج كامل إلا بعد ظهور نقرات حقيقية وإشارة اشتراك واحدة على الأقل.",
+  };
 }
 
 function writeProductsPage(siteDir) {
@@ -3173,6 +3202,7 @@ function zhProductCopy(product) {
 function writeZhProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
   const nextHandoff = manifest.nextValidationHandoff || {};
+  const validationCopy = zhValidationHandoffCopy(nextHandoff);
   const samplePreviews = (manifest.samplePreviews || [])
     .map((sample) => `
         <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
@@ -3317,8 +3347,8 @@ ${samplePreviews}
     </section>
     <section class="creator-kit-safety" data-product-validation-handoff>
       <p class="creator-eyebrow">下一步驗證</p>
-      <h2>先測努爾學習單需求</h2>
-      <p>先把努爾學習單樣張分享給阿語家庭，再引導到免費努爾故事包；只有看到真實點擊與訂閱信號後，才考慮擴成完整產品。</p>
+      <h2>${escapeHtml(validationCopy.title)}</h2>
+      <p>${escapeHtml(validationCopy.body)}</p>
       ${productValidationPublicActions(nextHandoff, {
         preview: "打開樣張預覽",
         download: "下載免費 PDF 樣張",
@@ -3380,6 +3410,7 @@ ${products}
 function writeArProductsPage(siteDir) {
   const manifest = readJson(resolve(siteDir, "products.json"));
   const nextHandoff = manifest.nextValidationHandoff || {};
+  const validationCopy = arValidationHandoffCopy(nextHandoff);
   const samplePreviews = (manifest.samplePreviews || [])
     .map((sample) => `
         <article class="creator-copy-block" data-product-sample-card="${escapeHtml(sample.pack)}">
@@ -3505,8 +3536,8 @@ ${samplePreviews}
     </section>
     <section class="creator-kit-safety" data-product-validation-handoff>
       <p class="creator-eyebrow">خطوة التحقق التالية</p>
-      <h2>اختبار اهتمام ورقة نور أولا</h2>
-      <p>شاركوا عينة ورقة نور مع عائلات عربية، ثم وجّهوهم إلى حزمة نور المجانية. لا نوسّعها إلى منتج كامل إلا بعد ظهور نقرات حقيقية وإشارة اشتراك واحدة على الأقل.</p>
+      <h2>${escapeHtml(validationCopy.title)}</h2>
+      <p>${escapeHtml(validationCopy.body)}</p>
       ${productValidationPublicActions(nextHandoff, {
         preview: "افتحوا معاينة العينة",
         download: "نزّلوا عينة PDF المجانية",

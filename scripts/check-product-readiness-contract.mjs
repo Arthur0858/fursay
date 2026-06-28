@@ -550,8 +550,8 @@ async function main() {
   if (!html.includes("data-product-validation-handoff")) failures.push("products_page_missing_validation_handoff");
   if (!zhHtml.includes("data-product-validation-handoff")) failures.push("zh_products_page_missing_validation_handoff");
   if (!arHtml.includes("data-product-validation-handoff")) failures.push("ar_products_page_missing_validation_handoff");
-  if (!zhHtml.includes("先測努爾學習單需求")) failures.push("zh_products_page_missing_validation_handoff_copy");
-  if (!arHtml.includes("اختبار اهتمام ورقة نور أولا")) failures.push("ar_products_page_missing_validation_handoff_copy");
+  if (!zhHtml.includes("先測叩叩可列印包需求")) failures.push("zh_products_page_missing_validation_handoff_copy");
+  if (!arHtml.includes("اختبار اهتمام حزمة كوكو أولا")) failures.push("ar_products_page_missing_validation_handoff_copy");
   if (!html.includes("data-product-sample-previews")) failures.push("products_page_missing_sample_preview_section");
   if (!zhHtml.includes("data-product-sample-previews")) failures.push("zh_products_page_missing_sample_preview_section");
   if (!arHtml.includes("data-product-sample-previews")) failures.push("ar_products_page_missing_sample_preview_section");
@@ -670,7 +670,8 @@ async function main() {
   if (products.samplePreviews?.length !== release.liveExpectations?.productSamplePreviewPages) failures.push(`products_manifest_sample_preview_count:${products.samplePreviews?.length || 0}`);
   if (!products.nextValidationHandoff) failures.push("products_manifest_missing_next_validation_handoff");
   if ((products.productValidationHandoffs || []).length !== REQUIRED_PRODUCTS.length) failures.push(`products_manifest_validation_handoff_count:${products.productValidationHandoffs?.length || 0}`);
-  if (products.nextValidationHandoff?.pack !== "noor") failures.push(`products_manifest_next_handoff_pack:${products.nextValidationHandoff?.pack || "none"}`);
+  if (products.nextValidationHandoff?.pack !== "koko") failures.push(`products_manifest_next_handoff_pack:${products.nextValidationHandoff?.pack || "none"}`);
+  if (!products.nextValidationHandoff?.priorityReason?.includes("product-interest clicks")) failures.push("products_manifest_handoff_missing_priority_reason");
   if (products.nextValidationHandoff?.paymentLinksAllowed !== false) failures.push("products_manifest_handoff_payment_links_allowed");
   if (products.nextValidationHandoff?.piiAllowed !== false) failures.push("products_manifest_handoff_pii_allowed");
   if (!products.nextValidationHandoff?.samplePreviewUrl?.startsWith("https://fursay.com/product-samples/")) failures.push("products_manifest_handoff_missing_sample_preview");
