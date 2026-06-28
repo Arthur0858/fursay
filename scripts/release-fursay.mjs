@@ -2676,6 +2676,17 @@ function productInterestNudge(product, locale = "en") {
   return `After previewing the sample, click this if you want a note when the ${pack} test pack is ready. It opens the free story-pack form; no payment today.`;
 }
 
+function productSampleCardInterestButton(sample, locale = "en") {
+  if (sample.pack !== "koko") return "";
+  const labels = {
+    en: "Notify me after previewing Koko",
+    zh: "看完叩叩樣張後通知我",
+    ar: "أخبروني بعد معاينة كوكو",
+  };
+  const sourcePrefix = locale === "en" ? "products" : `${locale}_products`;
+  return `<button class="creator-copy-button product-interest-primary product-sample-card-interest" type="button" data-product-interest="koko" data-interest-stage="sample_card_interest" data-signup-source="${sourcePrefix}_sample_interest_koko">${escapeHtml(labels[locale] || labels.en)}</button>`;
+}
+
 function samplePreviewHref(product) {
   try {
     return new URL(product.samplePreview?.url || "").pathname || "";
@@ -2935,7 +2946,10 @@ function writeProductsPage(siteDir) {
           <h3>${escapeHtml(sample.label)}</h3>
           <p>Preview contents: ${escapeHtml((sample.contents || []).join(", "))}</p>
           <p>This is a free sample preview for interest validation. It is not a checkout page.</p>
-          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="products_sample_preview_${escapeHtml(sample.pack)}">Open sample preview</a>
+          <div class="public-share-actions product-sample-card-actions">
+            <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="products_sample_preview_${escapeHtml(sample.pack)}">Open sample preview</a>
+            ${productSampleCardInterestButton(sample, "en")}
+          </div>
         </article>`)
     .join("\n");
   const products = (manifest.products || [])
@@ -3160,7 +3174,10 @@ function writeZhProductsPage(siteDir) {
           <h3>${escapeHtml(sample.pack === "noor" ? "免費努爾學習單樣張" : "免費叩叩可列印樣張")}</h3>
           <p>樣張內容：${escapeHtml((sample.contents || []).join("、"))}</p>
           <p>這是用來驗證家庭興趣的免費預覽，不是付款頁。</p>
-          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="zh_products_sample_preview_${escapeHtml(sample.pack)}">打開樣張預覽</a>
+          <div class="public-share-actions product-sample-card-actions">
+            <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="zh_products_sample_preview_${escapeHtml(sample.pack)}">打開樣張預覽</a>
+            ${productSampleCardInterestButton(sample, "zh")}
+          </div>
         </article>`)
     .join("\n");
   const products = (manifest.products || [])
@@ -3364,7 +3381,10 @@ function writeArProductsPage(siteDir) {
           <h3>${escapeHtml(sample.pack === "noor" ? "عينة مجانية من ورقة نور" : "عينة مجانية من حزمة كوكو")}</h3>
           <p>محتوى العينة: ${escapeHtml((sample.contents || []).join("، "))}</p>
           <p>هذه معاينة مجانية لاختبار اهتمام العائلات، وليست صفحة دفع.</p>
-          <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="ar_products_sample_preview_${escapeHtml(sample.pack)}">افتحوا معاينة العينة</a>
+          <div class="public-share-actions product-sample-card-actions">
+            <a href="${escapeHtml(new URL(sample.url).pathname)}" data-product-sample-preview="${escapeHtml(sample.pack)}" data-product-info-link="${escapeHtml(sample.pack)}" data-interest-stage="sample_preview" data-signup-source="ar_products_sample_preview_${escapeHtml(sample.pack)}">افتحوا معاينة العينة</a>
+            ${productSampleCardInterestButton(sample, "ar")}
+          </div>
         </article>`)
     .join("\n");
   const products = (manifest.products || [])

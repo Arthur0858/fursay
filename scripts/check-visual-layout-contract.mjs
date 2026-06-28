@@ -306,7 +306,7 @@ function checkLayout(spec, viewport, layout) {
     if (mustBeInFirstView && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
     if (cta.rect.width < 44 || cta.rect.height < 36) failures.push(`${prefix}:cta_touch_target:${cta.pack || cta.index}:${Math.round(cta.rect.width)}x${Math.round(cta.rect.height)}`);
     if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
-    if (spec.product && !["waitlist", "validation_pdf_interest"].includes(cta.stage)) failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.product && !["waitlist", "validation_pdf_interest", "sample_card_interest"].includes(cta.stage)) failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.product && cta.stage === "validation_pdf_interest" && (cta.pack !== "noor" || cta.source !== "product_validation_interest_noor")) {
       failures.push(`${prefix}:product_validation_cta_contract:${cta.pack || "none"}:${cta.source || "none"}`);
     }

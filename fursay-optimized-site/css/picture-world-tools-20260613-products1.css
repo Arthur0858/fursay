@@ -299,6 +299,13 @@ body.picture-world .share-kit-interest-button {
 body.picture-world .product-sample-after-pdf-interest {
   white-space: normal !important;
 }
+body.picture-world .product-sample-card-actions {
+  justify-content: flex-start !important;
+  margin-top: 12px !important;
+}
+body.picture-world .product-sample-card-interest {
+  white-space: normal !important;
+}
 body.picture-world .product-interest-nudge {
   max-width: 760px !important;
   margin: 10px 0 12px !important;

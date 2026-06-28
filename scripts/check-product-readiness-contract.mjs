@@ -631,12 +631,18 @@ async function main() {
   const validationButtons = productButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
   const zhValidationButtons = zhProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
   const arValidationButtons = arProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
+  const sampleCardButtons = productButtons.filter((button) => attr(button.tag, "data-interest-stage") === "sample_card_interest");
+  const zhSampleCardButtons = zhProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "sample_card_interest");
+  const arSampleCardButtons = arProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "sample_card_interest");
   if (waitlistButtons.length !== 2) failures.push(`products_page_product_interest_buttons:${waitlistButtons.length}`);
   if (zhWaitlistButtons.length !== 2) failures.push(`zh_products_page_product_interest_buttons:${zhWaitlistButtons.length}`);
   if (arWaitlistButtons.length !== 2) failures.push(`ar_products_page_product_interest_buttons:${arWaitlistButtons.length}`);
   if (validationButtons.length !== 1) failures.push(`products_page_validation_interest_buttons:${validationButtons.length}`);
   if (zhValidationButtons.length !== 1) failures.push(`zh_products_page_validation_interest_buttons:${zhValidationButtons.length}`);
   if (arValidationButtons.length !== 1) failures.push(`ar_products_page_validation_interest_buttons:${arValidationButtons.length}`);
+  if (sampleCardButtons.length !== 1) failures.push(`products_page_sample_card_interest_buttons:${sampleCardButtons.length}`);
+  if (zhSampleCardButtons.length !== 1) failures.push(`zh_products_page_sample_card_interest_buttons:${zhSampleCardButtons.length}`);
+  if (arSampleCardButtons.length !== 1) failures.push(`ar_products_page_sample_card_interest_buttons:${arSampleCardButtons.length}`);
   for (const button of waitlistButtons) {
     if (attr(button.tag, "data-interest-stage") !== "waitlist") failures.push(`product_button_bad_stage:${button.pack}`);
     if (!attr(button.tag, "data-signup-source").startsWith(`product_page_${button.pack}`)) failures.push(`product_button_bad_source:${button.pack}`);
@@ -644,6 +650,15 @@ async function main() {
   for (const button of [...validationButtons, ...zhValidationButtons, ...arValidationButtons]) {
     if (button.pack !== products.nextValidationHandoff?.pack) failures.push(`validation_button_bad_pack:${button.pack || "none"}`);
     if (attr(button.tag, "data-signup-source") !== `product_validation_interest_${button.pack}`) failures.push(`validation_button_bad_source:${button.pack}`);
+  }
+  for (const [label, buttons, expectedSource] of [
+    ["products", sampleCardButtons, "products_sample_interest_koko"],
+    ["zh_products", zhSampleCardButtons, "zh_products_sample_interest_koko"],
+    ["ar_products", arSampleCardButtons, "ar_products_sample_interest_koko"],
+  ]) {
+    const button = buttons[0];
+    if (button?.pack !== "koko") failures.push(`${label}_sample_card_interest_bad_pack:${button?.pack || "none"}`);
+    if (button && attr(button.tag, "data-signup-source") !== expectedSource) failures.push(`${label}_sample_card_interest_bad_source:${attr(button.tag, "data-signup-source") || "none"}`);
   }
 
   if (products.platform !== "cloudflare-workers-static-assets") failures.push(`products_manifest_platform:${products.platform || "none"}`);
