@@ -9290,6 +9290,21 @@
   },
   "runs": [
     {
+      "runId": "1782663340989-pfs0in",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-06T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-06-28T16:15:40.989Z",
+      "finishedAt": "2026-06-28T16:15:41.639Z"
+    },
+    {
       "runId": "1782607555619-m5xlel",
       "channel": "arabic",
       "mode": "api-preflight",
@@ -10045,21 +10060,6 @@
       "error": "HTTP 422: Content submission is only available on Premium plan.",
       "startedAt": "2026-06-21T14:44:40.954Z",
       "finishedAt": "2026-06-21T14:44:41.470Z"
-    },
-    {
-      "runId": "1782053080105-k3qgmn",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-22T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-21T14:44:40.106Z",
-      "finishedAt": "2026-06-21T14:44:40.789Z"
     }
   ]
 }
