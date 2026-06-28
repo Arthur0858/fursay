@@ -420,6 +420,15 @@ async function checkPage(browser, baseUrl, path) {
           text: button.textContent.trim().replace(/\s+/g, " "),
         }))
         : [],
+      homeKokoPdfSamples: homePages.includes(location.pathname)
+        ? qa(".home-koko-pdf-sample[data-product-sample-download='koko']").map((anchor) => ({
+          href: anchor.getAttribute("href") || "",
+          download: anchor.hasAttribute("download"),
+          stage: anchor.getAttribute("data-interest-stage") || "",
+          source: anchor.getAttribute("data-signup-source") || "",
+          text: anchor.textContent.trim().replace(/\s+/g, " "),
+        }))
+        : [],
       kokoLeadMagnet: !!document.querySelector(".koko-lead-magnet"),
       kokoLeadMagnetVariant: document.querySelector(".koko-lead-magnet")?.getAttribute("data-koko-lead-magnet") || "",
       kokoLeadMagnetText: document.querySelector(".koko-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
@@ -543,6 +552,16 @@ async function checkPage(browser, baseUrl, path) {
     }
     if (!/^((zh|ar)_)?home_koko_sample_printable_interest$/.test(homeKokoPrintableInterest.source || "")) {
       failures.push(`home_koko_printable_interest_source:${homeKokoPrintableInterest.source || "none"}`);
+    }
+    if (data.homeKokoPdfSamples.length !== 1) failures.push(`home_koko_pdf_sample_count:${data.homeKokoPdfSamples.length}`);
+    const homeKokoPdfSample = data.homeKokoPdfSamples[0] || {};
+    if (homeKokoPdfSample.href !== `/download/koko-printable-sample?source_id=${path === "/zh/" ? "zh_" : path === "/ar/" ? "ar_" : ""}home_koko_printable_pdf&creator=fursay&placement=home_weekly_pack`) {
+      failures.push(`home_koko_pdf_sample_href:${homeKokoPdfSample.href || "none"}`);
+    }
+    if (!homeKokoPdfSample.download) failures.push("home_koko_pdf_sample_missing_download_attr");
+    if (homeKokoPdfSample.stage !== "home_sample_pdf_download") failures.push(`home_koko_pdf_sample_stage:${homeKokoPdfSample.stage || "none"}`);
+    if (!/^((zh|ar)_)?home_koko_printable_pdf$/.test(homeKokoPdfSample.source || "")) {
+      failures.push(`home_koko_pdf_sample_source:${homeKokoPdfSample.source || "none"}`);
     }
 
     for (const expected of ["koko", "noor"]) {
