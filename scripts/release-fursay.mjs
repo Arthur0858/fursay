@@ -3604,6 +3604,8 @@ function samplePageSpec(product) {
       waitlistSource: "sample_preview_noor_worksheet",
       waitlistLabel: "أخبروني عندما تصبح ورقة نور التجريبية جاهزة",
       waitlistNudge: "إذا بدت العينة مناسبة لعائلتكم، اضغطوا الزر لفتح نموذج حزمة القصة المجانية وتسجيل اهتمامكم. لا يوجد دفع اليوم.",
+      activityInterestLabel: "نعم، أخبروني عن ورقة نور",
+      activityInterestSource: "sample_activity_interest_noor",
     };
   }
   return {
@@ -3645,6 +3647,8 @@ function samplePageSpec(product) {
     waitlistSource: "sample_preview_koko_printable",
     waitlistLabel: "Notify me when the Koko printable test is ready",
     waitlistNudge: "If this sample fits your family rhythm, click the button to open the free story-pack form and record interest. No payment today.",
+    activityInterestLabel: "Yes, notify me about the Koko printable",
+    activityInterestSource: "sample_activity_interest_koko",
   };
 }
 
@@ -3714,6 +3718,7 @@ ${cards}
       <p>${escapeHtml(spec.activity)}</p>
       <p>${escapeHtml(spec.validationCopy)}</p>
       <div class="public-share-actions">
+        <button class="creator-copy-button product-interest-primary product-sample-activity-interest" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="sample_activity_waitlist" data-signup-source="${escapeHtml(spec.activityInterestSource)}">${escapeHtml(spec.activityInterestLabel)}</button>
         <a href="${escapeHtml(spec.storyCta)}">${escapeHtml(spec.storyCtaLabel)}</a>
         <a href="/products?utm_source=sample_preview&utm_medium=site&utm_campaign=product_interest_validation&utm_content=${escapeHtml(spec.waitlistPack)}_sample_back_to_products">${escapeHtml(spec.backLabel)}</a>
       </div>

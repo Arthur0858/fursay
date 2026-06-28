@@ -311,7 +311,7 @@ function checkLayout(spec, viewport, layout) {
       failures.push(`${prefix}:product_validation_cta_contract:${cta.pack || "none"}:${cta.source || "none"}`);
     }
     if (spec.product && cta.overflowX) failures.push(`${prefix}:product_cta_text_overflow:${cta.pack || cta.index}`);
-    if (spec.sample && !["sample_preview_waitlist", "sample_after_pdf_interest"].includes(cta.stage)) failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.sample && !["sample_preview_waitlist", "sample_after_pdf_interest", "sample_activity_waitlist"].includes(cta.stage)) failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.sample && cta.overflowX) failures.push(`${prefix}:sample_cta_text_overflow:${cta.pack || cta.index}`);
   }
 

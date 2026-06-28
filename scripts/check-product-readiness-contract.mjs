@@ -762,6 +762,8 @@ async function main() {
     if (!pageHtml.includes('data-interest-stage="sample_preview_waitlist"')) failures.push(`sample_page_missing_interest_stage:${sample.pack}`);
     if (!pageHtml.includes('data-interest-stage="sample_after_pdf_interest"')) failures.push(`sample_page_missing_after_pdf_interest_stage:${sample.pack}`);
     if (!pageHtml.includes(`data-signup-source="sample_after_pdf_interest_${sample.pack}"`)) failures.push(`sample_page_missing_after_pdf_interest_source:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="sample_activity_waitlist"')) failures.push(`sample_page_missing_activity_interest_stage:${sample.pack}`);
+    if (!pageHtml.includes(`data-signup-source="sample_activity_interest_${sample.pack}"`)) failures.push(`sample_page_missing_activity_interest_source:${sample.pack}`);
     if (sample.pack === "noor") {
       if (!pageHtml.includes('<html lang="ar" dir="rtl">')) failures.push("sample_page_noor_missing_ar_lang_dir");
       for (const needle of NOOR_SAMPLE_REQUIRED_COPY) {
