@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-06-28",
+  "updatedAt": "2026-06-29",
   "page": "https://fursay.com/noor-sprint-status",
   "manifest": "https://fursay.com/noor-sprint-status.json",
   "releaseManifest": "https://fursay.com/release.json",
