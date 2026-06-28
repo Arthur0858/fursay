@@ -217,6 +217,16 @@ function checkEpisode(episode, html) {
   }
   if (!html.includes(`data-open-subscribe="${episode.pack}"`)) failures.push(`${episode.path}:missing_subscribe_cta`);
   if (!html.includes(`utm_campaign=${episode.campaign}`)) failures.push(`${episode.path}:missing_campaign`);
+  if (episode.pack === "koko") {
+    const expectedSource = episode.lang === "zh-TW"
+      ? "zh_episode_koko_feelings_printable_interest"
+      : episode.lang === "ar"
+        ? "ar_episode_koko_feelings_printable_interest"
+        : "episode_koko_feelings_printable_interest";
+    if (!html.includes('data-product-interest="koko"')) failures.push(`${episode.path}:missing_koko_product_interest_cta`);
+    if (!html.includes('data-interest-stage="episode_pack_interest"')) failures.push(`${episode.path}:missing_episode_pack_interest_stage`);
+    if (!html.includes(`data-signup-source="${expectedSource}"`)) failures.push(`${episode.path}:missing_episode_pack_interest_source`);
+  }
   const links = bookLinks(html);
   if (links.length < 2) failures.push(`${episode.path}:book_link_count:${links.length}<2`);
   for (const link of links) {
