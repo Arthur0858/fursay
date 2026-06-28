@@ -1,0 +1,72 @@
+{
+  "runId": "1782675037043-ecektu",
+  "channel": "koko",
+  "mode": "chrome-handoff",
+  "dryRun": false,
+  "startedAt": "2026-06-28T19:30:37.043Z",
+  "status": "chrome_handoff_ready",
+  "episodeNo": 6,
+  "videoId": "NW_RHZDPKUU",
+  "videoUrl": "https://www.youtube.com/watch?v=NW_RHZDPKUU",
+  "inputPath": "content/newsletters/pending/1782672182233-9tp909-koko-ep006.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "Koko and Hoppy discover a secret garden",
+    "preview_text": "A gentle story about curiosity, bravery, and three simple English words to practice together.",
+    "hero_title": "Hoppy's Secret Garden",
+    "intro": "This week, Koko and Hoppy follow a hidden path behind the big oak tree. Hoppy feels curious and a little nervous, so Koko stays by her side. Together they discover glowing flowers, dancing fireflies, and a calm reminder that bravery can begin with one small step.",
+    "learning_words": [
+      {
+        "term": "garden",
+        "pronunciation": "GAR-den",
+        "meaning": "花園",
+        "example": "Hoppy found a secret garden."
+      },
+      {
+        "term": "discover",
+        "pronunciation": "dis-KUH-ver",
+        "meaning": "發現",
+        "example": "Koko and Hoppy discover glowing flowers."
+      },
+      {
+        "term": "wonder",
+        "pronunciation": "WUN-der",
+        "meaning": "驚奇",
+        "example": "They looked at the fireflies with wonder."
+      }
+    ],
+    "parent_activity": "After watching, invite your child to draw a tiny secret garden. Ask: What would you discover there? Then practice one sentence together: I can discover something beautiful.",
+    "video_cta": "Watch the episode with your child: https://www.youtube.com/watch?v=NW_RHZDPKUU",
+    "site_cta": "For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko",
+    "closing": "Curiosity grows when children feel safe to explore. This story is a soft way to practice courage, friendship, and wonder before bedtime."
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">A gentle story about curiosity, bravery, and three simple English words to practice together.</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP006</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">Hoppy's Secret Garden</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">This week, Koko and Hoppy follow a hidden path behind the big oak tree. Hoppy feels curious and a little nervous, so Koko stays by her side. Together they discover glowing flowers, dancing fireflies, and a calm reminder that bravery can begin with one small step.</p>\n            <img src=\"https://i.ytimg.com/vi/NW_RHZDPKUU/maxresdefault.jpg\" alt=\"Koko and Hoppy 🐰 Hoppy's Secret Garden | English Bedtime Story | Koko's Forest Adventure\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>garden</strong><br><span style=\"color:#6d6258;\">GAR-den</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">花園<br><em>Hoppy found a secret garden.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>discover</strong><br><span style=\"color:#6d6258;\">dis-KUH-ver</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">發現<br><em>Koko and Hoppy discover glowing flowers.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>wonder</strong><br><span style=\"color:#6d6258;\">WUN-der</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">驚奇<br><em>They looked at the fireflies with wonder.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">After watching, invite your child to draw a tiny secret garden. Ask: What would you discover there? Then practice one sentence together: I can discover something beautiful.</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=NW_RHZDPKUU\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch the episode with your child: https://www.youtube.com/watch?v=NW_RHZDPKUU</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko?subscribe=koko&amp;utm_source=creator_kit&amp;utm_medium=description&amp;utm_campaign=koko_story_funnel&amp;utm_content=creator_kit_sample\" style=\"color:#c05f18;font-weight:bold;\">For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko</a>\n            </p>\n            <p style=\"font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;\">\n              Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter<br>\n              <a href=\"https://fursay.com/creator/koko/newsletter\" style=\"color:#c05f18;font-weight:bold;\">https://fursay.com/creator/koko/newsletter</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">Curiosity grows when children feel safe to explore. This story is a soft way to practice courage, friendship, and wonder before bedtime.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Koko's Forest - EP006\n\nHoppy's Secret Garden\n\nThis week, Koko and Hoppy follow a hidden path behind the big oak tree. Hoppy feels curious and a little nervous, so Koko stays by her side. Together they discover glowing flowers, dancing fireflies, and a calm reminder that bravery can begin with one small step.\n\nLearning words\ngarden - GAR-den\n花園\nHoppy found a secret garden.\n\ndiscover - dis-KUH-ver\n發現\nKoko and Hoppy discover glowing flowers.\n\nwonder - WUN-der\n驚奇\nThey looked at the fireflies with wonder.\n\nParent activity\nAfter watching, invite your child to draw a tiny secret garden. Ask: What would you discover there? Then practice one sentence together: I can discover something beautiful.\n\nWatch the episode with your child: https://www.youtube.com/watch?v=NW_RHZDPKUU\nhttps://www.youtube.com/watch?v=NW_RHZDPKUU\n\nFor more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko\nhttps://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample\n\nKoko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter\nhttps://fursay.com/creator/koko/newsletter\n\nCuriosity grows when children feel safe to explore. This story is a soft way to practice courage, friendship, and wonder before bedtime.",
+  "creatorKit": {
+    "pack": "koko",
+    "sampleShortlink": "https://fursay.com/sample/koko",
+    "newsletterShortlink": "https://fursay.com/creator/koko/newsletter",
+    "trackedLandingUrl": "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample",
+    "qrSvg": "https://fursay.com/images/qr/sample-koko.svg"
+  },
+  "delivery": "scheduled",
+  "scheduledAt": "2026-07-06T09:00:00+08:00",
+  "browserHandoff": {
+    "jsonPath": "content/newsletters/browser-handoff/2026-06-28-koko-ep006-1782675037043-ecektu.json",
+    "mdPath": "content/newsletters/browser-handoff/2026-06-28-koko-ep006-1782675037043-ecektu.md",
+    "editor": "Rich-text editor",
+    "action": "Create or duplicate a regular campaign, build the email with MailerLite blocks in the listed order, choose the listed group, set the schedule, then confirm it appears in Outbox."
+  },
+  "mailerLiteBrowserTarget": {
+    "groupId": "185164682657531180",
+    "groupName": "Koko 電子報訂閱者",
+    "groupActiveCount": 1,
+    "from": "hello@fursay.com",
+    "fromName": "Fursay",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-07-06T09:00:00+08:00"
+  },
+  "warnings": [],
+  "finishedAt": "2026-06-28T19:30:37.502Z"
+}
