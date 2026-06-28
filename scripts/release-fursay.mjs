@@ -2658,7 +2658,22 @@ function writeMonetizationRoadmap(siteDir, source) {
 
 function productButton(product) {
   const source = product.pack === "noor" ? "product_page_noor_worksheet" : "product_page_koko_printable";
-  return `<button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Join ${escapeHtml(product.pack === "noor" ? "Noor" : "Koko")} waitlist</button>`;
+  return `<button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Notify me when the ${escapeHtml(product.pack === "noor" ? "Noor worksheet" : "Koko printable")} test is ready</button>`;
+}
+
+function productInterestNudge(product, locale = "en") {
+  const pack = product.pack === "noor" ? "Noor" : "Koko";
+  if (locale === "zh") {
+    return product.pack === "noor"
+      ? "看完樣張後，如果你想收到努爾學習單測試通知，按這個按鈕會開啟免費故事包表單；今天不會收費。"
+      : "看完樣張後，如果你想收到叩叩可列印包測試通知，按這個按鈕會開啟免費故事包表單；今天不會收費。";
+  }
+  if (locale === "ar") {
+    return product.pack === "noor"
+      ? "بعد مشاهدة العينة، اضغطوا الزر إذا أردتم إشعار اختبار ورقة نور. سيفتح نموذج حزمة القصة المجانية، ولا يوجد دفع اليوم."
+      : "بعد مشاهدة العينة، اضغطوا الزر إذا أردتم إشعار اختبار حزمة كوكو. سيفتح نموذج حزمة القصة المجانية، ولا يوجد دفع اليوم.";
+  }
+  return `After previewing the sample, click this if you want a note when the ${pack} test pack is ready. It opens the free story-pack form; no payment today.`;
 }
 
 function samplePreviewHref(product) {
@@ -2954,6 +2969,7 @@ function writeProductsPage(siteDir) {
           </article>
         </div>
         <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
+        <p class="product-interest-nudge">${escapeHtml(productInterestNudge(product, "en"))}</p>
         <div class="public-share-actions">
           ${productButton(product)}
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
@@ -3178,8 +3194,9 @@ function writeZhProductsPage(siteDir) {
           </article>
         </div>
         <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="zh_product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
+        <p class="product-interest-nudge">${escapeHtml(productInterestNudge(product, "zh"))}</p>
         <div class="public-share-actions">
-          <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
+          <button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
         </div>
       </article>`;
@@ -3380,8 +3397,9 @@ function writeArProductsPage(siteDir) {
           </article>
         </div>
         <p class="product-sample-inline"><a href="${escapeHtml(samplePreviewHref(product))}" data-product-sample-preview="${escapeHtml(product.pack)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="sample_preview" data-signup-source="ar_product_sample_preview_${escapeHtml(product.pack)}">${escapeHtml(copy.previewLabel)}</a></p>
+        <p class="product-interest-nudge">${escapeHtml(productInterestNudge(product, "ar"))}</p>
         <div class="public-share-actions">
-          <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
+          <button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">${escapeHtml(copy.button)}</button>
           <a href="${escapeHtml(copy.bridge)}">${escapeHtml(copy.bridgeLabel)}</a>
         </div>
       </article>`;
@@ -3558,7 +3576,8 @@ function samplePageSpec(product) {
       modalNote: "لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.",
       waitlistPack: "noor",
       waitlistSource: "sample_preview_noor_worksheet",
-      waitlistLabel: "انضموا إلى قائمة اهتمام ورقة نور",
+      waitlistLabel: "أخبروني عندما تصبح ورقة نور التجريبية جاهزة",
+      waitlistNudge: "إذا بدت العينة مناسبة لعائلتكم، اضغطوا الزر لفتح نموذج حزمة القصة المجانية وتسجيل اهتمامكم. لا يوجد دفع اليوم.",
     };
   }
   return {
@@ -3597,7 +3616,8 @@ function samplePageSpec(product) {
     modalNote: "No spam, ever. Unsubscribe anytime.",
     waitlistPack: "koko",
     waitlistSource: "sample_preview_koko_printable",
-    waitlistLabel: "Join Koko printable interest list",
+    waitlistLabel: "Notify me when the Koko printable test is ready",
+    waitlistNudge: "If this sample fits your family rhythm, click the button to open the free story-pack form and record interest. No payment today.",
   };
 }
 
@@ -3640,8 +3660,9 @@ function writeProductSamplePages(siteDir) {
         ${(spec.trustLabels || []).map((label) => `<span>${escapeHtml(label)}</span>`).join("\n        ")}
       </div>
       <div class="public-share-actions">
-        <button class="creator-copy-button" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
+        <button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(spec.waitlistPack)}" data-interest-stage="sample_preview_waitlist" data-signup-source="${escapeHtml(spec.waitlistSource)}">${escapeHtml(spec.waitlistLabel)}</button>
       </div>
+      <p class="product-interest-nudge">${escapeHtml(spec.waitlistNudge || "")}</p>
     </header>
     <section class="creator-kit-safety" data-product-sample-preview="${escapeHtml(product.pack)}">
       <h2>${escapeHtml(spec.includeLabel)}</h2>
