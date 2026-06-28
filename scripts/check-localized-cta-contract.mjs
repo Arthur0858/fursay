@@ -18,7 +18,12 @@ const PAGES = [
       home_weekly_pack_noor: "noor",
     },
     samples: {
-      koko: "/koko",
+      koko: {
+        path: "/product-samples/koko-printable",
+        sourceId: "home_koko_sample_preview",
+        creator: "fursay",
+        placement: "home_weekly_pack",
+      },
       noor: "/arabic",
     },
   },
@@ -33,7 +38,12 @@ const PAGES = [
       home_weekly_pack_noor: "noor",
     },
     samples: {
-      koko: "/zh/koko",
+      koko: {
+        path: "/product-samples/koko-printable",
+        sourceId: "zh_home_koko_sample_preview",
+        creator: "fursay",
+        placement: "home_weekly_pack",
+      },
       noor: "/zh/arabic",
     },
   },
@@ -49,7 +59,12 @@ const PAGES = [
       home_weekly_pack_noor: "noor",
     },
     samples: {
-      koko: "/ar/koko",
+      koko: {
+        path: "/product-samples/koko-printable",
+        sourceId: "ar_home_koko_sample_preview",
+        creator: "fursay",
+        placement: "home_weekly_pack",
+      },
       noor: "/ar/arabic",
     },
   },
@@ -247,16 +262,23 @@ async function checkPage(browser, baseUrl, spec) {
   }
 
   if (spec.kind === "home") {
-    for (const [pack, expectedPath] of Object.entries(spec.samples || {})) {
+    for (const [pack, expected] of Object.entries(spec.samples || {})) {
       const link = data.sampleLinks.find((item) => item.pack === pack);
       if (!link) {
         failures.push(`missing_home_sample:${pack}`);
         continue;
       }
       const url = new URL(link.href, "https://fursay.com");
-      if (url.pathname !== expectedPath) failures.push(`bad_home_sample_path:${pack}:${url.pathname}`);
-      if (url.searchParams.get("subscribe") !== pack) failures.push(`bad_home_sample_subscribe:${pack}:${url.searchParams.get("subscribe") || "none"}`);
-      if (url.searchParams.get("utm_source") !== "home") failures.push(`bad_home_sample_source:${pack}:${url.searchParams.get("utm_source") || "none"}`);
+      if (typeof expected === "string") {
+        if (url.pathname !== expected) failures.push(`bad_home_sample_path:${pack}:${url.pathname}`);
+        if (url.searchParams.get("subscribe") !== pack) failures.push(`bad_home_sample_subscribe:${pack}:${url.searchParams.get("subscribe") || "none"}`);
+        if (url.searchParams.get("utm_source") !== "home") failures.push(`bad_home_sample_source:${pack}:${url.searchParams.get("utm_source") || "none"}`);
+      } else {
+        if (url.pathname !== expected.path) failures.push(`bad_home_sample_path:${pack}:${url.pathname}`);
+        if (url.searchParams.get("source_id") !== expected.sourceId) failures.push(`bad_home_sample_source_id:${pack}:${url.searchParams.get("source_id") || "none"}`);
+        if (url.searchParams.get("creator") !== expected.creator) failures.push(`bad_home_sample_creator:${pack}:${url.searchParams.get("creator") || "none"}`);
+        if (url.searchParams.get("placement") !== expected.placement) failures.push(`bad_home_sample_placement:${pack}:${url.searchParams.get("placement") || "none"}`);
+      }
     }
   }
 

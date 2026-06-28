@@ -665,7 +665,7 @@ function writeCampaignManifest(siteDir, source) {
       },
       landingPages: {
         storyWorld: "https://fursay.com/koko",
-        homeSample: "https://fursay.com/koko?subscribe=koko&utm_source=home&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=home_koko_sample_link",
+        homeSample: "https://fursay.com/product-samples/koko-printable?source_id=home_koko_sample_preview&creator=fursay&placement=home_weekly_pack",
         sampleSchema: "https://fursay.com/koko?subscribe=koko&utm_source=structured_data&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_sample_pack_schema",
       },
       copyKit: {

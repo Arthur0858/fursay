@@ -532,17 +532,29 @@ async function checkPage(browser, baseUrl, path) {
     if (!groups.has("noor")) failures.push("home_missing_noor_preselect");
     const sampleLinks = new Map(data.homeSampleLinks.map((link) => [link.pack, link.href]));
     const expectedSampleLinks = [
-      { pack: "koko", pathNeedle: "/koko", campaign: "koko_story_funnel", content: "home_koko_sample_link" },
+      {
+        pack: "koko",
+        pathNeedle: "/product-samples/koko-printable",
+        sourceId: `${path === "/zh/" ? "zh_" : path === "/ar/" ? "ar_" : ""}home_koko_sample_preview`,
+        creator: "fursay",
+        placement: "home_weekly_pack",
+      },
       { pack: "noor", pathNeedle: path === "/" ? "/arabic" : `${path.replace(/\/$/, "")}/arabic`, campaign: "noor_story_funnel", content: "home_noor_sample_link" },
     ];
     for (const expected of expectedSampleLinks) {
       const href = sampleLinks.get(expected.pack) || "";
       if (!href) failures.push(`home_missing_${expected.pack}_sample_link`);
       if (!href.includes(expected.pathNeedle)) failures.push(`home_bad_${expected.pack}_sample_path:${href || "none"}`);
-      if (!href.includes(`subscribe=${expected.pack}`)) failures.push(`home_bad_${expected.pack}_sample_subscribe:${href || "none"}`);
-      if (!href.includes("utm_source=home") || !href.includes("utm_medium=site")) failures.push(`home_bad_${expected.pack}_sample_utm_source_medium`);
-      if (!href.includes(`utm_campaign=${expected.campaign}`) || !href.includes(`utm_content=${expected.content}`)) {
-        failures.push(`home_bad_${expected.pack}_sample_campaign:${href || "none"}`);
+      if (expected.pack === "koko") {
+        if (!href.includes(`source_id=${expected.sourceId}`)) failures.push(`home_bad_koko_sample_source_id:${href || "none"}`);
+        if (!href.includes(`creator=${expected.creator}`)) failures.push(`home_bad_koko_sample_creator:${href || "none"}`);
+        if (!href.includes(`placement=${expected.placement}`)) failures.push(`home_bad_koko_sample_placement:${href || "none"}`);
+      } else {
+        if (!href.includes(`subscribe=${expected.pack}`)) failures.push(`home_bad_${expected.pack}_sample_subscribe:${href || "none"}`);
+        if (!href.includes("utm_source=home") || !href.includes("utm_medium=site")) failures.push(`home_bad_${expected.pack}_sample_utm_source_medium`);
+        if (!href.includes(`utm_campaign=${expected.campaign}`) || !href.includes(`utm_content=${expected.content}`)) {
+          failures.push(`home_bad_${expected.pack}_sample_campaign:${href || "none"}`);
+        }
       }
     }
     if (data.homeKokoPrintableInterest.length !== 1) failures.push(`home_koko_printable_interest_count:${data.homeKokoPrintableInterest.length}`);
@@ -1908,7 +1920,13 @@ async function checkDiscoveryFiles(baseUrl) {
     if (campaign.shortlinks?.share !== `https://fursay.com/share/${pack}`) failures.push(`campaigns_${pack}_share:${campaign.shortlinks?.share || "none"}`);
     if (campaign.shortlinks?.bio !== `https://fursay.com/bio/${pack}`) failures.push(`campaigns_${pack}_bio:${campaign.shortlinks?.bio || "none"}`);
     if (campaign.shortlinks?.creator !== expectedCreator) failures.push(`campaigns_${pack}_creator:${campaign.shortlinks?.creator || "none"}`);
-    if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) failures.push(`campaigns_${pack}_home_sample_subscribe`);
+    if (pack === "koko") {
+      if (!campaign.landingPages?.homeSample?.includes("/product-samples/koko-printable")) failures.push("campaigns_koko_home_sample_path");
+      if (!campaign.landingPages?.homeSample?.includes("source_id=home_koko_sample_preview")) failures.push("campaigns_koko_home_sample_source_id");
+      if (!campaign.landingPages?.homeSample?.includes("placement=home_weekly_pack")) failures.push("campaigns_koko_home_sample_placement");
+    } else if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) {
+      failures.push(`campaigns_${pack}_home_sample_subscribe`);
+    }
     if (!campaign.landingPages?.sampleSchema?.includes("utm_source=structured_data")) failures.push(`campaigns_${pack}_schema_source`);
     if (campaign.copyKit?.primaryShortlink !== expectedSample) failures.push(`campaigns_${pack}_copy_primary_shortlink:${campaign.copyKit?.primaryShortlink || "none"}`);
     if (campaign.copyKit?.shareShortlink !== `https://fursay.com/share/${pack}`) failures.push(`campaigns_${pack}_copy_share_shortlink:${campaign.copyKit?.shareShortlink || "none"}`);
