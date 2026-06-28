@@ -3637,7 +3637,7 @@ function samplePageSpec(product) {
     trustLabels: ["No payment today", "Print-ready preview", "Interest validation"],
     downloadLabel: "Download PDF sample",
     printLabel: "Print or save as PDF",
-    afterPdfInterestLabel: "Notify me after downloading or printing the sample",
+    afterPdfInterestLabel: "I would print the full Koko pack",
     modalTitle: "Join the story pack list",
     modalSub: "Get the free story pack first. Paid sample packs are not open yet.",
     modalInterestLabel: "I'm interested in",
@@ -3645,9 +3645,9 @@ function samplePageSpec(product) {
     modalNote: "No spam, ever. Unsubscribe anytime.",
     waitlistPack: "koko",
     waitlistSource: "sample_preview_koko_printable",
-    waitlistLabel: "Notify me when the Koko printable test is ready",
-    waitlistNudge: "If this sample fits your family rhythm, click the button to open the free story-pack form and record interest. No payment today.",
-    activityInterestLabel: "Yes, notify me about the Koko printable",
+    waitlistLabel: "I would use this 3-page Koko printable",
+    waitlistNudge: "If this sample fits your family rhythm, click the button to open the free story-pack form and mark Koko printable interest. No payment today.",
+    activityInterestLabel: "Yes, this activity would help us",
     activityInterestSource: "sample_activity_interest_koko",
   };
 }
