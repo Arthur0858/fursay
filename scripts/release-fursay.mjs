@@ -289,7 +289,7 @@ function writeReleaseManifest() {
       noorLeadMagnetPages: 3,
       noorSprintCopyVariants: 4,
       noorSprintStatusDays: 7,
-      productInterestLinks: 21,
+      productInterestLinks: 24,
       productInfoLinks: 18,
       productLandingPages: 3,
       ownedProductSpecs: 2,
