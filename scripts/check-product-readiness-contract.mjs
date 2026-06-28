@@ -775,6 +775,10 @@ async function main() {
       failures.push(`sample_page_missing_no_payment_copy:${sample.pack}`);
     }
     if (!pageHtml.includes(`data-product-sample-print-view="${sample.pack}"`)) failures.push(`sample_page_missing_print_view:${sample.pack}`);
+    if (!pageHtml.includes(`data-product-sample-pdf-followup="${sample.pack}"`)) failures.push(`sample_page_missing_pdf_followup:${sample.pack}`);
+    if (!pageHtml.includes('data-interest-stage="pdf_followup_interest"')) failures.push(`sample_page_missing_pdf_followup_stage:${sample.pack}`);
+    if (!pageHtml.includes(`data-signup-source="pdf_followup_interest_${sample.pack}"`)) failures.push(`sample_page_missing_pdf_followup_source:${sample.pack}`);
+    if (!pageHtml.includes(`${sample.pack}_pdf_followup_interest`)) failures.push(`sample_page_missing_pdf_followup_source_id:${sample.pack}`);
     const trackedHref = new URL(sample.trackedDownloadUrl).pathname + new URL(sample.trackedDownloadUrl).search;
     if (!htmlIncludesUrl(pageHtml, trackedHref)) failures.push(`sample_page_missing_tracked_pdf_download_href:${sample.pack}`);
     if (pageHtml.includes(`href="${sample.downloadPath}"`)) failures.push(`sample_page_uses_raw_pdf_download_href:${sample.pack}`);

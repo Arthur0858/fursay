@@ -3598,6 +3598,10 @@ function samplePageSpec(product) {
       downloadLabel: "تنزيل عينة PDF",
       printLabel: "طباعة أو Save as PDF",
       afterPdfInterestLabel: "أخبروني بعد تنزيل أو طباعة العينة",
+      pdfFollowupTitle: "بعد مشاركة PDF",
+      pdfFollowupCopy: "إذا وصلتكم هذه العينة كملف PDF، افتحوا الرابط ثم اضغطوا زر الاهتمام إذا كانت ورقة نور مفيدة لعائلتكم.",
+      pdfFollowupUrl: "https://fursay.com/product-samples/noor-worksheet?source_id=noor_pdf_followup_interest&creator=fursay&placement=pdf_sample_followup",
+      pdfFollowupLabel: "افتحوا صفحة الاهتمام بورقة نور",
       modalTitle: "انضموا إلى قائمة حزمة القصة",
       modalSub: "ابدؤوا بالحزمة المجانية أولا. حزم العينات المدفوعة غير مفتوحة بعد.",
       modalInterestLabel: "أنا مهتم بـ",
@@ -3641,6 +3645,10 @@ function samplePageSpec(product) {
     downloadLabel: "Download PDF sample",
     printLabel: "Print or save as PDF",
     afterPdfInterestLabel: "I would print the full Koko pack",
+    pdfFollowupTitle: "After you download the PDF",
+    pdfFollowupCopy: "If this PDF was shared with you, open the follow-up page and tap the interest button if the full Koko printable would help your family.",
+    pdfFollowupUrl: "https://fursay.com/product-samples/koko-printable?source_id=koko_pdf_followup_interest&creator=fursay&placement=pdf_sample_followup",
+    pdfFollowupLabel: "Open the Koko printable interest page",
     modalTitle: "Join the story pack list",
     modalSub: "Get the free story pack first. Paid sample packs are not open yet.",
     modalInterestLabel: "I'm interested in",
@@ -3714,6 +3722,12 @@ ${cards}
         <button class="creator-copy-button product-sample-print-button" type="button" data-print-product-sample="${escapeHtml(product.pack)}" data-interest-stage="sample_print" data-signup-source="sample_print_${escapeHtml(product.pack)}">${escapeHtml(spec.printLabel)}</button>
         <button class="creator-copy-button product-interest-primary product-sample-after-pdf-interest" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="sample_after_pdf_interest" data-signup-source="sample_after_pdf_interest_${escapeHtml(product.pack)}">${escapeHtml(spec.afterPdfInterestLabel)}</button>
       </div>
+    </section>
+    <section class="creator-kit-safety product-sample-pdf-followup" data-product-sample-pdf-followup="${escapeHtml(product.pack)}">
+      <h2>${escapeHtml(spec.pdfFollowupTitle)}</h2>
+      <p>${escapeHtml(spec.pdfFollowupCopy)}</p>
+      <p><a href="${escapeHtml(spec.pdfFollowupUrl)}" data-product-info-link="${escapeHtml(product.pack)}" data-interest-stage="pdf_followup_interest" data-signup-source="pdf_followup_interest_${escapeHtml(product.pack)}">${escapeHtml(spec.pdfFollowupLabel)}</a></p>
+      <p class="product-sample-followup-url">${escapeHtml(spec.pdfFollowupUrl)}</p>
     </section>
     <section class="creator-kit-safety" data-product-sample-activity="${escapeHtml(product.pack)}">
       <h2>${escapeHtml(spec.testTitle)}</h2>
