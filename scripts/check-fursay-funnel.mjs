@@ -413,6 +413,13 @@ async function checkPage(browser, baseUrl, path) {
           text: anchor.textContent.trim().replace(/\s+/g, " "),
         }))
         : [],
+      homeKokoPrintableInterest: homePages.includes(location.pathname)
+        ? qa(".home-koko-printable-interest[data-product-interest='koko']").map((button) => ({
+          stage: button.getAttribute("data-interest-stage") || "",
+          source: button.getAttribute("data-signup-source") || "",
+          text: button.textContent.trim().replace(/\s+/g, " "),
+        }))
+        : [],
       kokoLeadMagnet: !!document.querySelector(".koko-lead-magnet"),
       kokoLeadMagnetVariant: document.querySelector(".koko-lead-magnet")?.getAttribute("data-koko-lead-magnet") || "",
       kokoLeadMagnetText: document.querySelector(".koko-lead-magnet")?.textContent.trim().replace(/\s+/g, " ") || "",
@@ -528,6 +535,14 @@ async function checkPage(browser, baseUrl, path) {
       if (!href.includes(`utm_campaign=${expected.campaign}`) || !href.includes(`utm_content=${expected.content}`)) {
         failures.push(`home_bad_${expected.pack}_sample_campaign:${href || "none"}`);
       }
+    }
+    if (data.homeKokoPrintableInterest.length !== 1) failures.push(`home_koko_printable_interest_count:${data.homeKokoPrintableInterest.length}`);
+    const homeKokoPrintableInterest = data.homeKokoPrintableInterest[0] || {};
+    if (homeKokoPrintableInterest.stage !== "home_sample_printable_interest") {
+      failures.push(`home_koko_printable_interest_stage:${homeKokoPrintableInterest.stage || "none"}`);
+    }
+    if (!/^((zh|ar)_)?home_koko_sample_printable_interest$/.test(homeKokoPrintableInterest.source || "")) {
+      failures.push(`home_koko_printable_interest_source:${homeKokoPrintableInterest.source || "none"}`);
     }
 
     for (const expected of ["koko", "noor"]) {
@@ -1495,7 +1510,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.noorSprintCopyVariants !== 4) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
   if (release.liveExpectations?.noorSprintStatusDays !== 7) failures.push(`release_noor_sprint_status_days:${release.liveExpectations?.noorSprintStatusDays || "none"}`);
-  if (release.liveExpectations?.productInterestLinks !== 24) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
+  if (release.liveExpectations?.productInterestLinks !== 27) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
   if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
