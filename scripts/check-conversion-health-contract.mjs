@@ -199,12 +199,19 @@ async function main() {
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("bad_report_script");
   if (conversionHealth.measurement?.analyticsReport?.packageScript !== "npm run report:events") failures.push("bad_report_package_script");
   if (conversionHealth.measurement?.analyticsReport?.status !== "pending_cloudflare_credentials_or_enablement") failures.push("bad_report_status");
+  if (conversionHealth.measurement?.analyticsReport?.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("report_missing_qa_excluded_decision_traffic");
+  if (conversionHealth.measurement?.analyticsReport?.dataQuality?.cleanWindowRequired !== true) failures.push("report_missing_clean_window_requirement");
+  if (!conversionHealth.measurement?.analyticsReport?.dataQuality?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("report_missing_clean_window_ready_at");
+  if (!conversionHealth.measurement?.analyticsReport?.dataQuality?.automationTrafficPolicy?.includes("fursay_qa")) failures.push("report_missing_qa_source_policy");
   if (conversionHealth.measurement?.analyticsReport?.queryCount !== release.liveExpectations?.eventAnalyticsReportQueries) failures.push("report_query_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.windowDays !== release.liveExpectations?.eventAnalyticsReportWindowDays) failures.push("report_window_mismatch");
   if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
   for (const name of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
     if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(name)) failures.push(`report_missing_noor_query:${name}`);
   }
+  if (conversionHealth.monetization?.ownedProducts?.validationDashboard?.decisionTraffic !== "qa_excluded") failures.push("validation_dashboard_missing_qa_exclusion");
+  if (conversionHealth.monetization?.ownedProducts?.validationDashboard?.cleanWindowRequired !== true) failures.push("validation_dashboard_missing_clean_window_requirement");
+  if (!conversionHealth.monetization?.ownedProducts?.validationDashboard?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("validation_dashboard_missing_clean_window_ready_at");
   if (conversionHealth.growth?.noorSprintVariantCount !== release.liveExpectations?.noorSprintCopyVariants) {
     failures.push(`noor_sprint_variant_count:${conversionHealth.growth?.noorSprintVariantCount || 0}`);
   }

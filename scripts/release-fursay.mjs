@@ -2333,6 +2333,16 @@ function writeConversionHealth(siteDir, source) {
         output: "/tmp/fursay-event-analytics-report/event-analytics-report.json",
         requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN"],
         piiAllowed: false,
+        dataQuality: {
+          decisionTraffic: "qa_excluded",
+          cleanWindowRequired: true,
+          qaIsolationStartedAt: "2026-06-28T14:15:00.000Z",
+          cleanWindowDays: 30,
+          cleanWindowReadyAt: "2026-07-28T14:15:00.000Z",
+          qaIsolation: "live smoke and contract checks stub /api/event instead of writing browser-click QA events to Analytics Engine",
+          automationTrafficPolicy: "contract, test, and fursay_qa_* source markers are excluded from monetization decision queries",
+          caveat: "Do not change checkout or paid-product status from a polluted historical window; wait for a clean 7-day and 30-day collection window after QA isolation.",
+        },
         queries: [
           "event_totals_7d",
           "subscribe_funnel_by_pack_7d",
@@ -2448,6 +2458,9 @@ function writeConversionHealth(siteDir, source) {
           reportCommand: "npm run report:events",
           windowDays: release.liveExpectations.eventAnalyticsReportWindowDays,
           comparisonWindows: release.liveExpectations.eventAnalyticsReportComparisonWindows,
+          decisionTraffic: "qa_excluded",
+          cleanWindowRequired: true,
+          cleanWindowReadyAt: "2026-07-28T14:15:00.000Z",
           unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
           metrics: ["productInfoClicks", "productSampleDownloads", "productInterestClicks", "subscriberSignals"],
         },
@@ -3920,11 +3933,15 @@ function writeConversionHealthPage(siteDir) {
         ${healthMetric("Analytics write mode", health.measurement?.analyticsSink?.writeMode || "none")}
         ${healthMetric("Analytics report", health.measurement?.analyticsReport?.packageScript || "none", health.measurement?.analyticsReport?.status || "")}
         ${healthMetric("Report windows", (health.measurement?.analyticsReport?.comparisonWindows || []).join(" / "), "days")}
+        ${healthMetric("Decision traffic", health.measurement?.analyticsReport?.dataQuality?.decisionTraffic || "raw")}
+        ${healthMetric("Clean window required", String(health.measurement?.analyticsReport?.dataQuality?.cleanWindowRequired === true))}
+        ${healthMetric("Clean window ready", health.measurement?.analyticsReport?.dataQuality?.cleanWindowReadyAt || "not set")}
         ${healthMetric("Fallback review", health.measurement?.fallbackReviewSurface || "Cloudflare Worker logs")}
         ${healthMetric("Tracked event types", health.events?.length || 0, `expected ${release.liveExpectations?.anonymousConversionEvents}`)}
         ${healthMetric("Analytics blob fields", health.measurement?.analyticsSink?.blobFields?.length || 0, `expected ${release.liveExpectations?.eventAnalyticsBlobFields}`)}
         ${healthMetric("Report queries", health.measurement?.analyticsReport?.queryCount || 0, `expected ${release.liveExpectations?.eventAnalyticsReportQueries}`)}
       </dl>
+      <p>${escapeHtml(health.measurement?.analyticsReport?.dataQuality?.caveat || "")}</p>
     </section>
     <section class="creator-kit-safety" data-growth-dashboard-section="coverage">
       <h2>Coverage</h2>

@@ -269,6 +269,16 @@
         "CLOUDFLARE_ANALYTICS_TOKEN"
       ],
       "piiAllowed": false,
+      "dataQuality": {
+        "decisionTraffic": "qa_excluded",
+        "cleanWindowRequired": true,
+        "qaIsolationStartedAt": "2026-06-28T14:15:00.000Z",
+        "cleanWindowDays": 30,
+        "cleanWindowReadyAt": "2026-07-28T14:15:00.000Z",
+        "qaIsolation": "live smoke and contract checks stub /api/event instead of writing browser-click QA events to Analytics Engine",
+        "automationTrafficPolicy": "contract, test, and fursay_qa_* source markers are excluded from monetization decision queries",
+        "caveat": "Do not change checkout or paid-product status from a polluted historical window; wait for a clean 7-day and 30-day collection window after QA isolation."
+      },
       "queries": [
         "event_totals_7d",
         "subscribe_funnel_by_pack_7d",
@@ -496,6 +506,9 @@
           7,
           30
         ],
+        "decisionTraffic": "qa_excluded",
+        "cleanWindowRequired": true,
+        "cleanWindowReadyAt": "2026-07-28T14:15:00.000Z",
         "unlockPolicy": "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
         "metrics": [
           "productInfoClicks",

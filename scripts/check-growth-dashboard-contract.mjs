@@ -140,6 +140,13 @@ async function main() {
   if (conversionHealth.measurement?.analyticsReport?.script !== "scripts/query-event-analytics-report.mjs") failures.push("bad_report_script");
   if (conversionHealth.measurement?.analyticsReport?.packageScript !== "npm run report:events") failures.push("bad_report_package_script");
   if (conversionHealth.measurement?.analyticsReport?.status !== "pending_cloudflare_credentials_or_enablement") failures.push("bad_report_status");
+  if (conversionHealth.measurement?.analyticsReport?.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("dashboard_manifest_missing_qa_excluded_decision_traffic");
+  if (conversionHealth.measurement?.analyticsReport?.dataQuality?.cleanWindowRequired !== true) failures.push("dashboard_manifest_missing_clean_window_requirement");
+  if (!conversionHealth.measurement?.analyticsReport?.dataQuality?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("dashboard_manifest_missing_clean_window_ready_at");
+  if (!html.includes("Decision traffic")) failures.push("dashboard_missing_decision_traffic");
+  if (!html.includes("Clean window required")) failures.push("dashboard_missing_clean_window_requirement");
+  if (!html.includes("2026-07-28")) failures.push("dashboard_missing_clean_window_ready_at");
+  if (!html.includes("polluted historical window")) failures.push("dashboard_missing_polluted_window_caveat");
   if (conversionHealth.measurement?.analyticsReport?.queryCount !== release.liveExpectations?.eventAnalyticsReportQueries) failures.push("report_query_count_mismatch");
   if (conversionHealth.measurement?.analyticsReport?.windowDays !== release.liveExpectations?.eventAnalyticsReportWindowDays) failures.push("report_window_mismatch");
   if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
@@ -193,6 +200,8 @@ async function main() {
   if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.status !== "blocked_until_interest_signal") failures.push("checkout_gate_bad_status");
   if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.requirements?.length !== release.liveExpectations?.checkoutGateRequirements) failures.push("checkout_gate_requirement_count_mismatch");
   if (conversionHealth.monetization?.ownedProducts?.checkoutGate?.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
+  if (conversionHealth.monetization?.ownedProducts?.validationDashboard?.decisionTraffic !== "qa_excluded") failures.push("product_validation_missing_qa_exclusion");
+  if (conversionHealth.monetization?.ownedProducts?.validationDashboard?.cleanWindowRequired !== true) failures.push("product_validation_missing_clean_window_requirement");
   if (!html.includes("Checkout gate")) failures.push("dashboard_missing_checkout_gate");
   if (!html.includes("Product validation scoreboard")) failures.push("dashboard_missing_product_validation_scoreboard");
   if (!htmlIncludesValue(html, products.trafficEntryPoints?.socialProfileLinks || "missing")) failures.push("dashboard_missing_product_social_entry");

@@ -117,6 +117,10 @@ async function main() {
   if (analyticsReport.script !== REPORT_SCRIPT) failures.push("conversion_health_bad_report_script");
   if (analyticsReport.packageScript !== REPORT_COMMAND) failures.push("conversion_health_bad_report_command");
   if (analyticsReport.status !== "pending_cloudflare_credentials_or_enablement") failures.push(`conversion_health_bad_report_status:${analyticsReport.status || "none"}`);
+  if (analyticsReport.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("conversion_health_missing_qa_excluded_decision_traffic");
+  if (analyticsReport.dataQuality?.cleanWindowRequired !== true) failures.push("conversion_health_missing_clean_window_requirement");
+  if (!analyticsReport.dataQuality?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("conversion_health_missing_clean_window_ready_at");
+  if (!analyticsReport.dataQuality?.automationTrafficPolicy?.includes("fursay_qa")) failures.push("conversion_health_missing_qa_marker_policy");
   if (analyticsReport.queryCount !== 12) failures.push(`conversion_health_bad_query_count:${analyticsReport.queryCount || "none"}`);
   if (conversionHealth.measurement?.analyticsSink?.binding !== BINDING) failures.push("conversion_health_bad_binding");
   if (conversionHealth.measurement?.analyticsSink?.dataset !== DATASET) failures.push("conversion_health_bad_dataset");
@@ -140,6 +144,11 @@ async function main() {
   const handoff = report.enablementHandoff || {};
   if (report.status !== "pending_cloudflare_credentials_or_enablement" && report.status !== "queried") failures.push(`dry_run_bad_status:${report.status || "none"}`);
   if (report.piiAllowed !== false) failures.push("dry_run_report_allows_pii");
+  if (report.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("dry_run_report_missing_qa_exclusion");
+  if (!report.dataQuality?.caveat?.includes("clean 7-day and 30-day")) failures.push("dry_run_report_missing_clean_window_caveat");
+  if (!report.dataQuality?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("dry_run_report_missing_clean_window_ready_at");
+  if (report.decisionScoreboard?.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("dry_run_scoreboard_missing_qa_exclusion");
+  if (report.decisionScoreboard?.dataQuality?.cleanWindowComplete !== false) failures.push("dry_run_scoreboard_clean_window_should_be_pending");
   if ((report.queries || []).length !== 12) failures.push(`dry_run_bad_query_count:${(report.queries || []).length}`);
   if (handoff.binding !== BINDING) failures.push(`handoff_bad_binding:${handoff.binding || "none"}`);
   if (handoff.dataset !== DATASET) failures.push(`handoff_bad_dataset:${handoff.dataset || "none"}`);

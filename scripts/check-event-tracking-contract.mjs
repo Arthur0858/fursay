@@ -263,6 +263,15 @@ async function clickFirstProductSampleDownloadLink(page) {
 async function checkPage(browser, baseUrl, spec) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  let eventApiCalls = 0;
+  await page.route("**/api/event", async (route) => {
+    eventApiCalls += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      body: JSON.stringify({ success: true, sink: "contract_stub" }),
+    });
+  });
   let subscribeApiCalls = 0;
   await page.route("**/api/subscribe", async (route) => {
     subscribeApiCalls += 1;
@@ -300,6 +309,7 @@ async function checkPage(browser, baseUrl, spec) {
   if (!openState.dataLayer.some((entry) => entry.event === "fursay_subscribe_open_click")) {
     failures.push(`${spec.path}:data_layer_missing_open_click`);
   }
+  if (eventApiCalls < 2) failures.push(`${spec.path}:event_api_stub_call_count:${eventApiCalls}`);
   if (subscribeApiCalls !== 0) failures.push(`${spec.path}:api_called_before_submit:${subscribeApiCalls}`);
 
   const affiliateMeta = await clickFirstAffiliateLink(page);
@@ -435,6 +445,15 @@ async function checkPage(browser, baseUrl, spec) {
 async function checkShareKitSampleTracking(browser, baseUrl) {
   const failures = [];
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  let eventApiCalls = 0;
+  await page.route("**/api/event", async (route) => {
+    eventApiCalls += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      body: JSON.stringify({ success: true, sink: "contract_stub" }),
+    });
+  });
   await page.goto(`${baseUrl}/share-kit`, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
 
@@ -556,6 +575,7 @@ async function checkShareKitSampleTracking(browser, baseUrl) {
     if (!interestMeta.checkedGroups.includes(interestMeta.interest)) failures.push(`share-kit:interest_modal_group:${interestMeta.checkedGroups.join(",") || "none"}`);
     if (!interestState.dataLayer.some((entry) => entry.event === "fursay_product_interest_click")) failures.push("share-kit:data_layer_missing_product_interest_click");
   }
+  if (eventApiCalls < 3) failures.push(`share-kit:event_api_stub_call_count:${eventApiCalls}`);
 
   await page.close();
   return {
