@@ -336,6 +336,7 @@ function writeDeployReadinessManifest(siteDir, source) {
   const hasCloudflareToken = Boolean(process.env.CLOUDFLARE_API_TOKEN);
   const hasCloudflareAccount = Boolean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const hasAnalyticsReportToken = Boolean(process.env.CLOUDFLARE_ANALYTICS_TOKEN || process.env.CLOUDFLARE_API_TOKEN);
+  const analyticsReportReady = Boolean(analyticsBinding && hasCloudflareAccount && hasAnalyticsReportToken);
   const warnings = [];
   if (!analyticsBinding) warnings.push("analytics_engine_dashboard_enablement_required");
   if (!remote) warnings.push("git_missing_origin_remote");
@@ -374,8 +375,10 @@ function writeDeployReadinessManifest(siteDir, source) {
         requiredEnv: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN"],
         hasCloudflareAccount,
         hasAnalyticsReportToken,
-        ready: false,
-        status: "pending_cloudflare_credentials_or_enablement",
+        ready: analyticsReportReady,
+        status: analyticsReportReady
+          ? "ready_to_query_after_dashboard_enablement"
+          : "pending_cloudflare_credentials_or_enablement",
         piiAllowed: false,
       },
       analyticsEnablementHandoff: {
