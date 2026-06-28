@@ -90,7 +90,12 @@ async function main() {
     "concurrency:",
     "actions/upload-artifact@v4",
     "/tmp/fursay-release-*",
+    "/tmp/fursay-smoke-live",
+    "/tmp/fursay-event-analytics-report",
     "retention-days: 14",
+    "CLOUDFLARE_ANALYTICS_TOKEN",
+    "npm run smoke:live",
+    "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
   ]) {
     addIssue(failures, workflow.includes(needle), "workflow_missing", needle);
   }
@@ -105,8 +110,11 @@ async function main() {
     "npm run deploy:ready -- --require-cloudflare",
     "npm run deploy:ready -- --require-remote --require-cloudflare",
     "fursay-release-evidence-${{ github.run_id }}",
+    "/tmp/fursay-smoke-live",
+    "/tmp/fursay-event-analytics-report",
     "fail-closed",
     "npm run smoke:live",
+    "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
     "/deploy-readiness.json",
     "/share-kit.json",
     "/traffic-launch.json",
@@ -121,6 +129,7 @@ async function main() {
     "FURSAY_EVENTS",
     "fursay_events",
     "never secret values",
+    "GitHub push-to-deploy should attach both live smoke evidence and the real Analytics Engine report",
   ]) {
     addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);
   }
@@ -173,6 +182,8 @@ async function main() {
       assetsBinding: wrangler.assets?.binding || "",
       releaseCommand: packageJson.scripts?.deploy || "",
       localGateCommand: "npm run check",
+      postDeployLiveSmokeCommand: "npm run smoke:live",
+      postDeployAnalyticsReportCommand: "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
       workflow: ".github/workflows/deploy-worker.yml",
       runbook: "docs/cloudflare-deploy-runbook.md",
       hasOriginRemote: Boolean(remote),

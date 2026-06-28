@@ -188,8 +188,13 @@ function writeReleaseManifest() {
         check: "npm run check",
         deploy: "npm run deploy",
         liveSmoke: "npm run smoke:live",
+        eventReport: "npm run report:events",
       },
       autoDeployWorkflow: ".github/workflows/deploy-worker.yml",
+      autoDeployPostDeployGates: [
+        "npm run smoke:live",
+        "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
+      ],
     },
     funnels: {
       koko: {
@@ -349,6 +354,8 @@ function writeDeployReadinessManifest(siteDir, source) {
       releaseCommand: "node scripts/release-fursay.mjs",
       localGateCommand: "npm run check",
       liveSmokeCommand: "npm run smoke:live",
+      postDeployLiveSmokeCommand: "npm run smoke:live",
+      postDeployAnalyticsReportCommand: "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
       deployReadinessCommand: "npm run deploy:ready",
       autoDeployWorkflow: ".github/workflows/deploy-worker.yml",
       runbook: "docs/cloudflare-deploy-runbook.md",
@@ -476,6 +483,8 @@ function writeDeployReadinessPage(siteDir, manifest) {
         ${deployReadinessRow("GitHub push deploy proven", String(manifest.status.githubPushDeployProven))}
         ${deployReadinessRow("Local gate", manifest.deployment.localGateCommand)}
         ${deployReadinessRow("Live smoke", manifest.deployment.liveSmokeCommand)}
+        ${deployReadinessRow("Post-deploy smoke", manifest.deployment.postDeployLiveSmokeCommand)}
+        ${deployReadinessRow("Post-deploy Analytics report", manifest.deployment.postDeployAnalyticsReportCommand)}
         ${deployReadinessRow("Analytics Engine", manifest.deployment.analyticsEngine.status)}
         ${deployReadinessRow("Analytics binding", `${manifest.deployment.analyticsEngine.binding} / ${manifest.deployment.analyticsEngine.dataset}`)}
         ${deployReadinessRow("Analytics enablement", manifest.deployment.analyticsEngine.enablementUrl)}

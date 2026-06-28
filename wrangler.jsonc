@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "fursay",
   "main": "src/worker.js",
-  "compatibility_date": "2026-05-09",
+  "compatibility_date": "2026-06-28",
   "keep_vars": true,
   "assets": {
     "directory": "./fursay-optimized-site",

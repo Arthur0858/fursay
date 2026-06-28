@@ -15,9 +15,11 @@ Fursay deploys through Cloudflare Workers Static Assets, not Cloudflare Pages.
 The deploy workflow is `.github/workflows/deploy-worker.yml`.
 
 - `push` to `main` runs the local release gate and deploys only when Cloudflare secrets are present and the remote gate passes.
+- After a successful push deploy, the workflow runs `npm run smoke:live` against `https://fursay.com`.
+- When `CLOUDFLARE_ANALYTICS_TOKEN` is also present, the workflow runs `npm run report:events -- --out-dir /tmp/fursay-event-analytics-report` so 7-day and 30-day conversion evidence is attached to the run.
 - `workflow_dispatch` runs the local release gate, but does not deploy unless the workflow is changed to allow manual deploys.
 - Workflow runs use concurrency group `fursay-worker-${{ github.ref }}` and cancel older in-progress runs for the same ref.
-- Every run uploads `/tmp/fursay-release-*` as `fursay-release-evidence-${{ github.run_id }}` for 14 days.
+- Every run uploads `/tmp/fursay-release-*`, `/tmp/fursay-smoke-live`, and `/tmp/fursay-event-analytics-report` as `fursay-release-evidence-${{ github.run_id }}` for 14 days.
 
 ## Required GitHub Secrets
 
@@ -66,6 +68,12 @@ After deployment, verify:
 npm run smoke:live
 ```
 
+If Cloudflare Analytics Engine query credentials are available, also verify:
+
+```bash
+npm run report:events -- --out-dir /tmp/fursay-event-analytics-report
+```
+
 Live smoke must keep these invariants:
 
 - 9 public pages pass audit with `badCount 0`
@@ -76,6 +84,7 @@ Live smoke must keep these invariants:
 - `/api/event` receives anonymous conversion events and currently writes to Worker logs until the Cloudflare account enables Analytics Engine; no email, name, token, address, or subscriber payload is written
 - The Analytics Engine binding is `FURSAY_EVENTS` for dataset `fursay_events`. Keep the binding in `wrangler.jsonc`; if Cloudflare rejects deployment again, treat historical blocker code `10089` as the rollback clue.
 - `npm run report:events` is the post-enablement conversion report path; it queries 7-day and 30-day Analytics Engine summaries after dashboard enablement plus `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ANALYTICS_TOKEN` are available, including page intent, product interest, affiliate clicks, outbound clicks, and Noor variant attribution
+- GitHub push-to-deploy should attach both live smoke evidence and the real Analytics Engine report whenever the needed Cloudflare secrets are configured.
 - `docs/analytics-engine-enablement.md` is the operator checklist for moving `pending_cloudflare_credentials_or_enablement` to a real queried report without publishing secret values.
 - owned-product checkout remains disabled until product-interest evidence, disclosure copy, refund/support copy, and checkout tracking are all present in `/conversion-health.json`
 - product sample previews remain noindex interest-validation pages and do not include price, purchase, or payment links
