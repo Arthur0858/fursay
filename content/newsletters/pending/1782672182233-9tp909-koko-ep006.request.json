@@ -1,0 +1,52 @@
+{
+  "runId": "1782672182233-9tp909",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "audience": "families using Koko's Forest for gentle English learning",
+  "languageBrief": "English newsletter with Traditional Chinese parent support",
+  "contentRules": [
+    "Use warm, clear English as the main language.",
+    "Include Traditional Chinese parent guidance after the English learning content.",
+    "Keep the tone playful, calm, and practical for parents of young children.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 6,
+    "videoId": "NW_RHZDPKUU",
+    "title": "Koko and Hoppy 🐰 Hoppy's Secret Garden | English Bedtime Story | Koko's Forest Adventure",
+    "description": "Join Koko the squirrel and Hoppy the bunny on a magical adventure in Episode 006!\n\n▶️ Story: \"Hoppy's Secret Garden\"\nHoppy finds a hidden path behind the big oak tree. She's curious but nervous. Koko encourages her to be brave and holds her paw. Together, they follow the winding path through tall ferns and vines, discovering a secret garden full of glowing flowers and dancing fireflies. They learn that curiosity and bravery lead to beautiful discoveries.\n\n📚 Theme: Curiosity & Wonder\n🎓 Moral: The world is full of surprises when you look with wonder.\n\n⭐ Learning Points:\n• Vocabulary: garden (花園), discover (發現), wonder (驚奇)\n• Bilingual English-Mandarin Chinese\n• Perfect for bedtime stories and English learning\n• Learn about courage, friendship, and curiosity\n• Suitable for ages 3-8\n\n🎵 Features:\n✓ Gentle narration by professional voice actors\n✓ Bilingual dialogue (English & 繁體中文)\n✓ Soft background music with magical forest ambiance\n✓ Sound effects: magical sparkles, bird songs, fireflies\n✓ Perfect pacing for early learners\n✓ Moral lesson for children\n\n📖 Episode Highlights:\n0:00 - Introduction\n0:30 - Finding the hidden path\n2:15 - Journey through tall ferns\n3:45 - Discovery of the secret garden\n5:30 - Meeting the singing bird\n7:45 - Dancing in the magical garden\n9:00 - Word Time / 單字時間\n10:00 - Goodnight Message 晚安\n\n🌙 Goodnight Message:\nThe world is full of surprises when you look with wonder. Be curious. Be brave. Discover beauty everywhere.\n\n🇬🇧 Language: English & 中文\n👨‍👩‍👧 Age: 3-8 years old\n❤️ Content: Suitable for all audiences\n\n✨ Subscribe to Koko's Forest Adventure for new bilingual stories every week!\n\n#KokoForest #KokosForestAdventure #BedtimeStories #EnglishStories #ChildrensStories #BilingualLearning #EarlyChildhoodEducation #MandarinChinese #Learning #Children #FamilyFriendly #Storytelling 免費訂閱叩叩電子報 — 每週五收到故事精華、英文單字卡、親子活動，還有免費著色本 PDF！\nhttps://kokos-forest-adventure-g7f3ah.subscribepage.io 🌐 官方網站 / Official Website：https://fursay.com\n📖 更多親子英文資源：fursay.com",
+    "publishedAt": "2026-04-08T17:12:54Z",
+    "videoUrl": "https://www.youtube.com/watch?v=NW_RHZDPKUU",
+    "thumbnail": "https://i.ytimg.com/vi/NW_RHZDPKUU/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "content/newsletters/pending/1782672182233-9tp909-koko-ep006.newsletter.json",
+  "requiredSchema": {
+    "episodeNo": "number",
+    "videoId": "string",
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Koko's Forest.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}
