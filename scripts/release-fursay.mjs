@@ -2445,8 +2445,8 @@ function writeConversionHealth(siteDir, source) {
           reportCommand: "npm run report:events",
           windowDays: release.liveExpectations.eventAnalyticsReportWindowDays,
           comparisonWindows: release.liveExpectations.eventAnalyticsReportComparisonWindows,
-          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes.",
-          metrics: ["productInfoClicks", "productInterestClicks", "subscriberSignals"],
+          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
+          metrics: ["productInfoClicks", "productSampleDownloads", "productInterestClicks", "subscriberSignals"],
         },
         products: [
           {
@@ -2474,6 +2474,7 @@ function writeConversionHealth(siteDir, source) {
               signals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
               minimumSignals: {
                 productInfoClicks: 10,
+                productSampleDownloads: 0,
                 productInterestClicks: 5,
                 subscriberSignals: 1,
               },
@@ -2505,6 +2506,7 @@ function writeConversionHealth(siteDir, source) {
               signals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
               minimumSignals: {
                 productInfoClicks: 10,
+                productSampleDownloads: 0,
                 productInterestClicks: 5,
                 subscriberSignals: 1,
               },
@@ -3785,6 +3787,7 @@ function writeConversionHealthPage(siteDir) {
               <p>Decision: ${escapeHtml(plan.nextDecision || "Wait for real interest signals before drafting the paid product.")}</p>
               <dl>
                 ${healthMetric("Product info clicks", minimumSignals.productInfoClicks || 0, "minimum")}
+                ${healthMetric("Sample downloads", minimumSignals.productSampleDownloads || 0, "tracked diagnostic")}
                 ${healthMetric("Waitlist clicks", minimumSignals.productInterestClicks || 0, "minimum")}
                 ${healthMetric("Subscriber signals", minimumSignals.subscriberSignals || 0, "minimum")}
                 ${healthMetric("Free bridge", plan.freeBridge || "none")}
@@ -3984,6 +3987,7 @@ function roadmapProductCard(product) {
               <dl>
                 ${healthMetric("Free bridge", plan.freeBridge || "none")}
                 ${healthMetric("Info clicks", minimumSignals.productInfoClicks || 0, "minimum")}
+                ${healthMetric("Sample downloads", minimumSignals.productSampleDownloads || 0, "tracked diagnostic")}
                 ${healthMetric("Interest clicks", minimumSignals.productInterestClicks || 0, "minimum")}
                 ${healthMetric("Subscriber signals", minimumSignals.subscriberSignals || 0, "minimum")}
               </dl>

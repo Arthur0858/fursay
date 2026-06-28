@@ -496,9 +496,10 @@
           7,
           30
         ],
-        "unlockPolicy": "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes.",
+        "unlockPolicy": "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
         "metrics": [
           "productInfoClicks",
+          "productSampleDownloads",
           "productInterestClicks",
           "subscriberSignals"
         ]
@@ -541,6 +542,7 @@
             ],
             "minimumSignals": {
               "productInfoClicks": 10,
+              "productSampleDownloads": 0,
               "productInterestClicks": 5,
               "subscriberSignals": 1
             },
@@ -584,6 +586,7 @@
             ],
             "minimumSignals": {
               "productInfoClicks": 10,
+              "productSampleDownloads": 0,
               "productInterestClicks": 5,
               "subscriberSignals": 1
             },

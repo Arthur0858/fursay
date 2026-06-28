@@ -14,6 +14,7 @@ const PAGE_INTENT_EVENTS = [
 ];
 const PRODUCT_SIGNAL_EVENTS = {
   productInfoClicks: "fursay_product_info_click",
+  productSampleDownloads: "fursay_product_sample_download_click",
   productInterestClicks: "fursay_product_interest_click",
   subscriberSignals: "fursay_subscribe_submit_success",
 };
@@ -164,10 +165,12 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
     const countsByWindow = Object.fromEntries(windows.map((days) => {
       const counts = pending ? {
         productInfoClicks: null,
+        productSampleDownloads: null,
         productInterestClicks: null,
         subscriberSignals: null,
       } : {
         productInfoClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInfoClicks),
+        productSampleDownloads: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productSampleDownloads),
         productInterestClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInterestClicks),
         subscriberSignals: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.subscriberSignals),
       };
@@ -186,6 +189,7 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
       label: product.label,
       thresholds: {
         productInfoClicks: thresholds.productInfoClicks || 0,
+        productSampleDownloads: thresholds.productSampleDownloads || 0,
         productInterestClicks: thresholds.productInterestClicks || 0,
         subscriberSignals: thresholds.subscriberSignals || 0,
       },
