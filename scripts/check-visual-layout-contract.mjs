@@ -305,7 +305,10 @@ function checkLayout(spec, viewport, layout) {
     if (!spec.product && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
     if (cta.rect.width < 44 || cta.rect.height < 36) failures.push(`${prefix}:cta_touch_target:${cta.pack || cta.index}:${Math.round(cta.rect.width)}x${Math.round(cta.rect.height)}`);
     if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
-    if (spec.product && cta.stage !== "waitlist") failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.product && !["waitlist", "validation_pdf_interest"].includes(cta.stage)) failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
+    if (spec.product && cta.stage === "validation_pdf_interest" && (cta.pack !== "noor" || cta.source !== "product_validation_interest_noor")) {
+      failures.push(`${prefix}:product_validation_cta_contract:${cta.pack || "none"}:${cta.source || "none"}`);
+    }
     if (spec.product && cta.overflowX) failures.push(`${prefix}:product_cta_text_overflow:${cta.pack || cta.index}`);
     if (spec.sample && cta.stage !== "sample_preview_waitlist") failures.push(`${prefix}:sample_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.sample && cta.overflowX) failures.push(`${prefix}:sample_cta_text_overflow:${cta.pack || cta.index}`);
@@ -369,8 +372,10 @@ function checkLayout(spec, viewport, layout) {
       if (card.rect.width < (viewport.isMobile ? 280 : 360)) failures.push(`${prefix}:product_card_too_narrow:${card.id || "unknown"}:${Math.round(card.rect.width)}`);
       if (card.overflowX) failures.push(`${prefix}:product_card_overflow:${card.id || "unknown"}`);
     }
-    const buttonPacks = product.buttons.map((button) => button.pack).sort().join(",");
-    if (buttonPacks !== "koko,noor") failures.push(`${prefix}:product_button_packs:${buttonPacks || "none"}`);
+    const waitlistButtonPacks = product.buttons.filter((button) => button.stage === "waitlist").map((button) => button.pack).sort().join(",");
+    if (waitlistButtonPacks !== "koko,noor") failures.push(`${prefix}:product_button_packs:${waitlistButtonPacks || "none"}`);
+    const validationButtons = product.buttons.filter((button) => button.stage === "validation_pdf_interest");
+    if (validationButtons.length !== 1) failures.push(`${prefix}:product_validation_button_count:${validationButtons.length}`);
     if (product.bridgeLinks.length !== 2) failures.push(`${prefix}:product_bridge_link_count:${product.bridgeLinks.length}`);
     for (const link of product.bridgeLinks) {
       checkRectInsideViewport(failures, `${prefix}:product_bridge`, link.rect, viewport, 8);

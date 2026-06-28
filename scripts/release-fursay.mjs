@@ -289,7 +289,7 @@ function writeReleaseManifest() {
       noorLeadMagnetPages: 3,
       noorSprintCopyVariants: 4,
       noorSprintStatusDays: 7,
-      productInterestLinks: 18,
+      productInterestLinks: 21,
       productInfoLinks: 18,
       productLandingPages: 3,
       ownedProductSpecs: 2,
@@ -3055,6 +3055,7 @@ ${samplePreviews}
       ${productValidationPublicActions(nextHandoff, {
         preview: "Open the sample preview",
         download: "Download the free PDF sample",
+        interest: "Notify me after previewing the sample",
         story: "Get the free story pack",
         note: nextHandoff.checkoutBlockedReason || "Checkout stays disabled during interest validation.",
       })}
@@ -3299,6 +3300,7 @@ ${samplePreviews}
       ${productValidationPublicActions(nextHandoff, {
         preview: "打開樣張預覽",
         download: "下載免費 PDF 樣張",
+        interest: "看完樣張後通知我",
         story: "領取免費故事包",
         note: "付款與 checkout 維持關閉，直到產品興趣點擊與至少一個訂閱信號可被檢視。",
       })}
@@ -3483,6 +3485,7 @@ ${samplePreviews}
       ${productValidationPublicActions(nextHandoff, {
         preview: "افتحوا معاينة العينة",
         download: "نزّلوا عينة PDF المجانية",
+        interest: "أخبروني بعد مشاهدة العينة",
         story: "احصلوا على حزمة القصة المجانية",
         note: "يبقى الدفع و checkout مغلقين حتى يمكن مراجعة نقرات الاهتمام وإشارة اشتراك واحدة على الأقل.",
       })}
@@ -3727,6 +3730,7 @@ function productValidationPublicActions(nextHandoff, labels) {
   return `<div class="public-share-actions product-validation-actions" data-product-validation-actions="${escapeHtml(pack)}">
         <a href="${escapeHtml(previewPath)}" data-product-sample-preview="${escapeHtml(pack)}" data-product-info-link="${escapeHtml(pack)}" data-interest-stage="validation_sample_preview" data-signup-source="product_validation_preview_${escapeHtml(pack)}">${escapeHtml(labels.preview)}</a>
         <a href="${escapeHtml(downloadHref)}" data-product-sample-download="${escapeHtml(pack)}" data-product-info-link="${escapeHtml(pack)}" data-interest-stage="validation_pdf_download" data-signup-source="product_validation_pdf_${escapeHtml(pack)}">${escapeHtml(labels.download)}</a>
+        <button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(pack)}" data-interest-stage="validation_pdf_interest" data-signup-source="product_validation_interest_${escapeHtml(pack)}">${escapeHtml(labels.interest || "Notify me after previewing the sample")}</button>
         <a href="${escapeHtml(storyHref)}">${escapeHtml(labels.story)}</a>
       </div>
       <p class="product-validation-note">${escapeHtml(labels.note)}</p>`;

@@ -1489,7 +1489,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.noorSprintCopyVariants !== 4) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
   if (release.liveExpectations?.noorSprintStatusDays !== 7) failures.push(`release_noor_sprint_status_days:${release.liveExpectations?.noorSprintStatusDays || "none"}`);
-  if (release.liveExpectations?.productInterestLinks !== 18) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
+  if (release.liveExpectations?.productInterestLinks !== 21) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
   if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);

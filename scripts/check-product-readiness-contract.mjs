@@ -319,7 +319,7 @@ function htmlIncludesUrl(html, url) {
 
 async function clickProductInterest(page, pack) {
   return page.evaluate((targetPack) => {
-    const button = document.querySelector(`[data-product-interest="${targetPack}"]`);
+    const button = document.querySelector(`[data-product-interest="${targetPack}"][data-interest-stage="waitlist"]`);
     if (!button) return null;
     button.click();
     return {
@@ -586,12 +586,25 @@ async function main() {
     .map((match) => ({ pack: match[2], tag: match[0] }));
   const arProductButtons = [...arHtml.matchAll(/<button\b[^>]*data-product-interest=(["'])(koko|noor)\1[^>]*>/gi)]
     .map((match) => ({ pack: match[2], tag: match[0] }));
-  if (productButtons.length !== 2) failures.push(`products_page_product_interest_buttons:${productButtons.length}`);
-  if (zhProductButtons.length !== 2) failures.push(`zh_products_page_product_interest_buttons:${zhProductButtons.length}`);
-  if (arProductButtons.length !== 2) failures.push(`ar_products_page_product_interest_buttons:${arProductButtons.length}`);
-  for (const button of productButtons) {
+  const waitlistButtons = productButtons.filter((button) => attr(button.tag, "data-interest-stage") === "waitlist");
+  const zhWaitlistButtons = zhProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "waitlist");
+  const arWaitlistButtons = arProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "waitlist");
+  const validationButtons = productButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
+  const zhValidationButtons = zhProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
+  const arValidationButtons = arProductButtons.filter((button) => attr(button.tag, "data-interest-stage") === "validation_pdf_interest");
+  if (waitlistButtons.length !== 2) failures.push(`products_page_product_interest_buttons:${waitlistButtons.length}`);
+  if (zhWaitlistButtons.length !== 2) failures.push(`zh_products_page_product_interest_buttons:${zhWaitlistButtons.length}`);
+  if (arWaitlistButtons.length !== 2) failures.push(`ar_products_page_product_interest_buttons:${arWaitlistButtons.length}`);
+  if (validationButtons.length !== 1) failures.push(`products_page_validation_interest_buttons:${validationButtons.length}`);
+  if (zhValidationButtons.length !== 1) failures.push(`zh_products_page_validation_interest_buttons:${zhValidationButtons.length}`);
+  if (arValidationButtons.length !== 1) failures.push(`ar_products_page_validation_interest_buttons:${arValidationButtons.length}`);
+  for (const button of waitlistButtons) {
     if (attr(button.tag, "data-interest-stage") !== "waitlist") failures.push(`product_button_bad_stage:${button.pack}`);
     if (!attr(button.tag, "data-signup-source").startsWith(`product_page_${button.pack}`)) failures.push(`product_button_bad_source:${button.pack}`);
+  }
+  for (const button of [...validationButtons, ...zhValidationButtons, ...arValidationButtons]) {
+    if (button.pack !== products.nextValidationHandoff?.pack) failures.push(`validation_button_bad_pack:${button.pack || "none"}`);
+    if (attr(button.tag, "data-signup-source") !== `product_validation_interest_${button.pack}`) failures.push(`validation_button_bad_source:${button.pack}`);
   }
 
   if (products.platform !== "cloudflare-workers-static-assets") failures.push(`products_manifest_platform:${products.platform || "none"}`);
@@ -618,6 +631,7 @@ async function main() {
     if (pageHtml.includes("https://fursay.com/downloads/")) failures.push(`${label}_public_handoff_leaks_raw_pdf_url`);
     if (!pageHtml.includes(`data-product-validation-actions="${products.nextValidationHandoff?.pack || "noor"}"`)) failures.push(`${label}_missing_public_validation_actions`);
     if (!pageHtml.includes('data-interest-stage="validation_pdf_download"')) failures.push(`${label}_missing_public_handoff_pdf_tracking`);
+    if (!pageHtml.includes('data-interest-stage="validation_pdf_interest"')) failures.push(`${label}_missing_public_handoff_interest_tracking`);
   }
   if (!products.nextValidationHandoff?.freeStoryPackPath?.startsWith("/")) failures.push("products_manifest_handoff_missing_free_bridge");
   if (products.nextValidationHandoff?.reportCommand !== "npm run report:events") failures.push("products_manifest_handoff_bad_report_command");

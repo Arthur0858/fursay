@@ -117,6 +117,11 @@ async function checkPage(browser, baseUrl, path) {
         stage: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.getAttribute("data-interest-stage") || "",
         source: document.querySelector('.noor-lead-magnet a[data-product-sample-download="noor"]')?.getAttribute("data-signup-source") || "",
       },
+      sampleInterest: {
+        pack: document.querySelector('.noor-lead-magnet [data-product-interest="noor"]')?.getAttribute("data-product-interest") || "",
+        stage: document.querySelector('.noor-lead-magnet [data-product-interest="noor"]')?.getAttribute("data-interest-stage") || "",
+        source: document.querySelector('.noor-lead-magnet [data-product-interest="noor"]')?.getAttribute("data-signup-source") || "",
+      },
       hasNoorCheckbox: !!document.querySelector('#subscribeModal input[name="groups"][value="noor"]'),
       hasSubscribeForm: !!document.querySelector("#subscribeModal form"),
       horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
@@ -155,6 +160,9 @@ async function checkPage(browser, baseUrl, path) {
   if (!staticChecks.sampleDownload.download) failures.push("sample_download_missing_download_attr");
   if (staticChecks.sampleDownload.stage !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_stage:${staticChecks.sampleDownload.stage || "none"}`);
   if (staticChecks.sampleDownload.source !== "noor_lead_magnet_pdf") failures.push(`bad_sample_download_source:${staticChecks.sampleDownload.source || "none"}`);
+  if (staticChecks.sampleInterest.pack !== "noor") failures.push(`bad_sample_interest_pack:${staticChecks.sampleInterest.pack || "none"}`);
+  if (staticChecks.sampleInterest.stage !== "lead_magnet_after_pdf") failures.push(`bad_sample_interest_stage:${staticChecks.sampleInterest.stage || "none"}`);
+  if (staticChecks.sampleInterest.source !== "noor_lead_magnet_interest_after_pdf") failures.push(`bad_sample_interest_source:${staticChecks.sampleInterest.source || "none"}`);
   if (!/(sample pack|樣張|نموذج)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_sample_copy");
   if (!/(ready|準備好|جاهزة)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_delivery_copy");
   if (!/(free|免費|مجانية)/i.test(staticChecks.leadMagnetText)) failures.push("lead_magnet_missing_free_copy");

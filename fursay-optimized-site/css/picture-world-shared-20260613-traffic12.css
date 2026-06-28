@@ -2091,6 +2091,11 @@ body.picture-world.world-arabic .noor-sample-download {
   width: 100% !important;
   justify-content: center !important;
 }
+body.picture-world.world-arabic .noor-sample-interest {
+  width: 100% !important;
+  justify-content: center !important;
+  white-space: normal !important;
+}
 body.picture-world.world-koko .koko-lead-magnet {
   margin-top: 24px !important;
   display: grid !important;
