@@ -158,6 +158,12 @@ async function collectLayout(page) {
     const productCards = [...document.querySelectorAll(".product-waitlist-card")].filter(isVisible);
     const productButtons = [...document.querySelectorAll("[data-product-interest]")].filter(isVisible);
     const productBridgeLinks = [...document.querySelectorAll(".product-waitlist-card .public-share-actions a")].filter(isVisible);
+    const subscribeInner = document.querySelector(".subscribe-inner");
+    const storyPackProof = document.querySelector(".story-pack-proof");
+    const packLeadMagnet = document.querySelector(".koko-lead-magnet, .noor-lead-magnet");
+    const packSample = document.querySelector(".koko-pack-sample, .noor-pack-sample");
+    const packSteps = document.querySelector(".koko-pack-steps, .noor-pack-steps");
+    const campaignQrCard = document.querySelector(".campaign-qr-card");
     const sampleHero = document.querySelector("[data-product-sample-preview-page]");
     const samplePreview = document.querySelector("[data-product-sample-preview]");
     const sampleActivity = document.querySelector("[data-product-sample-activity]");
@@ -233,6 +239,31 @@ async function collectLayout(page) {
           rect: rectFor(element),
           overflowX: element.scrollWidth > Math.ceil(element.clientWidth) + 1,
         })),
+      } : null,
+      subscribe: subscribeInner ? {
+        inner: rectFor(subscribeInner),
+        proof: storyPackProof ? {
+          rect: rectFor(storyPackProof),
+          grid: getComputedStyle(storyPackProof).gridTemplateColumns,
+          overflowX: storyPackProof.scrollWidth > Math.ceil(storyPackProof.clientWidth) + 1,
+        } : null,
+        leadMagnet: packLeadMagnet ? {
+          rect: rectFor(packLeadMagnet),
+          grid: getComputedStyle(packLeadMagnet).gridTemplateColumns,
+          overflowX: packLeadMagnet.scrollWidth > Math.ceil(packLeadMagnet.clientWidth) + 1,
+        } : null,
+        sample: packSample ? {
+          rect: rectFor(packSample),
+          overflowX: packSample.scrollWidth > Math.ceil(packSample.clientWidth) + 1,
+        } : null,
+        steps: packSteps ? {
+          rect: rectFor(packSteps),
+          overflowX: packSteps.scrollWidth > Math.ceil(packSteps.clientWidth) + 1,
+        } : null,
+        qr: campaignQrCard ? {
+          rect: rectFor(campaignQrCard),
+          overflowX: campaignQrCard.scrollWidth > Math.ceil(campaignQrCard.clientWidth) + 1,
+        } : null,
       } : null,
       sample: sampleHero ? {
         pack: samplePack,
@@ -386,6 +417,34 @@ function checkLayout(spec, viewport, layout) {
       if (!link.href.includes("subscribe=")) failures.push(`${prefix}:product_bridge_missing_subscribe:${link.href || "none"}`);
       if (link.rect.width < 44 || link.rect.height < 36) failures.push(`${prefix}:product_bridge_touch_target:${Math.round(link.rect.width)}x${Math.round(link.rect.height)}`);
       if (link.overflowX) failures.push(`${prefix}:product_bridge_text_overflow:${link.text.slice(0, 24)}`);
+    }
+  }
+
+  if (!viewport.isMobile && ["/koko", "/zh/koko", "/ar/koko", "/arabic", "/zh/arabic", "/ar/arabic"].includes(spec.path)) {
+    const subscribe = layout.subscribe;
+    if (!subscribe) {
+      failures.push(`${prefix}:missing_subscribe_layout`);
+    } else {
+      const minimumInnerWidth = Math.min(960, viewport.width - 120);
+      const minimumLeadWidth = Math.min(880, viewport.width - 180);
+      checkRectInsideViewport(failures, `${prefix}:subscribe_inner`, subscribe.inner, viewport, 8);
+      if (subscribe.inner.width < minimumInnerWidth) failures.push(`${prefix}:subscribe_inner_too_narrow:${Math.round(subscribe.inner.width)}<${minimumInnerWidth}`);
+      if (!subscribe.leadMagnet) {
+        failures.push(`${prefix}:pack_lead_magnet_missing`);
+      } else {
+        if (subscribe.leadMagnet.rect.width < minimumLeadWidth) failures.push(`${prefix}:pack_lead_magnet_too_narrow:${Math.round(subscribe.leadMagnet.rect.width)}<${minimumLeadWidth}`);
+        if (subscribe.leadMagnet.overflowX) failures.push(`${prefix}:pack_lead_magnet_overflow`);
+      }
+      for (const [label, item] of [["sample", subscribe.sample], ["steps", subscribe.steps], ["qr", subscribe.qr]]) {
+        if (!item) failures.push(`${prefix}:pack_${label}_missing`);
+        else if (item.rect.width < 170) failures.push(`${prefix}:pack_${label}_too_narrow:${Math.round(item.rect.width)}`);
+        else if (item.overflowX) failures.push(`${prefix}:pack_${label}_overflow`);
+      }
+      if (spec.path.includes("arabic")) {
+        if (!subscribe.proof) failures.push(`${prefix}:story_pack_proof_missing`);
+        else if (subscribe.proof.rect.width < Math.min(760, viewport.width - 180)) failures.push(`${prefix}:story_pack_proof_too_narrow:${Math.round(subscribe.proof.rect.width)}`);
+        else if (subscribe.proof.overflowX) failures.push(`${prefix}:story_pack_proof_overflow`);
+      }
     }
   }
 

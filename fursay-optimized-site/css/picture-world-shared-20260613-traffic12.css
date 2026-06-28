@@ -2195,6 +2195,27 @@ body.picture-world .campaign-qr-card strong {
   font-size: 0.9rem !important;
   line-height: 1.25 !important;
 }
+
+@media (min-width: 900px) {
+  body.picture-world.world-koko .subscribe-inner,
+  body.picture-world.world-arabic .subscribe-inner {
+    width: min(1120px, calc(100% - 96px)) !important;
+    max-width: 1120px !important;
+  }
+
+  body.picture-world.world-koko .koko-lead-magnet,
+  body.picture-world.world-arabic .noor-lead-magnet {
+    width: 100% !important;
+    grid-template-columns: minmax(300px, 1fr) minmax(320px, 1.08fr) minmax(180px, 0.58fr) !important;
+  }
+
+  body.picture-world.world-arabic .story-pack-proof {
+    width: min(100%, 960px) !important;
+    max-width: 960px !important;
+    grid-template-columns: repeat(3, minmax(220px, 1fr)) !important;
+  }
+}
+
 body.picture-world .public-share-panel {
   grid-column: 1 / -1 !important;
   display: grid !important;
