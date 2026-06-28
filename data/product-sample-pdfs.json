@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-28T09:00:37.852Z",
+  "updatedAt": "2026-06-28T14:41:13.623Z",
   "samples": {
     "koko-printable-sample.pdf": {
       "source": "product-samples/koko-printable.html",
@@ -8,8 +8,8 @@
     },
     "noor-worksheet-sample.pdf": {
       "source": "product-samples/noor-worksheet.html",
-      "sourceHash": "a9d98e1ca5c079a4a87151646e64f90938faada00ae86d0a52e62acdae78c593",
-      "bytes": 101948
+      "sourceHash": "a3608c5a475ae3e589f07c4648c98dfecda3f905c91b1a4df7815ffc26e68981",
+      "bytes": 108221
     }
   }
 }

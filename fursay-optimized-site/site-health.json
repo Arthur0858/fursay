@@ -568,9 +568,9 @@
           "label": "Noor 3-minute worksheet interest list",
           "format": "PDF worksheet pack",
           "plannedIncludes": [
-            "Chinese color words with Pinyin",
-            "Arabic parent prompts",
-            "one 3-minute activity"
+            "short Chinese story moment",
+            "three Chinese words with Pinyin and Arabic parent prompts",
+            "one 3-minute family worksheet activity"
           ],
           "checkoutStatus": "not_enabled",
           "samplePreview": {
@@ -583,9 +583,9 @@
             "downloadUrl": "https://fursay.com/downloads/noor-worksheet-sample.pdf",
             "trackedDownloadUrl": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
             "contents": [
-              "Three Chinese words with Pinyin",
-              "Arabic parent prompt",
-              "One 3-minute activity"
+              "Short Noor and Zayd story moment",
+              "Three Chinese words with Pinyin and Arabic parent prompts",
+              "One 3-minute trace, point, and say activity"
             ],
             "nextCta": "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview"
           },

@@ -984,6 +984,21 @@ function writeCreatorKit(siteDir, source, campaigns) {
       const landing = pack === "koko"
         ? "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample"
         : "https://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample";
+      const productSamplePreviewUrl = pack === "noor"
+        ? "https://fursay.com/product-samples/noor-worksheet?source_id=noor_creator_youtube_sample_preview&creator=fursay&placement=youtube_description"
+        : "https://fursay.com/product-samples/koko-printable?source_id=koko_creator_youtube_sample_preview&creator=fursay&placement=youtube_description";
+      const productSampleDownloadUrl = pack === "noor"
+        ? "https://fursay.com/download/noor-worksheet-sample?source_id=noor_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description"
+        : "https://fursay.com/download/koko-printable-sample?source_id=koko_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description";
+      const youtubeDescription = pack === "noor"
+        ? `Try Noor's 3-minute Chinese worksheet sample\nWorksheet preview: ${productSamplePreviewUrl}\nFree weekly story pack: ${placementLinks.youtubeDescription.shortlink}`
+        : `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`;
+      const socialCaption = pack === "noor"
+        ? `Try Noor's 3-minute Chinese worksheet sample with Arabic parent prompts: ${productSamplePreviewUrl}\nCreator social link: ${placementLinks.socialCaption.shortlink}`
+        : `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`;
+      const newsletterBlurb = pack === "noor"
+        ? `Try Noor's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}. Free weekly story pack: ${placementLinks.newsletterBlurb.shortlink}`
+        : `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`;
       return [pack, {
         audience: campaign.audience,
         campaign: campaign.campaign,
@@ -1008,13 +1023,15 @@ function writeCreatorKit(siteDir, source, campaigns) {
           playlistEmbed: videoDiscoveryChannels[pack].playlistEmbed,
         },
         trackedLandingUrl: landing,
+        productSamplePreviewUrl,
+        productSampleDownloadUrl,
         qrSvg: campaign.copyKit.qrSvg,
         shareQrSvg: campaign.copyKit.shareQrSvg,
-        youtubeDescription: `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`,
-        socialCaption: `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`,
+        youtubeDescription,
+        socialCaption,
         familyShareMessage: campaign.copyKit.familyShareMessage,
         bioProfileCopy: campaign.copyKit.bioProfileCopy,
-        newsletterBlurb: `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`,
+        newsletterBlurb,
         altText: `${campaign.copyKit.qrLabel} QR code for ${sample}`,
         utmContract: {
           source: "creator_kit",
@@ -2502,7 +2519,7 @@ function writeConversionHealth(siteDir, source) {
             pack: "noor",
             label: "Noor 3-minute worksheet interest list",
             format: "PDF worksheet pack",
-            plannedIncludes: ["Chinese color words with Pinyin", "Arabic parent prompts", "one 3-minute activity"],
+            plannedIncludes: ["short Chinese story moment", "three Chinese words with Pinyin and Arabic parent prompts", "one 3-minute family worksheet activity"],
             checkoutStatus: "not_enabled",
             samplePreview: {
               status: "print_ready_preview",
@@ -2513,7 +2530,7 @@ function writeConversionHealth(siteDir, source) {
               downloadableFormat: "pdf_and_browser_print",
               downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
               trackedDownloadUrl: productSampleTrackedDownloadUrl({ pack: "noor" }, "sample_preview_pdf_download"),
-              contents: ["Three Chinese words with Pinyin", "Arabic parent prompt", "One 3-minute activity"],
+              contents: ["Short Noor and Zayd story moment", "Three Chinese words with Pinyin and Arabic parent prompts", "One 3-minute trace, point, and say activity"],
               nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
             },
             validationPlan: {
@@ -2543,10 +2560,10 @@ function writeProductsManifest(siteDir, source) {
   const productValidationHandoffs = (ownedProducts.products || []).map((product) => ({
     productId: product.id,
     pack: product.pack,
-    priority: product.pack === "koko" ? 1 : 2,
+    priority: product.pack === "noor" ? 1 : 2,
     priorityReason: product.pack === "koko"
       ? "Koko has sample-download and subscriber signals, but product-interest clicks are still the missing validation signal."
-      : "Noor remains active, but it already has stronger product-interest and subscriber signals in the current analytics report.",
+      : "Noor is the active first validation package because its Arabic-Chinese audience, worksheet sample, and subscriber signal path are already aligned.",
     action: product.pack === "noor"
       ? "Share the Noor worksheet sample with Arabic-speaking families, then send them to the free Noor story pack."
       : "Share the Koko printable sample with Mandarin-speaking families, then ask them to click the interest button after previewing the sample.",
@@ -3617,23 +3634,23 @@ function samplePageSpec(product) {
       lang: "ar",
       dir: "rtl",
       title: "عينة ورقة نور في 3 دقائق",
-      description: "شاهدوا عينة ورقة نور في 3 دقائق: ثلاث كلمات صينية مع Pinyin، توجيه عربي للوالدين، ونشاط عائلي قصير.",
+      description: "شاهدوا عينة ورقة نور في 3 دقائق: قصة قصيرة، ثلاث كلمات صينية مع Pinyin، توجيه عربي للوالدين، ونشاط عائلي قصير.",
       eyebrow: "عينة مجانية",
       h1: "عينة ورقة نور في 3 دقائق",
-      intro: "هذه معاينة قصيرة لما يمكن أن تصبح عليه ورقة نور بعد أن تنضم عائلات كافية إلى قائمة الاهتمام. العينة مجانية، ولا يوجد دفع أو شراء اليوم.",
+      intro: "هذه معاينة قصيرة لما يمكن أن تصبح عليه ورقة نور بعد أن تنضم عائلات كافية إلى قائمة الاهتمام. جرّبوها كروتين من 3 دقائق: قصة صغيرة، ثلاث كلمات، ونشاط واحد. العينة مجانية، ولا يوجد دفع أو شراء اليوم.",
       sections: [
-        ["الكلمة 1", "hong / 红", "أحمر. أشيروا إلى شيء أحمر وقولوا الكلمة ببطء مع الطفل."],
-        ["الكلمة 2", "lan / 蓝", "أزرق. اطلبوا من الطفل أن يجد شيئا أزرق قرب مكان القصة."],
-        ["الكلمة 3", "lv / 绿", "أخضر. دعوا الطفل يرسم ورقة خضراء صغيرة لنور وزيد."],
+        ["الصفحة 1", "قصة قصيرة: نور وزيد يبحثان عن الألوان", "ترى نور تفاحة حمراء، وكتابا أزرق، وورقة خضراء. يقول زيد كلمة واحدة في كل مرة، وتكررها نور بهدوء."],
+        ["الصفحة 2", "ثلاث كلمات: hong / lan / lv", "红 hong = أحمر، 蓝 lan = أزرق، 绿 lv = أخضر. قولوا الكلمة الصينية مرة واحدة، ثم أشيروا إلى شيء قريب بنفس اللون."],
+        ["الصفحة 3", "نشاط 3 دقائق", "دقيقة 1: اختاروا لونا. دقيقة 2: ارسموا شيئا صغيرا. دقيقة 3: قولوا الكلمة مع Pinyin ثم اسألوا: أين رأينا هذا اللون؟"],
       ],
       includeLabel: "ماذا تحتوي العينة؟",
-      includeNote: "هذه الصفحة مهيأة كعرض خفيف للطباعة. يمكن تنزيل عينة PDF أو استخدام أمر الطباعة في المتصفح لحفظ نسخة واحدة لاختبارها مع العائلة.",
+      includeNote: "هذه الصفحة مهيأة كعرض خفيف للطباعة. يمكن تنزيل عينة PDF أو استخدام أمر الطباعة في المتصفح لحفظ نسخة واحدة لاختبار القصة، الكلمات، والنشاط مع العائلة.",
       printTitle: "تنزيل العينة أو طباعتها",
-      printCopy: "نزّلوا عينة PDF للمشاركة، أو افتحوا أمر الطباعة في المتصفح واختاروا Save as PDF. نسخة الطباعة تبقي بطاقات الكلمات، توجيه الوالدين، وخطوات النشاط فقط.",
+      printCopy: "نزّلوا عينة PDF للمشاركة، أو افتحوا أمر الطباعة في المتصفح واختاروا Save as PDF. نسخة الطباعة تبقي القصة القصيرة، الكلمات الثلاث، توجيه الوالدين، وخطوات النشاط فقط.",
       noPaymentCopy: "لا يوجد checkout أو سعر أو رابط دفع متصل بهذه العينة. هي معاينة لبناء الثقة قبل وجود منتج مدفوع.",
       testTitle: "كيف تجربونها مع الطفل؟",
-      parentPrompt: "توجيه للوالدين: اقرأوا كلمة واحدة، أشيروا إلى شيء واحد، ثم توقفوا بينما لا يزال النشاط سهلا وممتعا.",
-      activity: "نشاط 3 دقائق: اختاروا لونا واحدا، ارسموا شيئا صغيرا، ثم قولوا الكلمة مرة أخرى مع Pinyin.",
+      parentPrompt: "توجيه للوالدين: لا تختبروا الطفل. اقرأوا السطر، قولوا كلمة واحدة، ثم دعوا الطفل يختار أو يرسم. توقفوا بينما لا يزال النشاط سهلا وممتعا.",
+      activity: "نشاط 3 دقائق: اختاروا بين 红 hong، 蓝 lan، أو 绿 lv. ارسموا شيئا صغيرا بهذا اللون، ثم قولوا الجملة: هذا لونه ___ مع Pinyin.",
       validationCopy: "هذه المعاينة موجودة لاختبار اهتمام العائلات قبل إنشاء منتج مدفوع. لا يوجد سعر أو زر شراء أو رابط دفع في هذه الصفحة.",
       storyCta: "/ar/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
       storyCtaLabel: "احصلوا على حزمة نور المجانية",
@@ -3654,7 +3671,7 @@ function samplePageSpec(product) {
       waitlistPack: "noor",
       waitlistSource: "sample_preview_noor_worksheet",
       waitlistLabel: "أخبروني عندما تصبح ورقة نور التجريبية جاهزة",
-      waitlistNudge: "إذا بدت العينة مناسبة لعائلتكم، اضغطوا الزر لفتح نموذج حزمة القصة المجانية وتسجيل اهتمامكم. لا يوجد دفع اليوم.",
+      waitlistNudge: "إذا بدت العينة مناسبة لعائلتكم، اضغطوا الزر لفتح نموذج حزمة القصة المجانية وتسجيل اهتمامكم بالنسخة الكاملة. لا يوجد دفع اليوم.",
       activityInterestLabel: "نعم، أخبروني عن ورقة نور",
       activityInterestSource: "sample_activity_interest_noor",
     };

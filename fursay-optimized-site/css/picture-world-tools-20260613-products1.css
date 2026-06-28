@@ -362,6 +362,10 @@ body.picture-world .product-sample-print-button {
  }
 
 @media print {
+  html {
+    background: #fff !important;
+  }
+
   body.picture-world.product-sample-preview-page {
     background: #fff !important;
     color: #111 !important;
@@ -376,8 +380,19 @@ body.picture-world .product-sample-print-button {
   body.picture-world.product-sample-preview-page .creator-kit-safety,
   body.picture-world.product-sample-preview-page .creator-copy-block {
     box-shadow: none !important;
-    border-color: #bbb !important;
+    border-color: transparent !important;
     break-inside: avoid !important;
+  }
+
+  body.picture-world.product-sample-preview-page .creator-kit-safety {
+    margin-bottom: 12px !important;
+    padding: 12px 0 !important;
+    background: #fff !important;
+  }
+
+  body.picture-world.product-sample-preview-page .creator-copy-blocks article {
+    border: 1px solid #ddd !important;
+    background: #faf6ec !important;
   }
 
   body.picture-world.product-sample-preview-page .modal-overlay,
