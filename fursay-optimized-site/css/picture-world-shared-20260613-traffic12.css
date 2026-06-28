@@ -2138,8 +2138,19 @@ body.picture-world.world-koko .koko-delivery-note {
 }
 body.picture-world.world-koko .koko-sample-cta {
   width: 100% !important;
-  margin-top: 16px !important;
   justify-content: center !important;
+}
+body.picture-world.world-koko .koko-sample-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 10px !important;
+  margin-top: 16px !important;
+}
+body.picture-world.world-koko .koko-sample-download,
+body.picture-world.world-koko .koko-printable-interest-cta {
+  width: 100% !important;
+  justify-content: center !important;
+  white-space: normal !important;
 }
 body.picture-world .campaign-qr-card {
   min-width: 0 !important;
