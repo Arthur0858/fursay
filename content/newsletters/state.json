@@ -15834,21 +15834,19 @@
   },
   "runs": [
     {
-      "runId": "1782736185171-5lfrhn",
-      "channel": "arabic",
+      "runId": "1782736185171-g1wbhq",
+      "channel": "koko",
       "mode": "api-preflight",
       "episodeNo": null,
       "status": "api_preflight_passed",
       "dryRun": false,
       "campaignId": null,
-      "scheduledAt": "2026-07-01T09:00:00+08:00",
+      "scheduledAt": "2026-07-06T09:00:00+08:00",
       "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
+      "warnings": [],
       "error": null,
       "startedAt": "2026-06-29T12:29:45.171Z",
-      "finishedAt": "2026-06-29T12:29:45.908Z"
+      "finishedAt": "2026-06-29T12:29:46.384Z"
     },
     {
       "runId": "1782718490862-fwclfp",
