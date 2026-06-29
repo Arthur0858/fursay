@@ -1,0 +1,29 @@
+{
+  "runId": "1782754326358-xx4orn",
+  "channel": "arabic",
+  "mode": "api-preflight",
+  "dryRun": false,
+  "startedAt": "2026-06-29T17:32:06.358Z",
+  "status": "api_preflight_passed",
+  "scheduledAt": "2026-07-01T09:00:00+08:00",
+  "delivery": "scheduled",
+  "warnings": [
+    "Target group \"Noor subscribers\" has 0 active subscribers"
+  ],
+  "mailerLiteApi": {
+    "baseUrl": "https://connect.mailerlite.com/api",
+    "groupId": "185908830918411331",
+    "groupName": "Noor subscribers",
+    "groupActiveCount": 0,
+    "from": "hello@fursay.com",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-07-01T09:00:00+08:00",
+    "warnings": [
+      "Target group \"Noor subscribers\" has 0 active subscribers"
+    ],
+    "contentApiEnabled": false,
+    "contentSubmission": "requires MailerLite Advanced plan when emails.*.content is sent by API"
+  },
+  "finishedAt": "2026-06-29T17:32:07.091Z"
+}
