@@ -50,7 +50,7 @@ function windowQueries(days) {
       family: "page_intent",
       windowDays: days,
       description: `Subscription, product info, sample download, and product-interest intent by landing path in the last ${days} days.`,
-      sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, blob13 AS product_interest, blob14 AS interest_stage, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND ${DECISION_TRAFFIC_FILTER} AND blob1 IN (${PAGE_INTENT_EVENTS.map((event) => `'${event}'`).join(",")}) GROUP BY path, event, pack, product_interest, interest_stage ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+      sql: `SELECT blob2 AS path, blob1 AS event, blob6 AS pack, blob13 AS product_interest, blob14 AS interest_stage, blob16 AS source_id, blob17 AS creator, blob18 AS placement, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND ${DECISION_TRAFFIC_FILTER} AND blob1 IN (${PAGE_INTENT_EVENTS.map((event) => `'${event}'`).join(",")}) GROUP BY path, event, pack, product_interest, interest_stage, source_id, creator, placement ORDER BY events DESC LIMIT 100 FORMAT JSON`,
     },
     {
       name: `affiliate_interest_${days}d`,
@@ -166,6 +166,15 @@ function sourceIdCount(queryReports, windowDays, sourceIds) {
     .reduce((total, row) => total + rowEvents(row), 0);
 }
 
+function sourceAttributionCount(queryReports, windowDays, pack) {
+  return rowsFor(queryReports, windowDays, "page_intent")
+    .filter((row) => {
+      if (row?.pack === pack || row?.product_interest === pack) return true;
+      return String(row?.source_id || "").startsWith(`${pack}_`);
+    })
+    .reduce((total, row) => total + rowEvents(row), 0);
+}
+
 function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
   const products = conversionHealth.monetization?.ownedProducts?.products || [];
   const windows = COMPARISON_WINDOWS_DAYS;
@@ -180,11 +189,13 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
         productSampleDownloads: null,
         productInterestClicks: null,
         subscriberSignals: null,
+        sourceAttributionEvents: null,
       } : {
         productInfoClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInfoClicks),
         productSampleDownloads: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productSampleDownloads),
         productInterestClicks: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.productInterestClicks),
         subscriberSignals: signalCount(queryReports, days, product.pack, PRODUCT_SIGNAL_EVENTS.subscriberSignals),
+        sourceAttributionEvents: sourceAttributionCount(queryReports, days, product.pack),
       };
       const thresholdMet = !pending
         && counts.productInfoClicks >= (thresholds.productInfoClicks || 0)
@@ -213,6 +224,8 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
       },
       countsByWindow,
       reportQueries: ["page_intent", "subscribe_funnel_by_pack", "noor_growth_signals"],
+      acceptedPreRevenueSignals: ["productSampleDownloads", "productInterestClicks", "sourceAttributionEvents", "subscriberSignals"],
+      revenueClaimFields: ["purchases", "revenue_usd"],
       nextDecision: product.validationPlan?.nextDecision || "",
     };
   });
@@ -262,6 +275,7 @@ function buildDecisionScoreboard(conversionHealth, queryReports, canQuery) {
       cleanWindowComplete,
     },
     unlockPolicy: conversionHealth.monetization?.ownedProducts?.validationDashboard?.unlockPolicy || "",
+    revenueClaimPolicy: "Sample downloads, product-interest clicks, source_id/placement aggregates, and subscriber signals are pre-revenue validation only; purchases and revenue_usd are the only revenue claim fields.",
     productSignalEvents: PRODUCT_SIGNAL_EVENTS,
     products: productScorecards,
     noorFirstSubscriber: {

@@ -53,5 +53,6 @@ The report is ready when `npm run report:events` writes `/tmp/fursay-event-analy
 
 - Do not print, commit, or publish token values.
 - Do not include email, name, phone, address, subscriber IDs, or MailerLite IDs in event rows.
-- Keep checkout disabled until product-interest and subscriber signals are reviewable.
-- Keep Noor newsletter publishing in `safe_wait_subscriber_empty` until at least one real Noor subscriber signal is observed.
+- Keep checkout disabled until product-interest, sample download, source_id/placement aggregate, and subscriber signals are reviewable.
+- Treat sample downloads, product-interest clicks, and source attribution as pre-revenue validation only; purchases/revenue_usd are required before claiming revenue.
+- Keep Noor newsletter publishing in `safe_wait_subscriber_empty` until list/post-send gates are healthy. Newsletter is optional retention and must not block NOOR worksheet/sample traffic validation.

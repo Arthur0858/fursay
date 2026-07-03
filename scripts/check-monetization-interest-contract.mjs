@@ -19,9 +19,11 @@ const PRODUCT_INFO_PAGES = [
 const CHECKOUT_NEEDLES = [/gumroad/i, /stripe/i, /ko-fi/i, /checkout/i, /buy now/i, /立即購買/i, /(?:^|\s)اشتر(?:\s|$)/i];
 const REQUIRED_GATE_REQUIREMENTS = [
   "verified_product_interest_clicks",
+  "price_copy",
   "disclosure_copy",
   "refund_support_copy",
   "checkout_tracking_contract",
+  "public_sample_to_checkout_route",
 ];
 const REQUIRED_VALIDATION_SIGNALS = [
   "fursay_product_info_click",
@@ -131,6 +133,11 @@ async function main() {
   if (products.trafficEntryPoints?.socialProfileLinks !== links.operations?.productInterest?.url) failures.push("products_social_entry_mismatch");
   if (products.trafficEntryPoints?.zhSocialProfileLinks !== links.operations?.zhProductInterest?.url) failures.push("products_zh_social_entry_mismatch");
   if (products.trafficEntryPoints?.arSocialProfileLinks !== links.operations?.arProductInterest?.url) failures.push("products_ar_social_entry_mismatch");
+  if (products.seoTrafficEntryPoints?.en?.url !== "https://fursay.com/products") failures.push("products_missing_en_seo_entry");
+  if (products.seoTrafficEntryPoints?.zh?.url !== "https://fursay.com/zh/products") failures.push("products_missing_zh_seo_entry");
+  if (products.seoTrafficEntryPoints?.ar?.url !== "https://fursay.com/ar/products") failures.push("products_missing_ar_seo_entry");
+  if (!products.seoTrafficEntryPoints?.ar?.keywords?.includes("Arabic Chinese for kids")) failures.push("products_missing_arabic_chinese_keyword");
+  if (!products.seoTrafficEntryPoints?.samplePreviewPolicy?.includes("noindex")) failures.push("products_missing_sample_preview_seo_policy");
   if (!linksHtml.includes("https://fursay.com/products?utm_source=links")) failures.push("links_missing_product_social_entry");
   if (!linksHtml.includes("https://fursay.com/zh/products?utm_source=links")) failures.push("links_missing_zh_product_social_entry");
   if (!linksHtml.includes("https://fursay.com/ar/products?utm_source=links")) failures.push("links_missing_ar_product_social_entry");
@@ -146,9 +153,12 @@ async function main() {
   if (checkoutGate.paymentLinksAllowed !== false) failures.push("checkout_payment_links_allowed");
   if (checkoutGate.minimumInterestClicks < 1) failures.push("checkout_gate_missing_interest_threshold");
   if (checkoutGate.minimumSubscriberSignals < 1) failures.push("checkout_gate_missing_subscriber_threshold");
+  if (!checkoutGate.priceCopy?.includes("USD 3-7")) failures.push("checkout_gate_missing_price_copy");
   if (!checkoutGate.disclosureCopy?.includes("clearly labeled")) failures.push("checkout_gate_missing_disclosure_copy");
   if (!checkoutGate.refundSupportCopy?.includes("Refund and support")) failures.push("checkout_gate_missing_refund_support_copy");
   if (!checkoutGate.trackingGate?.includes("fursay_product_interest_click")) failures.push("checkout_gate_missing_tracking_gate");
+  if (!checkoutGate.trackingGate?.includes("fursay_product_sample_download_click")) failures.push("checkout_gate_missing_sample_download_tracking");
+  if (!checkoutGate.publicRouteGate?.includes("sample-to-checkout")) failures.push("checkout_gate_missing_public_route_gate");
   if (release.liveExpectations?.checkoutGateRequirements !== checkoutGate.requirements?.length) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}!=${checkoutGate.requirements?.length || 0}`);
   for (const requirement of REQUIRED_GATE_REQUIREMENTS) {
     if (!checkoutGate.requirements?.includes(requirement)) failures.push(`checkout_gate_missing_requirement:${requirement}`);

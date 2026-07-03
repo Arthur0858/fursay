@@ -30,9 +30,11 @@ const REQUIRED_SAMPLE_PREVIEWS = [
 ];
 const REQUIRED_GATE_REQUIREMENTS = [
   "verified_product_interest_clicks",
+  "price_copy",
   "disclosure_copy",
   "refund_support_copy",
   "checkout_tracking_contract",
+  "public_sample_to_checkout_route",
 ];
 const REQUIRED_VALIDATION_SIGNALS = [
   "fursay_product_info_click",
@@ -830,6 +832,9 @@ async function main() {
   if (products.checkoutGate?.paymentLinksAllowed !== false) failures.push("checkout_gate_payment_links_allowed");
   if (products.checkoutGate?.minimumInterestClicks < 1) failures.push("checkout_gate_missing_interest_threshold");
   if (products.checkoutGate?.minimumSubscriberSignals < 1) failures.push("checkout_gate_missing_subscriber_threshold");
+  if (!products.checkoutGate?.priceCopy?.includes("USD 3-7")) failures.push("checkout_gate_missing_price_copy");
+  if (!products.checkoutGate?.trackingGate?.includes("fursay_product_sample_download_click")) failures.push("checkout_gate_missing_sample_download_tracking");
+  if (!products.checkoutGate?.publicRouteGate?.includes("sample-to-checkout")) failures.push("checkout_gate_missing_public_route_gate");
 
   if (release.deployment?.productsPage !== "https://fursay.com/products") failures.push("release_missing_products_page");
   if (release.deployment?.productsManifest !== "https://fursay.com/products.json") failures.push("release_missing_products_manifest");

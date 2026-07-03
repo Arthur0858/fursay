@@ -1550,7 +1550,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productSamplePreviewPages !== 2) failures.push(`release_product_sample_preview_pages:${release.liveExpectations?.productSamplePreviewPages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapStages !== 4) failures.push(`release_monetization_roadmap_stages:${release.liveExpectations?.monetizationRoadmapStages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapProducts !== 2) failures.push(`release_monetization_roadmap_products:${release.liveExpectations?.monetizationRoadmapProducts || "none"}`);
-  if (release.liveExpectations?.checkoutGateRequirements !== 4) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
+  if (release.liveExpectations?.checkoutGateRequirements !== 6) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
   if (release.liveExpectations?.cacheHeaderChecks !== 70) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
@@ -1992,7 +1992,12 @@ async function checkDiscoveryFiles(baseUrl) {
         continue;
       }
       if (launchChannel.link !== link) failures.push(`traffic_launch_${pack}_${channel}_link:${launchChannel.link || "none"}`);
-      if (!launchChannel.copy?.includes(channel === "qr_poster" ? expectedShare : link)) {
+      const expectedCopyLink = channel === "youtube_description" && pack === "noor"
+        ? creatorPack.productSamplePreviewUrl
+        : channel === "qr_poster"
+          ? expectedShare
+          : link;
+      if (!launchChannel.copy?.includes(expectedCopyLink)) {
         failures.push(`traffic_launch_${pack}_${channel}_copy_missing_link`);
       }
       if (launchChannel.linkTemplate !== `${trackingLink}?source_id={episode_or_post_id}&creator=fursay&placement=${placement}`) {
@@ -2038,7 +2043,9 @@ async function checkDiscoveryFiles(baseUrl) {
     if (creatorPack.placementLinks?.newsletterBlurb?.shortlink !== expectedNewsletterPlacement) {
       failures.push(`creator_kit_${pack}_newsletter_placement:${creatorPack.placementLinks?.newsletterBlurb?.shortlink || "none"}`);
     }
-    if (!creatorPack.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`creator_kit_${pack}_youtube_missing_placement`);
+    const expectedYoutubeCopyLink = pack === "noor" ? creatorPack.productSamplePreviewUrl : expectedYoutubePlacement;
+    if (!creatorPack.youtubeDescription?.includes(expectedYoutubeCopyLink)) failures.push(`creator_kit_${pack}_youtube_missing_placement`);
+    if (pack === "noor" && creatorPack.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push("creator_kit_noor_youtube_has_multiple_ctas");
     if (!creatorPack.socialCaption?.includes(expectedSocialPlacement)) failures.push(`creator_kit_${pack}_social_missing_placement`);
     if (!creatorPack.familyShareMessage?.includes(expectedShare)) failures.push(`creator_kit_${pack}_family_message_missing_share`);
     if (!creatorPack.bioProfileCopy?.includes(`https://fursay.com/bio/${pack}`)) failures.push(`creator_kit_${pack}_bio_profile_missing_bio`);

@@ -299,7 +299,7 @@ function writeReleaseManifest() {
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
       visualLayoutChecks: 28,
-      checkoutGateRequirements: 4,
+      checkoutGateRequirements: 6,
       webVitalsChecks: 18,
       cacheHeaderChecks: 70,
       badAuditCount: 0,
@@ -951,7 +951,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
     source,
-    purpose: "Reusable traffic assets for YouTube descriptions, social captions, newsletter blurbs, QR posters, and creator handoffs.",
+    purpose: "Reusable traffic assets for YouTube descriptions, social captions, retention newsletter blurbs, QR posters, and creator handoffs.",
     safety: {
       subscriptionEndpoint: "/api/subscribe",
       smokeSubmitsToMailerLite: false,
@@ -991,8 +991,8 @@ function writeCreatorKit(siteDir, source, campaigns) {
         ? "https://fursay.com/download/noor-worksheet-sample?source_id=noor_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description"
         : "https://fursay.com/download/koko-printable-sample?source_id=koko_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description";
       const youtubeDescription = pack === "noor"
-        ? `Try Noor's 3-minute Chinese worksheet sample\nWorksheet preview: ${productSamplePreviewUrl}\nFree weekly story pack: ${placementLinks.youtubeDescription.shortlink}`
-        : `${campaign.copyKit.shortHeadline}\nFree weekly sample pack: ${placementLinks.youtubeDescription.shortlink}`;
+        ? `Try Noor's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}`
+        : `Get Koko's free English story pack: ${placementLinks.youtubeDescription.shortlink}`;
       const socialCaption = pack === "noor"
         ? `Try Noor's 3-minute Chinese worksheet sample with Arabic parent prompts: ${productSamplePreviewUrl}\nCreator social link: ${placementLinks.socialCaption.shortlink}`
         : `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`;
@@ -1023,6 +1023,8 @@ function writeCreatorKit(siteDir, source, campaigns) {
           playlistEmbed: videoDiscoveryChannels[pack].playlistEmbed,
         },
         trackedLandingUrl: landing,
+        trafficPriority: "sample_to_paid_pack_validation",
+        newsletterRole: "optional_retention_not_launch_gate",
         productSamplePreviewUrl,
         productSampleDownloadUrl,
         qrSvg: campaign.copyKit.qrSvg,
@@ -2439,7 +2441,7 @@ function writeConversionHealth(siteDir, source) {
         status: "locked_until_signals",
         ownerAction: "Compare product info clicks, waitlist clicks, and subscriber signals against the product validation minimums.",
         evidence: "Each product has productInfoClicks >= 10, productInterestClicks >= 5, and subscriberSignals >= 1.",
-        unlocks: "Draft pre-checkout disclosure and refund/support copy before choosing a checkout provider.",
+        unlocks: "Draft pre-checkout disclosure, refund/support copy, price copy, and checkout tracking before choosing a checkout provider.",
       },
     ],
     monetization: {
@@ -2459,16 +2461,20 @@ function writeConversionHealth(siteDir, source) {
           provider: "not_selected",
           requirements: [
             "verified_product_interest_clicks",
+            "price_copy",
             "disclosure_copy",
             "refund_support_copy",
             "checkout_tracking_contract",
+            "public_sample_to_checkout_route",
           ],
           minimumInterestClicks: 10,
           minimumSubscriberSignals: 1,
           paymentLinksAllowed: false,
+          priceCopy: "First paid PDF pack target remains a low-friction USD 3-7 offer until real purchase evidence suggests otherwise.",
           disclosureCopy: "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
           refundSupportCopy: "Refund and support instructions must be published before any checkout link is enabled.",
-          trackingGate: "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed.",
+          trackingGate: "Checkout links stay disabled until fursay_product_sample_download_click, fursay_product_interest_click, source_id/placement attribution, and subscribe success reporting can be reviewed.",
+          publicRouteGate: "A public sample-to-checkout route must be smoke-tested before any payment link is enabled.",
         },
         validationDashboard: {
           status: "pending_cloudflare_credentials_or_enablement",
@@ -2478,7 +2484,7 @@ function writeConversionHealth(siteDir, source) {
           decisionTraffic: "qa_excluded",
           cleanWindowRequired: true,
           cleanWindowReadyAt: "2026-07-28T14:15:00.000Z",
-          unlockPolicy: "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
+          unlockPolicy: "Each product needs product info clicks, product sample downloads or source-attributed visits, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads and source_id/placement aggregates are traffic validation signals; purchases and revenue_usd are the only revenue claims.",
           metrics: ["productInfoClicks", "productSampleDownloads", "productInterestClicks", "subscriberSignals"],
         },
         products: [
@@ -2575,7 +2581,7 @@ function writeProductsManifest(siteDir, source) {
     requiredSignals: product.validationPlan?.signals || [],
     minimumSignals: product.validationPlan?.minimumSignals || {},
     nextDecision: product.validationPlan?.nextDecision || "",
-    checkoutBlockedReason: "Checkout stays disabled until product interest clicks and at least one subscriber signal are reviewable.",
+    checkoutBlockedReason: "Checkout stays disabled until product interest clicks, source-attributed sample traffic, and at least one subscriber signal are reviewable.",
     paymentLinksAllowed: false,
     piiAllowed: false,
   })).sort((a, b) => a.priority - b.priority);
@@ -2596,6 +2602,21 @@ function writeProductsManifest(siteDir, source) {
       socialProfileLinks: links.operations?.productInterest?.url || PRODUCT_INTEREST_SOCIAL_LINK,
       zhSocialProfileLinks: links.operations?.zhProductInterest?.url || ZH_PRODUCT_INTEREST_SOCIAL_LINK,
       arSocialProfileLinks: links.operations?.arProductInterest?.url || AR_PRODUCT_INTEREST_SOCIAL_LINK,
+    },
+    seoTrafficEntryPoints: {
+      en: {
+        url: "https://fursay.com/products",
+        keywords: ["printable worksheet", "English feelings printable", "kids story activity"],
+      },
+      zh: {
+        url: "https://fursay.com/zh/products",
+        keywords: ["親子英文故事學習單", "英文情緒詞練習", "兒童故事活動"],
+      },
+      ar: {
+        url: "https://fursay.com/ar/products",
+        keywords: ["Arabic Chinese for kids", "Chinese worksheet for Arabic families", "3-minute Chinese story activity"],
+      },
+      samplePreviewPolicy: "Sample preview pages remain noindex until checkout is approved; product landing pages are the indexable parent-facing entry points.",
     },
     samplePreviews: (ownedProducts.products || []).map((product) => ({
       productId: product.id,

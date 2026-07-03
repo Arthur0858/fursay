@@ -1,5 +1,7 @@
 # Fursay Newsletter Automation
 
+Newsletter is an optional retention channel. It is not the launch gate for KOKO/NOOR traffic validation or paid-pack readiness. If MailerLite, Chrome, sender, or list proof is blocked, keep product validation moving through Fursay creator links, sample pages, tracked PDF downloads, product-interest clicks, and aggregate source attribution.
+
 Codex Automation is the scheduler and copywriter. The project script is the source of truth for YouTube source selection, QA, MailerLite delivery, and state.
 
 ## Weekly schedule

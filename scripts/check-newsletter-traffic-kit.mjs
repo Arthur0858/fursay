@@ -297,7 +297,9 @@ async function main() {
     if (!item.videoDiscovery?.playlistName?.includes(pack === "koko" ? "Koko" : "Arabic Kids Chinese")) failures.push(`${pack}_bad_video_playlist_name`);
     if (!item.videoDiscovery?.playlistEmbed?.startsWith("https://www.youtube-nocookie.com/embed/videoseries?list=UU")) failures.push(`${pack}_bad_video_embed`);
     if (!item.newsletterBlurb?.includes(expectedNewsletterPlacement)) failures.push(`${pack}_newsletter_blurb_missing_placement`);
-    if (!item.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push(`${pack}_youtube_missing_placement`);
+    const youtubeTarget = pack === "noor" ? item.productSamplePreviewUrl : expectedYoutubePlacement;
+    if (!item.youtubeDescription?.includes(youtubeTarget)) failures.push(`${pack}_youtube_missing_placement`);
+    if (pack === "noor" && item.youtubeDescription?.includes(expectedYoutubePlacement)) failures.push("noor_youtube_has_multiple_ctas");
     if (!item.socialCaption?.includes(expectedSocialPlacement)) failures.push(`${pack}_social_missing_placement`);
     if (!item.familyShareMessage?.includes(expectedShare)) failures.push(`${pack}_family_share_message_missing_share`);
     if (!item.bioProfileCopy?.includes(expectedBio)) failures.push(`${pack}_bio_profile_copy_missing_bio`);

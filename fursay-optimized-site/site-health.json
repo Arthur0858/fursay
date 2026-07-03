@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-02",
+  "updatedAt": "2026-07-03",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -487,16 +487,20 @@
         "provider": "not_selected",
         "requirements": [
           "verified_product_interest_clicks",
+          "price_copy",
           "disclosure_copy",
           "refund_support_copy",
-          "checkout_tracking_contract"
+          "checkout_tracking_contract",
+          "public_sample_to_checkout_route"
         ],
         "minimumInterestClicks": 10,
         "minimumSubscriberSignals": 1,
         "paymentLinksAllowed": false,
+        "priceCopy": "First paid PDF pack target remains a low-friction USD 3-7 offer until real purchase evidence suggests otherwise.",
         "disclosureCopy": "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
         "refundSupportCopy": "Refund and support instructions must be published before any checkout link is enabled.",
-        "trackingGate": "Checkout links stay disabled until fursay_product_interest_click and subscribe success reporting can be reviewed."
+        "trackingGate": "Checkout links stay disabled until fursay_product_sample_download_click, fursay_product_interest_click, source_id/placement attribution, and subscribe success reporting can be reviewed.",
+        "publicRouteGate": "A public sample-to-checkout route must be smoke-tested before any payment link is enabled."
       },
       "validationDashboard": {
         "status": "pending_cloudflare_credentials_or_enablement",
@@ -509,7 +513,7 @@
         "decisionTraffic": "qa_excluded",
         "cleanWindowRequired": true,
         "cleanWindowReadyAt": "2026-07-28T14:15:00.000Z",
-        "unlockPolicy": "Each product needs product info clicks, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads are tracked as a diagnostic bridge metric, not a checkout unlock.",
+        "unlockPolicy": "Each product needs product info clicks, product sample downloads or source-attributed visits, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads and source_id/placement aggregates are traffic validation signals; purchases and revenue_usd are the only revenue claims.",
         "metrics": [
           "productInfoClicks",
           "productSampleDownloads",
