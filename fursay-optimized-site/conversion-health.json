@@ -1,0 +1,347 @@
+{
+  "site": "Fursay",
+  "origin": "https://fursay.com",
+  "platform": "cloudflare-workers-static-assets",
+  "updatedAt": "2026-07-04",
+  "source": {
+    "branch": "main",
+    "commit": "8647e97",
+    "summary": "ponytail: trigger CI/CD"
+  },
+  "measurement": {
+    "anonymousEventEndpoint": "https://fursay.com/api/event",
+    "piiAllowed": false,
+    "subscribePayloadCompatibility": "email/groups/attribution unchanged",
+    "externalAnalytics": "worker_event_endpoint",
+    "analyticsSink": {
+      "binding": "FURSAY_EVENTS",
+      "dataset": "fursay_events",
+      "status": "configured_in_wrangler",
+      "writeMode": "analytics_engine_binding",
+      "fallbackSink": "Cloudflare Analytics Engine dataset fursay_events",
+      "deployBlockerCode": "",
+      "enablementUrl": "https://dash.cloudflare.com/e6780ef96bb6f53eba1dbc4d6dfa7376/workers/analytics-engine",
+      "piiAllowed": false,
+      "blobFields": [
+        "event",
+        "path",
+        "locale",
+        "page_pack",
+        "campaign",
+        "pack",
+        "signup_source",
+        "market",
+        "product_id",
+        "outbound_host",
+        "outbound_path",
+        "copy_kind",
+        "product_interest",
+        "interest_stage",
+        "colo",
+        "source_id",
+        "creator",
+        "placement"
+      ],
+      "doubleFields": [
+        "event_count"
+      ],
+      "sqlApi": "Cloudflare Analytics Engine SQL API after account enablement"
+    },
+    "analyticsReport": {
+      "script": "scripts/query-event-analytics-report.mjs",
+      "packageScript": "npm run report:events",
+      "status": "pending_cloudflare_credentials_or_enablement",
+      "dataset": "fursay_events",
+      "windowDays": 7,
+      "comparisonWindows": [
+        7,
+        30
+      ],
+      "queryCount": 12,
+      "output": "/tmp/fursay-event-analytics-report/event-analytics-report.json",
+      "requiredEnv": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_ANALYTICS_TOKEN"
+      ],
+      "piiAllowed": false,
+      "dataQuality": {
+        "decisionTraffic": "qa_excluded",
+        "cleanWindowRequired": true,
+        "qaIsolationStartedAt": "2026-06-28T14:15:00.000Z",
+        "cleanWindowDays": 30,
+        "cleanWindowReadyAt": "2026-07-28T14:15:00.000Z",
+        "qaIsolation": "live smoke and contract checks stub /api/event instead of writing browser-click QA events to Analytics Engine",
+        "automationTrafficPolicy": "contract, test, and fursay_qa_* source markers are excluded from monetization decision queries",
+        "caveat": "Do not change checkout or paid-product status from a polluted historical window; wait for a clean 7-day and 30-day collection window after QA isolation."
+      },
+      "queries": [
+        "event_totals_7d",
+        "subscribe_funnel_by_pack_7d",
+        "page_intent_7d",
+        "affiliate_interest_7d",
+        "outbound_destinations_7d",
+        "noor_growth_signals_7d",
+        "event_totals_30d",
+        "subscribe_funnel_by_pack_30d",
+        "page_intent_30d",
+        "affiliate_interest_30d",
+        "outbound_destinations_30d",
+        "noor_growth_signals_30d"
+      ]
+    },
+    "fallbackReviewSurface": "Cloudflare Worker logs"
+  },
+  "events": [
+    "fursay_subscribe_open_click",
+    "fursay_subscribe_modal_open",
+    "fursay_subscribe_submit_attempt",
+    "fursay_subscribe_submit_success",
+    "fursay_subscribe_submit_failure",
+    "fursay_affiliate_click",
+    "fursay_outbound_click",
+    "fursay_share_click",
+    "fursay_pack_link_copy_click",
+    "fursay_sample_link_copy_click",
+    "fursay_public_share_copy_click",
+    "fursay_kit_copy_click",
+    "fursay_product_interest_click",
+    "fursay_product_info_click",
+    "fursay_product_sample_download_click"
+  ],
+  "coverage": {
+    "publicStoryPages": 9,
+    "subscribeOpenPages": 18,
+    "affiliateClickPages": 18,
+    "outboundClickPages": 18,
+    "shareOrCopyPages": 18,
+    "productInterestPages": 9,
+    "submitAttemptPages": 3
+  },
+  "growth": {
+    "latestStoryEntries": 12,
+    "episodeLandingPages": 9,
+    "episodeFaqSchemaPages": 9,
+    "noorLeadMagnetPages": 3,
+    "noorReadinessStatus": "safe_wait_subscriber_empty",
+    "noorSubscriberSignalGoal": 1,
+    "noorSubscriberSignalStatus": "waiting_for_first_real_subscriber_signal",
+    "noorSprintVariantCount": 4,
+    "noorSprintVariants": [
+      {
+        "id": "parent_group",
+        "label": "Parent group post",
+        "placement": "parent_group",
+        "sourceId": "noor_first_subscriber_sprint_parent_group",
+        "creator": "fursay",
+        "link": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_parent_group&creator=fursay&placement=parent_group",
+        "storySourceId": "",
+        "storyLink": "",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "direct_dm",
+        "label": "Direct family DM",
+        "placement": "direct_dm",
+        "sourceId": "noor_first_subscriber_sprint_direct_dm",
+        "creator": "fursay",
+        "link": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm",
+        "storySourceId": "",
+        "storyLink": "",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "worksheet_followup",
+        "label": "Worksheet follow-up",
+        "placement": "worksheet_followup",
+        "sourceId": "noor_first_subscriber_sprint_worksheet_followup",
+        "creator": "fursay",
+        "link": "https://fursay.com/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint_worksheet_followup&creator=fursay&placement=worksheet_followup",
+        "storySourceId": "noor_first_subscriber_sprint_worksheet_followup_story",
+        "storyLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_worksheet_followup_story&creator=fursay&placement=worksheet_followup_story",
+        "reportFamily": "noor_growth_signals"
+      },
+      {
+        "id": "pdf_sample_followup",
+        "label": "PDF sample follow-up",
+        "placement": "pdf_sample_followup",
+        "sourceId": "noor_first_subscriber_sprint_pdf_sample_followup",
+        "creator": "fursay",
+        "link": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_first_subscriber_sprint_pdf_sample_followup&creator=fursay&placement=pdf_sample_followup",
+        "storySourceId": "noor_first_subscriber_sprint_pdf_sample_story",
+        "storyLink": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_pdf_sample_story&creator=fursay&placement=pdf_sample_story",
+        "reportFamily": "noor_growth_signals"
+      }
+    ],
+    "productInterestLinks": 27,
+    "productInfoLinks": 18
+  },
+  "decisionChecklist": [
+    {
+      "id": "enable_analytics_report",
+      "label": "Enable the 7-day / 30-day event report",
+      "status": "blocked_external",
+      "ownerAction": "Enable Cloudflare Analytics Engine for FURSAY_EVENTS and provide CLOUDFLARE_ACCOUNT_ID plus CLOUDFLARE_ANALYTICS_TOKEN or CLOUDFLARE_API_TOKEN.",
+      "evidence": "npm run report:events returns status=queried and includes noor_growth_signals_7d plus noor_growth_signals_30d.",
+      "unlocks": "Review real product-interest, affiliate, outbound, and subscribe signals instead of dry-run status."
+    },
+    {
+      "id": "capture_first_noor_signal",
+      "label": "Capture the first Noor subscriber signal",
+      "status": "active_after_analytics",
+      "ownerAction": "Run the Noor sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
+      "evidence": "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Noor source_id.",
+      "unlocks": "Move Noor from safe_wait_subscriber_empty to newsletter readiness review."
+    },
+    {
+      "id": "evaluate_owned_product_upgrade",
+      "label": "Evaluate whether owned products can move past interest validation",
+      "status": "locked_until_signals",
+      "ownerAction": "Compare product info clicks, waitlist clicks, and subscriber signals against the product validation minimums.",
+      "evidence": "Each product has productInfoClicks >= 10, productInterestClicks >= 5, and subscriberSignals >= 1.",
+      "unlocks": "Draft pre-checkout disclosure, refund/support copy, price copy, and checkout tracking before choosing a checkout provider."
+    }
+  ],
+  "monetization": {
+    "affiliate": {
+      "amazonLinks": 37,
+      "amazonTag": "parenttechche-20",
+      "booksLinks": 18,
+      "booksAffiliateId": "arthur0858",
+      "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
+    },
+    "ownedProducts": {
+      "checkoutEnabled": false,
+      "interestOnly": true,
+      "status": "interest_validation",
+      "checkoutGate": {
+        "status": "blocked_until_interest_signal",
+        "provider": "not_selected",
+        "requirements": [
+          "verified_product_interest_clicks",
+          "price_copy",
+          "disclosure_copy",
+          "refund_support_copy",
+          "checkout_tracking_contract",
+          "public_sample_to_checkout_route"
+        ],
+        "minimumInterestClicks": 10,
+        "minimumSubscriberSignals": 1,
+        "paymentLinksAllowed": false,
+        "priceCopy": "First paid PDF pack target remains a low-friction USD 3-7 offer until real purchase evidence suggests otherwise.",
+        "disclosureCopy": "Paid worksheet or printable packs will be clearly labeled before checkout; affiliate links remain separate from owned products.",
+        "refundSupportCopy": "Refund and support instructions must be published before any checkout link is enabled.",
+        "trackingGate": "Checkout links stay disabled until fursay_product_sample_download_click, fursay_product_interest_click, source_id/placement attribution, and subscribe success reporting can be reviewed.",
+        "publicRouteGate": "A public sample-to-checkout route must be smoke-tested before any payment link is enabled."
+      },
+      "validationDashboard": {
+        "status": "pending_cloudflare_credentials_or_enablement",
+        "reportCommand": "npm run report:events",
+        "windowDays": 7,
+        "comparisonWindows": [
+          7,
+          30
+        ],
+        "decisionTraffic": "qa_excluded",
+        "cleanWindowRequired": true,
+        "cleanWindowReadyAt": "2026-07-28T14:15:00.000Z",
+        "unlockPolicy": "Each product needs product info clicks, product sample downloads or source-attributed visits, product interest clicks, and subscriber signals before a full-pack or checkout decision changes. Product sample downloads and source_id/placement aggregates are traffic validation signals; purchases and revenue_usd are the only revenue claims.",
+        "metrics": [
+          "productInfoClicks",
+          "productSampleDownloads",
+          "productInterestClicks",
+          "subscriberSignals"
+        ]
+      },
+      "products": [
+        {
+          "id": "koko-printable-pack",
+          "pack": "koko",
+          "label": "Koko printable pack interest list",
+          "format": "PDF printable pack",
+          "plannedIncludes": [
+            "story prompt sheet",
+            "emotion word practice",
+            "parent-child drawing activity"
+          ],
+          "checkoutStatus": "not_enabled",
+          "samplePreview": {
+            "status": "print_ready_preview",
+            "url": "https://fursay.com/product-samples/koko-printable",
+            "label": "Preview the Koko 3-page printable sample",
+            "noindex": true,
+            "printReady": true,
+            "downloadableFormat": "pdf_and_browser_print",
+            "downloadUrl": "https://fursay.com/downloads/koko-printable-sample.pdf",
+            "trackedDownloadUrl": "https://fursay.com/download/koko-printable-sample?source_id=koko_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
+            "contents": [
+              "Story moment prompt",
+              "Three feeling words",
+              "Draw-and-tell activity"
+            ],
+            "nextCta": "/koko?subscribe=koko&utm_source=sample_preview&utm_medium=site&utm_campaign=koko_story_funnel&utm_content=koko_printable_preview"
+          },
+          "validationPlan": {
+            "audience": "Mandarin-speaking families testing English feelings practice after a Koko story.",
+            "freeBridge": "/koko",
+            "signals": [
+              "fursay_product_info_click",
+              "fursay_product_interest_click",
+              "fursay_subscribe_submit_success"
+            ],
+            "minimumSignals": {
+              "productInfoClicks": 10,
+              "productSampleDownloads": 0,
+              "productInterestClicks": 5,
+              "subscriberSignals": 1
+            },
+            "nextDecision": "Expand the print-ready preview into a complete Koko printable pack only after product-interest clicks and at least one subscriber signal prove family demand."
+          }
+        },
+        {
+          "id": "noor-worksheet-pack",
+          "pack": "noor",
+          "label": "Noor 3-minute worksheet interest list",
+          "format": "PDF worksheet pack",
+          "plannedIncludes": [
+            "short Chinese story moment",
+            "three Chinese words with Pinyin and Arabic parent prompts",
+            "one 3-minute family worksheet activity"
+          ],
+          "checkoutStatus": "not_enabled",
+          "samplePreview": {
+            "status": "print_ready_preview",
+            "url": "https://fursay.com/product-samples/noor-worksheet",
+            "label": "Preview the Noor 3-minute worksheet sample",
+            "noindex": true,
+            "printReady": true,
+            "downloadableFormat": "pdf_and_browser_print",
+            "downloadUrl": "https://fursay.com/downloads/noor-worksheet-sample.pdf",
+            "trackedDownloadUrl": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
+            "contents": [
+              "Short Noor and Zayd story moment",
+              "Three Chinese words with Pinyin and Arabic parent prompts",
+              "One 3-minute trace, point, and say activity"
+            ],
+            "nextCta": "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview"
+          },
+          "validationPlan": {
+            "audience": "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
+            "freeBridge": "/arabic",
+            "signals": [
+              "fursay_product_info_click",
+              "fursay_product_interest_click",
+              "fursay_subscribe_submit_success"
+            ],
+            "minimumSignals": {
+              "productInfoClicks": 10,
+              "productSampleDownloads": 0,
+              "productInterestClicks": 5,
+              "subscriberSignals": 1
+            },
+            "nextDecision": "Expand the print-ready preview into a complete Noor worksheet pack only after Noor interest and at least one subscriber signal prove family demand."
+          }
+        }
+      ]
+    }
+  }
+}
