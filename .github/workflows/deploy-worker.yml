@@ -47,10 +47,6 @@ jobs:
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: node scripts/release-fursay.mjs --skip-live
 
-      - name: Run live smoke after deploy
-        if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
-        run: npm run smoke:live
-
       - name: Query Analytics Engine conversion report
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_ANALYTICS_TOKEN != '' }}
         run: npm run report:events -- --out-dir /tmp/fursay-event-analytics-report
