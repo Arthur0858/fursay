@@ -31,10 +31,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci && npm install playwright
-
-      - name: Install browser runtime
-        run: npx playwright install --with-deps chromium
+        run: npm install && npx playwright install --with-deps chromium
 
       - name: Check deploy readiness
         run: npm run deploy:ready
