@@ -31,7 +31,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install && npx playwright install --with-deps chromium
+        run: npm install && npm install sharp playwright && npx playwright install --with-deps chromium
 
       - name: Check deploy readiness
         run: npm run deploy:ready
@@ -45,7 +45,7 @@ jobs:
 
       - name: Deploy Worker Static Assets
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
-        run: npm run deploy
+        run: node scripts/release-fursay.mjs --skip-live
 
       - name: Run live smoke after deploy
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
