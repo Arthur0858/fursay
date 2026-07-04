@@ -39,6 +39,15 @@
       "signalEvidence": "noor_growth_signals_7d aggregate submit success count 6",
       "notes": "noor_growth_signals_7d aggregate shows 6 Noor subscribe submit success signal(s)",
       "nextAction": "prepare Noor newsletter readiness review without enabling checkout"
+    },
+    {
+      "day": 2,
+      "executedAt": "2026-07-03T13:52:31.530Z",
+      "status": "needs_retry",
+      "signalObserved": false,
+      "signalEvidence": "",
+      "notes": "noor_growth_signals_7d report missing; no anonymous aggregate signal reviewed",
+      "nextAction": "run npm run report:events after Analytics Engine credentials are available"
     }
   ]
 }

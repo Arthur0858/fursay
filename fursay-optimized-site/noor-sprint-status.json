@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-03",
+  "updatedAt": "2026-07-04",
   "page": "https://fursay.com/noor-sprint-status",
   "manifest": "https://fursay.com/noor-sprint-status.json",
   "releaseManifest": "https://fursay.com/release.json",
@@ -22,7 +22,7 @@
   "readinessStatus": "safe_wait_subscriber_empty",
   "analyticsStatus": "pending_cloudflare_credentials_or_enablement",
   "logStatus": "signal_observed",
-  "logEntryCount": 1,
+  "logEntryCount": 2,
   "privacy": {
     "piiAllowed": false,
     "boundaryConfirmed": true,
@@ -150,17 +150,17 @@
     {
       "day": 2,
       "label": "Direct family DM",
-      "status": "not_started",
+      "status": "needs_retry",
       "action": "Send the direct DM copy to two families who already know the project.",
       "link": "https://fursay.com/share/noor?source_id=noor_first_subscriber_sprint_direct_dm&creator=fursay&placement=direct_dm",
       "followupLink": "",
       "reportQuery": "noor_growth_signals_7d",
       "expectedSignal": "A noor direct_dm open, modal open, or submit success signal.",
-      "executedAt": "",
+      "executedAt": "2026-07-03T13:52:31.530Z",
       "signalObserved": false,
       "signalEvidence": "",
-      "notes": "",
-      "nextAction": "Wait until the previous day has been tried or skipped."
+      "notes": "noor_growth_signals_7d report missing; no anonymous aggregate signal reviewed",
+      "nextAction": "run npm run report:events after Analytics Engine credentials are available"
     },
     {
       "day": 3,

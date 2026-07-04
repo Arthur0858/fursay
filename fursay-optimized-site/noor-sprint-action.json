@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-03",
+  "updatedAt": "2026-07-04",
   "purpose": "Minimal operator handoff for the next Noor first-subscriber sprint action.",
   "statusManifest": "https://fursay.com/noor-sprint-status.json",
   "statusPage": "https://fursay.com/noor-sprint-status",
@@ -43,7 +43,7 @@
     "successMetric": "at_least_one_noor_subscribe_submit_success",
     "windowDays": 7,
     "logStatus": "signal_observed",
-    "logEntryCount": 1
+    "logEntryCount": 2
   },
   "nextAction": {
     "day": 2,
