@@ -1796,7 +1796,11 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!deployRunbookRaw.includes("CLOUDFLARE_API_TOKEN") || !deployRunbookRaw.includes("CLOUDFLARE_ACCOUNT_ID")) {
       failures.push("deploy_runbook_missing_secrets");
     }
-    if (!deployRunbookRaw.includes("fail-closed") || !deployRunbookRaw.includes("npm run smoke:live")) {
+    if (
+      !deployRunbookRaw.includes("fail-closed")
+      || !deployRunbookRaw.includes("npm run smoke:live")
+      || !deployRunbookRaw.includes("live smoke remains a manual verification tool")
+    ) {
       failures.push("deploy_runbook_missing_fail_closed_or_live_smoke");
     }
     if (!deployRunbookRaw.includes("npm run deploy:ready -- --require-remote --require-cloudflare")) {

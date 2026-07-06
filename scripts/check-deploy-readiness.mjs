@@ -94,7 +94,6 @@ async function main() {
     "/tmp/fursay-event-analytics-report",
     "retention-days: 14",
     "CLOUDFLARE_ANALYTICS_TOKEN",
-    "npm run smoke:live",
     "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
   ]) {
     addIssue(failures, workflow.includes(needle), "workflow_missing", needle);
@@ -115,6 +114,7 @@ async function main() {
     "fail-closed",
     "npm run smoke:live",
     "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
+    "live smoke remains a manual verification tool",
     "/deploy-readiness.json",
     "/share-kit.json",
     "/traffic-launch.json",
@@ -129,7 +129,7 @@ async function main() {
     "FURSAY_EVENTS",
     "fursay_events",
     "never secret values",
-    "GitHub push-to-deploy should attach both live smoke evidence and the real Analytics Engine report",
+    "GitHub push-to-deploy should attach the real Analytics Engine report whenever the needed Cloudflare secrets are configured",
   ]) {
     addIssue(failures, deployRunbook.includes(needle), "deploy_runbook_missing", needle);
   }
@@ -182,7 +182,7 @@ async function main() {
       assetsBinding: wrangler.assets?.binding || "",
       releaseCommand: packageJson.scripts?.deploy || "",
       localGateCommand: "npm run check",
-      postDeployLiveSmokeCommand: "npm run smoke:live",
+      postDeployLiveSmokeCommand: "manual verification only: npm run smoke:live",
       postDeployAnalyticsReportCommand: "npm run report:events -- --out-dir /tmp/fursay-event-analytics-report",
       workflow: ".github/workflows/deploy-worker.yml",
       runbook: "docs/cloudflare-deploy-runbook.md",
