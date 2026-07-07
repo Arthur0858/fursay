@@ -10,7 +10,7 @@ Cloudflare **Worker** (not Pages) serving the Fursay site + newsletter + render 
 - `npm run noor:sprint:log|next|review` — Noor sprint pipeline logging/review.
 
 ## Conventions
-- Local-only git, no remote. Deploy needs a **Workers** token (CF account `e6780ef96bb6f53eba1dbc4d6dfa7376`).
+- Git remote `origin` → `github.com/Arthur0858/fursay.git` (tracks `remotes/origin/main`). Deploy needs a **Workers** token (CF account `e6780ef96bb6f53eba1dbc4d6dfa7376`).
 - Analytics Engine not yet enabled — set `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_ANALYTICS_TOKEN` to unlock.
 - Secrets via wrangler / `.local-secrets/`; never commit.
 
