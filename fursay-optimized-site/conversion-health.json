@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-06",
+  "updatedAt": "2026-07-07",
   "source": {
     "branch": "main",
-    "commit": "0565921",
-    "summary": "Record koko newsletter autopilot evidence"
+    "commit": "124532f",
+    "summary": "Align Fursay deploy readiness and newsletter evidence"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
