@@ -15834,6 +15834,36 @@
   },
   "runs": [
     {
+      "runId": "1783402216905-owe415",
+      "channel": "arabic",
+      "mode": "chrome-handoff",
+      "episodeNo": 1,
+      "status": "failed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": null,
+      "providerErrorCode": "unknown",
+      "warnings": [],
+      "error": "QA failed: rendered email must include the creator-kit newsletter blurb",
+      "startedAt": "2026-07-07T05:30:16.905Z",
+      "finishedAt": "2026-07-07T05:30:16.908Z"
+    },
+    {
+      "runId": "1783402216231-ovmueh",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-08T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-07T05:30:16.231Z",
+      "finishedAt": "2026-07-07T05:30:16.805Z"
+    },
+    {
       "runId": "1783292235762-4vgqvg",
       "channel": "koko",
       "mode": "api-preflight",
@@ -16576,36 +16606,6 @@
       "error": null,
       "startedAt": "2026-06-21T16:03:45.025Z",
       "finishedAt": "2026-06-21T16:03:45.602Z"
-    },
-    {
-      "runId": "1782056772824-su8ruc",
-      "channel": "koko",
-      "mode": "chrome-handoff",
-      "episodeNo": 5,
-      "status": "chrome_handoff_ready",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-22T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-21T15:46:12.824Z",
-      "finishedAt": "2026-06-21T15:46:13.317Z"
-    },
-    {
-      "runId": "1782056772266-6zwlpr",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-22T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-21T15:46:12.266Z",
-      "finishedAt": "2026-06-21T15:46:12.762Z"
     }
   ]
 }
