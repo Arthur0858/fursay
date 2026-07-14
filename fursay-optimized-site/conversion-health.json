@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-10",
+  "updatedAt": "2026-07-15",
   "source": {
     "branch": "main",
-    "commit": "20ad064",
-    "summary": "chore: persist newsletter run artifacts (2026-07-07)"
+    "commit": "c85bf37",
+    "summary": "Record arabic newsletter autopilot evidence"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
