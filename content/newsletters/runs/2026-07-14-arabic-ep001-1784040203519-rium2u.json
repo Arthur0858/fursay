@@ -1,0 +1,18 @@
+{
+  "runId": "1784040203519-rium2u",
+  "channel": "arabic",
+  "mode": "chrome-handoff",
+  "dryRun": false,
+  "startedAt": "2026-07-14T14:43:23.519Z",
+  "status": "failed",
+  "episodeNo": 1,
+  "videoId": "uFicgPqbxms",
+  "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
+  "inputPath": "content/newsletters/pending/1781616731896-h7litz-arabic-ep001.newsletter.json",
+  "qaErrors": [
+    "rendered email must include the creator-kit newsletter blurb"
+  ],
+  "error": "QA failed: rendered email must include the creator-kit newsletter blurb",
+  "providerErrorCode": "unknown",
+  "finishedAt": "2026-07-14T14:43:23.523Z"
+}
