@@ -1,4 +1,3 @@
-import { spawnSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -51,15 +50,6 @@ function parseArgs() {
     if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
   }
   return parsed;
-}
-
-function gitCommit() {
-  const result = spawnSync("git", ["rev-parse", "--short", "HEAD"], {
-    cwd: process.cwd(),
-    encoding: "utf8",
-    stdio: "pipe",
-  });
-  return result.status === 0 ? result.stdout.trim() : "";
 }
 
 function localFile(pathname) {
@@ -145,7 +135,7 @@ async function main() {
   const manifests = [];
   const badges = [];
   const release = await readJson(args.baseUrl, "/release.json");
-  const expectedCommit = args.baseUrl ? release.source?.commit || "" : gitCommit();
+  const expectedCommit = release.source?.commit || "";
   const expectedSummary = release.source?.summary || "";
   const expectedDate = release.releasedAt || "";
 

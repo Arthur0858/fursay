@@ -4614,7 +4614,7 @@ async function main() {
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
 
-  writeReleaseManifest();
+  if (!args.checkOnly) writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);

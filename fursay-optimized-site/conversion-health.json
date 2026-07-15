@@ -5,8 +5,8 @@
   "updatedAt": "2026-07-15",
   "source": {
     "branch": "main",
-    "commit": "c85bf37",
-    "summary": "Record arabic newsletter autopilot evidence"
+    "commit": "7b90a38",
+    "summary": "chore: refresh Fursay health artifacts"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
