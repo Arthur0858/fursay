@@ -1270,7 +1270,8 @@ async function checkDiscoveryFiles(baseUrl) {
   const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]);
   const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   const sitemapAlternateCount = (sitemap.match(/<xhtml:link /g) || []).length;
-  const expectedLastmod = taipeiDateString();
+  const currentDate = taipeiDateString();
+  const expectedLastmod = release.releasedAt || siteHealth.updatedAt || "";
   const expectedSitemapLocs = [
     "https://fursay.com/",
     "https://fursay.com/zh/",
@@ -1313,7 +1314,10 @@ async function checkDiscoveryFiles(baseUrl) {
     }
   }
   if (lastmods.length !== expectedSitemapLocs.length) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
-  if (lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_not_current:${expectedLastmod}`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(expectedLastmod)) failures.push(`release_date_invalid:${expectedLastmod || "none"}`);
+  if (lastmods.some((value) => !/^\d{4}-\d{2}-\d{2}$/.test(value))) failures.push("sitemap_lastmod_invalid");
+  if (lastmods.some((value) => value > currentDate)) failures.push(`sitemap_lastmod_in_future:${currentDate}`);
+  if (expectedLastmod && lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_release_mismatch:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
   if (!llms.includes("https://fursay.com/sitemap.xml") || !llms.includes("https://fursay.com/robots.txt")) {
     failures.push("llms_missing_sitemap_or_robots");
