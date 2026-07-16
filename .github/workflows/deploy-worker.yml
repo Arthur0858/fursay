@@ -37,7 +37,7 @@ jobs:
         run: npm run deploy:ready
 
       - name: Run local release gate
-        run: npm run check
+        run: node scripts/release-fursay.mjs --skip-deploy --skip-live
 
       - name: Check push deployment readiness
         if: ${{ github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
