@@ -1772,7 +1772,7 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!existsSync(resolve(process.cwd(), "scripts/smoke-live.mjs"))) failures.push("missing_live_smoke_runner");
     if (!packageJson.devDependencies?.wrangler) failures.push("package_missing_wrangler");
     if (!packageJson.devDependencies?.playwright) failures.push("package_missing_playwright");
-    if (!workflowRaw.includes("npm run check")) failures.push("workflow_missing_local_gate");
+    if (!workflowRaw.includes("node scripts/release-fursay.mjs --skip-deploy --skip-live")) failures.push("workflow_missing_local_gate");
     if (!workflowRaw.includes("npm run deploy:ready")) failures.push("workflow_missing_deploy_readiness");
     if (!workflowRaw.includes("npm run deploy:ready -- --require-cloudflare")
       && !workflowRaw.includes("npm run deploy:ready -- --require-remote --require-cloudflare")) {

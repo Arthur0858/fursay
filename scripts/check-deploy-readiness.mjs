@@ -81,7 +81,7 @@ async function main() {
 
   for (const needle of [
     "npm run deploy:ready",
-    "npm run check",
+    "node scripts/release-fursay.mjs --skip-deploy --skip-live",
     "npm run deploy",
     "npm run deploy:ready -- --require-remote --require-cloudflare",
     "CLOUDFLARE_API_TOKEN",
