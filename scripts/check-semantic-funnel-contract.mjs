@@ -174,7 +174,7 @@ function checkPage(spec, html, manifests) {
     if (cta.source && !campaigns[cta.pack]?.ctaSources?.includes(cta.source)) {
       failures.push(`${spec.path}:cta_source_not_registered:${cta.pack}:${cta.source}`);
     }
-    if (!textHasAll(`${cta.text} ${title}`, [cta.pack === "koko" ? "koko" : "noor"]) && spec.locale === "en") {
+    if (!textHasAll(`${cta.text} ${title}`, [cta.pack === "koko" ? "koko" : "nour"]) && spec.locale === "en") {
       failures.push(`${spec.path}:cta_copy_missing_pack:${cta.pack}:${cta.text || "none"}`);
     }
   }

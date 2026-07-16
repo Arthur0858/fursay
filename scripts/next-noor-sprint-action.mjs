@@ -67,7 +67,7 @@ async function main() {
     console.log(JSON.stringify({
       ok: true,
       status: "sprint_plan_complete",
-      message: "All Noor sprint days are completed or skipped. Review subscriber signal before changing newsletter readiness.",
+      message: "All Nour sprint days are completed or skipped. Review subscriber signal before changing newsletter readiness.",
     }, null, 2));
     return;
   }

@@ -64,10 +64,10 @@ async function main() {
 
   const trafficLaunch = await readJson(TRAFFIC_LAUNCH_FILE);
   const dayPlan = trafficLaunch.activationSprints?.noorFirstSubscriber?.dailyPlan?.find((day) => Number(day.day) === args.day);
-  if (!dayPlan) fail(`No Noor sprint daily plan found for day ${args.day}`);
+  if (!dayPlan) fail(`No Nour sprint daily plan found for day ${args.day}`);
 
   const log = await readJson(LOG_FILE);
-  if (log.piiAllowed !== false) fail("Noor sprint log must keep piiAllowed=false");
+  if (log.piiAllowed !== false) fail("Nour sprint log must keep piiAllowed=false");
   if (!Array.isArray(log.entries)) log.entries = [];
 
   const entry = {

@@ -94,7 +94,11 @@ async function main() {
   for (const needle of includesAny(JSON.stringify(roadmap), privateNeedles)) failures.push(`json_private_needle:${needle}`);
   for (const needle of includesAny(html, paymentNeedles)) failures.push(`html_payment_link_or_cta:${needle}`);
 
-  if (roadmap.status !== "interest_validation") failures.push(`status:${roadmap.status || "none"}`);
+  if (roadmap.status !== "presale_preparation") failures.push(`status:${roadmap.status || "none"}`);
+  if (roadmap.provider !== "not_selected") failures.push(`provider:${roadmap.provider || "none"}`);
+  if (roadmap.publicPrice !== null) failures.push("public_price_not_null");
+  if (roadmap.policyStatus !== "review_required") failures.push(`policy_status:${roadmap.policyStatus || "none"}`);
+  if (JSON.stringify(roadmap.targetPriceRangeUsd) !== JSON.stringify([3, 7])) failures.push("target_price_range");
   if (roadmap.decisionState !== "wait_for_interest_and_subscriber_signal") failures.push(`decision_state:${roadmap.decisionState || "none"}`);
   if (roadmap.checkoutEnabled !== false) failures.push("checkout_enabled_not_false");
   if (roadmap.paymentLinksAllowed !== false) failures.push("payment_links_allowed_not_false");

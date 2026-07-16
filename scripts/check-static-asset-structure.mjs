@@ -21,6 +21,7 @@ const EXPECTED_CSS = [
   "storybook-skin-20260613-inline1.css",
   "picture-world-shared-20260613-traffic12.css",
   "picture-world-tools-20260613-products1.css",
+  "brand-storybook-20260717-v1.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260615-sharekit1.js",

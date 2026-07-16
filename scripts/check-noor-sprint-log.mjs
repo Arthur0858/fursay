@@ -141,17 +141,17 @@ function validateStatus(status, log, failures) {
   }
   const requiredExecutionItems = readinessReview ? [
     "Run the anonymous 7-day and 30-day event report.",
-    "Run the Noor sprint review and keep only aggregate evidence.",
-    "Prepare a Noor subscriber readiness review without sending a newsletter yet.",
-    "Noor subscriber list readiness confirmation before newsletter changes.",
+    "Run the Nour sprint review and keep only aggregate evidence.",
+    "Prepare a Nour subscriber readiness review without sending a newsletter yet.",
+    "Nour subscriber list readiness confirmation before newsletter changes.",
     "Aggregate attribution review before marking a new outreach day complete.",
-    "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+    "Do not send a Nour newsletter while readiness is safe_wait_subscriber_empty.",
     "Do not add payment, price, checkout, or product purchase language.",
     "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
   ] : [
     "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
-    "At least one real Noor subscriber signal before newsletter readiness changes.",
-    "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+    "At least one real Nour subscriber signal before newsletter readiness changes.",
+    "Do not send a Nour newsletter while readiness is safe_wait_subscriber_empty.",
     "Do not add payment, price, checkout, or product purchase language.",
     "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
   ];
@@ -189,7 +189,7 @@ function validateStatus(status, log, failures) {
       if (!String(handoff.recorderDryRunCommand || "").includes("--dry-run")) failures.push("handoff_missing_dry_run_recorder");
     }
     if (!String(handoff.privacyBoundary || "").includes("anonymous aggregate evidence")) failures.push("handoff_missing_privacy_boundary");
-    if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Noor 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
+    if (Number(handoff.day) === 1 && !String(handoff.copy || "").includes("Free Nour 3-minute story pack")) failures.push("handoff_missing_day_one_copy");
     if (Number(handoff.day) === 1 && !String(handoff.localizedCopy?.ar || "").includes("قصة نور الصينية في 3 دقائق")) failures.push("handoff_missing_day_one_arabic_copy");
   }
   if (!Array.isArray(status.operatorChecklist)) failures.push("status_missing_operator_checklist");
@@ -292,9 +292,9 @@ async function main() {
     if (!html.includes("Do not record a new posted outreach day")) failures.push("page_missing_readiness_record_boundary");
   } else {
     if (!html.includes(`Share only the Day ${status.summary?.nextDay || 1}`)) failures.push("page_missing_next_day_can_do_now");
-    if (!html.includes("At least one real Noor subscriber signal")) failures.push("page_missing_subscriber_wait_state");
+    if (!html.includes("At least one real Nour subscriber signal")) failures.push("page_missing_subscriber_wait_state");
   }
-  if (!html.includes("Do not send a Noor newsletter")) failures.push("page_missing_newsletter_do_not_do");
+  if (!html.includes("Do not send a Nour newsletter")) failures.push("page_missing_newsletter_do_not_do");
   if (!html.includes("Do not add payment, price, checkout, or product purchase language")) failures.push("page_missing_payment_do_not_do");
   if (!html.includes("data-noor-sprint-privacy")) failures.push("page_missing_privacy_boundary");
   if (!html.includes("Logging boundary")) failures.push("page_missing_logging_boundary_heading");

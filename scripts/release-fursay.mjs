@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -174,6 +175,24 @@ function writeReleaseManifest() {
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
       ],
+      productPresalePages: [
+        "https://fursay.com/products/koko-printable",
+        "https://fursay.com/products/noor-worksheet",
+        "https://fursay.com/zh/products/koko-printable",
+        "https://fursay.com/zh/products/noor-worksheet",
+        "https://fursay.com/ar/products/koko-printable",
+        "https://fursay.com/ar/products/noor-worksheet",
+      ],
+      privacyPages: [
+        "https://fursay.com/privacy",
+        "https://fursay.com/zh/privacy",
+        "https://fursay.com/ar/privacy",
+      ],
+      supportPages: [
+        "https://fursay.com/support",
+        "https://fursay.com/zh/support",
+        "https://fursay.com/ar/support",
+      ],
       productSampleDownloads: [
         "https://fursay.com/downloads/koko-printable-sample.pdf",
         "https://fursay.com/downloads/noor-worksheet-sample.pdf",
@@ -291,14 +310,16 @@ function writeReleaseManifest() {
       noorSprintStatusDays: 7,
       productInterestLinks: 27,
       productInfoLinks: 18,
-      productLandingPages: 3,
+      productLandingPages: 9,
+      productPresalePages: 6,
+      policyPages: 6,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
       productSampleDownloadFiles: 2,
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
-      visualLayoutChecks: 28,
+      visualLayoutChecks: 104,
       checkoutGateRequirements: 6,
       webVitalsChecks: 18,
       cacheHeaderChecks: 70,
@@ -318,10 +339,7 @@ function writeReleaseManifest() {
   writeShortlinkManifest(siteDir, source);
   writeConversionHealth(siteDir, source);
   writeProductsManifest(siteDir, source);
-  writeProductsPage(siteDir);
-  writeZhProductsPage(siteDir);
-  writeArProductsPage(siteDir);
-  writeProductSamplePages(siteDir);
+  writeBrandProductsBundle(siteDir);
   run("node", ["scripts/build-product-sample-pdfs.mjs"]);
   writeMonetizationRoadmap(siteDir, source);
   writeMonetizationRoadmapPage(siteDir);
@@ -585,6 +603,12 @@ function writeSitemap(siteDir) {
     ar: "https://fursay.com/ar/products",
     "x-default": "https://fursay.com/products",
   };
+  const localizedAlternates = (path) => ({
+    en: `https://fursay.com${path}`,
+    "zh-TW": `https://fursay.com/zh${path}`,
+    ar: `https://fursay.com/ar${path}`,
+    "x-default": `https://fursay.com${path}`,
+  });
   const entries = [
     sitemapUrl("https://fursay.com/", homeAlternates, "1.0"),
     sitemapUrl("https://fursay.com/zh/", homeAlternates, "0.8"),
@@ -607,6 +631,22 @@ function writeSitemap(siteDir) {
     sitemapUrl("https://fursay.com/products", productAlternates, "0.5"),
     sitemapUrl("https://fursay.com/zh/products", productAlternates, "0.5"),
     sitemapUrl("https://fursay.com/ar/products", productAlternates, "0.5"),
+    ...["/products/koko-printable", "/products/noor-worksheet"].flatMap((path) => {
+      const localized = localizedAlternates(path);
+      return [
+        sitemapUrl(`https://fursay.com${path}`, localized, "0.6"),
+        sitemapUrl(`https://fursay.com/zh${path}`, localized, "0.6"),
+        sitemapUrl(`https://fursay.com/ar${path}`, localized, "0.6"),
+      ];
+    }),
+    ...["/privacy", "/support"].flatMap((path) => {
+      const localized = localizedAlternates(path);
+      return [
+        sitemapUrl(`https://fursay.com${path}`, localized, "0.3"),
+        sitemapUrl(`https://fursay.com/zh${path}`, localized, "0.3"),
+        sitemapUrl(`https://fursay.com/ar${path}`, localized, "0.3"),
+      ];
+    }),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -714,9 +754,9 @@ function writeCampaignManifest(siteDir, source) {
       },
       copyKit: {
         version: "2026-06-13",
-        qrLabel: "Noor 3-minute story pack",
-        shortHeadline: "Get Noor's 3-minute Chinese story pack",
-        videoDescription: "Get the free Noor 3-minute story pack: https://fursay.com/sample/noor",
+        qrLabel: "Nour 3-minute story pack",
+        shortHeadline: "Get Nour's 3-minute Chinese story pack",
+        videoDescription: "Get the free Nour 3-minute story pack: https://fursay.com/sample/noor",
         familyShareText: "قصة نور الصينية في 3 دقائق جاهزة لوقت القصة مع الأطفال: https://fursay.com/sample/noor",
         familyShareMessage: "نجرب هذا الأسبوع قصة نور الصينية في 3 دقائق: قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط بين الأهل والطفل. https://fursay.com/share/noor",
         bioProfileCopy: bioProfileCopy("noor"),
@@ -767,7 +807,7 @@ function writeLinksManifest(siteDir, source) {
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
     source,
-    purpose: "Public social-profile landing page that lets families choose Koko or Noor before opening a tracked story-pack signup path.",
+    purpose: "Public social-profile landing page that lets families choose Koko or Nour before opening a tracked story-pack signup path.",
     safety: {
       subscriptionEndpoint: "/api/subscribe",
       smokeSubmitsToMailerLite: false,
@@ -797,10 +837,10 @@ function writeLinksManifest(siteDir, source) {
         "https://www.youtube.com/@KokosForest",
       ),
       noor: linkCard(
-        "Noor 3-minute Chinese story pack",
+        "Nour 3-minute Chinese story pack",
         "Chinese stories with Pinyin support for Arabic-speaking families.",
         {
-          label: "Get Noor's 3-minute pack",
+          label: "Get Nour's 3-minute pack",
           url: campaigns.noor.shortlinks.sample,
           pack: "noor",
           attribution: {
@@ -811,7 +851,7 @@ function writeLinksManifest(siteDir, source) {
           },
         },
         {
-          label: "Share Noor with another family",
+          label: "Share Nour with another family",
           url: campaigns.noor.shortlinks.share,
         },
         "https://www.youtube.com/@ArabicKidsChinese",
@@ -894,9 +934,9 @@ function writeLinksPage(siteDir, links) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Links</title>
-  <meta name="description" content="Choose a Fursay story pack: Koko English stories or Noor Arabic-Chinese stories, with tracked signup and share links.">
+  <meta name="description" content="Choose a Fursay story pack: Koko English stories or Nour Arabic-Chinese stories, with tracked signup and share links.">
   <meta property="og:title" content="Fursay story pack links">
-  <meta property="og:description" content="Choose Koko or Noor and get a free family story pack.">
+  <meta property="og:description" content="Choose Koko or Nour and get a free family story pack.">
   <meta property="og:url" content="https://fursay.com/links">
   <meta property="og:image" content="https://fursay.com/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -904,7 +944,7 @@ function writeLinksPage(siteDir, links) {
   <meta property="og:image:alt" content="Fursay story pack chooser preview">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay story pack links">
-  <meta name="twitter:description" content="Choose Koko or Noor and get a free family story pack.">
+  <meta name="twitter:description" content="Choose Koko or Nour and get a free family story pack.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay story pack chooser preview">
   <meta name="theme-color" content="#4CAF7D">
@@ -918,7 +958,7 @@ function writeLinksPage(siteDir, links) {
     <header class="creator-kit-hero">
       <p class="creator-eyebrow">Fursay start here</p>
       <h1>Choose Your Story Pack</h1>
-      <p>Pick Koko for English story time or Noor for Arabic-Chinese story time. Each button opens a tracked signup path with the right pack preselected.</p>
+      <p>Pick Koko for English story time or Nour for Arabic-Chinese story time. Each button opens a tracked signup path with the right pack preselected.</p>
     </header>
     <section class="creator-pack" data-social-links-page>
       <div class="creator-pack-copy">
@@ -991,13 +1031,13 @@ function writeCreatorKit(siteDir, source, campaigns) {
         ? "https://fursay.com/download/noor-worksheet-sample?source_id=noor_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description"
         : "https://fursay.com/download/koko-printable-sample?source_id=koko_creator_youtube_pdf_sample&creator=fursay&placement=youtube_description";
       const youtubeDescription = pack === "noor"
-        ? `Try Noor's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}`
+        ? `Try Nour's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}`
         : `Get Koko's free English story pack: ${placementLinks.youtubeDescription.shortlink}`;
       const socialCaption = pack === "noor"
-        ? `Try Noor's 3-minute Chinese worksheet sample with Arabic parent prompts: ${productSamplePreviewUrl}\nCreator social link: ${placementLinks.socialCaption.shortlink}`
+        ? `Try Nour's 3-minute Chinese worksheet sample with Arabic parent prompts: ${productSamplePreviewUrl}\nCreator social link: ${placementLinks.socialCaption.shortlink}`
         : `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`;
       const newsletterBlurb = pack === "noor"
-        ? `Try Noor's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}. Free weekly story pack: ${placementLinks.newsletterBlurb.shortlink}`
+        ? `Try Nour's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}. Free weekly story pack: ${placementLinks.newsletterBlurb.shortlink}`
         : `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`;
       return [pack, {
         audience: campaign.audience,
@@ -1057,7 +1097,7 @@ function writeShareKit(siteDir, source) {
     const productSamplePreviewUrl = `https://fursay.com${productSamplePreviewPath}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
     const productSampleDownloadUrl = `https://fursay.com${productSampleDownloadPath}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     return [pack, {
-      title: pack === "koko" ? "Koko weekly English story pack" : "Noor 3-minute Chinese story pack",
+      title: pack === "koko" ? "Koko weekly English story pack" : "Nour 3-minute Chinese story pack",
       audience: campaign.audience,
       campaign: campaign.campaign,
       storyWorld: campaign.landingPages?.storyWorld || "",
@@ -1164,21 +1204,21 @@ function buildNoorSubscriberSprint() {
     pack: "noor",
     status: "subscriber_signal_needed",
     windowDays: 7,
-    goal: "Get the first real Noor subscriber signal without sending a newsletter or enabling checkout.",
+    goal: "Get the first real Nour subscriber signal without sending a newsletter or enabling checkout.",
     successMetric: "at_least_one_noor_subscribe_submit_success",
     primaryLink,
     sampleLink,
     worksheetPreview,
     copy: [
       "Trying a tiny Arabic-Chinese routine with kids this week.",
-      `Free Noor 3-minute story pack: ${primaryLink}`,
+      `Free Nour 3-minute story pack: ${primaryLink}`,
       "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
     ].join("\n"),
     localizedCopy: {
       ar: arabicCopy.main,
       en: [
         "Trying a tiny Arabic-Chinese routine with kids this week.",
-        `Free Noor 3-minute story pack: ${primaryLink}`,
+        `Free Nour 3-minute story pack: ${primaryLink}`,
         "One story, one Chinese phrase with Pinyin, and one parent-child activity.",
       ].join("\n"),
     },
@@ -1193,7 +1233,7 @@ function buildNoorSubscriberSprint() {
         },
         copy: [
           "Trying a tiny Arabic-Chinese routine with kids this week.",
-          `Free Noor 3-minute story pack: ${variantLinks.parentGroup}`,
+          `Free Nour 3-minute story pack: ${variantLinks.parentGroup}`,
           "It is short: one story, one Chinese phrase with Pinyin, and one parent-child activity.",
         ].join("\n"),
       },
@@ -1206,7 +1246,7 @@ function buildNoorSubscriberSprint() {
           ar: arabicCopy.directDm,
         },
         copy: [
-          "I thought your family might like this tiny Noor story pack.",
+          "I thought your family might like this tiny Nour story pack.",
           `Free 3-minute Arabic-Chinese story pack: ${variantLinks.directDm}`,
           "No payment. It just helps test whether families want this kind of bilingual routine.",
         ].join("\n"),
@@ -1221,7 +1261,7 @@ function buildNoorSubscriberSprint() {
           ar: arabicCopy.worksheetFollowup,
         },
         copy: [
-          "Here is the Noor worksheet preview I mentioned.",
+          "Here is the Nour worksheet preview I mentioned.",
           `Preview: ${variantLinks.worksheetFollowup}`,
           `If it feels useful, the free story pack starts here: ${variantLinks.worksheetFollowupStory}`,
         ].join("\n"),
@@ -1236,9 +1276,9 @@ function buildNoorSubscriberSprint() {
           ar: arabicCopy.pdfSampleFollowup,
         },
         copy: [
-          "Here is the printable Noor PDF sample.",
+          "Here is the printable Nour PDF sample.",
           `Download: ${variantLinks.pdfSampleFollowup}`,
-          `If the 3-minute activity feels useful, the free Noor story pack starts here: ${variantLinks.pdfSampleStory}`,
+          `If the 3-minute activity feels useful, the free Nour story pack starts here: ${variantLinks.pdfSampleStory}`,
         ].join("\n"),
       },
     ],
@@ -1283,12 +1323,12 @@ function buildNoorSubscriberSprint() {
         action: "Repeat the highest-response placement once; do not add price or checkout copy.",
         link: primaryLink,
         reportQuery: "event_totals_7d",
-        expectedSignal: "More Noor subscribe opens without payment-link exposure.",
+        expectedSignal: "More Nour subscribe opens without payment-link exposure.",
       },
       {
         day: 6,
         label: "Check first signal",
-        action: "Run the event report and look for one Noor submit success or clear product-interest signal.",
+        action: "Run the event report and look for one Nour submit success or clear product-interest signal.",
         link: "https://fursay.com/conversion-health",
         reportQuery: "noor_growth_signals_7d",
         expectedSignal: "at_least_one_noor_subscribe_submit_success or a clear follow-up request.",
@@ -1296,7 +1336,7 @@ function buildNoorSubscriberSprint() {
       {
         day: 7,
         label: "Decision checkpoint",
-        action: "Keep Noor in safe wait if there is no subscriber signal; otherwise prepare newsletter readiness review.",
+        action: "Keep Nour in safe wait if there is no subscriber signal; otherwise prepare newsletter readiness review.",
         link: "https://fursay.com/traffic-launch",
         reportQuery: "subscribe_funnel_by_pack_7d",
         expectedSignal: "subscriber_signal_received or safe_wait_subscriber_empty remains explicit.",
@@ -1340,8 +1380,8 @@ function trafficLaunchSprintSection(sprint) {
         </tr>`).join("\n");
   return `
     <section class="creator-kit-safety noor-subscriber-sprint" data-noor-subscriber-sprint="${escapeHtml(sprint.status)}">
-      <p class="creator-eyebrow">Noor subscriber sprint</p>
-      <h2>7-day Noor first-subscriber sprint</h2>
+      <p class="creator-eyebrow">Nour subscriber sprint</p>
+      <h2>7-day Nour first-subscriber sprint</h2>
       <p>${escapeHtml(sprint.goal)}</p>
       <dl>
         <div>
@@ -1396,7 +1436,7 @@ function buildTrafficLaunchKit(siteDir, source) {
   const packs = Object.fromEntries(Object.entries(campaignManifest.campaigns || {}).map(([pack, campaign]) => {
     const creatorPack = creatorKit.packs?.[pack] || {};
     const sharePack = shareKit.packs?.[pack] || {};
-    const channel = pack === "koko" ? "Koko" : "Noor";
+    const channel = pack === "koko" ? "Koko" : "Nour";
     const sourceIdExample = pack === "koko" ? "koko_ep001" : "noor_ep001";
     const withSource = (link, placement) => `${link}?source_id=${sourceIdExample}&creator=fursay&placement=${placement}`;
     const template = (link, placement) => `${link}?source_id={episode_or_post_id}&creator=fursay&placement=${placement}`;
@@ -1493,7 +1533,7 @@ function buildTrafficLaunchKit(siteDir, source) {
       },
     ];
     return [pack, {
-      title: pack === "koko" ? "Koko weekly English story pack" : "Noor 3-minute Chinese story pack",
+      title: pack === "koko" ? "Koko weekly English story pack" : "Nour 3-minute Chinese story pack",
       campaign: campaign.campaign,
       audience: campaign.audience,
       primaryGoal: campaign.primaryGoal,
@@ -1577,7 +1617,7 @@ ${trafficLaunchChannelRows(item.channels)}
     <header class="creator-kit-hero">
       <p class="creator-eyebrow">Fursay traffic launch kit</p>
       <h1>Traffic Launch Kit</h1>
-      <p>Tracked links and copy checkpoints for moving Koko and Noor story packs through the next publishing surface.</p>
+      <p>Tracked links and copy checkpoints for moving Koko and Nour story packs through the next publishing surface.</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(kit.updatedAt)}</span>
         <span>Commit ${escapeHtml(kit.source.commit)}</span>
@@ -1666,18 +1706,18 @@ function buildNoorSprintStatus(siteDir, source) {
   if (needsReadinessReview) {
     nextActionHandoff = {
       day: nextOpenDay.day || 1,
-      label: "Noor readiness review",
+      label: "Nour readiness review",
       placement: "readiness_review",
-      action: "Review Noor subscriber readiness and aggregate attribution before running more outreach.",
+      action: "Review Nour subscriber readiness and aggregate attribution before running more outreach.",
       primaryLink: "https://fursay.com/conversion-health",
       followupLink: "https://fursay.com/noor-sprint-status",
-      copy: "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
+      copy: "A Nour subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
       localizedCopy: {
         ar: "",
-        en: "A Noor subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
+        en: "A Nour subscriber signal has already been observed. Review readiness before attributing new outreach or sending a newsletter.",
       },
       reportQuery: "noor_growth_signals_7d",
-      expectedSignal: "Existing Noor submit success aggregate evidence remains non-identifying and should be reviewed before new outreach is marked complete.",
+      expectedSignal: "Existing Nour submit success aggregate evidence remains non-identifying and should be reviewed before new outreach is marked complete.",
       reviewCommand: "npm run noor:sprint:review",
       recorderPostedCommand: "",
       recorderPostedApplyCommand: "",
@@ -1697,14 +1737,14 @@ function buildNoorSprintStatus(siteDir, source) {
     {
       id: "open_link_check",
       label: "Open the tracked link before sharing",
-      action: "Open the primary link once and confirm it lands on the Noor story pack or sample preview with the expected source_id and placement.",
+      action: "Open the primary link once and confirm it lands on the Nour story pack or sample preview with the expected source_id and placement.",
       evidence: "The URL remains on fursay.com and keeps the planned source_id, creator, and placement attribution.",
     },
     {
       id: "record_posted",
       label: "Record the posted state",
       action: needsReadinessReview
-        ? "Do not record a new posted outreach day until the Noor readiness review is complete."
+        ? "Do not record a new posted outreach day until the Nour readiness review is complete."
         : `Preview: ${nextActionHandoff.recorderPostedCommand} | Apply after confirming the preview: ${nextActionHandoff.recorderPostedApplyCommand}`,
       evidence: needsReadinessReview
         ? "The current log already has an aggregate subscriber signal; avoid attributing it to a new unposted placement."
@@ -1719,18 +1759,18 @@ function buildNoorSprintStatus(siteDir, source) {
   ];
   const executionState = needsReadinessReview ? {
     status: "readiness_review_required",
-    headline: "Noor subscriber signal is observed; review readiness before more outreach.",
+    headline: "Nour subscriber signal is observed; review readiness before more outreach.",
     canDoNow: [
       "Run the anonymous 7-day and 30-day event report.",
-      "Run the Noor sprint review and keep only aggregate evidence.",
-      "Prepare a Noor subscriber readiness review without sending a newsletter yet.",
+      "Run the Nour sprint review and keep only aggregate evidence.",
+      "Prepare a Nour subscriber readiness review without sending a newsletter yet.",
     ],
     waitingFor: [
-      "Noor subscriber list readiness confirmation before newsletter changes.",
+      "Nour subscriber list readiness confirmation before newsletter changes.",
       "Aggregate attribution review before marking a new outreach day complete.",
     ],
     mustNotDo: [
-      "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+      "Do not send a Nour newsletter while readiness is safe_wait_subscriber_empty.",
       "Do not add payment, price, checkout, or product purchase language.",
       "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     ],
@@ -1744,10 +1784,10 @@ function buildNoorSprintStatus(siteDir, source) {
     ],
     waitingFor: [
       "Cloudflare Analytics Engine credentials or enablement for aggregate reporting.",
-      "At least one real Noor subscriber signal before newsletter readiness changes.",
+      "At least one real Nour subscriber signal before newsletter readiness changes.",
     ],
     mustNotDo: [
-      "Do not send a Noor newsletter while readiness is safe_wait_subscriber_empty.",
+      "Do not send a Nour newsletter while readiness is safe_wait_subscriber_empty.",
       "Do not add payment, price, checkout, or product purchase language.",
       "Do not record email, name, phone, address, subscriber IDs, or MailerLite IDs.",
     ],
@@ -1771,7 +1811,7 @@ function buildNoorSprintStatus(siteDir, source) {
     status: sprintLog.status || "ready_to_log",
     pack: "noor",
     windowDays: sprint.windowDays || 7,
-    goal: sprint.goal || "Get the first real Noor subscriber signal.",
+    goal: sprint.goal || "Get the first real Nour subscriber signal.",
     successMetric: sprint.successMetric || "at_least_one_noor_subscribe_submit_success",
     readinessStatus,
     analyticsStatus,
@@ -1842,8 +1882,8 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fursay Noor Sprint Status</title>
-  <meta name="description" content="Noor first-subscriber sprint status log for daily outreach actions, anonymous signal checks, and safe wait state.">
+  <title>Fursay Nour Sprint Status</title>
+  <meta name="description" content="Nour first-subscriber sprint status log for daily outreach actions, anonymous signal checks, and safe wait state.">
   <meta name="robots" content="noindex,follow">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/noor-sprint-status">
@@ -1854,8 +1894,8 @@ function writeNoorSprintStatusPage(siteDir, manifest) {
 <body class="picture-world creator-kit-page noor-sprint-status-page">
   <main class="creator-kit-shell">
     <header class="creator-kit-hero">
-      <p class="creator-eyebrow">Noor sprint log</p>
-      <h1>Noor Sprint Status</h1>
+      <p class="creator-eyebrow">Nour sprint log</p>
+      <h1>Nour Sprint Status</h1>
       <p>${escapeHtml(manifest.goal)}</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(manifest.updatedAt)}</span>
@@ -1930,7 +1970,7 @@ ${mustNotDo}
       ${handoff.copy ? `<p class="creator-eyebrow">English operator note</p><pre>${escapeHtml(handoff.copy)}</pre>` : ""}
       ${handoff.placement === "readiness_review" ? `
       <p>Do not record a new posted outreach day yet. Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code> and keep the evidence aggregate-only.</p>
-      <p>Use the review to decide whether Noor can move out of <code>${escapeHtml(manifest.readinessStatus)}</code> without sending a newsletter prematurely.</p>` : `
+      <p>Use the review to decide whether Nour can move out of <code>${escapeHtml(manifest.readinessStatus)}</code> without sending a newsletter prematurely.</p>` : `
       <p>After sharing, preview the pending report log entry with <code>${escapeHtml(handoff.recorderPostedCommand || "")}</code>.</p>
       <p>After the preview looks correct and contains no personal data, write the log with <code>${escapeHtml(handoff.recorderPostedApplyCommand || "")}</code>.</p>
       <p>Review with <code>${escapeHtml(handoff.reviewCommand || manifest.reviewCommand)}</code>, then record only anonymous aggregate evidence with <code>${escapeHtml(handoff.recorderDryRunCommand || manifest.recorderCommand)}</code>.</p>`}
@@ -1938,7 +1978,7 @@ ${mustNotDo}
     </section>
     <section class="creator-kit-safety" data-noor-sprint-operator-checklist>
       <p class="creator-eyebrow">Operator checklist</p>
-      <h2>Run the next Noor sprint action</h2>
+      <h2>Run the next Nour sprint action</h2>
       <p>Follow these steps in order so the outreach stays measurable, interest-only, and free of personal data.</p>
       <div class="creator-copy-blocks">
 ${operatorChecklist}
@@ -1985,7 +2025,7 @@ function buildNoorSprintActionManifest(statusManifest, source) {
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
     updatedAt: statusManifest.updatedAt,
-    purpose: "Minimal operator handoff for the next Noor first-subscriber sprint action.",
+    purpose: "Minimal operator handoff for the next Nour first-subscriber sprint action.",
     statusManifest: statusManifest.manifest,
     statusPage: statusManifest.page,
     trafficLaunch: statusManifest.trafficLaunch,
@@ -2159,7 +2199,7 @@ function writeVideoDiscovery(siteDir, source) {
         url: "https://fursay.com/episodes/noor-colors",
         pack: "noor",
         locale: "en",
-        title: "Noor Colors Story Pack",
+        title: "Nour Colors Story Pack",
         channel: "Arabic Kids Chinese Picture Book",
         watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
         words: ["hong se", "lan se", "lu se"],
@@ -2170,7 +2210,7 @@ function writeVideoDiscovery(siteDir, source) {
         url: "https://fursay.com/zh/episodes/noor-colors",
         pack: "noor",
         locale: "zh-TW",
-        title: "Noor 顏色故事包",
+        title: "Nour 顏色故事包",
         channel: "Arabic Kids Chinese Picture Book",
         watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
         words: ["hong se", "lan se", "lu se"],
@@ -2192,7 +2232,7 @@ function writeVideoDiscovery(siteDir, source) {
         url: "https://fursay.com/episodes/noor-greetings",
         pack: "noor",
         locale: "en",
-        title: "Noor Greetings Story Pack",
+        title: "Nour Greetings Story Pack",
         channel: "Arabic Kids Chinese Picture Book",
         watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
         words: ["ni hao", "zai jian", "xie xie"],
@@ -2203,7 +2243,7 @@ function writeVideoDiscovery(siteDir, source) {
         url: "https://fursay.com/zh/episodes/noor-greetings",
         pack: "noor",
         locale: "zh-TW",
-        title: "Noor 問候故事包",
+        title: "Nour 問候故事包",
         channel: "Arabic Kids Chinese Picture Book",
         watchEmbed: "https://www.youtube-nocookie.com/embed/videoseries?list=UUOxmnonpfBvpiV8Vg5LEiYw",
         words: ["ni hao", "zai jian", "xie xie"],
@@ -2429,11 +2469,11 @@ function writeConversionHealth(siteDir, source) {
       },
       {
         id: "capture_first_noor_signal",
-        label: "Capture the first Noor subscriber signal",
+        label: "Capture the first Nour subscriber signal",
         status: "active_after_analytics",
-        ownerAction: "Run the Noor sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
-        evidence: "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Noor source_id.",
-        unlocks: "Move Noor from safe_wait_subscriber_empty to newsletter readiness review.",
+        ownerAction: "Run the Nour sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
+        evidence: "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Nour source_id.",
+        unlocks: "Move Nour from safe_wait_subscriber_empty to newsletter readiness review.",
       },
       {
         id: "evaluate_owned_product_upgrade",
@@ -2523,24 +2563,24 @@ function writeConversionHealth(siteDir, source) {
           {
             id: "noor-worksheet-pack",
             pack: "noor",
-            label: "Noor 3-minute worksheet interest list",
+            label: "Nour 3-minute worksheet interest list",
             format: "PDF worksheet pack",
             plannedIncludes: ["short Chinese story moment", "three Chinese words with Pinyin and Arabic parent prompts", "one 3-minute family worksheet activity"],
             checkoutStatus: "not_enabled",
             samplePreview: {
               status: "print_ready_preview",
               url: "https://fursay.com/product-samples/noor-worksheet",
-              label: "Preview the Noor 3-minute worksheet sample",
+              label: "Preview the Nour 3-minute worksheet sample",
               noindex: true,
               printReady: true,
               downloadableFormat: "pdf_and_browser_print",
               downloadUrl: "https://fursay.com/downloads/noor-worksheet-sample.pdf",
               trackedDownloadUrl: productSampleTrackedDownloadUrl({ pack: "noor" }, "sample_preview_pdf_download"),
-              contents: ["Short Noor and Zayd story moment", "Three Chinese words with Pinyin and Arabic parent prompts", "One 3-minute trace, point, and say activity"],
+              contents: ["Short Nour and Zayd story moment", "Three Chinese words with Pinyin and Arabic parent prompts", "One 3-minute trace, point, and say activity"],
               nextCta: "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview",
             },
             validationPlan: {
-              audience: "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
+              audience: "Arabic-speaking families testing a tiny Chinese practice ritual with Nour parent prompts.",
               freeBridge: "/arabic",
               signals: ["fursay_product_info_click", "fursay_product_interest_click", "fursay_subscribe_submit_success"],
               minimumSignals: {
@@ -2549,7 +2589,7 @@ function writeConversionHealth(siteDir, source) {
                 productInterestClicks: 5,
                 subscriberSignals: 1,
               },
-              nextDecision: "Expand the print-ready preview into a complete Noor worksheet pack only after Noor interest and at least one subscriber signal prove family demand.",
+              nextDecision: "Expand the print-ready preview into a complete Nour worksheet pack only after Nour interest and at least one subscriber signal prove family demand.",
             },
           },
         ],
@@ -2569,9 +2609,9 @@ function writeProductsManifest(siteDir, source) {
     priority: product.pack === "noor" ? 1 : 2,
     priorityReason: product.pack === "koko"
       ? "Koko has sample-download and subscriber signals, but product-interest clicks are still the missing validation signal."
-      : "Noor is the active first validation package because its Arabic-Chinese audience, worksheet sample, and subscriber signal path are already aligned.",
+      : "Nour is the active first validation package because its Arabic-Chinese audience, worksheet sample, and subscriber signal path are already aligned.",
     action: product.pack === "noor"
-      ? "Share the Noor worksheet sample with Arabic-speaking families, then send them to the free Noor story pack."
+      ? "Share the Nour worksheet sample with Arabic-speaking families, then send them to the free Nour story pack."
       : "Share the Koko printable sample with Mandarin-speaking families, then ask them to click the interest button after previewing the sample.",
     samplePreviewUrl: product.samplePreview?.url || "",
     sampleDownloadUrl: product.samplePreview?.downloadUrl || "",
@@ -2591,11 +2631,15 @@ function writeProductsManifest(siteDir, source) {
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
     source,
-    status: "interest_validation",
+    status: "presale_preparation",
     page: "https://fursay.com/products",
     conversionHealth: "https://fursay.com/conversion-health.json",
     checkoutEnabled: ownedProducts.checkoutEnabled === true ? true : false,
     paymentLinksAllowed: ownedProducts.checkoutGate?.paymentLinksAllowed === true ? true : false,
+    provider: "not_selected",
+    publicPrice: null,
+    targetPriceRangeUsd: [3, 7],
+    policyStatus: "review_required",
     interestOnly: ownedProducts.interestOnly !== false,
     event: "fursay_product_interest_click",
     trafficEntryPoints: {
@@ -2628,7 +2672,16 @@ function writeProductsManifest(siteDir, source) {
     productValidationHandoffs,
     subscribePayloadCompatibility: conversionHealth.measurement?.subscribePayloadCompatibility || "email/groups/attribution unchanged",
     checkoutGate: ownedProducts.checkoutGate || {},
-    products: ownedProducts.products || [],
+    products: (ownedProducts.products || []).map((product) => ({
+      ...product,
+      publicName: product.pack === "noor" ? "Nour 3-minute worksheet pack" : "Koko printable story pack",
+      presalePage: `https://fursay.com/products/${product.pack === "noor" ? "noor-worksheet" : "koko-printable"}`,
+      localizedPresalePages: {
+        en: `https://fursay.com/products/${product.pack === "noor" ? "noor-worksheet" : "koko-printable"}`,
+        "zh-TW": `https://fursay.com/zh/products/${product.pack === "noor" ? "noor-worksheet" : "koko-printable"}`,
+        ar: `https://fursay.com/ar/products/${product.pack === "noor" ? "noor-worksheet" : "koko-printable"}`,
+      },
+    })),
   };
   writeFileSync(resolve(siteDir, "products.json"), JSON.stringify(manifest, null, 2) + "\n");
 }
@@ -2645,12 +2698,16 @@ function writeMonetizationRoadmap(siteDir, source) {
     platform: "cloudflare-workers-static-assets",
     updatedAt: taipeiDateString(),
     source,
-    status: "interest_validation",
+    status: "presale_preparation",
     page: "https://fursay.com/monetization-roadmap",
     productsManifest: "https://fursay.com/products.json",
     conversionHealth: "https://fursay.com/conversion-health.json",
     checkoutEnabled: products.checkoutEnabled === true,
     paymentLinksAllowed: products.paymentLinksAllowed === true,
+    provider: "not_selected",
+    publicPrice: null,
+    targetPriceRangeUsd: [3, 7],
+    policyStatus: "review_required",
     decisionState: "wait_for_interest_and_subscriber_signal",
     subscribePayloadCompatibility: products.subscribePayloadCompatibility,
     stages: [
@@ -2669,7 +2726,7 @@ function writeMonetizationRoadmap(siteDir, source) {
         completedAt: taipeiDateString(),
         evidenceSources: ["products.json", "product sample preview pages", "sample PDF downloads"],
         nextGate: "Keep checkout locked until each product meets minimum product-interest and subscriber signals.",
-        deliverables: ["Koko 3-page printable sample", "Noor 3-minute worksheet sample"],
+        deliverables: ["Koko 3-page printable sample", "Nour 3-minute worksheet sample"],
       },
       {
         id: "publish_precheckout_disclosure",
@@ -2697,6 +2754,9 @@ function writeMonetizationRoadmap(siteDir, source) {
       plannedIncludes: product.plannedIncludes || [],
       samplePreview: product.samplePreview || {},
       validationPlan: product.validationPlan || {},
+      publicName: product.publicName,
+      presalePage: product.presalePage,
+      localizedPresalePages: product.localizedPresalePages,
     })),
     guardrails: {
       noPaymentLinks: true,
@@ -2717,11 +2777,11 @@ function writeMonetizationRoadmap(siteDir, source) {
 
 function productButton(product) {
   const source = product.pack === "noor" ? "product_page_noor_worksheet" : "product_page_koko_printable";
-  return `<button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Notify me when the ${escapeHtml(product.pack === "noor" ? "Noor worksheet" : "Koko printable")} test is ready</button>`;
+  return `<button class="creator-copy-button product-interest-primary" type="button" data-product-interest="${escapeHtml(product.pack)}" data-interest-stage="waitlist" data-signup-source="${escapeHtml(source)}">Notify me when the ${escapeHtml(product.pack === "noor" ? "Nour worksheet" : "Koko printable")} test is ready</button>`;
 }
 
 function productInterestNudge(product, locale = "en") {
-  const pack = product.pack === "noor" ? "Noor" : "Koko";
+  const pack = product.pack === "noor" ? "Nour" : "Koko";
   if (locale === "zh") {
     return product.pack === "noor"
       ? "看完樣張後，如果你想收到努爾學習單測試通知，按這個按鈕會開啟免費故事包表單；今天不會收費。"
@@ -2757,14 +2817,14 @@ function samplePreviewHref(product) {
 function productPublicCopy(product) {
   if (product.pack === "noor") {
     return {
-      eyebrow: "Noor Chinese-Arabic worksheet",
-      label: "Noor 3-minute worksheet pack",
+      eyebrow: "Nour Chinese-Arabic worksheet",
+      label: "Nour 3-minute worksheet pack",
       audience: "For families who want a tiny Chinese practice ritual with Arabic parent prompts.",
       outcome: "Use one short story moment to practice three Chinese words, hear the parent prompt in Arabic, and finish a quick activity before attention fades.",
       format: "Printable PDF worksheets with Pinyin, Arabic prompts, and one 3-minute activity.",
-      previewLabel: "Preview the free Noor worksheet sample",
+      previewLabel: "Preview the free Nour worksheet sample",
       bridge: "/arabic?subscribe=noor&utm_source=products&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=product_page_sample",
-      bridgeLabel: "Get the free Noor story pack",
+      bridgeLabel: "Get the free Nour story pack",
     };
   }
   return {
@@ -2805,7 +2865,7 @@ function productsJsonLd(manifest) {
       potentialAction: {
         "@type": "RegisterAction",
         target: "https://fursay.com/products",
-        name: `Join the ${product.pack === "noor" ? "Noor" : "Koko"} waitlist`,
+        name: `Join the ${product.pack === "noor" ? "Nour" : "Koko"} waitlist`,
       },
     };
   });
@@ -2817,7 +2877,7 @@ function productsJsonLd(manifest) {
         "@id": "https://fursay.com/products#webpage",
         url: "https://fursay.com/products",
         name: "Fursay printable story pack waitlist",
-        description: "Join the Koko printable pack or Noor 3-minute worksheet pack waitlist. No payment today.",
+        description: "Join the Koko printable pack or Nour 3-minute worksheet pack waitlist. No payment today.",
         isPartOf: {
           "@type": "WebSite",
           name: "Fursay",
@@ -3082,12 +3142,12 @@ function writeProductsPage(siteDir) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Printable Story Pack Waitlist</title>
-  <meta name="description" content="Join the Fursay waitlist for Koko printable story packs and Noor 3-minute worksheet packs. Families get the free story pack first; paid access is not open.">
+  <meta name="description" content="Join the Fursay waitlist for Koko printable story packs and Nour 3-minute worksheet packs. Families get the free story pack first; paid access is not open.">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/products">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:title" content="Fursay Printable Story Pack Waitlist">
-  <meta property="og:description" content="Join interest lists for parent-child printable packs based on Koko and Noor story worlds. No payment today.">
+  <meta property="og:description" content="Join interest lists for parent-child printable packs based on Koko and Nour story worlds. No payment today.">
   <meta property="og:url" content="https://fursay.com/products">
   <meta property="og:image" content="https://fursay.com/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -3098,7 +3158,7 @@ function writeProductsPage(siteDir) {
   <meta property="og:locale:alternate" content="ar_SA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay Printable Story Pack Waitlist">
-  <meta name="twitter:description" content="Join the Koko or Noor printable pack waitlist. Free story pack first, no payment today.">
+  <meta name="twitter:description" content="Join the Koko or Nour printable pack waitlist. Free story pack first, no payment today.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay parent-child bilingual story world">
   <link rel="alternate" hreflang="en" href="https://fursay.com/products">
@@ -3116,7 +3176,7 @@ function writeProductsPage(siteDir) {
     <header class="creator-kit-hero product-waitlist-hero" data-product-hero>
       <p class="creator-eyebrow">Fursay printable packs</p>
       <h1>Printable story packs for busy parents</h1>
-      <p>Choose Koko or Noor, get the free story pack first, and join the waitlist for a future printable PDF pack. Paid access is not open yet, and this page will not charge you.</p>
+      <p>Choose Koko or Nour, get the free story pack first, and join the waitlist for a future printable PDF pack. Paid access is not open yet, and this page will not charge you.</p>
       <div class="product-trust-strip" aria-label="Product waitlist status">
         <span>No payment today</span>
         <span>Free story pack first</span>
@@ -3128,7 +3188,7 @@ function writeProductsPage(siteDir) {
       <div class="product-step-grid">
         <article>
           <h3>1. Pick a story world</h3>
-          <p>Koko focuses on English feelings practice. Noor focuses on Chinese words with Arabic parent prompts.</p>
+          <p>Koko focuses on English feelings practice. Nour focuses on Chinese words with Arabic parent prompts.</p>
         </article>
         <article>
           <h3>2. Receive the free pack first</h3>
@@ -3149,7 +3209,7 @@ ${samplePreviews}
     </section>
     <section class="creator-kit-safety" data-product-validation-handoff>
       <p class="creator-eyebrow">Next validation step</p>
-      <h2>Test ${escapeHtml(nextHandoff.pack === "noor" ? "Noor worksheet interest" : "Koko printable interest")} first</h2>
+      <h2>Test ${escapeHtml(nextHandoff.pack === "noor" ? "Nour worksheet interest" : "Koko printable interest")} first</h2>
       <p>${escapeHtml(nextHandoff.action || "Share one free sample preview, then send interested families to the free story pack.")}</p>
       ${productValidationPublicActions(nextHandoff, {
         preview: "Open the sample preview",
@@ -3176,7 +3236,7 @@ ${products}
         </article>
         <article>
           <h3>What will I receive now?</h3>
-          <p>You can join the weekly story pack list and choose Koko, Noor, or both inside the signup form.</p>
+          <p>You can join the weekly story pack list and choose Koko, Nour, or both inside the signup form.</p>
         </article>
         <article>
           <h3>When will the paid packs open?</h3>
@@ -3194,10 +3254,10 @@ ${products}
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">Join the story pack list</div>
-      <p class="modal-sub">Pick Koko or Noor and get updates when the weekly story pack is ready. No payment today.</p>
+      <p class="modal-sub">Pick Koko or Nour and get updates when the weekly story pack is ready. No payment today.</p>
       <form id="subscribeForm">
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
-        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
       </form>
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
@@ -3387,7 +3447,7 @@ function writeZhProductsPage(siteDir) {
           <p>目前只觀察樣張預覽、PDF 下載、產品興趣點擊和故事包訂閱信號。沒有價格、付款連結或 checkout；若未來要開放付費版本，會先公開支援與退款說明。</p>
         </article>
       </div>
-      <p>如果你只是想先試用，不需要加入任何付費流程。建議先打開免費樣張，確認活動長度是否適合你家的晚間節奏，再領免費故事包。等候名單的用途是幫我們判斷哪一種格式值得繼續製作：更多 Koko 情緒詞可列印頁，或更多 Noor 拼音與阿語提示學習單。</p>
+      <p>如果你只是想先試用，不需要加入任何付費流程。建議先打開免費樣張，確認活動長度是否適合你家的晚間節奏，再領免費故事包。等候名單的用途是幫我們判斷哪一種格式值得繼續製作：更多 Koko 情緒詞可列印頁，或更多 Nour 拼音與阿語提示學習單。</p>
     </section>
     <section class="creator-kit-safety" data-product-sample-previews>
       <h2>免費樣張預覽</h2>
@@ -3831,7 +3891,7 @@ ${cards}
       <p class="modal-sub">${escapeHtml(spec.modalSub)}</p>
       <form id="subscribeForm">
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
-        <div class="modal-field"><label>${escapeHtml(spec.modalInterestLabel)}</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <div class="modal-field"><label>${escapeHtml(spec.modalInterestLabel)}</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">${escapeHtml(spec.modalSubmit)}</button>
       </form>
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
@@ -3940,7 +4000,7 @@ function writeConversionHealthPage(siteDir) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Conversion Health</title>
-  <meta name="description" content="Fursay conversion measurement dashboard for anonymous event coverage, Noor readiness, affiliate tracking, and product interest status.">
+  <meta name="description" content="Fursay conversion measurement dashboard for anonymous event coverage, Nour readiness, affiliate tracking, and product interest status.">
   <meta name="robots" content="noindex,follow">
   <meta name="theme-color" content="#4CAF7D">
   <link rel="canonical" href="https://fursay.com/conversion-health">
@@ -3953,7 +4013,7 @@ function writeConversionHealthPage(siteDir) {
     <header class="creator-kit-hero">
       <p class="creator-eyebrow">Fursay growth dashboard</p>
       <h1>Conversion Health</h1>
-      <p>Anonymous measurement coverage for subscription intent, affiliate clicks, outbound clicks, share actions, Noor readiness, and product interest validation.</p>
+      <p>Anonymous measurement coverage for subscription intent, affiliate clicks, outbound clicks, share actions, Nour readiness, and product interest validation.</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(health.updatedAt)}</span>
         <span>Commit ${escapeHtml(health.source?.commit)}</span>
@@ -3998,10 +4058,10 @@ function writeConversionHealthPage(siteDir) {
       <dl>
         ${healthMetric("Latest story entries", health.growth?.latestStoryEntries)}
         ${healthMetric("Episode landing pages", health.growth?.episodeLandingPages)}
-        ${healthMetric("Noor lead magnet pages", health.growth?.noorLeadMagnetPages)}
-        ${healthMetric("Noor readiness", health.growth?.noorReadinessStatus)}
-        ${healthMetric("Noor subscriber signal goal", health.growth?.noorSubscriberSignalGoal, health.growth?.noorSubscriberSignalStatus || "")}
-        ${healthMetric("Noor sprint variants", health.growth?.noorSprintVariantCount || 0, `expected ${release.liveExpectations?.noorSprintCopyVariants}`)}
+        ${healthMetric("Nour lead magnet pages", health.growth?.noorLeadMagnetPages)}
+        ${healthMetric("Nour readiness", health.growth?.noorReadinessStatus)}
+        ${healthMetric("Nour subscriber signal goal", health.growth?.noorSubscriberSignalGoal, health.growth?.noorSubscriberSignalStatus || "")}
+        ${healthMetric("Nour sprint variants", health.growth?.noorSprintVariantCount || 0, `expected ${release.liveExpectations?.noorSprintCopyVariants}`)}
         ${healthMetric("Product interest links", health.growth?.productInterestLinks)}
       </dl>
       <div class="creator-copy-blocks">
@@ -4126,7 +4186,7 @@ function writeMonetizationRoadmapPage(siteDir) {
     <header class="creator-kit-hero">
       <p class="creator-eyebrow">Fursay monetization roadmap</p>
       <h1>From interest list to paid product</h1>
-      <p>This internal roadmap keeps checkout disabled while Fursay validates real family demand for Koko printable packs and Noor 3-minute worksheets.</p>
+      <p>This internal roadmap keeps checkout disabled while Fursay validates real family demand for Koko printable packs and Nour 3-minute worksheets.</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(roadmap.updatedAt)}</span>
         <span>Commit ${escapeHtml(roadmap.source?.commit)}</span>
@@ -4278,6 +4338,24 @@ function writeSiteHealthManifest(siteDir) {
         "https://fursay.com/ar/products",
         "https://fursay.com/products.json",
       ],
+      productPresalePages: [
+        "https://fursay.com/products/koko-printable",
+        "https://fursay.com/products/noor-worksheet",
+        "https://fursay.com/zh/products/koko-printable",
+        "https://fursay.com/zh/products/noor-worksheet",
+        "https://fursay.com/ar/products/koko-printable",
+        "https://fursay.com/ar/products/noor-worksheet",
+      ],
+      privacy: [
+        "https://fursay.com/privacy",
+        "https://fursay.com/zh/privacy",
+        "https://fursay.com/ar/privacy",
+      ],
+      support: [
+        "https://fursay.com/support",
+        "https://fursay.com/zh/support",
+        "https://fursay.com/ar/support",
+      ],
       productSamplePreviews: [
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
@@ -4339,7 +4417,7 @@ function escapeHtml(value) {
 }
 
 function campaignName(pack) {
-  return pack === "koko" ? "Koko" : "Noor";
+  return pack === "koko" ? "Koko" : "Nour";
 }
 
 function creatorCopyBlock(title, value) {
@@ -4478,7 +4556,7 @@ function shareKitLinkRow(title, value, attrs = {}, extra = "") {
 }
 
 function shareKitInterestButton(pack) {
-  const label = pack === "noor" ? "Notify me after sharing the Noor sample" : "Notify me after sharing the Koko sample";
+  const label = pack === "noor" ? "Notify me after sharing the Nour sample" : "Notify me after sharing the Koko sample";
   return `<button type="button" class="creator-copy-button product-interest-primary share-kit-interest-button" data-product-interest="${escapeHtml(pack)}" data-interest-stage="share_kit_after_pdf" data-signup-source="share_kit_interest_after_pdf_${escapeHtml(pack)}">${escapeHtml(label)}</button>`;
 }
 
@@ -4488,10 +4566,10 @@ function shareKitSubscribeModal() {
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">Join the story pack list</div>
-      <p class="modal-sub">Pick Koko or Noor and get updates after sharing a sample. No payment today.</p>
+      <p class="modal-sub">Pick Koko or Nour and get updates after sharing a sample. No payment today.</p>
       <form id="subscribeForm">
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
-        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Noor's Adventure (Arabic-Chinese)</label></div></div>
+        <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
       </form>
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
@@ -4568,10 +4646,10 @@ function writeShareKitPage(siteDir, kit) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Share Kit</title>
-  <meta name="description" content="Copy-ready Fursay family share links, social captions, QR assets, and story-pack shortlinks for Koko and Noor.">
+  <meta name="description" content="Copy-ready Fursay family share links, social captions, QR assets, and story-pack shortlinks for Koko and Nour.">
   <meta name="robots" content="noindex,follow">
   <meta property="og:title" content="Fursay Share Kit">
-  <meta property="og:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
+  <meta property="og:description" content="Copy-ready family links and QR assets for sharing Koko or Nour story packs.">
   <meta property="og:url" content="https://fursay.com/share-kit">
   <meta property="og:image" content="https://fursay.com/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -4579,7 +4657,7 @@ function writeShareKitPage(siteDir, kit) {
   <meta property="og:image:alt" content="Fursay family share kit preview">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fursay Share Kit">
-  <meta name="twitter:description" content="Copy-ready family links and QR assets for sharing Koko or Noor story packs.">
+  <meta name="twitter:description" content="Copy-ready family links and QR assets for sharing Koko or Nour story packs.">
   <meta name="twitter:image" content="https://fursay.com/og-image.png">
   <meta name="twitter:image:alt" content="Fursay family share kit preview">
   <meta name="theme-color" content="#4CAF7D">
@@ -4593,7 +4671,7 @@ function writeShareKitPage(siteDir, kit) {
     <header class="creator-kit-hero">
       <p class="creator-eyebrow">Fursay family share kit</p>
       <h1>Share Kit</h1>
-      <p>Copy-ready family links, QR assets, and short messages for sharing Koko or Noor story packs.</p>
+      <p>Copy-ready family links, QR assets, and short messages for sharing Koko or Nour story packs.</p>
       <div class="creator-kit-meta">
         <span>Updated ${escapeHtml(kit.updatedAt)}</span>
         <span>Commit ${escapeHtml(kit.source.commit)}</span>

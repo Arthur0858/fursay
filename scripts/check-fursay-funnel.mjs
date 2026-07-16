@@ -126,7 +126,7 @@ function expectedSocialPreview(path) {
   if (normalized === "/arabic" || normalized.endsWith("/arabic")) {
     return {
       image: "https://fursay.com/og-noor.png",
-      altNeedle: "Noor",
+      altNeedle: normalized.startsWith("/zh/") ? "努爾" : normalized.startsWith("/ar/") ? "نور" : "Nour",
     };
   }
   return {
@@ -878,7 +878,7 @@ async function checkSocialLinksLanding(browser, baseUrl) {
       const primary = staticData.primaryLinks.find((link) => link.pack === pack);
       if (!primary) failures.push(`links_missing_primary:${pack}`);
       if (primary && urlPath(primary.href) !== `/sample/${pack}`) failures.push(`links_bad_primary:${pack}:${primary.href}`);
-      const expectedText = pack === "koko" ? "Koko" : "Noor";
+      const expectedText = pack === "koko" ? "Koko" : "Nour";
       if (primary && !primary.text.includes(expectedText)) failures.push(`links_bad_primary_text:${pack}:${primary.text}`);
 
       const localPrimaryTarget = new URL(urlPath(primary?.href || `/sample/${pack}`), baseUrl);
@@ -1294,13 +1294,25 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/products",
     "https://fursay.com/zh/products",
     "https://fursay.com/ar/products",
+    "https://fursay.com/products/koko-printable",
+    "https://fursay.com/zh/products/koko-printable",
+    "https://fursay.com/ar/products/koko-printable",
+    "https://fursay.com/products/noor-worksheet",
+    "https://fursay.com/zh/products/noor-worksheet",
+    "https://fursay.com/ar/products/noor-worksheet",
+    "https://fursay.com/privacy",
+    "https://fursay.com/zh/privacy",
+    "https://fursay.com/ar/privacy",
+    "https://fursay.com/support",
+    "https://fursay.com/zh/support",
+    "https://fursay.com/ar/support",
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
   if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);
   for (const loc of expectedSitemapLocs) {
     if (!sitemapLocs.includes(loc)) failures.push(`sitemap_missing_loc:${loc}`);
   }
-  if (sitemapAlternateCount !== 84) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
+  if (sitemapAlternateCount !== expectedSitemapLocs.length * 4) failures.push(`sitemap_alternate_count:${sitemapAlternateCount}`);
   for (const productLoc of ["https://fursay.com/products", "https://fursay.com/zh/products", "https://fursay.com/ar/products"]) {
     const start = sitemap.indexOf(`<loc>${productLoc}</loc>`);
     const block = start >= 0 ? sitemap.slice(start, sitemap.indexOf("</url>", start)) : "";
@@ -1341,7 +1353,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!familyActions) failures.push("llms_missing_family_actions_section");
   if (!llms.includes("Creator and sharing references:")) failures.push("llms_missing_creator_references_section");
   if (!llms.includes("Operator and validation references:")) failures.push("llms_missing_operator_references_section");
-  for (const needle of ["Creator kit", "Traffic launch", "Noor sprint status", "Deploy readiness", "Conversion health", "Monetization roadmap", "manifest", ".json", "npm run"]) {
+  for (const needle of ["Creator kit", "Traffic launch", "Nour sprint status", "Deploy readiness", "Conversion health", "Monetization roadmap", "manifest", ".json", "npm run"]) {
     if (familyActions.includes(needle)) failures.push(`llms_family_actions_leaks_operator_reference:${needle}`);
   }
   for (const route of ["https://fursay.com/join/koko", "https://fursay.com/join/noor", "https://fursay.com/sample/koko", "https://fursay.com/sample/noor", "https://fursay.com/products", "https://fursay.com/zh/products", "https://fursay.com/ar/products"]) {
@@ -1548,7 +1560,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.productInterestLinks !== 27) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
-  if (release.liveExpectations?.productLandingPages !== 3) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
+  if (release.liveExpectations?.productLandingPages !== 9) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);
   if (release.liveExpectations?.ownedProductSpecs !== 2) failures.push(`release_owned_product_specs:${release.liveExpectations?.ownedProductSpecs || "none"}`);
   if (release.liveExpectations?.productValidationPlans !== 2) failures.push(`release_product_validation_plans:${release.liveExpectations?.productValidationPlans || "none"}`);
   if (release.liveExpectations?.productSamplePreviewPages !== 2) failures.push(`release_product_sample_preview_pages:${release.liveExpectations?.productSamplePreviewPages || "none"}`);
@@ -1660,7 +1672,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!noorSprint.worksheetPreview?.includes("/product-samples/noor-worksheet?source_id=noor_first_subscriber_sprint")) {
     failures.push(`traffic_launch_noor_sprint_worksheet_link:${noorSprint.worksheetPreview || "none"}`);
   }
-  if (!noorSprint.copy?.includes("Free Noor 3-minute story pack") || !noorSprint.copy?.includes(noorSprint.primaryLink || "missing")) {
+  if (!noorSprint.copy?.includes("Free Nour 3-minute story pack") || !noorSprint.copy?.includes(noorSprint.primaryLink || "missing")) {
     failures.push("traffic_launch_noor_sprint_copy_missing_primary_link");
   }
   if (!Array.isArray(noorSprint.copyVariants) || noorSprint.copyVariants.length !== 4) {

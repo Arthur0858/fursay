@@ -241,8 +241,8 @@ function buildReview({ log, sprint, report, windowDays }) {
       ...recorderCommandPair(
         day.day,
         "completed",
-        `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows ${submitSuccess} Noor subscribe submit success signal(s)`,
-        "prepare Noor newsletter readiness review without enabling checkout",
+        `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows ${submitSuccess} Nour subscribe submit success signal(s)`,
+        "prepare Nour newsletter readiness review without enabling checkout",
         `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate submit success count ${submitSuccess}`,
       ),
     };
@@ -259,7 +259,7 @@ function buildReview({ log, sprint, report, windowDays }) {
       recordStatus: "",
       recommendedRecorderCommand: "",
       recommendedRecorderApplyCommand: "",
-      nextAction: "prepare Noor newsletter readiness review without attributing the aggregate signal to an unposted placement",
+      nextAction: "prepare Nour newsletter readiness review without attributing the aggregate signal to an unposted placement",
     };
   }
   if (submitSuccess > 0) {
@@ -291,7 +291,7 @@ function buildReview({ log, sprint, report, windowDays }) {
         day.day,
         "completed",
         `${NOOR_QUERY_FAMILY}_${windowDays}d aggregate shows ${dayEvents} event(s) for planned source_id`,
-        "continue with the next planned Noor sprint placement",
+        "continue with the next planned Nour sprint placement",
       ),
     };
   }

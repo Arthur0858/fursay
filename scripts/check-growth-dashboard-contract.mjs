@@ -152,8 +152,8 @@ async function main() {
   if ((conversionHealth.measurement?.analyticsReport?.comparisonWindows || []).join(",") !== (release.liveExpectations?.eventAnalyticsReportComparisonWindows || []).join(",")) failures.push("report_comparison_windows_mismatch");
   if (!html.includes("Report windows")) failures.push("dashboard_missing_report_windows");
   if (!html.includes("Comparison windows")) failures.push("dashboard_missing_comparison_windows");
-  if (!html.includes("Noor subscriber signal goal")) failures.push("dashboard_missing_noor_subscriber_goal");
-  if (!html.includes("Noor sprint variants")) failures.push("dashboard_missing_noor_sprint_variant_metric");
+  if (!html.includes("Nour subscriber signal goal")) failures.push("dashboard_missing_noor_subscriber_goal");
+  if (!html.includes("Nour sprint variants")) failures.push("dashboard_missing_noor_sprint_variant_metric");
   for (const queryName of ["noor_growth_signals_7d", "noor_growth_signals_30d"]) {
     if (!conversionHealth.measurement?.analyticsReport?.queries?.includes(queryName)) failures.push(`dashboard_manifest_missing_noor_query:${queryName}`);
   }

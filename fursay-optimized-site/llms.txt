@@ -26,50 +26,62 @@ Episode landing pages:
 - Koko feelings story pack: https://fursay.com/episodes/koko-feelings
   - Traditional Chinese: https://fursay.com/zh/episodes/koko-feelings
   - Arabic: https://fursay.com/ar/episodes/koko-feelings
-- Noor colors story pack: https://fursay.com/episodes/noor-colors
+- Nour colors story pack: https://fursay.com/episodes/noor-colors
   - Traditional Chinese: https://fursay.com/zh/episodes/noor-colors
   - Arabic: https://fursay.com/ar/episodes/noor-colors
-- Noor greetings story pack: https://fursay.com/episodes/noor-greetings
+- Nour greetings story pack: https://fursay.com/episodes/noor-greetings
   - Traditional Chinese: https://fursay.com/zh/episodes/noor-greetings
   - Arabic: https://fursay.com/ar/episodes/noor-greetings
 
 Family actions:
 - Choose a story world from the home page.
 - Watch one free story on YouTube.
-- Subscribe to the Koko or Noor weekly story pack.
+- Subscribe to the Koko or Nour weekly story pack.
 - Join Koko's weekly English story pack: https://fursay.com/join/koko
-- Join Noor's weekly Chinese story pack: https://fursay.com/join/noor
+- Join Nour's weekly Chinese story pack: https://fursay.com/join/noor
 - Preview Koko's sample story pack: https://fursay.com/sample/koko
-- Preview Noor's sample story pack: https://fursay.com/sample/noor
+- Preview Nour's sample story pack: https://fursay.com/sample/noor
 - Social profile story-pack chooser: https://fursay.com/links
 - Share Koko's family sample link: https://fursay.com/share/koko
-- Share Noor's family sample link: https://fursay.com/share/noor
+- Share Nour's family sample link: https://fursay.com/share/noor
 - Koko social profile bio link: https://fursay.com/bio/koko
-- Noor social profile bio link: https://fursay.com/bio/noor
+- Nour social profile bio link: https://fursay.com/bio/noor
 - Social profile links page: https://fursay.com/links
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
+- Koko printable presale-preparation page: https://fursay.com/products/koko-printable
+  - Traditional Chinese: https://fursay.com/zh/products/koko-printable
+  - Arabic: https://fursay.com/ar/products/koko-printable
+- Nour worksheet presale-preparation page: https://fursay.com/products/noor-worksheet
+  - Traditional Chinese: https://fursay.com/zh/products/noor-worksheet
+  - Arabic: https://fursay.com/ar/products/noor-worksheet
+- Privacy: https://fursay.com/privacy
+  - Traditional Chinese: https://fursay.com/zh/privacy
+  - Arabic: https://fursay.com/ar/privacy
+- Support: https://fursay.com/support
+  - Traditional Chinese: https://fursay.com/zh/support
+  - Arabic: https://fursay.com/ar/support
 - Koko printable sample preview: https://fursay.com/product-samples/koko-printable
-- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
+- Nour worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 
 Creator and sharing references:
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
-- Creator link for Noor descriptions: https://fursay.com/creator/noor
+- Creator link for Nour descriptions: https://fursay.com/creator/noor
 - Koko YouTube creator link: https://fursay.com/creator/koko/youtube
 - Koko social creator link: https://fursay.com/creator/koko/social
 - Koko newsletter creator link: https://fursay.com/creator/koko/newsletter
-- Noor YouTube creator link: https://fursay.com/creator/noor/youtube
-- Noor social creator link: https://fursay.com/creator/noor/social
-- Noor newsletter creator link: https://fursay.com/creator/noor/newsletter
+- Nour YouTube creator link: https://fursay.com/creator/noor/youtube
+- Nour social creator link: https://fursay.com/creator/noor/social
+- Nour newsletter creator link: https://fursay.com/creator/noor/newsletter
 - Family share kit page: https://fursay.com/share-kit
 - Creator kit page: https://fursay.com/creator-kit
 
 Operator and validation references:
 - These pages are for launch, QA, growth, and monetization validation. They are noindex or machine-readable references, not the primary family entry points.
 - Traffic launch kit page: https://fursay.com/traffic-launch
-- Noor sprint status page: https://fursay.com/noor-sprint-status
-- Noor sprint next action manifest: https://fursay.com/noor-sprint-action.json
+- Nour sprint status page: https://fursay.com/noor-sprint-status
+- Nour sprint next action manifest: https://fursay.com/noor-sprint-action.json
 - Deploy readiness page: https://fursay.com/deploy-readiness
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Monetization roadmap: https://fursay.com/monetization-roadmap
@@ -88,7 +100,7 @@ Commerce and affiliate policy:
 - Affiliate click tracking is expected on all 18 public story and episode pages.
 - Anonymous conversion events post to /api/event and write to Worker logs until the Cloudflare account enables Analytics Engine; the planned binding is FURSAY_EVENTS for dataset fursay_events, with no PII fields.
 - Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries 7-day and 30-day Analytics Engine summaries after dashboard enablement and Cloudflare query credentials are available.
-- Owned products are family-facing waitlists only: Koko printable story pack and Noor 3-minute worksheet pack. Families can join interest lists and receive the free story pack first; paid access is not open and no payment is collected on the product page.
+- Owned products are family-facing waitlists only: Koko printable story pack and Nour 3-minute worksheet pack. Families can join interest lists and receive the free story pack first; paid access is not open and no payment is collected on the product page.
 - Event analytics must not include email, name, phone, address, token, password, or subscriber payload fields.
 
 Technical discovery:
@@ -103,8 +115,8 @@ Technical discovery:
 - Creator kit: https://fursay.com/creator-kit.json
 - Share kit: https://fursay.com/share-kit.json
 - Traffic launch kit: https://fursay.com/traffic-launch.json
-- Noor sprint status manifest: https://fursay.com/noor-sprint-status.json
-- Noor sprint next action manifest: https://fursay.com/noor-sprint-action.json
+- Nour sprint status manifest: https://fursay.com/noor-sprint-status.json
+- Nour sprint next action manifest: https://fursay.com/noor-sprint-action.json
 - Social profile links manifest: https://fursay.com/links.json
 - Conversion health dashboard: https://fursay.com/conversion-health
 - Conversion health manifest: https://fursay.com/conversion-health.json
@@ -114,7 +126,7 @@ Technical discovery:
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
 - Koko printable sample preview: https://fursay.com/product-samples/koko-printable
-- Noor worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
+- Nour worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 - Product interest manifest: https://fursay.com/products.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready

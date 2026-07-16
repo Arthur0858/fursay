@@ -21,6 +21,22 @@ const STORY_PAGES = [
   { path: "/zh/arabic", file: "zh/arabic.html", pack: "noor", locale: "zh-TW" },
   { path: "/ar/arabic", file: "ar/arabic.html", pack: "noor", locale: "ar" },
 ];
+const PRESALE_PAGES = [
+  { path: "/products/koko-printable", file: "products/koko-printable.html" },
+  { path: "/products/noor-worksheet", file: "products/noor-worksheet.html" },
+  { path: "/zh/products/koko-printable", file: "zh/products/koko-printable.html" },
+  { path: "/zh/products/noor-worksheet", file: "zh/products/noor-worksheet.html" },
+  { path: "/ar/products/koko-printable", file: "ar/products/koko-printable.html" },
+  { path: "/ar/products/noor-worksheet", file: "ar/products/noor-worksheet.html" },
+];
+const POLICY_PAGES = [
+  { path: "/privacy", file: "privacy.html" },
+  { path: "/support", file: "support.html" },
+  { path: "/zh/privacy", file: "zh/privacy.html" },
+  { path: "/zh/support", file: "zh/support.html" },
+  { path: "/ar/privacy", file: "ar/privacy.html" },
+  { path: "/ar/support", file: "ar/support.html" },
+];
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -198,6 +214,23 @@ async function main() {
     const html = await readPage(args.baseUrl, page);
     const blocks = structuredDataBlocks(html, page.path, failures);
     checkStory(page, blocks, videoDiscovery, failures);
+    pages.push({ path: page.path, jsonLdBlocks: blocks.length });
+  }
+  for (const page of PRESALE_PAGES) {
+    const html = await readPage(args.baseUrl, page);
+    const blocks = structuredDataBlocks(html, page.path, failures);
+    for (const type of ["WebPage", "Product", "FAQPage"]) {
+      if (!hasType(blocks, type)) failures.push(`presale_missing_type:${page.path}:${type}`);
+    }
+    const product = firstType(blocks, "Product");
+    if (product?.offers) failures.push(`presale_unreviewed_offer:${page.path}`);
+    if (product?.potentialAction?.["@type"] !== "DownloadAction") failures.push(`presale_download_action:${page.path}`);
+    pages.push({ path: page.path, jsonLdBlocks: blocks.length });
+  }
+  for (const page of POLICY_PAGES) {
+    const html = await readPage(args.baseUrl, page);
+    const blocks = structuredDataBlocks(html, page.path, failures);
+    if (!hasType(blocks, "WebPage")) failures.push(`policy_missing_webpage:${page.path}`);
     pages.push({ path: page.path, jsonLdBlocks: blocks.length });
   }
 

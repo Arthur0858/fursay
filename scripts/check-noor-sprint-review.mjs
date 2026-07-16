@@ -169,8 +169,8 @@ async function main() {
         status: "completed",
         signalObserved: true,
         signalEvidence: "noor_growth_signals_7d aggregate submit success count 1",
-        notes: "noor_growth_signals_7d aggregate shows 1 Noor subscribe submit success signal(s)",
-        nextAction: "prepare Noor newsletter readiness review without enabling checkout",
+        notes: "noor_growth_signals_7d aggregate shows 1 Nour subscribe submit success signal(s)",
+        nextAction: "prepare Nour newsletter readiness review without enabling checkout",
       },
     ],
   });

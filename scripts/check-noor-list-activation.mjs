@@ -226,7 +226,7 @@ async function main() {
   await import("node:fs/promises").then((fs) => fs.mkdir(args.outDir, { recursive: true })
     .then(() => fs.writeFile(join(args.outDir, "noor-list-activation.json"), JSON.stringify(report, null, 2) + "\n"))
     .then(() => fs.writeFile(join(args.outDir, "noor-list-activation.md"), [
-      "# Fursay Noor List Activation Check",
+      "# Fursay Nour List Activation Check",
       "",
       `- Result: ${report.ok ? "PASS" : "FAIL"}`,
       `- Pages: ${report.total}`,

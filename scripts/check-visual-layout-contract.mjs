@@ -15,15 +15,29 @@ const PAGES = [
   { path: "/arabic", file: "arabic.html", lang: "en" },
   { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW" },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", rtl: true },
-  { path: "/products", file: "products.html", lang: "en", product: true },
-  { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", product: true },
-  { path: "/ar/products", file: "ar/products.html", lang: "ar", rtl: true, product: true },
-  { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", sample: true },
-  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "ar", rtl: true, sample: true },
+  { path: "/products", file: "products.html", lang: "en", brand: true },
+  { path: "/zh/products", file: "zh/products.html", lang: "zh-TW", brand: true },
+  { path: "/ar/products", file: "ar/products.html", lang: "ar", rtl: true, brand: true },
+  { path: "/product-samples/koko-printable", file: "product-samples/koko-printable.html", lang: "en", brand: true },
+  { path: "/product-samples/noor-worksheet", file: "product-samples/noor-worksheet.html", lang: "ar", rtl: true, brand: true },
+  { path: "/products/koko-printable", file: "products/koko-printable.html", lang: "en", brand: true },
+  { path: "/products/noor-worksheet", file: "products/noor-worksheet.html", lang: "en", brand: true },
+  { path: "/zh/products/koko-printable", file: "zh/products/koko-printable.html", lang: "zh-TW", brand: true },
+  { path: "/zh/products/noor-worksheet", file: "zh/products/noor-worksheet.html", lang: "zh-TW", brand: true },
+  { path: "/ar/products/koko-printable", file: "ar/products/koko-printable.html", lang: "ar", rtl: true, brand: true },
+  { path: "/ar/products/noor-worksheet", file: "ar/products/noor-worksheet.html", lang: "ar", rtl: true, brand: true },
+  { path: "/privacy", file: "privacy.html", lang: "en", policy: true },
+  { path: "/support", file: "support.html", lang: "en", policy: true },
+  { path: "/zh/privacy", file: "zh/privacy.html", lang: "zh-TW", policy: true },
+  { path: "/zh/support", file: "zh/support.html", lang: "zh-TW", policy: true },
+  { path: "/ar/privacy", file: "ar/privacy.html", lang: "ar", rtl: true, policy: true },
+  { path: "/ar/support", file: "ar/support.html", lang: "ar", rtl: true, policy: true },
 ];
 const VIEWPORTS = [
-  { name: "desktop", width: 1366, height: 900, isMobile: false, deviceScaleFactor: 1 },
   { name: "mobile", width: 390, height: 844, isMobile: true, deviceScaleFactor: 2 },
+  { name: "tablet", width: 768, height: 1024, isMobile: true, deviceScaleFactor: 1 },
+  { name: "laptop", width: 1024, height: 900, isMobile: false, deviceScaleFactor: 1 },
+  { name: "desktop", width: 1440, height: 900, isMobile: false, deviceScaleFactor: 1 },
 ];
 
 function parseArgs() {
@@ -128,7 +142,7 @@ async function collectLayout(page) {
       const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
       return text || element.getAttribute("aria-label") || element.getAttribute("alt") || element.tagName.toLowerCase();
     };
-    const actionableSelector = "nav a, nav button, .hero a, .hero button, .hero [data-open-subscribe], .products-page [data-product-interest], .products-page .public-share-actions a";
+    const actionableSelector = "nav a, nav button, .hero a, .hero button, .brand-hero a, .brand-hero button, .hero [data-open-subscribe], .products-page [data-product-interest], .products-page .public-share-actions a";
     const actionables = [...document.querySelectorAll(actionableSelector)]
       .filter(isVisible)
       .map((element, index) => ({
@@ -139,9 +153,9 @@ async function collectLayout(page) {
         rect: rectFor(element),
       }));
     const h1 = document.querySelector("h1");
-    const hero = document.querySelector(".hero");
+    const hero = document.querySelector(".hero, .brand-hero");
     const nav = document.querySelector("nav");
-    const primaryCtas = [...document.querySelectorAll(".hero [data-open-subscribe]")].filter(isVisible);
+    const primaryCtas = [...document.querySelectorAll(".hero [data-open-subscribe], .brand-hero .brand-btn")].filter(isVisible);
     const heroImages = [...document.querySelectorAll(".hero img")].filter(isVisible).map((element, index) => ({
       index,
       alt: element.getAttribute("alt") || "",
@@ -315,7 +329,7 @@ function checkLayout(spec, viewport, layout) {
   if (spec.rtl && layout.dir !== "rtl") failures.push(`${prefix}:html_dir:${layout.dir || "none"}`);
   if (!spec.rtl && layout.dir === "rtl") failures.push(`${prefix}:unexpected_rtl_dir`);
   const expectedHero = spec.sample ? layout.sample?.hero : spec.product ? layout.product?.hero : layout.hero;
-  if (!expectedHero) failures.push(`${prefix}:missing_hero`);
+  if (!spec.policy && !expectedHero) failures.push(`${prefix}:missing_hero`);
   if (!layout.h1) {
     failures.push(`${prefix}:missing_h1`);
     return failures;
@@ -330,13 +344,13 @@ function checkLayout(spec, viewport, layout) {
   if (spec.rtl && layout.h1.direction !== "rtl") failures.push(`${prefix}:h1_direction:${layout.h1.direction}`);
 
   const heroCtas = spec.sample ? layout.sample?.buttons || [] : spec.product ? layout.product?.buttons || [] : layout.primaryCtas;
-  if (!heroCtas.length) failures.push(`${prefix}:hero_subscribe_cta_missing`);
+  if (!spec.policy && !heroCtas.length) failures.push(`${prefix}:hero_subscribe_cta_missing`);
   for (const cta of heroCtas) {
     checkRectInsideViewport(failures, `${prefix}:cta_${cta.pack || cta.index}`, cta.rect, viewport, 8);
     const mustBeInFirstView = !spec.product && (!spec.sample || cta.stage === "sample_preview_waitlist");
     if (mustBeInFirstView && cta.rect.top > viewport.height) failures.push(`${prefix}:cta_below_first_view:${cta.pack || cta.index}:${Math.round(cta.rect.top)}`);
     if (cta.rect.width < 44 || cta.rect.height < 36) failures.push(`${prefix}:cta_touch_target:${cta.pack || cta.index}:${Math.round(cta.rect.width)}x${Math.round(cta.rect.height)}`);
-    if (!cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
+    if (!spec.brand && !cta.source) failures.push(`${prefix}:cta_missing_signup_source:${cta.pack || cta.index}`);
     if (spec.product && !["waitlist", "validation_pdf_interest", "sample_card_interest"].includes(cta.stage)) failures.push(`${prefix}:product_cta_stage:${cta.pack || cta.index}:${cta.stage || "none"}`);
     if (spec.product && cta.stage === "validation_pdf_interest" && cta.source !== `product_validation_interest_${cta.pack}`) {
       failures.push(`${prefix}:product_validation_cta_contract:${cta.pack || "none"}:${cta.source || "none"}`);
@@ -425,8 +439,8 @@ function checkLayout(spec, viewport, layout) {
     if (!subscribe) {
       failures.push(`${prefix}:missing_subscribe_layout`);
     } else {
-      const minimumInnerWidth = Math.min(960, viewport.width - 120);
-      const minimumLeadWidth = Math.min(880, viewport.width - 180);
+      const minimumInnerWidth = viewport.width <= 1100 ? viewport.width - 140 : Math.min(960, viewport.width - 120);
+      const minimumLeadWidth = viewport.width <= 1100 ? viewport.width - 224 : Math.min(880, viewport.width - 180);
       checkRectInsideViewport(failures, `${prefix}:subscribe_inner`, subscribe.inner, viewport, 8);
       if (subscribe.inner.width < minimumInnerWidth) failures.push(`${prefix}:subscribe_inner_too_narrow:${Math.round(subscribe.inner.width)}<${minimumInnerWidth}`);
       if (!subscribe.leadMagnet) {

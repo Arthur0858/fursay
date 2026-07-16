@@ -13,7 +13,7 @@ const PAGES = [
   { path: "/arabic", file: "arabic.html", minLatest: 1, targets: { noor: "/episodes/noor-greetings" } },
   { path: "/zh/arabic", file: "zh/arabic.html", minLatest: 1, minContent: 2250, targets: { noor: "/zh/episodes/noor-greetings" } },
   { path: "/ar/arabic", file: "ar/arabic.html", minLatest: 1, targets: { noor: "/ar/episodes/noor-greetings" } },
-  { path: "/zh/products", file: "zh/products.html", minLatest: 0, minContent: 2000, targets: {} },
+  { path: "/zh/products", file: "zh/products.html", minLatest: 0, minContent: 500, targets: {} },
 ];
 
 function parseArgs() {

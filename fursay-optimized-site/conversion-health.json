@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-15",
+  "updatedAt": "2026-07-17",
   "source": {
     "branch": "main",
-    "commit": "7b90a38",
-    "summary": "chore: refresh Fursay health artifacts"
+    "commit": "b8662e3",
+    "summary": "fix: align deploy checks with generated CI gate"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -186,11 +186,11 @@
     },
     {
       "id": "capture_first_noor_signal",
-      "label": "Capture the first Noor subscriber signal",
+      "label": "Capture the first Nour subscriber signal",
       "status": "active_after_analytics",
-      "ownerAction": "Run the Noor sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
-      "evidence": "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Noor source_id.",
-      "unlocks": "Move Noor from safe_wait_subscriber_empty to newsletter readiness review."
+      "ownerAction": "Run the Nour sprint next action, share only the planned tracked link, then review anonymous aggregate results.",
+      "evidence": "noor_growth_signals_7d shows at least one fursay_subscribe_submit_success for pack=noor or a Nour source_id.",
+      "unlocks": "Move Nour from safe_wait_subscriber_empty to newsletter readiness review."
     },
     {
       "id": "evaluate_owned_product_upgrade",
@@ -300,7 +300,7 @@
         {
           "id": "noor-worksheet-pack",
           "pack": "noor",
-          "label": "Noor 3-minute worksheet interest list",
+          "label": "Nour 3-minute worksheet interest list",
           "format": "PDF worksheet pack",
           "plannedIncludes": [
             "short Chinese story moment",
@@ -311,21 +311,21 @@
           "samplePreview": {
             "status": "print_ready_preview",
             "url": "https://fursay.com/product-samples/noor-worksheet",
-            "label": "Preview the Noor 3-minute worksheet sample",
+            "label": "Preview the Nour 3-minute worksheet sample",
             "noindex": true,
             "printReady": true,
             "downloadableFormat": "pdf_and_browser_print",
             "downloadUrl": "https://fursay.com/downloads/noor-worksheet-sample.pdf",
             "trackedDownloadUrl": "https://fursay.com/download/noor-worksheet-sample?source_id=noor_product_validation_pdf_sample&creator=fursay&placement=sample_preview_pdf_download",
             "contents": [
-              "Short Noor and Zayd story moment",
+              "Short Nour and Zayd story moment",
               "Three Chinese words with Pinyin and Arabic parent prompts",
               "One 3-minute trace, point, and say activity"
             ],
             "nextCta": "/arabic?subscribe=noor&utm_source=sample_preview&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_worksheet_preview"
           },
           "validationPlan": {
-            "audience": "Arabic-speaking families testing a tiny Chinese practice ritual with Noor parent prompts.",
+            "audience": "Arabic-speaking families testing a tiny Chinese practice ritual with Nour parent prompts.",
             "freeBridge": "/arabic",
             "signals": [
               "fursay_product_info_click",
@@ -338,7 +338,7 @@
               "productInterestClicks": 5,
               "subscriberSignals": 1
             },
-            "nextDecision": "Expand the print-ready preview into a complete Noor worksheet pack only after Noor interest and at least one subscriber signal prove family demand."
+            "nextDecision": "Expand the print-ready preview into a complete Nour worksheet pack only after Nour interest and at least one subscriber signal prove family demand."
           }
         }
       ]

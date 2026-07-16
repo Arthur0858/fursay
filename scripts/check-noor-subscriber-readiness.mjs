@@ -46,7 +46,7 @@ async function recentNoorSubscriberEmptyRuns() {
   for (const file of files) {
     const data = JSON.parse(await readFile(join(dir, file), "utf8"));
     const text = JSON.stringify(data);
-    if (data.channel === "arabic" && /Noor subscribers/.test(text) && /subscriber_empty|0 active subscribers/.test(text)) {
+    if (data.channel === "arabic" && /Nour subscribers/.test(text) && /subscriber_empty|0 active subscribers/.test(text)) {
       rows.push({ file: `content/newsletters/runs/${file}`, status: data.status || "", failureCode: data.failureCode || data.providerErrorCode || "" });
     }
   }

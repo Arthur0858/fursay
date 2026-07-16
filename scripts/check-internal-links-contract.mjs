@@ -163,7 +163,7 @@ async function checkReference({ baseUrl, pages, shortlinkPaths, caches, sourceRo
   if (!exists) failures.push(`${sourceRoute}:${attrName}:missing_target:${rawValue}:${localPathForUrlPath(url.pathname)}`);
 
   const hash = decodeURIComponent(url.hash.slice(1));
-  if (hash) {
+  if (hash && !url.pathname.endsWith(".svg")) {
     const targetPage = baseUrl ? null : pageForHash(pages, url.pathname);
     if (!targetPage && !caches.html.has(url.pathname)) {
       caches.html.set(url.pathname, await readTargetHtml(baseUrl, pages, url.pathname));
