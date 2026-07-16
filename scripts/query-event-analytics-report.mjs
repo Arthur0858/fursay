@@ -1,6 +1,12 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+try {
+  process.loadEnvFile();
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
+
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-analytics-report";
 const DATASET = "fursay_events";
