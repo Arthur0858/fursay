@@ -93,11 +93,11 @@ Operator and validation references:
 Commerce and affiliate policy:
 - Traditional Chinese pages use Books.com.tw affiliate links only: https://fursay.com/zh/, https://fursay.com/zh/koko, https://fursay.com/zh/arabic, https://fursay.com/zh/episodes/koko-feelings, https://fursay.com/zh/episodes/noor-colors, https://fursay.com/zh/episodes/noor-greetings
 - Books.com.tw affiliate ID: arthur0858
-- Current expected Books.com.tw affiliate links: 18
+- Current expected Books.com.tw affiliate links: 14
 - English and Arabic pages use Amazon affiliate links only: https://fursay.com/, https://fursay.com/koko, https://fursay.com/arabic, https://fursay.com/episodes/koko-feelings, https://fursay.com/episodes/noor-colors, https://fursay.com/episodes/noor-greetings, https://fursay.com/ar/, https://fursay.com/ar/koko, https://fursay.com/ar/arabic, https://fursay.com/ar/episodes/koko-feelings, https://fursay.com/ar/episodes/noor-colors, https://fursay.com/ar/episodes/noor-greetings
 - Amazon Associates Store ID: parenttechche-20
-- Current expected Amazon affiliate links: 37
-- Affiliate click tracking is expected on all 18 public story and episode pages.
+- Current expected Amazon affiliate links: 28
+- Affiliate click tracking is expected on all 15 public story and episode pages.
 - Anonymous conversion events post to /api/event and write to Worker logs until the Cloudflare account enables Analytics Engine; the planned binding is FURSAY_EVENTS for dataset fursay_events, with no PII fields.
 - Event reporting path: npm run report:events writes /tmp/fursay-event-analytics-report/event-analytics-report.json and queries 7-day and 30-day Analytics Engine summaries after dashboard enablement and Cloudflare query credentials are available.
 - Owned products are family-facing waitlists only: Koko printable story pack and Nour 3-minute worksheet pack. Families can join interest lists and receive the free story pack first; paid access is not open and no payment is collected on the product page.

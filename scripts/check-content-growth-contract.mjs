@@ -5,7 +5,7 @@ const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-content-growth-contract";
 const PAGES = [
   { path: "/", file: "index.html", minLatest: 2, targets: { koko: "/episodes/koko-feelings", noor: "/episodes/noor-greetings" } },
-  { path: "/zh/", file: "zh/index.html", minLatest: 2, minContent: 2650, targets: { koko: "/zh/episodes/koko-feelings", noor: "/zh/episodes/noor-greetings" } },
+  { path: "/zh/", file: "zh/index.html", minLatest: 2, minContent: 1500, targets: { koko: "/zh/episodes/koko-feelings", noor: "/zh/episodes/noor-greetings" } },
   { path: "/ar/", file: "ar/index.html", minLatest: 2, targets: { koko: "/ar/episodes/koko-feelings", noor: "/ar/episodes/noor-greetings" } },
   { path: "/koko", file: "koko.html", minLatest: 1, targets: { koko: "/episodes/koko-feelings" } },
   { path: "/zh/koko", file: "zh/koko.html", minLatest: 1, minContent: 1800, targets: { koko: "/zh/episodes/koko-feelings" } },

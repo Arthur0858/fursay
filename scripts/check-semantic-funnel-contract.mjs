@@ -4,9 +4,9 @@ import { resolve } from "node:path";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-semantic-funnel-contract";
 const PAGES = [
-  { path: "/", file: "index.html", locale: "en", market: "amazon", packs: ["koko", "noor"] },
-  { path: "/zh/", file: "zh/index.html", locale: "zh-TW", market: "books", packs: ["koko", "noor"] },
-  { path: "/ar/", file: "ar/index.html", locale: "ar", market: "amazon", packs: ["koko", "noor"] },
+  { path: "/", file: "index.html", locale: "en", market: "amazon", packs: ["koko", "noor"], affiliateRequired: false },
+  { path: "/zh/", file: "zh/index.html", locale: "zh-TW", market: "books", packs: ["koko", "noor"], affiliateRequired: false },
+  { path: "/ar/", file: "ar/index.html", locale: "ar", market: "amazon", packs: ["koko", "noor"], affiliateRequired: false },
   { path: "/koko", file: "koko.html", locale: "en", market: "amazon", pack: "koko" },
   { path: "/zh/koko", file: "zh/koko.html", locale: "zh-TW", market: "books", pack: "koko" },
   { path: "/ar/koko", file: "ar/koko.html", locale: "ar", market: "amazon", pack: "koko" },
@@ -221,13 +221,13 @@ function checkPage(spec, html, manifests) {
     }
   }
 
-  if (spec.market === "books" && !textHasAll(bodyText, ["博客來", "回饋"])) {
+  if (spec.affiliateRequired !== false && spec.market === "books" && !textHasAll(bodyText, ["博客來", "回饋"])) {
     failures.push(`${spec.path}:affiliate_disclosure_weak:${spec.market}`);
   }
-  if (spec.market === "amazon" && spec.locale === "ar" && !textHasAny(bodyText, ["عمولة", "تابعة"])) {
+  if (spec.affiliateRequired !== false && spec.market === "amazon" && spec.locale === "ar" && !textHasAny(bodyText, ["عمولة", "تابعة"])) {
     failures.push(`${spec.path}:affiliate_disclosure_weak:${spec.market}`);
   }
-  if (spec.market === "amazon" && spec.locale !== "ar" && !textHasAny(bodyText, ["commission", "affiliate", "sponsored"])) {
+  if (spec.affiliateRequired !== false && spec.market === "amazon" && spec.locale !== "ar" && !textHasAny(bodyText, ["commission", "affiliate", "sponsored"])) {
     failures.push(`${spec.path}:affiliate_disclosure_weak:${spec.market}`);
   }
 

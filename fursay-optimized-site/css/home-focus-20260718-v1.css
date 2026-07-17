@@ -1,0 +1,200 @@
+/* Focused home journey: story world -> three steps -> free sample -> trust -> secondary paths. */
+body.world-home .brand-icon,
+body.world-home .home-focus-icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body.world-home .card-icon,
+body.world-home .rhythm-emoji {
+  display: inline-grid;
+  place-items: center;
+}
+
+body.world-home .card-icon .home-focus-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+body.world-home .rhythm-emoji .home-focus-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+body.world-home .home-pack-actions {
+  align-content: start;
+}
+
+body.world-home .home-focus-trust {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+body.world-home .home-focus-trust span {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(87, 94, 70, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #46503d;
+  font-weight: 800;
+  text-align: center;
+}
+
+body.world-home .home-explore {
+  padding: clamp(56px, 7vw, 88px) 24px;
+  background: linear-gradient(180deg, #fffdf8 0%, #f6f0df 100%);
+}
+
+body.world-home .home-explore-grid {
+  width: min(1120px, 100%);
+  margin: 36px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+body.world-home .home-explore-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(22px, 3vw, 30px);
+  border: 1px solid rgba(87, 94, 70, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 14px 36px rgba(67, 71, 48, 0.08);
+}
+
+body.world-home .home-explore-card > .home-focus-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #67734f;
+}
+
+body.world-home .home-explore-card h3 {
+  margin: 0;
+  color: #313b2f;
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+}
+
+body.world-home .home-explore-card p {
+  margin: 0;
+  color: #5d6558;
+  line-height: 1.7;
+}
+
+body.world-home .home-explore-links,
+body.world-home .home-explore-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+body.world-home .home-explore-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding: 10px 13px;
+  border: 1px solid rgba(87, 94, 70, 0.15);
+  border-radius: 14px;
+  background: #fffdf8;
+  color: #3f4939;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+body.world-home .home-explore-link::after {
+  content: "→";
+  margin-inline-start: 10px;
+}
+
+html[dir="rtl"] body.world-home .home-explore-link::after {
+  content: "←";
+}
+
+body.world-home .home-explore-link:hover {
+  border-color: rgba(87, 94, 70, 0.35);
+  background: #f8f3e5;
+}
+
+body.world-home .home-explore :is(a, button):focus-visible {
+  outline: 3px solid #2f6f62;
+  outline-offset: 3px;
+}
+
+/* Keep sharing available without letting seven utility actions become a new funnel. */
+body.world-home .share-strip {
+  padding-block: 28px !important;
+}
+
+body.world-home .share-strip-inner {
+  gap: 18px !important;
+}
+
+body.world-home .share-pack-link,
+body.world-home [data-copy-sample-link],
+body.world-home .share-fallback {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  body.world-home .home-explore-grid {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.world-home .hero-float.float-1 {
+    display: block !important;
+    visibility: visible !important;
+    width: 112px !important;
+    height: auto !important;
+    max-height: none !important;
+    inset: auto 14px 10px auto !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+  }
+
+  body.world-home .hero-float.float-1 picture,
+  body.world-home .hero-float.float-1 img {
+    visibility: visible !important;
+  }
+
+  body.world-home .home-focus-trust {
+    grid-template-columns: 1fr;
+  }
+
+  body.world-home .home-explore {
+    padding: 50px 18px;
+  }
+
+  body.world-home .home-explore-card {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.world-home .home-explore *,
+  body.world-home .home-focus-trust * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1536,14 +1536,14 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.deployment?.packageScripts?.liveSmoke !== "npm run smoke:live") failures.push("release_bad_live_smoke_script");
   if (release.deployment?.autoDeployWorkflow !== ".github/workflows/deploy-worker.yml") failures.push("release_bad_auto_deploy_workflow");
   if (release.liveExpectations?.funnelChecks !== 41) failures.push(`release_funnel_expectation:${release.liveExpectations?.funnelChecks || "none"}`);
-  if (release.liveExpectations?.amazonAffiliateLinks !== 37) failures.push(`release_amazon_affiliate_link_expectation:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.amazonAffiliateLinks !== 28) failures.push(`release_amazon_affiliate_link_expectation:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
   if (release.liveExpectations?.amazonAffiliateTag !== "parenttechche-20") failures.push(`release_amazon_affiliate_tag:${release.liveExpectations?.amazonAffiliateTag || "none"}`);
-  if (release.liveExpectations?.booksAffiliateLinks !== 18) failures.push(`release_books_affiliate_link_expectation:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.booksAffiliateLinks !== 14) failures.push(`release_books_affiliate_link_expectation:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
   if (release.liveExpectations?.booksAffiliateId !== "arthur0858") failures.push(`release_books_affiliate_id:${release.liveExpectations?.booksAffiliateId || "none"}`);
-  if (release.liveExpectations?.amazonAffiliateLinks !== 37) failures.push(`release_amazon_affiliate_links:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
-  if (release.liveExpectations?.booksAffiliateLinks !== 18) failures.push(`release_books_affiliate_links:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.amazonAffiliateLinks !== 28) failures.push(`release_amazon_affiliate_links:${release.liveExpectations?.amazonAffiliateLinks || "none"}`);
+  if (release.liveExpectations?.booksAffiliateLinks !== 14) failures.push(`release_books_affiliate_links:${release.liveExpectations?.booksAffiliateLinks || "none"}`);
   if (release.liveExpectations?.eventTrackingPages !== 18) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
-  if (release.liveExpectations?.affiliateEventTrackingPages !== 18) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
+  if (release.liveExpectations?.affiliateEventTrackingPages !== 15) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
   if (release.liveExpectations?.anonymousConversionEvents !== 15) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
   if (release.liveExpectations?.eventAnalyticsBlobFields !== 18) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
@@ -1557,7 +1557,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.noorLeadMagnetPages !== 3) failures.push(`release_noor_lead_magnet_pages:${release.liveExpectations?.noorLeadMagnetPages || "none"}`);
   if (release.liveExpectations?.noorSprintCopyVariants !== 4) failures.push(`release_noor_sprint_copy_variants:${release.liveExpectations?.noorSprintCopyVariants || "none"}`);
   if (release.liveExpectations?.noorSprintStatusDays !== 7) failures.push(`release_noor_sprint_status_days:${release.liveExpectations?.noorSprintStatusDays || "none"}`);
-  if (release.liveExpectations?.productInterestLinks !== 27) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
+  if (release.liveExpectations?.productInterestLinks !== 24) failures.push(`release_product_interest_links:${release.liveExpectations?.productInterestLinks || "none"}`);
   if (release.liveExpectations?.productInfoLinks !== 18) failures.push(`release_product_info_links:${release.liveExpectations?.productInfoLinks || "none"}`);
   if (release.liveExpectations?.productInfoEventTrackingPages !== 18) failures.push(`release_product_info_event_tracking_pages:${release.liveExpectations?.productInfoEventTrackingPages || "none"}`);
   if (release.liveExpectations?.productLandingPages !== 9) failures.push(`release_product_landing_pages:${release.liveExpectations?.productLandingPages || "none"}`);

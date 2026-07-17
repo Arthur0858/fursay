@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-17",
+  "updatedAt": "2026-07-18",
   "source": {
     "branch": "main",
-    "commit": "b8662e3",
-    "summary": "fix: align deploy checks with generated CI gate"
+    "commit": "6929b2f",
+    "summary": "ops: schedule Arabic EP001 newsletter"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -111,7 +111,7 @@
   "coverage": {
     "publicStoryPages": 9,
     "subscribeOpenPages": 18,
-    "affiliateClickPages": 18,
+    "affiliateClickPages": 15,
     "outboundClickPages": 18,
     "shareOrCopyPages": 18,
     "productInterestPages": 9,
@@ -172,7 +172,7 @@
         "reportFamily": "noor_growth_signals"
       }
     ],
-    "productInterestLinks": 27,
+    "productInterestLinks": 24,
     "productInfoLinks": 18
   },
   "decisionChecklist": [
@@ -203,9 +203,9 @@
   ],
   "monetization": {
     "affiliate": {
-      "amazonLinks": 37,
+      "amazonLinks": 28,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 18,
+      "booksLinks": 14,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

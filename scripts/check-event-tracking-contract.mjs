@@ -12,9 +12,9 @@ const LEGACY_JS = [
   "/js/site-shared-20260613-events1.js",
 ];
 const PAGES = [
-  { path: "/", lang: "en", campaign: "home_story_funnel", market: "amazon" },
-  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel", market: "books" },
-  { path: "/ar/", lang: "ar", campaign: "home_story_funnel", market: "amazon" },
+  { path: "/", lang: "en", campaign: "home_story_funnel", market: "amazon", affiliateRequired: false },
+  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel", market: "books", affiliateRequired: false },
+  { path: "/ar/", lang: "ar", campaign: "home_story_funnel", market: "amazon", affiliateRequired: false },
   { path: "/koko", lang: "en", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
   { path: "/zh/koko", lang: "zh-TW", campaign: "koko_story_funnel", pack: "koko", market: "books" },
   { path: "/ar/koko", lang: "ar", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
@@ -319,9 +319,9 @@ async function checkPage(browser, baseUrl, spec) {
     dataLayer: window.dataLayer || [],
     navigationBlocked: window.__fursayAffiliateNavigationBlocked || false,
   }));
-  if (!affiliateMeta) {
+  if (!affiliateMeta && spec.affiliateRequired !== false) {
     failures.push(`${spec.path}:missing_affiliate_link`);
-  } else {
+  } else if (affiliateMeta) {
     const affiliateEvent = affiliateState.events.find((event) => event.event === "fursay_affiliate_click");
     assertEventShape(failures, `${spec.path}:affiliate_click`, spec, affiliateEvent);
     if (affiliateEvent?.detail?.market !== spec.market) failures.push(`${spec.path}:affiliate_market:${affiliateEvent?.detail?.market || "none"}`);

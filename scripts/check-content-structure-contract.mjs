@@ -9,8 +9,9 @@ const PAGES = [
     file: "index.html",
     lang: "en",
     footer: ["/", "/koko", "/arabic", "mailto:contact@fursay.com"],
-    sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
-    navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
+    sections: ["channels", "rhythm", "weekly-pack", "explore-more", "parents", "faq"],
+    absentSections: ["videos", "printable-packs", "booklist"],
+    navAnchors: ["channels", "rhythm", "weekly-pack"],
     h1Needles: ["story", "phrase"],
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
@@ -26,8 +27,9 @@ const PAGES = [
     file: "zh/index.html",
     lang: "zh-TW",
     footer: ["/zh/", "/zh/koko", "/zh/arabic", "mailto:contact@fursay.com"],
-    sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
-    navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
+    sections: ["channels", "rhythm", "weekly-pack", "explore-more", "parents", "faq"],
+    absentSections: ["home-learning-plan", "bilingual-search-guide", "videos", "printable-packs", "booklist"],
+    navAnchors: ["channels", "rhythm", "weekly-pack"],
     h1Needles: ["故事", "一句話"],
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
@@ -44,8 +46,9 @@ const PAGES = [
     lang: "ar",
     dir: "rtl",
     footer: ["/ar/", "/ar/koko", "/ar/arabic", "mailto:contact@fursay.com"],
-    sections: ["channels", "rhythm", "weekly-pack", "videos", "parents", "faq", "booklist"],
-    navAnchors: ["channels", "rhythm", "weekly-pack", "faq"],
+    sections: ["channels", "rhythm", "weekly-pack", "explore-more", "parents", "faq"],
+    absentSections: ["videos", "printable-packs", "booklist"],
+    navAnchors: ["channels", "rhythm", "weekly-pack"],
     h1Needles: ["قصة", "عبارة"],
     storyCardClass: "video-card",
     noEmptyStoryNote: true,
@@ -238,6 +241,9 @@ function checkPage(page, html) {
 
   for (const id of page.sections || []) {
     if (!hasId(html, id)) failures.push(`missing_section:${id}`);
+  }
+  for (const id of page.absentSections || []) {
+    if (hasId(html, id)) failures.push(`legacy_home_section_present:${id}`);
   }
   for (const id of page.navAnchors || []) {
     if (!navHrefs.includes(`#${id}`)) failures.push(`nav_missing_anchor:${id}`);

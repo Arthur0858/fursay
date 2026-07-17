@@ -5,9 +5,9 @@ const DEFAULT_OUT = "/tmp/fursay-amazon-affiliate-links";
 const AMAZON_TAG = "parenttechche-20";
 const BOOKS_AFFILIATE_ID = "arthur0858";
 const PAGES = [
-  { path: "/", market: "amazon" },
-  { path: "/zh/", market: "books" },
-  { path: "/ar/", market: "amazon" },
+  { path: "/", market: "amazon", affiliateRequired: false },
+  { path: "/zh/", market: "books", affiliateRequired: false },
+  { path: "/ar/", market: "amazon", affiliateRequired: false },
   { path: "/koko", market: "amazon" },
   { path: "/zh/koko", market: "books" },
   { path: "/ar/koko", market: "amazon" },
@@ -130,9 +130,9 @@ function checkPage(page, html, status) {
     if (!className.split(/\s+/).includes("book-link")) failures.push(`books_missing_book_link_class:${href}`);
   }
   if (page.market === "books" && amazonLinks.length) failures.push(`zh_page_must_not_use_amazon:${amazonLinks.length}`);
-  if (page.market === "books" && !booksLinks.length) failures.push("zh_page_missing_books_links");
+  if (page.affiliateRequired !== false && page.market === "books" && !booksLinks.length) failures.push("zh_page_missing_books_links");
   if (page.market === "amazon" && booksLinks.length) failures.push(`non_zh_page_must_not_use_books:${booksLinks.length}`);
-  if (page.market === "amazon" && !amazonLinks.length) failures.push("non_zh_page_missing_amazon_links");
+  if (page.affiliateRequired !== false && page.market === "amazon" && !amazonLinks.length) failures.push("non_zh_page_missing_amazon_links");
   const productKeys = [...amazonLinks, ...booksLinks].map((link) => link.productKey);
   const duplicateProductKeys = [...new Set(productKeys.filter((key, index) => productKeys.indexOf(key) !== index))];
   if (duplicateProductKeys.length) failures.push(`duplicate_affiliate_products:${duplicateProductKeys.join(",")}`);

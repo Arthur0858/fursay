@@ -13,7 +13,6 @@ const PAGES = [
     kind: "home",
     required: {
       home_koko_weekly_pack: "koko",
-      home_noor_weekly_pack: "noor",
       home_weekly_pack_koko: "koko",
       home_weekly_pack_noor: "noor",
     },
@@ -33,7 +32,6 @@ const PAGES = [
     kind: "home",
     required: {
       home_koko_weekly_pack: "koko",
-      home_noor_weekly_pack: "noor",
       home_weekly_pack_koko: "koko",
       home_weekly_pack_noor: "noor",
     },
@@ -54,7 +52,6 @@ const PAGES = [
     kind: "home",
     required: {
       home_koko_weekly_pack: "koko",
-      home_noor_weekly_pack: "noor",
       home_weekly_pack_koko: "koko",
       home_weekly_pack_noor: "noor",
     },

@@ -7,9 +7,9 @@ import { chromium } from "playwright";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-conversion-health-contract";
 const PAGES = [
-  { path: "/", productInterest: true },
-  { path: "/zh/", productInterest: true },
-  { path: "/ar/", productInterest: true },
+  { path: "/", productInterest: true, affiliateRequired: false },
+  { path: "/zh/", productInterest: true, affiliateRequired: false },
+  { path: "/ar/", productInterest: true, affiliateRequired: false },
   { path: "/koko", productInterest: true },
   { path: "/zh/koko", productInterest: true },
   { path: "/ar/koko", productInterest: true },
@@ -150,11 +150,11 @@ async function checkPage(browser, baseUrl, spec) {
 
   const selectors = [
     "[data-open-subscribe]",
-    "a.book-link",
     "a[data-fursay-outbound]",
     "[data-share-fursay]",
     "[data-copy-sample-link]",
   ];
+  if (spec.affiliateRequired !== false) selectors.push("a.book-link");
   if (spec.productInterest) selectors.push("[data-product-interest]");
   for (const selector of selectors) {
     const clicked = await clickVisible(page, selector);
@@ -163,7 +163,10 @@ async function checkPage(browser, baseUrl, spec) {
   }
 
   const eventNames = new Set(events.map((event) => event.event));
-  const requiredEvents = spec.productInterest ? [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT] : BASE_REQUIRED_EVENTS;
+  const pageEvents = spec.affiliateRequired === false
+    ? BASE_REQUIRED_EVENTS.filter((name) => name !== "fursay_affiliate_click")
+    : BASE_REQUIRED_EVENTS;
+  const requiredEvents = spec.productInterest ? [...pageEvents, PRODUCT_INTEREST_EVENT] : pageEvents;
   for (const name of requiredEvents) {
     if (!eventNames.has(name)) failures.push(`${pathname}:missing_event:${name}`);
   }

@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-17",
+  "updatedAt": "2026-07-18",
   "purpose": "Minimal operator handoff for the next Nour first-subscriber sprint action.",
   "statusManifest": "https://fursay.com/noor-sprint-status.json",
   "statusPage": "https://fursay.com/noor-sprint-status",

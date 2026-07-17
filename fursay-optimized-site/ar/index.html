@@ -122,6 +122,7 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
+  <link rel="stylesheet" href="/css/home-focus-20260718-v1.css">
 </head>
 <body class="picture-world world-home">
 
@@ -134,7 +135,7 @@
         <li><a href="#channels"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg> عوالم القصص</a></li>
         <li><a href="#rhythm"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#steps"></use></svg> طريقة الاستخدام</a></li>
         <li><a href="#weekly-pack" class="nav-cta"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> الحزمة المجانية</a></li>
-        <li><a href="#faq"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#faq"></use></svg> أسئلة شائعة</a></li>
+        <li><a href="/ar/products"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> معاينة المنتجات</a></li>
       </ul>
       <div class="lang-switcher" data-lang-menu>
         <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
@@ -202,7 +203,7 @@
 
       <a href="/ar/koko" class="channel-card card-koko reveal">
         <div class="card-header">
-          <div class="card-icon">🦊</div>
+          <div class="card-icon"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
           <span class="card-tag">تعلّم الإنجليزية</span>
           <div class="card-title">Koko's Forest Adventure</div>
           <picture>
@@ -229,7 +230,7 @@
 
       <a href="/ar/arabic" class="channel-card card-arabic reveal">
         <div class="card-header">
-          <div class="card-icon">🐪</div>
+          <div class="card-icon"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
           <span class="card-tag">تعلّم الصينية</span>
           <div class="card-title">Arabic Kids Chinese Picture Book</div>
           <picture>
@@ -263,17 +264,17 @@
     <p class="section-sub reveal">اختاروا فيديو. جربوا عبارة واحدة. اسألوا سؤالا بسيطا بعد المشاهدة.</p>
     <div class="rhythm-grid compact-rhythm">
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">☀️</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
         <div class="rhythm-title">اختاروا فيديو واحدا</div>
         <p class="rhythm-desc">كوكو للإنجليزية، ونور وزيد للصينية. كل قصة يمكن البدء بها وحدها.</p>
       </div>
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">💬</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#steps"></use></svg></div>
         <div class="rhythm-title">جربوا عبارة واحدة</div>
         <p class="rhythm-desc">توقفوا مرة واحدة ورددوا عبارة اليوم مع الطفل حتى تبقى اللغة داخل القصة.</p>
       </div>
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">📬</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg></div>
         <div class="rhythm-title">افعلوا نشاطا صغيرا</div>
         <p class="rhythm-desc">استخدموا سؤالا واحدا أو نشاطا مطبوعا عندما تريدون المتابعة.</p>
       </div>
@@ -282,83 +283,25 @@
 
   <section class="story-pick" id="weekly-pack">
     <div class="story-pick-inner reveal">
-      <div>
-        <span class="story-pick-kicker">ماذا يصلكم بعد الاشتراك</span>
-        <h2>الحزمة الأسبوعية تخبركم بالخطوة التالية بوضوح.</h2>
-        <p>كل رسالة تحول قصة واحدة إلى خطة قراءة صغيرة: رابط القصة، عبارة واحدة، سؤالان للوالدين، ونشاط قابل للطباعة.</p>
-        <button class="btn btn-newsletter" data-open-subscribe="noor" data-signup-source="home_noor_weekly_pack">حزمة نور الصينية</button>
+      <div><span class="story-pick-kicker">عينة مجانية لوقت القصة</span><h2>شاهدوا حزمة قصة أولا، ثم قرروا إن كنتم تريدون الانضمام.</h2><p>عاينوا نشاطا، نزّلوا ملف Koko، أو افتحوا مسار قصة نور. لا يوجد دفع أو إتمام شراء.</p></div>
+      <div class="home-pack-actions" aria-label="اختيار عينة قصة مجانية">
+        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">احصلوا على حزمة Koko الأسبوعية</button>
+        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">احصلوا على حزمة نور الأسبوعية</button>
+        <a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=ar_home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">معاينة نشاط Koko</a>
+        <a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=ar_home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="ar_home_koko_printable_pdf">تنزيل ملف Koko PDF</a>
+        <a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/ar/arabic?subscribe=noor&amp;utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">معاينة قصة نور</a>
       </div>
-      <div class="home-pack-actions" aria-label="اختاروا حزمة القصة الأسبوعية"><button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">حزمة كوكو الإنجليزية</button><button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">حزمة نور الصينية</button><a class="btn btn-outline home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=ar_home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">شاهدوا عينة كوكو للطباعة</a><a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=ar_home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="ar_home_koko_printable_pdf">نزّلوا PDF كوكو</a><a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/ar/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link">شاهدوا نموذج نور</a></div>
-      <div class="parent-toolkit weekly-toolkit" aria-label="What parents receive">
-          <div class="toolkit-card"><strong>قصة مختارة</strong><span>حلقة هادئة واحدة للمشاهدة مع الطفل.</span></div>
-          <div class="toolkit-card"><strong>عبارات ثنائية</strong><span>كلمات قصيرة تكررونها معًا.</span></div>
-          <div class="toolkit-card"><strong>أسئلة للحديث</strong><span>سؤالان لجعل المشاهدة تفاعلية.</span></div>
-          <div class="toolkit-card"><strong>نشاط للطباعة</strong><span>نشاط بسيط بعد انتهاء الفيديو.</span></div>
-        </div>
-      <div class="story-pick-preview" aria-label="معاينة الرسالة الأسبوعية">
-        <strong>حزمة هذا الأسبوع</strong>
-        <span><span class="preview-label">القصة</span>كوكو يتعلّم كلمة شجاعة جديدة</span>
-        <span><span class="preview-label">العبارة</span>"I can try again" / 我可以再試一次</span>
-        <span class="preview-question"><span class="preview-label">اسألوا</span>متى شعر كوكو بالشجاعة؟ ماذا تريد أن تحاول مرة أخرى؟</span>
-        <span><span class="preview-label">النشاط</span>مطابقة كلمات في 5 دقائق</span>
-        <button class="btn btn-newsletter home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="ar_home_koko_sample_printable_interest">سنستخدم حزمة كوكو من 3 صفحات</button>
-      </div>
+      <div class="parent-toolkit weekly-toolkit" aria-label="ما تحصل عليه العائلة"><div class="toolkit-card"><strong>قصة قصيرة</strong><span>جاهزة للمشاهدة معا.</span></div><div class="toolkit-card"><strong>عبارة واحدة</strong><span>سهلة التكرار بعد القصة.</span></div><div class="toolkit-card"><strong>نشاط صغير</strong><span>استخدموه فقط عندما يريد الطفل المزيد.</span></div></div>
+      <div class="home-focus-trust" aria-label="ملاحظات الثقة في Fursay"><span>معاينة مجانية</span><span>لا يوجد إتمام شراء</span><span>إشارات تفاعل مجهولة فقط</span></div>
     </div>
   </section>
 
-  <!-- Latest Videos -->
-  <section class="videos" id="videos">
-    <h2 class="section-title reveal">قصص يمكن البدء بها</h2>
-    <p class="section-sub reveal">اختاروا أي قصة يحبها طفلكم. لا يوجد ترتيب صحيح.</p>
-    <div class="videos-tabs">
-      <button class="tab-btn active" data-tab="koko">🦊 غابة كوكو</button>
-      <button class="tab-btn tab-arabic" data-tab="arabic">🐪 حزمة الأطفال العرب يتعلّمون الصينية</button>
-    </div>
-
-    <div class="videos-grid" id="tab-koko">
-      <a class="video-card unstyled-card-link" data-latest-story="koko" href="/ar/episodes/koko-feelings">
-        <div class="video-thumb"><img src="/images/chars/koko.webp" alt="قصص غابة كوكو" loading="lazy" width="853" height="1280"></div>
-        <div class="video-info"><div class="video-ep">دليل حلقة كوكو</div><div class="video-title">ابدؤوا بحزمة قصة المشاعر</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" href="https://www.youtube.com/@KokosForest/playlists" target="_blank" rel="noopener">
-        <div class="video-thumb"><img src="/images/chars/mimi.webp" alt="قوائم تشغيل كوكو" loading="lazy" width="853" height="1280"></div>
-        <div class="video-info"><div class="video-ep">قوائم التشغيل</div><div class="video-title">تصفحوا الكلمات والأغاني وقصص النوم</div></div>
-      </a>
-    </div>
-    <div class="videos-grid is-hidden" id="tab-arabic">
-      <a class="video-card unstyled-card-link" data-latest-story="noor" href="/ar/episodes/noor-greetings">
-        <div class="video-thumb"><img src="/images/chars/arabic_nour_zayd_together.webp" alt="قصص نور وزيد العربية الصينية" loading="lazy" width="1380" height="752"></div>
-        <div class="video-info"><div class="video-ep">دليل حلقة نور</div><div class="video-title">ابدؤوا بحزمة قصة التحيات</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" href="https://www.youtube.com/@ArabicKidsChinese/playlists" target="_blank" rel="noopener">
-        <div class="video-thumb"><img src="/images/chars/arabic_nour.webp" alt="قوائم نور الصينية" loading="lazy" width="1408" height="768"></div>
-        <div class="video-info"><div class="video-ep">قوائم التشغيل</div><div class="video-title">تصفحوا الكلمات والبينيين والموضوعات الثقافية</div></div>
-      </a>
-    </div>
-
-    <div class="view-more">
-      <a href="https://www.youtube.com/@KokosForest" target="_blank" rel="noopener" id="view-all-btn" class="btn btn-primary">🎬 افتح مكتبة القصص</a>
-    </div>
-  </section>
-
-  <div class="paw-divider" aria-hidden="true">🐾 🐾 🐾 🐾 🐾</div>
-
-  <section class="story-pick product-interest" id="printable-packs" data-product-interest-section>
-    <div class="story-pick-inner reveal">
-      <div>
-        <span class="story-pick-kicker">الخطوة القادمة</span>
-        <h2>حزم قابلة للطباعة وأوراق عمل في 3 دقائق.</h2>
-        <p>نقيس اهتمام العائلات قبل فتح الدفع. انضموا إلى قائمة الاهتمام وستصلكم الحزمة المجانية أولاً.</p>
-      </div>
-      <div class="home-pack-actions" aria-label="قائمة الاهتمام بالمنتج">
-        <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">أخبروني عند جاهزية حزمة كوكو من 3 صفحات</button>
-        <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">ورقة نور في 3 دقائق</button>
-        <a class="btn btn-outline" href="/ar/products?utm_source=ar_home&utm_medium=site&utm_campaign=product_interest_validation&utm_content=ar_home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="ar_home_product_info">اطّلعوا على صفحة الحزم</a>
-      </div>
-      <div class="parent-toolkit weekly-toolkit" aria-label="معاينة الاهتمام بالمنتج">
-        <div class="toolkit-card"><strong>لا يوجد دفع الآن</strong><span>نؤكد الطلب الحقيقي قبل إطلاق المنتج المدفوع.</span></div>
-        <div class="toolkit-card"><strong>الخطوة الأولى مجانية</strong><span>النقر يفتح حزمة القصة المجانية أولاً.</span></div>
-      </div>
+  <section class="home-explore" id="explore-more" data-product-interest-section>
+    <h2 class="section-title reveal">مسارات إضافية عند الحاجة فقط</h2><p class="section-sub reveal">استخدموها عندما تريد العائلة قصة أخرى أو معاينة منتج أو مساعدة.</p>
+    <div class="home-explore-grid">
+      <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg><h3>مكتبة القصص</h3><p>ابدؤوا بدليل واحد أو تصفحوا قوائم تشغيل القنوات الأصلية.</p><div class="home-explore-links"><a class="video-card unstyled-card-link home-explore-link" href="/ar/episodes/koko-feelings" data-latest-story="koko">دليل مشاعر Koko</a><a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@KokosForest/playlists" target="_blank" rel="noopener">قوائم Koko</a><a class="video-card unstyled-card-link home-explore-link" href="/ar/episodes/noor-greetings" data-latest-story="noor">دليل تحيات نور</a><a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@ArabicKidsChinese/playlists" target="_blank" rel="noopener">قوائم نور</a></div></article>
+      <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg><h3>معاينة المواد المطبوعة</h3><p>شاهدوا ما يتم تحضيره. لا يوجد حتى الآن سعر عام أو رابط دفع أو إتمام شراء.</p><div class="home-explore-actions"><a class="btn btn-outline" href="/ar/products?utm_source=home&amp;utm_medium=site&amp;utm_campaign=product_interest_validation&amp;utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="ar_home_product_info">عرض المعاينتين</a><button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="ar_home_koko_sample_printable_interest">قائمة اهتمام Koko</button><button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="ar_product_interest_noor_worksheet">قائمة اهتمام نور</button></div></article>
+      <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#support"></use></svg><h3>مساعدة الوالدين</h3><p>أسئلة التنزيل واللغة والخصوصية وقائمة الاهتمام موجودة في مكان واحد.</p><div class="home-explore-links"><a class="home-explore-link" href="/ar/support">فتح الدعم</a><a class="home-explore-link" href="/ar/koko#booklist">قائمة قراءة Koko</a><a class="home-explore-link" href="/ar/arabic#booklist">قائمة قراءة نور</a></div></article>
     </div>
   </section>
 
@@ -413,88 +356,12 @@
     </div>
   </section>
 
-  <!-- كتب مُوصى بها -->
-  <section class="booklist-sec" id="booklist">
-    <div class="section-intro-block">
-      <div class="section-title reveal">📚 كتب <span class="hl">مُوصى بها</span></div>
-      <p class="section-sub reveal">كتب مصوّرة مختارة بعناية تناسب مواضيع قصصنا. شاهدوا الحلقة ثم اقرؤوا معًا — تعلّم مضاعف!</p>
-    </div>
-    <div class="booklist-grid">
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">وحش الألوان</div>
-        <div class="book-info">
-          <span class="book-tag">مشاعر · feelings</span>
-          <div class="book-title">The Color Monster</div>
-          <p class="book-desc">كتاب عالمي يساعد الأطفال على التعرّف على مشاعرهم من خلال الألوان. مثالي مع حلقاتنا عن المشاعر.</p>
-          <a href="https://www.amazon.com/dp/0316450014?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            شاهد على أمازون
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">كتابي المصوّر ثنائي اللغة</div>
-        <div class="book-info">
-          <span class="book-tag">ثنائي اللغة · bilingual</span>
-          <div class="book-title">كتابي المصوّر الأول إنجليزي-عربي</div>
-          <p class="book-desc">أكثر من ٢٨٠ كلمة يومية بالعربية والإنجليزية مع رسوم جميلة — رفيق مثالي للتعلّم المبكر.</p>
-          <a href="https://www.amazon.com/dp/B0DRVXFBMR?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            شاهد على أمازون
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">هل ملأت دلوك اليوم؟</div>
-        <div class="book-info">
-          <span class="book-tag">لطف · kindness</span>
-          <div class="book-title">هل ملأت دلوك اليوم؟</div>
-          <p class="book-desc">قصة كلاسيكية عن اللطف وكيف أن الأفعال الصغيرة تملأ دلو الجميع. تتناسب مع مواضيع الصداقة والدفء.</p>
-          <a href="https://www.amazon.com/dp/0996099948?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            شاهد على أمازون
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">الأشياء الرائعة التي ستصبحها</div>
-        <div class="book-info">
-          <span class="book-tag">شجاعة · brave</span>
-          <div class="book-title">الأشياء الرائعة التي ستصبحها</div>
-          <p class="book-desc">احتفاء بالإمكانيات المستقبلية والشجاعة على النمو. يتناسب مع مغامراتنا عن تجربة أشياء جديدة.</p>
-          <a href="https://www.amazon.com/dp/0385376715?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            شاهد على أمازون
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">آخر محطة في شارع ماركت</div>
-        <div class="book-info">
-          <span class="book-tag">استكشاف · wonder</span>
-          <div class="book-title">آخر محطة في شارع ماركت</div>
-          <p class="book-desc">فائز بجائزة نيوبيري عن رؤية الجمال في كل مكان — يعكس الدروس الحياتية اللطيفة في قصصنا.</p>
-          <a href="https://www.amazon.com/dp/0399257748?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            شاهد على أمازون
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-    <p class="booklist-note reveal">بعض الروابط قد تُدرّ عمولة صغيرة لدعم محتوانا المجاني.<br/>جميع الكتب مختارة يدويًا من فريق Fursay لتتناسب مع موضوعات حلقاتنا — ولم تكن يومًا اختيارات مدفوعة.</p>
-  </section>
 
   <!-- Footer -->
   <footer>
-    <div class="f-logo">🐾 Fursay</div>
-    <div class="footer-kicker">قصص ثنائية اللغة جاهزة للقراءة مع العائلة</div>
-    <div class="f-links">
-      <a href="/ar/">الرئيسية</a>
-      <a href="/ar/koko">غابة كوكو</a>
-      <a href="/ar/arabic">حزمة الأطفال العرب يتعلّمون الصينية</a>
-      <a href="mailto:contact@fursay.com">تواصل معنا</a>
-    </div>
-    <div class="f-copy">© 2026 Fursay · fursay.com · Made with 🐾 and 💚</div>
+    <div class="f-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</div><div class="footer-kicker">قصص ثنائية اللغة جاهزة للقراءة مع العائلة</div>
+    <div class="f-links"><a href="/ar/">الرئيسية</a><a href="/ar/koko">غابة كوكو</a><a href="/ar/arabic">الأطفال العرب يتعلمون الصينية</a><a href="/ar/products">معاينة المنتجات</a><a href="/ar/support">الدعم</a><a href="/ar/privacy">الخصوصية</a><a href="mailto:contact@fursay.com">تواصل معنا</a></div>
+    <div class="f-copy">© 2026 Fursay · fursay.com · صُنع لوقت قصة عائلي هادئ</div>
   </footer>
 
   <!-- نافذة الاشتراك -->

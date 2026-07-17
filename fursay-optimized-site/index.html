@@ -122,6 +122,7 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
+  <link rel="stylesheet" href="/css/home-focus-20260718-v1.css">
 </head>
 <body class="picture-world world-home">
 
@@ -134,7 +135,7 @@
         <li><a href="#channels"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg> Story Worlds</a></li>
         <li><a href="#rhythm"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#steps"></use></svg> How It Works</a></li>
         <li><a href="#weekly-pack" class="nav-cta"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> Free Pack</a></li>
-        <li><a href="#faq"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#faq"></use></svg> FAQ</a></li>
+        <li><a href="/products"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> Products</a></li>
       </ul>
       <div class="lang-switcher" data-lang-menu>
         <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
@@ -202,7 +203,7 @@
 
       <a href="/koko" class="channel-card card-koko reveal">
         <div class="card-header">
-          <div class="card-icon">🦊</div>
+          <div class="card-icon"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
           <span class="card-tag">English Learning</span>
           <div class="card-title">Koko's Forest Adventure</div>
           <picture>
@@ -229,7 +230,7 @@
 
       <a href="/arabic" class="channel-card card-arabic reveal">
         <div class="card-header">
-          <div class="card-icon">🐪</div>
+          <div class="card-icon"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
           <span class="card-tag">Chinese Learning</span>
           <div class="card-title">Arabic Kids Chinese Picture Book</div>
           <picture>
@@ -263,17 +264,17 @@
     <p class="section-sub reveal">Choose one video. Try one phrase. Ask one easy question after watching.</p>
     <div class="rhythm-grid compact-rhythm">
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">☀️</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
         <div class="rhythm-title">Pick one video</div>
         <p class="rhythm-desc">Choose Koko for English or Nour and Zayd for Chinese. Any video is fine.</p>
       </div>
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">💬</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#steps"></use></svg></div>
         <div class="rhythm-title">Try one phrase</div>
         <p class="rhythm-desc">Pause once and say the phrase together. Keep it light.</p>
       </div>
       <div class="rhythm-card reveal">
-        <div class="rhythm-emoji">📬</div>
+        <div class="rhythm-emoji"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg></div>
         <div class="rhythm-title">Do one small activity</div>
         <p class="rhythm-desc">Use one question or printable when you want to keep going.</p>
       </div>
@@ -283,90 +284,54 @@
   <section class="story-pick" id="weekly-pack">
     <div class="story-pick-inner reveal">
       <div>
-        <span class="story-pick-kicker">What you get each week</span>
-        <h2>A simple weekly pack for story time.</h2>
-        <p>Each email includes one story, one phrase, two questions, and one printable activity.</p>
-        <button class="btn btn-newsletter" data-open-subscribe="noor" data-signup-source="home_noor_weekly_pack">Get the Nour pack</button>
+        <span class="story-pick-kicker">Free story-time sample</span>
+        <h2>Try one story pack before you join anything.</h2>
+        <p>Preview a printable, download the Koko PDF, or open the Nour story path. No payment or checkout is involved.</p>
       </div>
-      <div class="home-pack-actions" aria-label="Choose a weekly story pack"><button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">Koko English pack</button><button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">Nour Chinese pack</button><a class="btn btn-outline home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">Preview Koko printable</a><a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="home_koko_printable_pdf">Download Koko PDF</a><a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link">Preview Nour sample</a></div>
+      <div class="home-pack-actions" aria-label="Choose a free story sample">
+        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">Get the Koko weekly pack</button>
+        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">Get the Nour weekly pack</button>
+        <a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">Preview Koko printable</a>
+        <a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="home_koko_printable_pdf">Download Koko PDF</a>
+        <a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/arabic?subscribe=noor&amp;utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">Preview Nour sample</a>
+      </div>
       <div class="parent-toolkit weekly-toolkit" aria-label="What parents receive">
-          <div class="toolkit-card"><strong>Story pick</strong><span>One short story to watch together.</span></div>
-          <div class="toolkit-card"><strong>Phrase set</strong><span>A few words to say together.</span></div>
-          <div class="toolkit-card"><strong>Talk prompts</strong><span>Two easy questions for your child.</span></div>
-          <div class="toolkit-card"><strong>Printable</strong><span>One simple activity after watching.</span></div>
+        <div class="toolkit-card"><strong>One short story</strong><span>Ready to watch together.</span></div>
+        <div class="toolkit-card"><strong>One phrase</strong><span>Easy to repeat after the story.</span></div>
+        <div class="toolkit-card"><strong>One activity</strong><span>Use it only when your child wants more.</span></div>
+      </div>
+      <div class="home-focus-trust" aria-label="Fursay trust notes"><span>Free to preview</span><span>No checkout</span><span>Anonymous interaction signals only</span></div>
+    </div>
+  </section>
+
+  <section class="home-explore" id="explore-more" data-product-interest-section>
+    <h2 class="section-title reveal">More paths, kept out of the way</h2>
+    <p class="section-sub reveal">Use these when your family wants another story, a product preview, or help.</p>
+    <div class="home-explore-grid">
+      <article class="home-explore-card reveal">
+        <svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg><h3>Story library</h3>
+        <p>Start with one guide or browse the original channel playlists.</p>
+        <div class="home-explore-links">
+          <a class="video-card unstyled-card-link home-explore-link" href="/episodes/koko-feelings" data-latest-story="koko">Koko feelings guide</a>
+          <a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@KokosForest/playlists" target="_blank" rel="noopener">Koko playlists</a>
+          <a class="video-card unstyled-card-link home-explore-link" href="/episodes/noor-greetings" data-latest-story="noor">Nour greetings guide</a>
+          <a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@ArabicKidsChinese/playlists" target="_blank" rel="noopener">Nour playlists</a>
         </div>
-      <div class="story-pick-preview" aria-label="Weekly letter preview">
-        <strong>This week's pack</strong>
-        <span><span class="preview-label">Story</span>Koko learns a brave new word</span>
-        <span><span class="preview-label">Phrase</span>"I can try again" / "我可以再試一次"</span>
-        <span class="preview-question"><span class="preview-label">Ask</span>When did Koko feel brave? What would you try again?</span>
-        <span><span class="preview-label">Printable</span>5-minute word match</span>
-        <button class="btn btn-newsletter home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="home_koko_sample_printable_interest">I would use this 3-page printable</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Latest Videos -->
-  <section class="videos" id="videos">
-    <h2 class="section-title reveal">Stories to start with</h2>
-    <p class="section-sub reveal">Pick any story your child likes. There is no right order.</p>
-    <div class="videos-tabs">
-      <button class="tab-btn active" data-tab="koko">🦊 Koko's Forest</button>
-      <button class="tab-btn tab-arabic" data-tab="arabic">🐪 Arabic Kids Chinese</button>
-    </div>
-
-    <div class="videos-grid" id="tab-koko">
-      <a class="video-card unstyled-card-link" data-latest-story="koko" href="/episodes/koko-feelings">
-        <div class="video-thumb"><img src="/images/chars/koko.webp" alt="Koko forest stories" loading="lazy" width="853" height="1280"></div>
-        <div class="video-info"><div class="video-ep">Koko episode guide</div><div class="video-title">Start with the feelings story pack</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" href="https://www.youtube.com/@KokosForest/playlists" target="_blank" rel="noopener">
-        <div class="video-thumb"><img src="/images/chars/mimi.webp" alt="Koko playlists" loading="lazy" width="853" height="1280"></div>
-        <div class="video-info"><div class="video-ep">Watch-along themes</div><div class="video-title">Browse words, songs, and bedtime stories</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" data-episode-link="koko" href="/episodes/koko-feelings">
-        <div class="video-thumb"><img src="/images/chars/gugu.webp" alt="Koko feelings episode guide" loading="lazy" width="853" height="1280"></div>
-        <div class="video-info"><div class="video-ep">Episode guide</div><div class="video-title">Koko feelings pack: happy, sad, brave</div></div>
-      </a>
-    </div>
-    <div class="videos-grid is-hidden" id="tab-arabic">
-      <a class="video-card unstyled-card-link" data-latest-story="noor" href="/episodes/noor-greetings">
-        <div class="video-thumb"><img src="/images/chars/arabic_nour_zayd_together.webp" alt="Nour and Zayd Arabic Chinese stories" loading="lazy" width="1380" height="752"></div>
-        <div class="video-info"><div class="video-ep">Nour episode guide</div><div class="video-title">Start with the greetings story pack</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" href="https://www.youtube.com/@ArabicKidsChinese/playlists" target="_blank" rel="noopener">
-        <div class="video-thumb"><img src="/images/chars/arabic_nour.webp" alt="Arabic Kids Chinese playlists" loading="lazy" width="1408" height="768"></div>
-        <div class="video-info"><div class="video-ep">Playlists</div><div class="video-title">Browse words, Pinyin, and culture themes</div></div>
-      </a>
-      <a class="video-card unstyled-card-link" data-episode-link="noor" href="/episodes/noor-colors">
-        <div class="video-thumb"><img src="/images/chars/arabic_zayd.webp" alt="Nour colors episode guide" loading="lazy" width="1380" height="752"></div>
-        <div class="video-info"><div class="video-ep">Episode guide</div><div class="video-title">Nour colors pack: red, blue, green</div></div>
-      </a>
-    </div>
-
-    <div class="view-more">
-      <a href="https://www.youtube.com/@KokosForest" target="_blank" rel="noopener" id="view-all-btn" class="btn btn-primary">🎬 Open the story library</a>
-    </div>
-  </section>
-
-  <div class="paw-divider" aria-hidden="true">🐾 🐾 🐾 🐾 🐾</div>
-
-  <section class="story-pick product-interest" id="printable-packs" data-product-interest-section>
-    <div class="story-pick-inner reveal">
-      <div>
-        <span class="story-pick-kicker">Coming next</span>
-        <h2>Printable packs and 3-minute worksheets.</h2>
-        <p>We are testing interest before opening paid packs. Join the interest list and we will send the free story pack first.</p>
-      </div>
-      <div class="home-pack-actions" aria-label="Join product interest list">
-        <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">Notify me about the Koko 3-page pack</button>
-        <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">Nour worksheet pack</button>
-        <a class="btn btn-outline" href="/products?utm_source=home&utm_medium=site&utm_campaign=product_interest_validation&utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="home_product_info">Learn about the packs</a>
-      </div>
-      <div class="parent-toolkit weekly-toolkit" aria-label="Product interest preview">
-        <div class="toolkit-card"><strong>No paid pack yet</strong><span>We are measuring real family interest before selling.</span></div>
-        <div class="toolkit-card"><strong>Free first step</strong><span>The signup still sends the free story pack.</span></div>
-      </div>
+      </article>
+      <article class="home-explore-card reveal">
+        <svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg><h3>Printable previews</h3>
+        <p>See what is being prepared. There is still no public price or payment link.</p>
+        <div class="home-explore-actions">
+          <a class="btn btn-outline" href="/products?utm_source=home&amp;utm_medium=site&amp;utm_campaign=product_interest_validation&amp;utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="home_product_info">View both previews</a>
+          <button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="home_koko_sample_printable_interest">Koko interest list</button>
+          <button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">Nour interest list</button>
+        </div>
+      </article>
+      <article class="home-explore-card reveal">
+        <svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#support"></use></svg><h3>Parent help</h3>
+        <p>Questions about downloads, languages, privacy, or the interest list have one clear home.</p>
+        <div class="home-explore-links"><a class="home-explore-link" href="/support">Open support</a><a class="home-explore-link" href="/koko#booklist">Koko reading list</a><a class="home-explore-link" href="/arabic#booklist">Nour reading list</a></div>
+      </article>
     </div>
   </section>
 
@@ -422,73 +387,13 @@
     </div>
   </section>
 
-  <!-- Booklist -->
-  <section class="booklist-sec" id="booklist">
-    <div class="section-intro-block">
-      <div class="section-title reveal">📚 Our <span class="hl">Booklist</span></div>
-      <p class="section-sub reveal">Handpicked picture books that pair with our story themes across both channels. Watch, then read together — double the learning!</p>
-    </div>
-    <div class="booklist-grid">
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">The Color Monster</div>
-        <div class="book-info">
-          <span class="book-tag">feelings · emotions</span>
-          <div class="book-title">The Color Monster</div>
-          <p class="book-desc">An international bestseller that helps kids name their emotions through color. Perfect alongside our "feelings" episodes.</p>
-          <a href="https://www.amazon.com/dp/0316450014?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            View on Amazon
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">Have You Filled a Bucket Today?</div>
-        <div class="book-info">
-          <span class="book-tag">kindness · kind</span>
-          <div class="book-title">Have You Filled a Bucket Today?</div>
-          <p class="book-desc">A classic about kindness and how small acts fill everyone's invisible bucket. Matches our themes of friendship and warmth.</p>
-          <a href="https://www.amazon.com/dp/0996099948?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            View on Amazon
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">The Wonderful Things You Will Be</div>
-        <div class="book-info">
-          <span class="book-tag">courage · brave</span>
-          <div class="book-title">The Wonderful Things You Will Be</div>
-          <p class="book-desc">A celebration of future possibilities and the courage to grow. Pairs with our adventures about trying new things.</p>
-          <a href="https://www.amazon.com/dp/0385376715?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">
-            View on Amazon
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="book-card reveal">
-        <div class="book-cover-fallback">Last Stop on Market Street</div>
-        <div class="book-info">
-          <span class="book-tag">exploration · wonder</span>
-          <div class="book-title">Last Stop on Market Street</div>
-          <p class="book-desc">A Newbery Medal winner about seeing beauty everywhere — mirrors the gentle life lessons in our stories.</p>
-          <a href="https://www.amazon.com/dp/0399257748?tag=parenttechche-20" target="_blank" rel="noopener sponsored" class="book-link">View on Amazon → <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
-        </div>
-      </div>
-    </div>
-    <p class="booklist-note reveal">Some links may earn a small commission to support our free content.<br/>Books are hand-picked by the Fursay team to match our episode themes — never paid placements.</p>
-  </section>
 
   <!-- Footer -->
   <footer>
-    <div class="f-logo">🐾 Fursay</div>
+    <div class="f-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</div>
     <div class="footer-kicker">Parent-child bilingual stories, ready to read together</div>
-    <div class="f-links">
-      <a href="/">Home</a>
-      <a href="/koko">Koko's Forest</a>
-      <a href="/arabic">Arabic Kids Chinese</a>
-      <a href="mailto:contact@fursay.com">Contact</a>
-    </div>
-    <div class="f-copy">© 2026 Fursay · fursay.com · Made with 🐾 and 💚</div>
+    <div class="f-links"><a href="/">Home</a><a href="/koko">Koko's Forest</a><a href="/arabic">Arabic Kids Chinese</a><a href="/products">Products</a><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="mailto:contact@fursay.com">Contact</a></div>
+    <div class="f-copy">© 2026 Fursay · fursay.com · Made for calm family story time</div>
   </footer>
 
   <!-- Subscribe Modal -->
