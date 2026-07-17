@@ -487,7 +487,7 @@ function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTex
   if (!html.includes(newsletterShortlink) || !richTextBody.includes(newsletterShortlink)) {
     errors.push("rendered email must include the creator-kit newsletter shortlink");
   }
-  if (!html.includes(trafficPack.newsletterBlurb) || !richTextBody.includes(trafficPack.newsletterBlurb)) {
+  if (!html.includes(escapeHtml(trafficPack.newsletterBlurb)) || !richTextBody.includes(trafficPack.newsletterBlurb)) {
     errors.push("rendered email must include the creator-kit newsletter blurb");
   }
   if (!html.includes(escapeHtml(newsletter.video_cta)) || !richTextBody.includes(newsletter.video_cta)) {
