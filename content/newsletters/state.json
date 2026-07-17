@@ -12155,7 +12155,7 @@
       "lastSyncedAt": "2026-06-28T18:43:11.998Z"
     },
     "arabic": {
-      "lastSentEpisodeNo": 0,
+      "lastSentEpisodeNo": 1,
       "episodes": [
         {
           "episodeNo": 1,
@@ -12166,8 +12166,8 @@
           "publishedAt": "2026-04-16T17:32:15Z",
           "videoUrl": "https://www.youtube.com/watch?v=uFicgPqbxms",
           "source": "parsed",
-          "sentAt": null,
-          "campaignId": null,
+          "sentAt": "2026-07-17T15:12:14.967Z",
+          "campaignId": "193253744075343190",
           "deliveryMethod": null
         },
         {
@@ -15834,6 +15834,51 @@
   },
   "runs": [
     {
+      "runId": "1784301131515-bn7pwv",
+      "channel": "arabic",
+      "mode": "send",
+      "episodeNo": 1,
+      "status": "scheduled",
+      "dryRun": false,
+      "campaignId": "193253744075343190",
+      "scheduledAt": "2026-07-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-17T15:12:11.515Z",
+      "finishedAt": "2026-07-17T15:12:14.967Z"
+    },
+    {
+      "runId": "1784301116136-v4dyof",
+      "channel": "arabic",
+      "mode": "send",
+      "episodeNo": 1,
+      "status": "failed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": null,
+      "providerErrorCode": "advanced_plan_required",
+      "warnings": [],
+      "error": "MailerLite content API send is disabled. Set MAILERLITE_ALLOW_CONTENT_API_SEND=true only after the account supports Advanced plan content submission.",
+      "startedAt": "2026-07-17T15:11:56.136Z",
+      "finishedAt": "2026-07-17T15:11:56.139Z"
+    },
+    {
+      "runId": "1784301099621-m2ujjp",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-17T15:11:39.622Z",
+      "finishedAt": "2026-07-17T15:11:40.771Z"
+    },
+    {
       "runId": "1784265812234-wbwev6",
       "channel": "arabic",
       "mode": "chrome-result",
@@ -16555,55 +16600,6 @@
       "error": null,
       "startedAt": "2026-06-23T04:46:39.618Z",
       "finishedAt": "2026-06-23T04:46:40.323Z"
-    },
-    {
-      "runId": "1782185933991-egst8i",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-24T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-23T03:38:53.991Z",
-      "finishedAt": "2026-06-23T03:38:54.594Z"
-    },
-    {
-      "runId": "1782172958139-rr2im1",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-29T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-23T00:02:38.139Z",
-      "finishedAt": "2026-06-23T00:02:38.782Z"
-    },
-    {
-      "runId": "1782135067630-50dbnu",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-24T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-22T13:31:07.630Z",
-      "finishedAt": "2026-06-22T13:31:08.261Z"
     }
   ]
 }

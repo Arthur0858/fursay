@@ -16,6 +16,7 @@ const RUN_STATUSES = new Set([
   "dry_run_passed",
   "failed",
   "prepared",
+  "scheduled",
   "scheduled_by_chrome",
   "synced",
 ]);
