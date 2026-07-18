@@ -5,8 +5,8 @@
   "updatedAt": "2026-07-18",
   "source": {
     "branch": "main",
-    "commit": "6929b2f",
-    "summary": "ops: schedule Arabic EP001 newsletter"
+    "commit": "7e345c8",
+    "summary": "feat: focus multilingual homepage journey"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

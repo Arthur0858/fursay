@@ -22,6 +22,7 @@ const EXPECTED_CSS = [
   "picture-world-shared-20260613-traffic12.css",
   "picture-world-tools-20260613-products1.css",
   "brand-storybook-20260717-v1.css",
+  "sample-activity-20260718-v1.css",
   "home-focus-20260718-v1.css",
 ];
 const EXPECTED_JS = [

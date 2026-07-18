@@ -78,6 +78,11 @@
       "sha256": "b7a67b11205599312a07dbd5050520ebf7682ab48c0019babbcb1699987ec279"
     },
     {
+      "path": "/css/sample-activity-20260718-v1.css",
+      "bytes": 9258,
+      "sha256": "12c6d729f2b3adad7f6b335b653d6d1ff508db7a1ed9607575016d976366e245"
+    },
+    {
       "path": "/css/story-page-common-20260613-css1.css",
       "bytes": 3878,
       "sha256": "7fc76f5b5a856e91d4d4c423ef1ed46717f1e59b15479e698aee63b9a62eff1d"

@@ -6,8 +6,8 @@ const DEFAULT_OUT = "/tmp/fursay-product-readiness-contract";
 const ORIGIN = "https://fursay.com";
 const CHECKOUT_NEEDLES = [/gumroad/i, /stripe/i, /checkout\.stripe/i, /paypal/i, /buy now/i, /立即購買/i, /اشتر الآن/i];
 const PRODUCTS = [
-  { id: "koko-printable-pack", pack: "koko", slug: "koko-printable", sample: "/product-samples/koko-printable", pdf: "/downloads/koko-printable-sample.pdf", name: "Koko" },
-  { id: "noor-worksheet-pack", pack: "noor", slug: "noor-worksheet", sample: "/product-samples/noor-worksheet", pdf: "/downloads/noor-worksheet-sample.pdf", name: "Nour" },
+  { id: "koko-printable-pack", pack: "koko", slug: "koko-printable", sample: "/product-samples/koko-printable", pdf: "/downloads/koko-printable-sample.pdf", name: "Koko", pages: 3 },
+  { id: "noor-worksheet-pack", pack: "noor", slug: "noor-worksheet", sample: "/product-samples/noor-worksheet", pdf: "/downloads/noor-worksheet-sample.pdf", name: "Nour", pages: 3 },
 ];
 const LOCALES = [
   { key: "en", prefix: "", lang: "en", dir: "" },
@@ -107,6 +107,8 @@ async function main() {
     if (spec.pack === "noor" && product.publicName !== "Nour 3-minute worksheet pack") failures.push(`public_nour_name:${product.publicName || "none"}`);
     const pdf = await readBytes(args.baseUrl, spec.pdf);
     if (String.fromCharCode(...pdf.slice(0, 4)) !== "%PDF") failures.push(`sample_pdf_invalid:${spec.pack}`);
+    const pdfPages = (Buffer.from(pdf).toString("latin1").match(/\/Type\s*\/Page\b/g) || []).length;
+    if (pdfPages !== spec.pages) failures.push(`sample_pdf_pages:${spec.pack}:${pdfPages}`);
   }
 
   for (const locale of LOCALES) {
@@ -176,6 +178,10 @@ async function main() {
     requireContains(failures, spec.sample, html, `data-product-sample-download="${spec.pack}"`, "sample_download");
     requireContains(failures, spec.sample, html, `data-product-interest="${spec.pack}"`, "sample_interest");
     requireContains(failures, spec.sample, html, "trust-strip", "trust_strip");
+    requireContains(failures, spec.sample, html, "sample-activity-20260718-v1.css", "sample_activity_css");
+    requireContains(failures, spec.sample, html, "sample-activity-preview", "sample_activity_preview");
+    const sampleSheets = count(html, /data-sample-sheet=/g);
+    if (sampleSheets !== spec.pages) failures.push(`${spec.sample}:sample_sheet_count:${sampleSheets}`);
     if (count(html, /<link rel="alternate" hreflang=/g) !== 0) failures.push(`${spec.sample}:noindex_hreflang`);
     if (spec.pack === "noor" && !html.includes("نور")) failures.push(`${spec.sample}:arabic_nour_name`);
     if (!html.includes(`lang="${locale}"`)) failures.push(`${spec.sample}:lang`);

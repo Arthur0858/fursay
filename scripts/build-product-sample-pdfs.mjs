@@ -13,11 +13,15 @@ const SAMPLES = [
     path: "/product-samples/koko-printable",
     source: "product-samples/koko-printable.html",
     output: "koko-printable-sample.pdf",
+    assets: ["css/sample-activity-20260718-v1.css"],
+    expectedPages: 3,
   },
   {
     path: "/product-samples/noor-worksheet",
     source: "product-samples/noor-worksheet.html",
     output: "noor-worksheet-sample.pdf",
+    assets: ["css/sample-activity-20260718-v1.css"],
+    expectedPages: 3,
   },
 ];
 
@@ -85,8 +89,14 @@ function readManifest() {
 async function sourceHash(sample) {
   const sourcePath = resolve(SITE_DIR, sample.source);
   if (!existsSync(sourcePath)) return "";
-  const source = await readFile(sourcePath);
-  return createHash("sha256").update(source).digest("hex");
+  const hash = createHash("sha256");
+  for (const relativePath of [sample.source, ...(sample.assets || [])]) {
+    const assetPath = resolve(SITE_DIR, relativePath);
+    if (!existsSync(assetPath)) return "";
+    hash.update(relativePath);
+    hash.update(await readFile(assetPath));
+  }
+  return hash.digest("hex");
 }
 
 async function main() {
@@ -144,7 +154,9 @@ async function main() {
       const outputPath = resolve(DOWNLOAD_DIR, sample.output);
       return [sample.output, {
         source: sample.source,
+        assets: sample.assets,
         sourceHash: sample.hash,
+        pages: sample.expectedPages,
         bytes: existsSync(outputPath) ? statSync(outputPath).size : 0,
       }];
     })),

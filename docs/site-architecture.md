@@ -9,6 +9,7 @@
 - The watercolor presale, sample, Privacy, and Support presentation layer lives in `/css/brand-storybook-20260717-v1.css`; brand icons are served from `/images/brand-icons.svg`.
 - Home page common styles live in `/css/home-common-20260613-cache1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-cache1.css`, `/css/home-zh-page-20260613-cache1.css`, and `/css/home-ar-page-20260613-cache1.css`.
 - The focused three-language homepage journey and compact secondary-resource cards live in `/css/home-focus-20260718-v1.css`.
+- The three-page printable activity previews and print-only PDF layout live in `/css/sample-activity-20260718-v1.css`; both source HTML and this stylesheet are included in the PDF rebuild hash.
 - Koko common styles live in `/css/koko-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-cache1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-cache1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
