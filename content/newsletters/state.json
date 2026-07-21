@@ -15834,7 +15834,7 @@
   },
   "runs": [
     {
-      "runId": "1784611809134-r2qb65",
+      "runId": "1784640272075-r9kr1t",
       "channel": "arabic",
       "mode": "api-preflight",
       "episodeNo": null,
@@ -15845,11 +15845,11 @@
       "providerErrorCode": null,
       "warnings": [],
       "error": null,
-      "startedAt": "2026-07-21T05:30:09.134Z",
-      "finishedAt": "2026-07-21T05:30:09.817Z"
+      "startedAt": "2026-07-21T13:24:32.075Z",
+      "finishedAt": "2026-07-21T13:24:32.622Z"
     },
     {
-      "runId": "1784477706519-yhb89i",
+      "runId": "1784640268301-p7uhyk",
       "channel": "koko",
       "mode": "api-preflight",
       "episodeNo": null,
@@ -15860,8 +15860,68 @@
       "providerErrorCode": null,
       "warnings": [],
       "error": null,
-      "startedAt": "2026-07-19T16:15:06.519Z",
-      "finishedAt": "2026-07-19T16:15:07.056Z"
+      "startedAt": "2026-07-21T13:24:28.301Z",
+      "finishedAt": "2026-07-21T13:24:29.189Z"
+    },
+    {
+      "runId": "1784638663170-8y3ihc",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-21T12:57:43.170Z",
+      "finishedAt": "2026-07-21T12:57:43.832Z"
+    },
+    {
+      "runId": "1784638661114-bo63b3",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-27T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-21T12:57:41.114Z",
+      "finishedAt": "2026-07-21T12:57:41.761Z"
+    },
+    {
+      "runId": "1784638169103-003mav",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-21T12:49:29.103Z",
+      "finishedAt": "2026-07-21T12:49:29.694Z"
+    },
+    {
+      "runId": "1784638167032-dqhfqd",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-27T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-21T12:49:27.032Z",
+      "finishedAt": "2026-07-21T12:49:27.691Z"
     },
     {
       "runId": "1784301131515-bn7pwv",
@@ -16534,68 +16594,6 @@
       "error": null,
       "startedAt": "2026-06-25T01:01:03.372Z",
       "finishedAt": "2026-06-25T01:01:03.861Z"
-    },
-    {
-      "runId": "1782349262694-0mvgex",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-29T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-25T01:01:02.694Z",
-      "finishedAt": "2026-06-25T01:01:03.256Z"
-    },
-    {
-      "runId": "1782250185656-dgnkmq",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-07-01T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-23T21:29:45.656Z",
-      "finishedAt": "2026-06-23T21:29:46.119Z"
-    },
-    {
-      "runId": "1782250184997-oakzvw",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-29T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-23T21:29:44.997Z",
-      "finishedAt": "2026-06-23T21:29:45.530Z"
-    },
-    {
-      "runId": "1782248738944-8l8zop",
-      "channel": "koko",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-29T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-23T21:05:38.945Z",
-      "finishedAt": "2026-06-23T21:05:40.057Z"
     }
   ]
 }
