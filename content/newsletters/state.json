@@ -15834,6 +15834,36 @@
   },
   "runs": [
     {
+      "runId": "1784611809134-r2qb65",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-22T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-21T05:30:09.134Z",
+      "finishedAt": "2026-07-21T05:30:09.817Z"
+    },
+    {
+      "runId": "1784477706519-yhb89i",
+      "channel": "koko",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-27T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-19T16:15:06.519Z",
+      "finishedAt": "2026-07-19T16:15:07.056Z"
+    },
+    {
       "runId": "1784301131515-bn7pwv",
       "channel": "arabic",
       "mode": "send",
@@ -16566,40 +16596,6 @@
       "error": null,
       "startedAt": "2026-06-23T21:05:38.945Z",
       "finishedAt": "2026-06-23T21:05:40.057Z"
-    },
-    {
-      "runId": "1782192601232-isfmrg",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-24T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-23T05:30:01.232Z",
-      "finishedAt": "2026-06-23T05:30:01.888Z"
-    },
-    {
-      "runId": "1782189999618-y954pj",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-06-24T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-23T04:46:39.618Z",
-      "finishedAt": "2026-06-23T04:46:40.323Z"
     }
   ]
 }

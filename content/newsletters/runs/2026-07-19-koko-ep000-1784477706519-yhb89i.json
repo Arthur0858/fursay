@@ -1,0 +1,25 @@
+{
+  "runId": "1784477706519-yhb89i",
+  "channel": "koko",
+  "mode": "api-preflight",
+  "dryRun": false,
+  "startedAt": "2026-07-19T16:15:06.519Z",
+  "status": "api_preflight_passed",
+  "scheduledAt": "2026-07-27T09:00:00+08:00",
+  "delivery": "scheduled",
+  "warnings": [],
+  "mailerLiteApi": {
+    "baseUrl": "https://connect.mailerlite.com/api",
+    "groupId": "185164682657531180",
+    "groupName": "Koko 電子報訂閱者",
+    "groupActiveCount": 1,
+    "from": "hello@fursay.com",
+    "replyTo": "hello@fursay.com",
+    "delivery": "scheduled",
+    "scheduledAt": "2026-07-27T09:00:00+08:00",
+    "warnings": [],
+    "contentApiEnabled": false,
+    "contentSubmission": "requires MailerLite Advanced plan when emails.*.content is sent by API"
+  },
+  "finishedAt": "2026-07-19T16:15:07.056Z"
+}
