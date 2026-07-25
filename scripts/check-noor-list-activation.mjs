@@ -205,22 +205,33 @@ async function main() {
   const args = parseArgs();
   const local = args.baseUrl ? { server: null, baseUrl: args.baseUrl } : await startServer();
   const { server, baseUrl } = local;
-  const browser = await chromium.launch({ headless: true });
   const results = [];
-  try {
-    for (const path of PAGES) results.push(await checkPage(browser, baseUrl, path));
-  } finally {
-    await browser.close();
-    if (server) server.close();
+  const errors = [];
+  for (const path of PAGES) {
+    let browser;
+    try {
+      browser = await chromium.launch({ headless: true });
+      results.push(await checkPage(browser, baseUrl, path));
+    } catch (pageError) {
+      const message = pageError instanceof Error ? pageError.message : String(pageError);
+      errors.push({ path, error: message });
+      results.push({ path, ok: false, failures: ["page_check_exception"], staticChecks: {}, modalChecks: {},
+        safety: { noFormSubmit: true, noMailerLiteCall: true, noSecretRead: true, baseUrl } });
+    } finally {
+      if (browser) await browser.close().catch(() => {});
+    }
   }
+  if (server) server.close();
   const failed = results.filter((result) => !result.ok);
+  const pageFailures = failed.map((result) => ({ path: result.path, failures: result.failures }));
   const report = {
     generatedAt: new Date().toISOString(),
     siteDir: SITE_DIR,
     baseUrl,
-    ok: failed.length === 0,
+    ok: failed.length === 0 && errors.length === 0,
     total: results.length,
-    failed: failed.map((result) => ({ path: result.path, failures: result.failures })),
+    failed: pageFailures,
+    errors,
     results,
   };
   await import("node:fs/promises").then((fs) => fs.mkdir(args.outDir, { recursive: true })
@@ -230,12 +241,12 @@ async function main() {
       "",
       `- Result: ${report.ok ? "PASS" : "FAIL"}`,
       `- Pages: ${report.total}`,
-      `- Failed: ${failed.length}`,
+      `- Failed: ${pageFailures.length}`,
       `- Base URL: ${baseUrl}`,
       "- Safety: no form submit; no MailerLite call; no secret read.",
       "",
     ].join("\n"))));
-  console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: failed.length }, null, 2));
+  console.log(JSON.stringify({ ok: report.ok, outDir: args.outDir, failed: pageFailures.length, errors: errors.length }, null, 2));
   return report.ok ? 0 : 1;
 }
 
