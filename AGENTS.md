@@ -13,7 +13,11 @@ Cloudflare **Worker** (not Pages) serving the Fursay site + newsletter + render 
 - Git remote `origin` → `github.com/Arthur0858/fursay.git` (tracks `remotes/origin/main`). Deploy needs a **Workers** token (CF account `e6780ef96bb6f53eba1dbc4d6dfa7376`).
 - Analytics Engine not yet enabled — set `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_ANALYTICS_TOKEN` to unlock.
 - Secrets via wrangler / `.local-secrets/`; never commit.
+- Pull requests run validation only. Production deploys require a manual
+  `workflow_dispatch` and the GitHub `production` environment should have
+  approval protection configured.
 
 ## Do NOT
 - Assume the CF **Pages** token covers Workers — it does NOT.
 - Deploy without the Workers token present.
+- Add a `push` trigger to the production deploy workflow.
