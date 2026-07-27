@@ -2,7 +2,7 @@
   "version": 1,
   "channels": {
     "koko": {
-      "lastSentEpisodeNo": 5,
+      "lastSentEpisodeNo": 6,
       "episodes": [
         {
           "episodeNo": 1,
@@ -117,9 +117,9 @@
           "publishedAt": "2026-04-08T17:12:54Z",
           "videoUrl": "https://www.youtube.com/watch?v=NW_RHZDPKUU",
           "source": "parsed",
-          "sentAt": null,
-          "campaignId": null,
-          "deliveryMethod": null
+          "sentAt": "2026-07-27T00:09:52.375Z",
+          "campaignId": "194101167684322990",
+          "deliveryMethod": "mailerlite_chrome"
         },
         {
           "episodeNo": 7,
@@ -15834,6 +15834,21 @@
   },
   "runs": [
     {
+      "runId": "1785110992366-kfmfel",
+      "channel": "koko",
+      "mode": "chrome-result",
+      "episodeNo": 6,
+      "status": "scheduled_by_chrome",
+      "dryRun": false,
+      "campaignId": "194101167684322990",
+      "scheduledAt": "2026-07-27T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-27T00:09:52.367Z",
+      "finishedAt": "2026-07-27T00:09:52.375Z"
+    },
+    {
       "runId": "1785082505830-zfuf3a",
       "channel": "koko",
       "mode": "api-preflight",
@@ -16571,23 +16586,6 @@
       "error": null,
       "startedAt": "2026-06-28T16:15:40.989Z",
       "finishedAt": "2026-06-28T16:15:41.639Z"
-    },
-    {
-      "runId": "1782607555619-m5xlel",
-      "channel": "arabic",
-      "mode": "api-preflight",
-      "episodeNo": null,
-      "status": "api_preflight_passed",
-      "dryRun": false,
-      "campaignId": null,
-      "scheduledAt": "2026-07-01T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [
-        "Target group \"Noor subscribers\" has 0 active subscribers"
-      ],
-      "error": null,
-      "startedAt": "2026-06-28T00:45:55.619Z",
-      "finishedAt": "2026-06-28T00:45:56.179Z"
     }
   ]
 }
