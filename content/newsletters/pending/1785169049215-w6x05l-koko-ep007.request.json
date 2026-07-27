@@ -1,0 +1,52 @@
+{
+  "runId": "1785169049215-w6x05l",
+  "channel": "koko",
+  "channelLabel": "Koko's Forest",
+  "audience": "families using Koko's Forest for gentle English learning",
+  "languageBrief": "English newsletter with Traditional Chinese parent support",
+  "contentRules": [
+    "Use warm, clear English as the main language.",
+    "Include Traditional Chinese parent guidance after the English learning content.",
+    "Keep the tone playful, calm, and practical for parents of young children.",
+    "Do not claim the video is new unless the source metadata explicitly says so."
+  ],
+  "episode": {
+    "episodeNo": 7,
+    "videoId": "sSntjdCfB-U",
+    "title": "Koko and Poki 🦔 Poki Wants a Hug | English Bedtime Story | Koko's Forest Adventure",
+    "description": "Join Koko and Poki in this heartwarming bedtime story about self-acceptance and friendship!\n\nPoki the hedgehog is shy and worried his spikes will hurt his friends. But Koko shows him that everyone deserves love, no matter what they look like on the outside.\n\n🌟 EPISODE CHAPTERS:\n0:00 - Intro\n0:30 - Scene 1: Watching from the Tree\n2:15 - Scene 2: Hiding Away\n4:00 - Scene 3: A Gentle Solution\n5:45 - Scene 4: The Warm Hug\n7:30 - Word Time (Vocabulary Learning)\n8:45 - Goodnight Message\n\n📚 LEARNING OBJECTIVES:\n✓ Build confidence and self-acceptance\n✓ Learn 3 key English vocabulary words\n✓ Understand the importance of kindness\n✓ Dual-language learning (English + Traditional Chinese)\n\n📖 VOCABULARY TODAY:\n• GENTLE (溫柔) - Kind and calm\n• SOFT (柔軟) - Smooth and nice to touch\n• HUG (擁抱) - Hold someone close with love\n\n🎯 MORAL:\nEven if you have spikes on the outside, you can still be loved.\n\n💙 PERFECT FOR:\n• Bedtime stories for young learners\n• English language learners (Ages 3-7)\n• Children learning Traditional Chinese\n• Building emotional intelligence\n• Story time before sleep\n\n🌿 About Koko's Forest Adventure:\nA bilingual children's YouTube channel where Koko the squirrel and her friends learn English, Chinese, and important life lessons in the magical forest.\n\n📺 Subscribe for new episodes every week!\n\n#KokosForestAdventure #EnglishBedtimeStory #BilingualLearning #ChildrenStories #EnglishLearning #BedtimeStories #TraditionalChinese 免費訂閱叩叩電子報 — 每週五收到故事精華、英文單字卡、親子活動，還有免費著色本 PDF！\nhttps://kokos-forest-adventure-g7f3ah.subscribepage.io 🌐 官方網站 / Official Website：https://fursay.com\n📖 更多親子英文資源：fursay.com",
+    "publishedAt": "2026-04-08T17:12:54Z",
+    "videoUrl": "https://www.youtube.com/watch?v=sSntjdCfB-U",
+    "thumbnail": "https://i.ytimg.com/vi/sSntjdCfB-U/maxresdefault.jpg"
+  },
+  "requiredOutputPath": "content/newsletters/pending/1785169049215-w6x05l-koko-ep007.newsletter.json",
+  "requiredSchema": {
+    "episodeNo": "number",
+    "videoId": "string",
+    "subject": "string",
+    "preview_text": "string",
+    "hero_title": "string",
+    "intro": "string",
+    "learning_words": [
+      {
+        "term": "string",
+        "pronunciation": "string",
+        "meaning": "string",
+        "example": "string"
+      }
+    ],
+    "parent_activity": "string",
+    "video_cta": "string",
+    "site_cta": "string",
+    "closing": "string"
+  },
+  "instructions": [
+    "Create one production-ready weekly email newsletter for Koko's Forest.",
+    "Use only the episode title, description, and video URL as source context.",
+    "Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.",
+    "Do not include Markdown fences, comments, or extra top-level fields.",
+    "Include exactly 3 learning_words.",
+    "Do not claim the video is new unless the source metadata explicitly supports it.",
+    "Keep the writing parent-friendly, mobile-readable, and suitable for an email."
+  ]
+}

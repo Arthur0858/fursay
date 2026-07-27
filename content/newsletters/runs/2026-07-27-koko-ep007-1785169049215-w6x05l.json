@@ -1,0 +1,15 @@
+{
+  "runId": "1785169049215-w6x05l",
+  "channel": "koko",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-07-27T16:17:29.216Z",
+  "status": "prepared",
+  "syncedEpisodes": 1716,
+  "episodeNo": 7,
+  "videoId": "sSntjdCfB-U",
+  "videoUrl": "https://www.youtube.com/watch?v=sSntjdCfB-U",
+  "requestPath": "content/newsletters/pending/1785169049215-w6x05l-koko-ep007.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1785169049215-w6x05l-koko-ep007.newsletter.json",
+  "finishedAt": "2026-07-27T16:17:42.628Z"
+}
