@@ -24030,6 +24030,21 @@
   },
   "runs": [
     {
+      "runId": "1785216609027-2xyctc",
+      "channel": "arabic",
+      "mode": "api-preflight",
+      "episodeNo": null,
+      "status": "api_preflight_passed",
+      "dryRun": false,
+      "campaignId": null,
+      "scheduledAt": "2026-07-29T09:00:00+08:00",
+      "providerErrorCode": null,
+      "warnings": [],
+      "error": null,
+      "startedAt": "2026-07-28T05:30:09.028Z",
+      "finishedAt": "2026-07-28T05:30:10.304Z"
+    },
+    {
       "runId": "1785169148321-a956eh",
       "channel": "koko",
       "mode": "send",
@@ -24767,21 +24782,6 @@
       "error": null,
       "startedAt": "2026-06-28T19:30:36.303Z",
       "finishedAt": "2026-06-28T19:30:36.919Z"
-    },
-    {
-      "runId": "1782672505262-sxu075",
-      "channel": "koko",
-      "mode": "send",
-      "episodeNo": 6,
-      "status": "dry_run_passed",
-      "dryRun": true,
-      "campaignId": null,
-      "scheduledAt": "2026-07-06T09:00:00+08:00",
-      "providerErrorCode": null,
-      "warnings": [],
-      "error": null,
-      "startedAt": "2026-06-28T18:48:25.262Z",
-      "finishedAt": "2026-06-28T18:48:25.307Z"
     }
   ]
 }
