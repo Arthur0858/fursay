@@ -9,7 +9,7 @@ const ACCOUNT_META = "ca-pub-4093856660317740";
 const DEFAULT_OUT = "/tmp/fursay-adsense-review-contract";
 const LOCALES = [{ prefix: "", code: "en" }, { prefix: "/zh", code: "zh" }, { prefix: "/ar", code: "ar" }];
 const TRUST = ["about", "editorial-method", "contact", "terms", "privacy", "support"];
-const NOINDEX_HEADERS = ["/links", "/links.json", "/share-kit.json", "/creator-kit.json", "/traffic-launch.json", "/noor-sprint-status.json", "/noor-sprint-action.json", "/deploy-readiness.json", "/conversion-health.json", "/monetization-roadmap.json", "/adsense-readiness.json", "/product-samples/koko-printable", "/product-samples/noor-worksheet"];
+const NOINDEX_HEADERS = ["/links.json", "/share-kit.json", "/creator-kit.json", "/traffic-launch.json", "/noor-sprint-status.json", "/noor-sprint-action.json", "/deploy-readiness.json", "/conversion-health.json", "/monetization-roadmap.json", "/adsense-readiness.json", "/product-samples/koko-printable", "/product-samples/noor-worksheet"];
 
 function args() { const parsed = { baseUrl: "", outDir: DEFAULT_OUT }; const values = process.argv.slice(2); for (let i = 0; i < values.length; i += 1) { if (values[i] === "--base-url") parsed.baseUrl = values[++i].replace(/\/$/, ""); if (values[i] === "--out-dir") parsed.outDir = values[++i]; } return parsed; }
 function fileFor(path) { return path === "/" ? "index.html" : path.endsWith("/") ? `${path.slice(1)}index.html` : path.endsWith(".xml") || path.endsWith(".txt") || path.endsWith(".json") ? path.slice(1) : `${path.slice(1)}.html`; }
@@ -77,6 +77,7 @@ async function mainRun() {
   }
   const links = await get(options.baseUrl, "/links");
   if (meta(links.text, "robots") !== "noindex,follow") failures.push("links_missing_noindex_follow");
+  if (options.baseUrl && String(links.headers["x-robots-tag"] || "").replace(/\s+/g, "") !== "noindex,follow") failures.push("links_header_missing_noindex_follow");
   if (urls.includes(`${ORIGIN}/links`)) failures.push("links_in_sitemap");
   const readinessResponse = await get(options.baseUrl, "/adsense-readiness.json");
   let readiness = {}; try { readiness = JSON.parse(readinessResponse.text); } catch { failures.push("adsense_readiness_invalid_json"); }

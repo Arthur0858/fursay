@@ -257,8 +257,9 @@ function withAssetHeaders(response, request) {
   const url = new URL(request.url);
   const headers = new Headers(next.headers);
   const path = url.pathname;
+  const noindexFollowPaths = new Set(["/links", "/links.html"]);
   const noindexPaths = new Set([
-    "/links", "/links.html", "/links.json",
+    "/links.json",
     "/share-kit", "/share-kit.html", "/share-kit.json",
     "/creator-kit", "/creator-kit.html", "/creator-kit.json",
     "/traffic-launch", "/traffic-launch.html", "/traffic-launch.json",
@@ -271,7 +272,8 @@ function withAssetHeaders(response, request) {
     "/product-samples/noor-worksheet", "/product-samples/noor-worksheet.html",
   ]);
 
-  if (noindexPaths.has(path)) headers.set("X-Robots-Tag", "noindex, nofollow");
+  if (noindexFollowPaths.has(path)) headers.set("X-Robots-Tag", "noindex, follow");
+  else if (noindexPaths.has(path)) headers.set("X-Robots-Tag", "noindex, nofollow");
 
   if (path === "/" || path.endsWith(".html") || !/\.[^/]+$/.test(path)) {
     headers.set("Cache-Control", "public, max-age=300, must-revalidate");
