@@ -3,6 +3,12 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
+try {
+  process.loadEnvFile();
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
+
 const ROOT = process.cwd();
 const DEFAULT_OUT = "/tmp/fursay-deploy-readiness";
 const ANALYTICS_ENGINE_ENABLEMENT_URL =

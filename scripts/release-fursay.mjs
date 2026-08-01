@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
+import { editorialSitemapEntries, writeEditorialBundle } from "./fursay-editorial-pages.mjs";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -282,6 +283,7 @@ function writeReleaseManifest() {
       "scripts/check-image-assets.mjs",
       "scripts/check-cache-headers.mjs",
       "scripts/check-deploy-readiness.mjs",
+      "scripts/check-adsense-review-contract.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
@@ -312,7 +314,9 @@ function writeReleaseManifest() {
       productInfoLinks: 18,
       productLandingPages: 9,
       productPresalePages: 6,
-      policyPages: 6,
+      policyPages: 18,
+      editorialGuidePages: 24,
+      sitemapUrls: 72,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
@@ -329,7 +333,6 @@ function writeReleaseManifest() {
   };
   writeFileSync(resolve(siteDir, "release.json"), JSON.stringify(manifest, null, 2) + "\n");
   writeDeployReadinessManifest(siteDir, source);
-  writeSitemap(siteDir);
   writeCampaignManifest(siteDir, source);
   writeLinksManifest(siteDir, source);
   writeShareKit(siteDir, source);
@@ -340,6 +343,8 @@ function writeReleaseManifest() {
   writeConversionHealth(siteDir, source);
   writeProductsManifest(siteDir, source);
   writeBrandProductsBundle(siteDir);
+  writeEditorialBundle(siteDir);
+  writeSitemap(siteDir);
   run("node", ["scripts/build-product-sample-pdfs.mjs"]);
   writeMonetizationRoadmap(siteDir, source);
   writeMonetizationRoadmapPage(siteDir);
@@ -647,6 +652,7 @@ function writeSitemap(siteDir) {
         sitemapUrl(`https://fursay.com/ar${path}`, localized, "0.3"),
       ];
     }),
+    ...editorialSitemapEntries(sitemapUrl),
   ];
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -4743,6 +4749,7 @@ async function main() {
   run("node", ["--check", "scripts/check-static-asset-structure.mjs"]);
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
+  run("node", ["--check", "scripts/check-adsense-review-contract.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
@@ -4789,6 +4796,7 @@ async function main() {
   run("node", ["scripts/update-immutable-asset-fingerprints.mjs", "--check"]);
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
+  run("node", ["scripts/check-adsense-review-contract.mjs", "--out-dir", join(outRoot, "adsense-review-local")]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);
@@ -4833,6 +4841,7 @@ async function main() {
     run("node", ["scripts/update-immutable-asset-fingerprints.mjs", "--check"]);
     run("node", ["scripts/check-image-assets.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "image-assets-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
+    run("node", ["scripts/check-adsense-review-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "adsense-review-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });
     writeFileSync(auditOut, auditJson);

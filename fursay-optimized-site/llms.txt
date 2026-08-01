@@ -65,6 +65,47 @@ Family actions:
 - Koko printable sample preview: https://fursay.com/product-samples/koko-printable
 - Nour worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
 
+Editorial library:
+https://fursay.com/guides
+https://fursay.com/about
+https://fursay.com/editorial-method
+https://fursay.com/contact
+https://fursay.com/terms
+https://fursay.com/guides/english-storytime-without-fluent-english
+https://fursay.com/guides/feelings-words-through-stories
+https://fursay.com/guides/repetition-without-pressure
+https://fursay.com/guides/from-video-to-five-minute-printable
+https://fursay.com/guides/chinese-storytime-for-arabic-speaking-families
+https://fursay.com/guides/pinyin-and-tones-for-parents
+https://fursay.com/guides/three-chinese-words-a-day
+https://fursay.com/guides/three-minute-chinese-routine
+https://fursay.com/zh/guides
+https://fursay.com/zh/about
+https://fursay.com/zh/editorial-method
+https://fursay.com/zh/contact
+https://fursay.com/zh/terms
+https://fursay.com/zh/guides/english-storytime-without-fluent-english
+https://fursay.com/zh/guides/feelings-words-through-stories
+https://fursay.com/zh/guides/repetition-without-pressure
+https://fursay.com/zh/guides/from-video-to-five-minute-printable
+https://fursay.com/zh/guides/chinese-storytime-for-arabic-speaking-families
+https://fursay.com/zh/guides/pinyin-and-tones-for-parents
+https://fursay.com/zh/guides/three-chinese-words-a-day
+https://fursay.com/zh/guides/three-minute-chinese-routine
+https://fursay.com/ar/guides
+https://fursay.com/ar/about
+https://fursay.com/ar/editorial-method
+https://fursay.com/ar/contact
+https://fursay.com/ar/terms
+https://fursay.com/ar/guides/english-storytime-without-fluent-english
+https://fursay.com/ar/guides/feelings-words-through-stories
+https://fursay.com/ar/guides/repetition-without-pressure
+https://fursay.com/ar/guides/from-video-to-five-minute-printable
+https://fursay.com/ar/guides/chinese-storytime-for-arabic-speaking-families
+https://fursay.com/ar/guides/pinyin-and-tones-for-parents
+https://fursay.com/ar/guides/three-chinese-words-a-day
+https://fursay.com/ar/guides/three-minute-chinese-routine
+
 Creator and sharing references:
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
 - Creator link for Nour descriptions: https://fursay.com/creator/noor

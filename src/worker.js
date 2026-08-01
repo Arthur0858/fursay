@@ -257,6 +257,21 @@ function withAssetHeaders(response, request) {
   const url = new URL(request.url);
   const headers = new Headers(next.headers);
   const path = url.pathname;
+  const noindexPaths = new Set([
+    "/links", "/links.html", "/links.json",
+    "/share-kit", "/share-kit.html", "/share-kit.json",
+    "/creator-kit", "/creator-kit.html", "/creator-kit.json",
+    "/traffic-launch", "/traffic-launch.html", "/traffic-launch.json",
+    "/noor-sprint-status", "/noor-sprint-status.html", "/noor-sprint-status.json", "/noor-sprint-action.json",
+    "/deploy-readiness", "/deploy-readiness.html", "/deploy-readiness.json",
+    "/conversion-health", "/conversion-health.html", "/conversion-health.json",
+    "/monetization-roadmap", "/monetization-roadmap.html", "/monetization-roadmap.json",
+    "/adsense-readiness.json",
+    "/product-samples/koko-printable", "/product-samples/koko-printable.html",
+    "/product-samples/noor-worksheet", "/product-samples/noor-worksheet.html",
+  ]);
+
+  if (noindexPaths.has(path)) headers.set("X-Robots-Tag", "noindex, nofollow");
 
   if (path === "/" || path.endsWith(".html") || !/\.[^/]+$/.test(path)) {
     headers.set("Cache-Control", "public, max-age=300, must-revalidate");
@@ -313,7 +328,7 @@ async function handleSubscribe(request, env) {
     if (!body || typeof body !== "object" || Array.isArray(body)) {
       return json({ success: false, message: "Invalid request" }, 400, headers);
     }
-    const { email, groups, child_age, region, attribution } = body;
+    const { email, groups, region, attribution } = body;
     const normalizedEmail = typeof email === "string" ? email.trim() : "";
 
     if (!normalizedEmail || !normalizedEmail.includes("@")) {
@@ -331,7 +346,6 @@ async function handleSubscribe(request, env) {
     }
 
     const fields = {};
-    if (child_age) fields.child_age = child_age;
     if (region) fields.region = region;
     Object.assign(fields, attributionFields(attribution, env));
 

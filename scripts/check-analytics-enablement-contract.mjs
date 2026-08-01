@@ -148,7 +148,11 @@ async function main() {
   if (!report.dataQuality?.caveat?.includes("clean 7-day and 30-day")) failures.push("dry_run_report_missing_clean_window_caveat");
   if (!report.dataQuality?.cleanWindowReadyAt?.startsWith("2026-07-28")) failures.push("dry_run_report_missing_clean_window_ready_at");
   if (report.decisionScoreboard?.dataQuality?.decisionTraffic !== "qa_excluded") failures.push("dry_run_scoreboard_missing_qa_exclusion");
-  if (report.decisionScoreboard?.dataQuality?.cleanWindowComplete !== false) failures.push("dry_run_scoreboard_clean_window_should_be_pending");
+  const cleanWindowReadyAt = Date.parse(report.dataQuality?.cleanWindowReadyAt || "");
+  const expectedCleanWindowComplete = Number.isFinite(cleanWindowReadyAt) && Date.now() >= cleanWindowReadyAt;
+  if (report.decisionScoreboard?.dataQuality?.cleanWindowComplete !== expectedCleanWindowComplete) {
+    failures.push(`dry_run_scoreboard_clean_window_mismatch:${report.decisionScoreboard?.dataQuality?.cleanWindowComplete}:${expectedCleanWindowComplete}`);
+  }
   if ((report.queries || []).length !== 12) failures.push(`dry_run_bad_query_count:${(report.queries || []).length}`);
   if (handoff.binding !== BINDING) failures.push(`handoff_bad_binding:${handoff.binding || "none"}`);
   if (handoff.dataset !== DATASET) failures.push(`handoff_bad_dataset:${handoff.dataset || "none"}`);

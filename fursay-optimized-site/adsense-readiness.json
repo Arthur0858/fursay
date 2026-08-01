@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "not_ready",
+  "readyToSubmit": false,
+  "publisherId": "pub-4093856660317740",
+  "lovetypesPrerequisite": "ready",
+  "adRuntimeEnabled": false,
+  "reviewSubmitted": false,
+  "minimumStableDays": 14,
+  "maximumEvidenceAgeDays": 3,
+  "lastMaterialChange": "2026-08-01",
+  "externalGates": {
+    "lovetypesReady": false,
+    "adsTxtAuthorized": false,
+    "gscSitemapAccepted": false,
+    "importantPagesRecrawled": false,
+    "editorialPagesWithImpressions": {
+      "value": 0,
+      "minimum": 5,
+      "confirmed": false
+    },
+    "unexpectedUrlsLeavingIndex": false,
+    "productionAuditGreen": false,
+    "stableWindowComplete": false,
+    "reviewActionAvailable": false
+  }
+}

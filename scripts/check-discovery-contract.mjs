@@ -1,5 +1,6 @@
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 
 const ROOT = process.cwd();
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
@@ -83,6 +84,11 @@ const WORKER_ONLY_ROUTES = new Set([
   "/download/koko-printable-sample",
   "/download/noor-worksheet-sample",
 ]);
+const KNOWN_EDITORIAL_ROUTES = new Set(["", "/zh", "/ar"].flatMap((prefix) => [
+  `${prefix}/guides`,
+  ...GUIDE_SLUGS.map((slug) => `${prefix}/guides/${slug}`),
+  ...["about", "editorial-method", "contact", "terms"].map((page) => `${prefix}/${page}`),
+]));
 const FAMILY_ACTION_FORBIDDEN_NEEDLES = [
   "Creator kit",
   "Traffic launch",
@@ -379,6 +385,7 @@ async function main() {
       || shortlinkPaths.has(pathname)
       || KNOWN_API_ROUTES.has(pathname)
       || WORKER_ONLY_ROUTES.has(pathname)
+      || KNOWN_EDITORIAL_ROUTES.has(pathname)
       || pathname.startsWith("/images/qr/");
     if (!known) unknownOwnUrls.push(url);
   }

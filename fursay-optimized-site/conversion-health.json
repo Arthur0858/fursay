@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-18",
+  "updatedAt": "2026-08-01",
   "source": {
     "branch": "main",
-    "commit": "7e345c8",
-    "summary": "feat: focus multilingual homepage journey"
+    "commit": "3350c9d",
+    "summary": "chore: reconcile newsletter run evidence"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

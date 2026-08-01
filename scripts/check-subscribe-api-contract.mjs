@@ -157,6 +157,7 @@ async function runLocal() {
   }
   if (capturedPayload?.fields?.utm_content !== "line1 line2") failures.push(`success:bad_sanitized_attribution:${capturedPayload?.fields?.utm_content || "none"}`);
   if (capturedPayload?.fields?.source_id !== "episode-001") failures.push(`success:missing_optional_attribution:${capturedPayload?.fields?.source_id || "none"}`);
+  if (Object.hasOwn(capturedPayload?.fields || {}, "child_age")) failures.push("success:child_age_must_not_be_forwarded");
 
   const conflict = await localFetch({
     method: "POST",

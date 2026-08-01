@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-07-18T03:01:18.654Z",
+  "updatedAt": "2026-08-01T14:37:02.854Z",
   "samples": {
     "koko-printable-sample.pdf": {
       "source": "product-samples/koko-printable.html",
       "assets": [
         "css/sample-activity-20260718-v1.css"
       ],
-      "sourceHash": "c52107c73174b8d1f5ac0c864d0fc1b9ba9af985d7826b4bce5fbb92c43c551f",
+      "sourceHash": "5d1fc07d6a37df52b125609aaf5d51a263c5f596ffa4ce5adccad7dc9ee1efc4",
       "pages": 3,
       "bytes": 506350
     },
@@ -15,7 +15,7 @@
       "assets": [
         "css/sample-activity-20260718-v1.css"
       ],
-      "sourceHash": "90cd12849dccddfb22f6a920ced4274b4bebac4e59feee8cdd27cccfa07eb08b",
+      "sourceHash": "60f31fb89814bc8538609dbd11e8f8eaa19f49eb511b0cfa93a639e66bb4fa91",
       "pages": 3,
       "bytes": 665607
     }

@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-07-18",
+  "updatedAt": "2026-08-01",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -414,7 +414,8 @@
       "/css/picture-world-tools-20260613-products1.css",
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
-      "/css/sample-activity-20260718-v1.css"
+      "/css/sample-activity-20260718-v1.css",
+      "/css/editorial-20260801-v1.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js"

@@ -1,5 +1,6 @@
 import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
+import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 
 const DEFAULT_OUT = "/tmp/fursay-site-structure-contract";
 const SITE_DIR = "fursay-optimized-site";
@@ -39,6 +40,19 @@ const EXPECTED_PAGES = {
     localizedRoutes: { en: "/episodes/noor-greetings", "zh-TW": "/zh/episodes/noor-greetings", ar: "/ar/episodes/noor-greetings" },
   },
 };
+const localizedRoutes = (route) => ({ en: route, "zh-TW": `/zh${route}`, ar: `/ar${route}` });
+const EXPECTED_EDITORIAL_PAGES = {
+  guides: { route: "/guides", localizedRoutes: localizedRoutes("/guides") },
+  ...Object.fromEntries(GUIDE_SLUGS.map((slug) => [`guide-${slug}`, {
+    route: `/guides/${slug}`,
+    localizedRoutes: localizedRoutes(`/guides/${slug}`),
+  }])),
+  ...Object.fromEntries(["about", "editorial-method", "contact", "terms"].map((name) => [name, {
+    route: `/${name}`,
+    localizedRoutes: localizedRoutes(`/${name}`),
+  }])),
+};
+const ALL_EXPECTED_PAGES = { ...EXPECTED_PAGES, ...EXPECTED_EDITORIAL_PAGES };
 const EXPECTED_CHANNELS = {
   koko: {
     youtubeNeedle: "@KokosForest",
@@ -170,8 +184,8 @@ function validateLocales(structure, failures) {
 
 function validatePages(structure, failures) {
   const pages = structure.pages || [];
-  if (pages.length !== Object.keys(EXPECTED_PAGES).length) failures.push(`page_count:${pages.length}`);
-  for (const [key, expected] of Object.entries(EXPECTED_PAGES)) {
+  if (pages.length !== Object.keys(ALL_EXPECTED_PAGES).length) failures.push(`page_count:${pages.length}`);
+  for (const [key, expected] of Object.entries(ALL_EXPECTED_PAGES)) {
     const page = pages.find((item) => item.key === key);
     if (!page) {
       failures.push(`missing_page:${key}`);
@@ -296,7 +310,7 @@ async function validateLocalHtmlInventory(context, failures, data) {
     .map((file) => relative(context.root, file).split("\\").join("/"))
     .sort();
   data.htmlFiles = htmlFiles;
-  if (htmlFiles.length !== 43) failures.push(`html_file_count:${htmlFiles.length}`);
+  if (htmlFiles.length !== 82) failures.push(`html_file_count:${htmlFiles.length}`);
   for (const file of htmlFiles) {
     const html = await readLocalText(context.root, file);
     for (const href of [...stylesheetHrefs(html), ...scriptSrcs(html)]) {

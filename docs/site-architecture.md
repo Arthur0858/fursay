@@ -7,6 +7,7 @@
 - Shared story visual layers live in `/css/picture-book-base-20260613-base1.css`, `/css/storybook-skin-20260613-inline1.css`, `/css/story-page-common-20260613-css1.css`, and `/css/picture-world-shared-20260613-traffic12.css`.
 - Operations and product-validation page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/noor-sprint-status`, `/links`, `/deploy-readiness`, `/conversion-health`, `/monetization-roadmap`, and `/products` live in `/css/picture-world-tools-20260613-products1.css` so the main story pages do not load creator/share/deploy-only rules.
 - The watercolor presale, sample, Privacy, and Support presentation layer lives in `/css/brand-storybook-20260717-v1.css`; brand icons are served from `/images/brand-icons.svg`.
+- The generated editorial hubs, long-form guides, trust pages, and reviewer-facing utility navigation use `/css/editorial-20260801-v1.css`; their source data and templates live in `scripts/fursay-editorial-content.mjs` and `scripts/fursay-editorial-pages.mjs`.
 - Home page common styles live in `/css/home-common-20260613-cache1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-cache1.css`, `/css/home-zh-page-20260613-cache1.css`, and `/css/home-ar-page-20260613-cache1.css`.
 - The focused three-language homepage journey and compact secondary-resource cards live in `/css/home-focus-20260718-v1.css`.
 - The three-page printable activity previews and print-only PDF layout live in `/css/sample-activity-20260718-v1.css`; both source HTML and this stylesheet are included in the PDF rebuild hash.
@@ -38,6 +39,8 @@
 - `/ar/`, `/ar/koko`, `/ar/arabic`
 - `/episodes/koko-feelings`, `/zh/episodes/koko-feelings`, `/ar/episodes/koko-feelings`
 - `/episodes/noor-colors`, `/zh/episodes/noor-colors`, `/ar/episodes/noor-colors`
+- `/guides`, `/zh/guides`, and `/ar/guides`, with eight localized guide routes under each hub
+- `/about`, `/editorial-method`, `/contact`, `/terms`, `/privacy`, and `/support`, with matching `/zh` and `/ar` routes
 
 ## Operations pages
 

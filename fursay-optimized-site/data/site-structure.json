@@ -86,6 +86,136 @@
         "zh-TW": "/zh/episodes/noor-greetings",
         "ar": "/ar/episodes/noor-greetings"
       }
+    },
+    {
+      "key": "guides",
+      "route": "/guides",
+      "type": "editorialHub",
+      "localizedRoutes": {
+        "en": "/guides",
+        "zh-TW": "/zh/guides",
+        "ar": "/ar/guides"
+      }
+    },
+    {
+      "key": "guide-english-storytime-without-fluent-english",
+      "route": "/guides/english-storytime-without-fluent-english",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/english-storytime-without-fluent-english",
+        "zh-TW": "/zh/guides/english-storytime-without-fluent-english",
+        "ar": "/ar/guides/english-storytime-without-fluent-english"
+      }
+    },
+    {
+      "key": "guide-feelings-words-through-stories",
+      "route": "/guides/feelings-words-through-stories",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/feelings-words-through-stories",
+        "zh-TW": "/zh/guides/feelings-words-through-stories",
+        "ar": "/ar/guides/feelings-words-through-stories"
+      }
+    },
+    {
+      "key": "guide-repetition-without-pressure",
+      "route": "/guides/repetition-without-pressure",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/repetition-without-pressure",
+        "zh-TW": "/zh/guides/repetition-without-pressure",
+        "ar": "/ar/guides/repetition-without-pressure"
+      }
+    },
+    {
+      "key": "guide-from-video-to-five-minute-printable",
+      "route": "/guides/from-video-to-five-minute-printable",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/from-video-to-five-minute-printable",
+        "zh-TW": "/zh/guides/from-video-to-five-minute-printable",
+        "ar": "/ar/guides/from-video-to-five-minute-printable"
+      }
+    },
+    {
+      "key": "guide-chinese-storytime-for-arabic-speaking-families",
+      "route": "/guides/chinese-storytime-for-arabic-speaking-families",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/chinese-storytime-for-arabic-speaking-families",
+        "zh-TW": "/zh/guides/chinese-storytime-for-arabic-speaking-families",
+        "ar": "/ar/guides/chinese-storytime-for-arabic-speaking-families"
+      }
+    },
+    {
+      "key": "guide-pinyin-and-tones-for-parents",
+      "route": "/guides/pinyin-and-tones-for-parents",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/pinyin-and-tones-for-parents",
+        "zh-TW": "/zh/guides/pinyin-and-tones-for-parents",
+        "ar": "/ar/guides/pinyin-and-tones-for-parents"
+      }
+    },
+    {
+      "key": "guide-three-chinese-words-a-day",
+      "route": "/guides/three-chinese-words-a-day",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/three-chinese-words-a-day",
+        "zh-TW": "/zh/guides/three-chinese-words-a-day",
+        "ar": "/ar/guides/three-chinese-words-a-day"
+      }
+    },
+    {
+      "key": "guide-three-minute-chinese-routine",
+      "route": "/guides/three-minute-chinese-routine",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/three-minute-chinese-routine",
+        "zh-TW": "/zh/guides/three-minute-chinese-routine",
+        "ar": "/ar/guides/three-minute-chinese-routine"
+      }
+    },
+    {
+      "key": "about",
+      "route": "/about",
+      "type": "editorialTrust",
+      "localizedRoutes": {
+        "en": "/about",
+        "zh-TW": "/zh/about",
+        "ar": "/ar/about"
+      }
+    },
+    {
+      "key": "editorial-method",
+      "route": "/editorial-method",
+      "type": "editorialTrust",
+      "localizedRoutes": {
+        "en": "/editorial-method",
+        "zh-TW": "/zh/editorial-method",
+        "ar": "/ar/editorial-method"
+      }
+    },
+    {
+      "key": "contact",
+      "route": "/contact",
+      "type": "editorialTrust",
+      "localizedRoutes": {
+        "en": "/contact",
+        "zh-TW": "/zh/contact",
+        "ar": "/ar/contact"
+      }
+    },
+    {
+      "key": "terms",
+      "route": "/terms",
+      "type": "editorialTrust",
+      "localizedRoutes": {
+        "en": "/terms",
+        "zh-TW": "/zh/terms",
+        "ar": "/ar/terms"
+      }
     }
   ],
   "channels": {
@@ -123,7 +253,8 @@
       "/css/picture-world-tools-20260613-products1.css",
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
-      "/css/sample-activity-20260718-v1.css"
+      "/css/sample-activity-20260718-v1.css",
+      "/css/editorial-20260801-v1.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js"

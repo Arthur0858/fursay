@@ -160,11 +160,13 @@ async function main() {
       requireContains(failures, pagePath, html, "contact@fursay.com", "support_email");
       if (count(html, /<link rel="alternate" hreflang=/g) !== 4) failures.push(`${pagePath}:hreflang_count`);
       if (policy === "privacy") {
-        const localizedNeedle = locale.key === "en" ? "Anonymous interaction signals" : locale.key === "zh" ? "匿名互動訊號" : "إشارات مجهولة";
+        const localizedNeedle = locale.key === "en" ? "Anonymous interaction signals" : locale.key === "zh" ? "匿名互動訊號" : "إشارات تفاعل مجهولة";
         requireContains(failures, pagePath, html, localizedNeedle, "anonymous_signal_copy");
       } else {
-        requireContains(failures, pagePath, html, "checkoutEnabled=false", "checkout_disabled_copy");
-        requireContains(failures, pagePath, html, "review-required", "review_required_copy");
+        const disabledCopy = locale.key === "en" ? "no purchase button, public price, or payment link" : locale.key === "zh" ? "沒有購買按鈕、公開價格或付款連結" : "لا يوجد زر شراء أو سعر عام أو رابط دفع";
+        const reviewCopy = locale.key === "en" ? "remain review-required" : locale.key === "zh" ? "仍需審核" : "قيد المراجعة";
+        requireContains(failures, pagePath, html, disabledCopy, "checkout_disabled_copy");
+        requireContains(failures, pagePath, html, reviewCopy, "review_required_copy");
       }
     }
   }
@@ -195,7 +197,7 @@ async function main() {
   }
   if (release.liveExpectations?.productLandingPages !== 9) failures.push("release_product_landing_pages");
   if (release.liveExpectations?.productPresalePages !== 6) failures.push("release_presale_pages");
-  if (release.liveExpectations?.policyPages !== 6) failures.push("release_policy_pages");
+  if (release.liveExpectations?.policyPages !== 18) failures.push("release_policy_pages");
   if ((release.deployment?.productPresalePages || []).length !== 6) failures.push("release_presale_urls");
   if ((release.deployment?.privacyPages || []).length !== 3) failures.push("release_privacy_urls");
   if ((release.deployment?.supportPages || []).length !== 3) failures.push("release_support_urls");

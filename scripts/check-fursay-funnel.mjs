@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
+import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
@@ -1306,6 +1307,11 @@ async function checkDiscoveryFiles(baseUrl) {
     "https://fursay.com/support",
     "https://fursay.com/zh/support",
     "https://fursay.com/ar/support",
+    ...["", "/zh", "/ar"].flatMap((prefix) => [
+      `https://fursay.com${prefix}/guides`,
+      ...GUIDE_SLUGS.map((slug) => `https://fursay.com${prefix}/guides/${slug}`),
+      ...["about", "editorial-method", "contact", "terms"].map((page) => `https://fursay.com${prefix}/${page}`),
+    ]),
   ];
   if (!sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"')) failures.push("sitemap_missing_xhtml_namespace");
   if (sitemapLocs.length !== expectedSitemapLocs.length) failures.push(`sitemap_loc_count:${sitemapLocs.length}`);

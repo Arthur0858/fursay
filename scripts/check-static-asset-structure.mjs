@@ -24,6 +24,7 @@ const EXPECTED_CSS = [
   "brand-storybook-20260717-v1.css",
   "sample-activity-20260718-v1.css",
   "home-focus-20260718-v1.css",
+  "editorial-20260801-v1.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260615-sharekit1.js",
