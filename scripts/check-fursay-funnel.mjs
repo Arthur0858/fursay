@@ -1802,7 +1802,9 @@ async function checkDiscoveryFiles(baseUrl) {
     if (!workflowRaw.includes("CLOUDFLARE_ACCOUNT_ID")) failures.push("workflow_missing_cloudflare_account_gate");
     if (!workflowRaw.includes("npx playwright install --with-deps chromium")) failures.push("workflow_missing_browser_runtime");
     if (!workflowRaw.includes("concurrency:")) failures.push("workflow_missing_concurrency");
-    if (!workflowRaw.includes("actions/upload-artifact@v4") || !workflowRaw.includes("/tmp/fursay-release-*")) failures.push("workflow_missing_release_artifact_upload");
+    if (!workflowRaw.includes("actions/checkout@11d5960a326750d5838078e36cf38b85af677262")) failures.push("workflow_checkout_not_pinned");
+    if (!workflowRaw.includes("actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020")) failures.push("workflow_setup_node_not_pinned");
+    if (!workflowRaw.includes("actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02") || !workflowRaw.includes("/tmp/fursay-release-*")) failures.push("workflow_missing_release_artifact_upload");
     if (
       !deployReadinessScriptRaw.includes("requireCloudflare")
       || !deployReadinessScriptRaw.includes("missing_CLOUDFLARE_API_TOKEN")
@@ -1810,7 +1812,7 @@ async function checkDiscoveryFiles(baseUrl) {
     ) {
       failures.push("deploy_readiness_missing_cloudflare_gate");
     }
-    if (!deployReadinessScriptRaw.includes("actions/upload-artifact@v4") || !deployReadinessScriptRaw.includes("/tmp/fursay-release-*")) {
+    if (!deployReadinessScriptRaw.includes("actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02") || !deployReadinessScriptRaw.includes("/tmp/fursay-release-*")) {
       failures.push("deploy_readiness_missing_artifact_gate");
     }
     if (!deployReadinessScriptRaw.includes("docs/cloudflare-deploy-runbook.md")) failures.push("deploy_readiness_missing_runbook_gate");
