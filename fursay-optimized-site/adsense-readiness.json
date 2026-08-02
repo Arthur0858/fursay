@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "not_ready",
+  "contentTemplateRisk": "passed",
+  "distinctEditorialSources": 18,
+  "minimumDistinctEditorialSources": 16,
+  "commercialIndexingPolicy": "maintained",
+  "operatorDisclosureMode": "brand",
   "readyToSubmit": false,
   "publisherId": "pub-4093856660317740",
   "lovetypesPrerequisite": "ready",
@@ -8,7 +13,7 @@
   "reviewSubmitted": false,
   "minimumStableDays": 14,
   "maximumEvidenceAgeDays": 3,
-  "lastMaterialChange": "2026-08-01",
+  "lastMaterialChange": "2026-08-02",
   "externalGates": {
     "lovetypesReady": false,
     "adsTxtAuthorized": false,

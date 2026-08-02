@@ -45,6 +45,7 @@ const LIVE_GATES = [
   { command: "node", args: ["scripts/check-image-assets.mjs"] },
   { command: "node", args: ["scripts/check-cache-headers.mjs"] },
   { command: "node", args: ["scripts/check-adsense-review-contract.mjs"] },
+  { command: "node", args: ["scripts/check-product-content-contract.mjs"] },
   { command: "node", args: ["audit-fursay.mjs"], audit: true },
 ];
 

@@ -1,4 +1,4 @@
-export const EDITORIAL_UPDATED = "2026-08-01";
+export const EDITORIAL_UPDATED = "2026-08-02";
 
 export const GUIDE_SLUGS = [
   "english-storytime-without-fluent-english",

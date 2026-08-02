@@ -16,6 +16,7 @@
     "noor:sprint:review": "node scripts/review-noor-sprint-report.mjs",
     "report:events": "node scripts/query-event-analytics-report.mjs",
     "adsense:check": "node scripts/check-adsense-review-contract.mjs",
+    "product:content:check": "node scripts/check-product-content-contract.mjs",
     "smoke:live": "node scripts/smoke-live.mjs"
   },
   "devDependencies": {

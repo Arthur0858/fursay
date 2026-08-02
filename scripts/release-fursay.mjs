@@ -284,14 +284,15 @@ function writeReleaseManifest() {
       "scripts/check-cache-headers.mjs",
       "scripts/check-deploy-readiness.mjs",
       "scripts/check-adsense-review-contract.mjs",
+      "scripts/check-product-content-contract.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
       pages: 9,
       funnelChecks: 41,
-      amazonAffiliateLinks: 28,
+      amazonAffiliateLinks: 20,
       amazonAffiliateTag: "parenttechche-20",
-      booksAffiliateLinks: 14,
+      booksAffiliateLinks: 10,
       booksAffiliateId: "arthur0858",
       eventTrackingPages: 18,
       affiliateEventTrackingPages: 15,
@@ -4750,6 +4751,7 @@ async function main() {
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
   run("node", ["--check", "scripts/check-adsense-review-contract.mjs"]);
+  run("node", ["--check", "scripts/check-product-content-contract.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
@@ -4797,6 +4799,7 @@ async function main() {
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
   run("node", ["scripts/check-adsense-review-contract.mjs", "--out-dir", join(outRoot, "adsense-review-local")]);
+  run("node", ["scripts/check-product-content-contract.mjs", "--out-dir", join(outRoot, "product-content-local")]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);
@@ -4842,6 +4845,7 @@ async function main() {
     run("node", ["scripts/check-image-assets.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "image-assets-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     run("node", ["scripts/check-adsense-review-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "adsense-review-live")]);
+    run("node", ["scripts/check-product-content-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "product-content-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });
     writeFileSync(auditOut, auditJson);

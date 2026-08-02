@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-08-01",
+  "updatedAt": "2026-08-02",
   "source": {
     "branch": "main",
-    "commit": "3350c9d",
-    "summary": "chore: reconcile newsletter run evidence"
+    "commit": "6a91b66",
+    "summary": "fix: preserve follow crawling on links hub"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -203,9 +203,9 @@
   ],
   "monetization": {
     "affiliate": {
-      "amazonLinks": 28,
+      "amazonLinks": 20,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 14,
+      "booksLinks": 10,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

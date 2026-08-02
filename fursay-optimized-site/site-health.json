@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-08-01",
+  "updatedAt": "2026-08-02",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -415,7 +415,7 @@
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
       "/css/sample-activity-20260718-v1.css",
-      "/css/editorial-20260801-v1.css"
+      "/css/editorial-20260802-v2.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js"
@@ -494,9 +494,9 @@
   },
   "monetization": {
     "affiliate": {
-      "amazonLinks": 28,
+      "amazonLinks": 20,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 14,
+      "booksLinks": 10,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },
