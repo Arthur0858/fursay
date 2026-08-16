@@ -1,0 +1,11 @@
+{
+  "runId": "1786703796851-tf6m1z",
+  "channel": "arabic",
+  "mode": "chrome-result",
+  "dryRun": false,
+  "startedAt": "2026-08-14T10:36:36.851Z",
+  "status": "failed",
+  "error": "Episode already sent: arabic ep1",
+  "providerErrorCode": "unknown",
+  "finishedAt": "2026-08-14T10:36:36.859Z"
+}

@@ -5,7 +5,7 @@
   "channelLabel": "Arabic Kids Chinese",
   "createdAt": "2026-07-17T05:21:59.424Z",
   "episodeNo": 1,
-  "campaignName": "Arabic Kids Chinese EP001 - 2026-07-22",
+  "campaignName": "Arabic Kids Chinese EP001 - 2026-08-19",
   "episode": {
     "episodeNo": 1,
     "videoId": "uFicgPqbxms",
@@ -15,10 +15,10 @@
   },
   "schedule": {
     "delivery": "scheduled",
-    "date": "2026-07-22",
+    "date": "2026-08-19",
     "hours": "09",
     "minutes": "00",
-    "scheduledAt": "2026-07-22T09:00:00+08:00"
+    "scheduledAt": "2026-08-19T09:00:00+08:00"
   },
   "mailerLite": {
     "groupId": "185908830918411331",
@@ -28,7 +28,7 @@
     "fromName": "Fursay",
     "replyTo": "hello@fursay.com",
     "delivery": "scheduled",
-    "scheduledAt": "2026-07-22T09:00:00+08:00"
+    "scheduledAt": "2026-08-19T09:00:00+08:00"
   },
   "email": {
     "subject": "هذا الأسبوع: نبدأ التحية بالصينية مع 你好",
@@ -98,7 +98,7 @@
         "action": "Before scheduling, preview the campaign footer and fail closed if it still says Add your company postal address here or any other default placeholder."
       }
     ],
-    "successCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel arabic --input content/newsletters/pending/1781616731896-h7litz-arabic-ep001.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url> --schedule-date 2026-07-22 --schedule-time 09:00",
+    "successCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel arabic --input content/newsletters/pending/1781616731896-h7litz-arabic-ep001.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url> --schedule-date 2026-08-19 --schedule-time 09:00",
     "failureCommand": "node scripts/newsletter-runner.mjs --mode chrome-result --channel arabic --input content/newsletters/pending/1781616731896-h7litz-arabic-ep001.newsletter.json --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail \"<exact blocker>\""
   },
   "postSendGmailCheck": {
