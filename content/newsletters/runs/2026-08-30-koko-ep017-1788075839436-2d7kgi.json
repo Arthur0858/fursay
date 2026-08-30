@@ -1,0 +1,70 @@
+{
+  "runId": "1788075839436-2d7kgi",
+  "channel": "koko",
+  "mode": "chrome-result",
+  "dryRun": false,
+  "startedAt": "2026-08-30T07:43:59.436Z",
+  "status": "scheduled_by_chrome",
+  "episodeNo": 17,
+  "videoId": "0SiM4f3VncI",
+  "videoUrl": "https://www.youtube.com/watch?v=0SiM4f3VncI",
+  "inputPath": "content/newsletters/pending/2026-08-30-koko-ep017.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "Poki and the Windy Day 刺刺與大風天",
+    "preview_text": "勇氣 · Courage",
+    "hero_title": "Poki and the Windy Day 刺刺與大風天",
+    "intro": "勇氣 · Courage",
+    "learning_words": [
+      {
+        "term": "WIND",
+        "pronunciation": "WIND",
+        "meaning": "WIND 風 FLY 飛 HOLD 抓住",
+        "example": "Practice WIND together."
+      },
+      {
+        "term": "FLY",
+        "pronunciation": "FLY",
+        "meaning": "WIND 風 FLY 飛 HOLD 抓住",
+        "example": "Practice FLY together."
+      },
+      {
+        "term": "HOLD",
+        "pronunciation": "HOLD",
+        "meaning": "WIND 風 FLY 飛 HOLD 抓住",
+        "example": "Practice HOLD together."
+      }
+    ],
+    "parent_activity": "每日任務 Daily Mission 今天試著用 'WIND' 說一個句子! Try saying a sentence with 'WIND' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Facing the wind together is not so scary.... 小測驗 Quick Quiz What does 'WIND' mean? / 'WIND' 是什麼意思? A. 風 B. 高興 happy C. 跑步 run D. 睡覺 sleep",
+    "video_cta": "Watch the story / 觀看影片: https://youtu.be/0SiM4f3VncI",
+    "site_cta": "For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko",
+    "closing": "Next preview / 下期預告: 滾滾過小河 · Turtly's River Crossing perseverance Download the episode PDF: https://drive.google.com/file/d/1qiuXw57OopQYyDP6RpY3cBwOz7mPqwoS/view?usp=drive_link",
+    "source_title": "Poki and the Windy Day 刺刺與大風天",
+    "source_next_preview": "滾滾過小河 · Turtly's River Crossing perseverance",
+    "pdf_url": "https://drive.google.com/file/d/1qiuXw57OopQYyDP6RpY3cBwOz7mPqwoS/view?usp=drive_link",
+    "source_pdf_link": "https://drive.google.com/file/d/1qiuXw57OopQYyDP6RpY3cBwOz7mPqwoS/view?usp=drive_link"
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">勇氣 · Courage</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP017</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">Poki and the Windy Day 刺刺與大風天</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">勇氣 · Courage</p>\n            <img src=\"https://i.ytimg.com/vi/0SiM4f3VncI/maxresdefault.jpg\" alt=\"Koko and Poki 🦔 Poki and the Windy Day | English Bedtime Story | Koko's Forest Adventure\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>WIND</strong><br><span style=\"color:#6d6258;\">WIND</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">WIND 風 FLY 飛 HOLD 抓住<br><em>Practice WIND together.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>FLY</strong><br><span style=\"color:#6d6258;\">FLY</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">WIND 風 FLY 飛 HOLD 抓住<br><em>Practice FLY together.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>HOLD</strong><br><span style=\"color:#6d6258;\">HOLD</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">WIND 風 FLY 飛 HOLD 抓住<br><em>Practice HOLD together.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">每日任務 Daily Mission 今天試著用 'WIND' 說一個句子! Try saying a sentence with 'WIND' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Facing the wind together is not so scary.... 小測驗 Quick Quiz What does 'WIND' mean? / 'WIND' 是什麼意思? A. 風 B. 高興 happy C. 跑步 run D. 睡覺 sleep</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=0SiM4f3VncI\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch the story / 觀看影片: https://youtu.be/0SiM4f3VncI</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko?subscribe=koko&amp;utm_source=creator_kit&amp;utm_medium=description&amp;utm_campaign=koko_story_funnel&amp;utm_content=creator_kit_sample\" style=\"color:#c05f18;font-weight:bold;\">For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko</a>\n            </p>\n            <p style=\"font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;\">\n              Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter<br>\n              <a href=\"https://fursay.com/creator/koko/newsletter\" style=\"color:#c05f18;font-weight:bold;\">https://fursay.com/creator/koko/newsletter</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">Next preview / 下期預告: 滾滾過小河 · Turtly's River Crossing perseverance Download the episode PDF: https://drive.google.com/file/d/1qiuXw57OopQYyDP6RpY3cBwOz7mPqwoS/view?usp=drive_link</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Koko's Forest - EP017\n\nPoki and the Windy Day 刺刺與大風天\n\n勇氣 · Courage\n\nLearning words\nWIND - WIND\nWIND 風 FLY 飛 HOLD 抓住\nPractice WIND together.\n\nFLY - FLY\nWIND 風 FLY 飛 HOLD 抓住\nPractice FLY together.\n\nHOLD - HOLD\nWIND 風 FLY 飛 HOLD 抓住\nPractice HOLD together.\n\nParent activity\n每日任務 Daily Mission 今天試著用 'WIND' 說一個句子! Try saying a sentence with 'WIND' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Facing the wind together is not so scary.... 小測驗 Quick Quiz What does 'WIND' mean? / 'WIND' 是什麼意思? A. 風 B. 高興 happy C. 跑步 run D. 睡覺 sleep\n\nWatch the story / 觀看影片: https://youtu.be/0SiM4f3VncI\nhttps://www.youtube.com/watch?v=0SiM4f3VncI\n\nFor more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko\nhttps://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample\n\nKoko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter\nhttps://fursay.com/creator/koko/newsletter\n\nNext preview / 下期預告: 滾滾過小河 · Turtly's River Crossing perseverance Download the episode PDF: https://drive.google.com/file/d/1qiuXw57OopQYyDP6RpY3cBwOz7mPqwoS/view?usp=drive_link",
+  "creatorKit": {
+    "pack": "koko",
+    "sampleShortlink": "https://fursay.com/sample/koko",
+    "newsletterShortlink": "https://fursay.com/creator/koko/newsletter",
+    "trackedLandingUrl": "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample",
+    "qrSvg": "https://fursay.com/images/qr/sample-koko.svg"
+  },
+  "browserResult": {
+    "status": "scheduled",
+    "campaignId": null,
+    "campaignUrl": "https://dashboard.mailerlite.com/campaigns/197211025377854854/review",
+    "failureCode": null,
+    "failureDetail": null,
+    "handoffPath": null,
+    "recordedAt": "2026-08-30T07:43:59.447Z"
+  },
+  "delivery": "scheduled",
+  "scheduledAt": "2026-11-09T09:00:00+08:00",
+  "campaignId": null,
+  "campaignUrl": "https://dashboard.mailerlite.com/campaigns/197211025377854854/review",
+  "finishedAt": "2026-08-30T07:43:59.448Z"
+}
