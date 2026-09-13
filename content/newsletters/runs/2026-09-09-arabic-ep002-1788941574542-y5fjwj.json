@@ -1,0 +1,15 @@
+{
+  "runId": "1788941574542-y5fjwj",
+  "channel": "arabic",
+  "mode": "prepare",
+  "dryRun": false,
+  "startedAt": "2026-09-09T08:12:54.542Z",
+  "status": "prepared",
+  "syncedEpisodes": 374,
+  "episodeNo": 2,
+  "videoId": "_kA6Im_vi-0",
+  "videoUrl": "https://www.youtube.com/watch?v=_kA6Im_vi-0",
+  "requestPath": "content/newsletters/pending/1788941574542-y5fjwj-arabic-ep002.request.json",
+  "newsletterOutputPath": "content/newsletters/pending/1788941574542-y5fjwj-arabic-ep002.newsletter.json",
+  "finishedAt": "2026-09-09T08:12:57.100Z"
+}
