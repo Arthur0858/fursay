@@ -1,0 +1,88 @@
+{
+  "runId": "1790088347035-2prdw2",
+  "channel": "koko",
+  "mode": "chrome-result",
+  "dryRun": false,
+  "startedAt": "2026-09-22T14:45:47.035Z",
+  "status": "readback_verified",
+  "episodeNo": 14,
+  "videoId": "2wSOcF3nc24",
+  "videoUrl": "https://www.youtube.com/watch?v=2wSOcF3nc24",
+  "inputPath": "content/newsletters/pending/2026-08-30-koko-ep014.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "Mimi's Autumn Leaves 米米的秋天樹葉",
+    "preview_text": "感恩 · Gratitude",
+    "hero_title": "Mimi's Autumn Leaves 米米的秋天樹葉",
+    "intro": "感恩 · Gratitude",
+    "learning_words": [
+      {
+        "term": "LEAF",
+        "pronunciation": "LEAF",
+        "meaning": "LEAF 葉子 FALL 落下 COLLECT 收集",
+        "example": "Practice LEAF together."
+      },
+      {
+        "term": "FALL",
+        "pronunciation": "FALL",
+        "meaning": "LEAF 葉子 FALL 落下 COLLECT 收集",
+        "example": "Practice FALL together."
+      },
+      {
+        "term": "COLLECT",
+        "pronunciation": "COLLECT",
+        "meaning": "LEAF 葉子 FALL 落下 COLLECT 收集",
+        "example": "Practice COLLECT together."
+      }
+    ],
+    "parent_activity": "每日任務 Daily Mission 今天試著用 'LEAF' 說一個句子! Try saying a sentence with 'LEAF' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Change can be beautiful if you look with open eyes.... 小測驗 Quick Quiz What does 'LEAF' mean? / 'LEAF' 是什麼意思? A. 葉子 B. 高興 happy C. 跑步 run D. 睡覺 sleep",
+    "video_cta": "Watch the story / 觀看影片: https://youtu.be/2wSOcF3nc24",
+    "site_cta": "For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko",
+    "closing": "Next preview / 下期預告: 慢慢的陽光午睡 · Snaily's Sunny Nap self-care Download the episode PDF: https://drive.google.com/file/d/11rn_-aKRokFVjN4NueNDa49H8o4X83MW/view?usp=drive_link",
+    "source_title": "Mimi's Autumn Leaves 米米的秋天樹葉",
+    "source_next_preview": "慢慢的陽光午睡 · Snaily's Sunny Nap self-care",
+    "pdf_url": "https://drive.google.com/file/d/11rn_-aKRokFVjN4NueNDa49H8o4X83MW/view?usp=drive_link",
+    "source_pdf_link": "https://drive.google.com/file/d/11rn_-aKRokFVjN4NueNDa49H8o4X83MW/view?usp=drive_link"
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">感恩 · Gratitude</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:left;direction:ltr;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Koko's Forest · EP014</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">Mimi's Autumn Leaves 米米的秋天樹葉</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">感恩 · Gratitude</p>\n            <img src=\"https://i.ytimg.com/vi/2wSOcF3nc24/maxresdefault.jpg\" alt=\"Koko and Mimi 🐭 Mimi's Autumn Leaves | English Bedtime Story | Koko's Forest Adventure\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>LEAF</strong><br><span style=\"color:#6d6258;\">LEAF</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">LEAF 葉子 FALL 落下 COLLECT 收集<br><em>Practice LEAF together.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>FALL</strong><br><span style=\"color:#6d6258;\">FALL</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">LEAF 葉子 FALL 落下 COLLECT 收集<br><em>Practice FALL together.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>COLLECT</strong><br><span style=\"color:#6d6258;\">COLLECT</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">LEAF 葉子 FALL 落下 COLLECT 收集<br><em>Practice COLLECT together.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">每日任務 Daily Mission 今天試著用 'LEAF' 說一個句子! Try saying a sentence with 'LEAF' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Change can be beautiful if you look with open eyes.... 小測驗 Quick Quiz What does 'LEAF' mean? / 'LEAF' 是什麼意思? A. 葉子 B. 高興 happy C. 跑步 run D. 睡覺 sleep</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=2wSOcF3nc24\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">Watch the story / 觀看影片: https://youtu.be/2wSOcF3nc24</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/koko?subscribe=koko&amp;utm_source=creator_kit&amp;utm_medium=description&amp;utm_campaign=koko_story_funnel&amp;utm_content=creator_kit_sample\" style=\"color:#c05f18;font-weight:bold;\">For more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko</a>\n            </p>\n            <p style=\"font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;\">\n              Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter<br>\n              <a href=\"https://fursay.com/creator/koko/newsletter\" style=\"color:#c05f18;font-weight:bold;\">https://fursay.com/creator/koko/newsletter</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">Next preview / 下期預告: 慢慢的陽光午睡 · Snaily's Sunny Nap self-care Download the episode PDF: https://drive.google.com/file/d/11rn_-aKRokFVjN4NueNDa49H8o4X83MW/view?usp=drive_link</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Koko's Forest - EP014\n\nMimi's Autumn Leaves 米米的秋天樹葉\n\n感恩 · Gratitude\n\nLearning words\nLEAF - LEAF\nLEAF 葉子 FALL 落下 COLLECT 收集\nPractice LEAF together.\n\nFALL - FALL\nLEAF 葉子 FALL 落下 COLLECT 收集\nPractice FALL together.\n\nCOLLECT - COLLECT\nLEAF 葉子 FALL 落下 COLLECT 收集\nPractice COLLECT together.\n\nParent activity\n每日任務 Daily Mission 今天試著用 'LEAF' 說一個句子! Try saying a sentence with 'LEAF' today! 角色扮演 Role Play 和家人一起演一演這集的故事! Act out today's story with your family! Tip: Change can be beautiful if you look with open eyes.... 小測驗 Quick Quiz What does 'LEAF' mean? / 'LEAF' 是什麼意思? A. 葉子 B. 高興 happy C. 跑步 run D. 睡覺 sleep\n\nWatch the story / 觀看影片: https://youtu.be/2wSOcF3nc24\nhttps://www.youtube.com/watch?v=2wSOcF3nc24\n\nFor more Koko parent resources and bilingual learning ideas, visit https://fursay.com/koko\nhttps://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample\n\nKoko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/creator/koko/newsletter\nhttps://fursay.com/creator/koko/newsletter\n\nNext preview / 下期預告: 慢慢的陽光午睡 · Snaily's Sunny Nap self-care Download the episode PDF: https://drive.google.com/file/d/11rn_-aKRokFVjN4NueNDa49H8o4X83MW/view?usp=drive_link",
+  "creatorKit": {
+    "pack": "koko",
+    "sampleShortlink": "https://fursay.com/sample/koko",
+    "newsletterShortlink": "https://fursay.com/creator/koko/newsletter",
+    "trackedLandingUrl": "https://fursay.com/koko?subscribe=koko&utm_source=creator_kit&utm_medium=description&utm_campaign=koko_story_funnel&utm_content=creator_kit_sample",
+    "qrSvg": "https://fursay.com/images/qr/sample-koko.svg"
+  },
+  "browserResult": {
+    "status": "scheduled",
+    "campaignId": "197210332475688445",
+    "campaignUrl": "https://dashboard.mailerlite.com/campaigns/197210332475688445/review",
+    "failureCode": null,
+    "failureDetail": null,
+    "handoffPath": null,
+    "readbackOnly": true,
+    "providerReadback": {
+      "status": "scheduled",
+      "scheduledAt": "2026-10-19 09:00:00 (+08:00)",
+      "sender": "Fursay (hello@fursay.com)",
+      "audience": "Koko 電子報訂閱者 (1)",
+      "subject": "Mimi's Autumn Leaves 米米的秋天樹葉"
+    },
+    "recordedAt": "2026-09-22T14:45:47.045Z"
+  },
+  "executionState": "readback_only",
+  "externalActionCount": 0,
+  "providerMutationCount": 0,
+  "campaignId": "197210332475688445",
+  "campaignUrl": "https://dashboard.mailerlite.com/campaigns/197210332475688445/review",
+  "delivery": "scheduled",
+  "scheduledAt": "2026-10-19 09:00:00 (+08:00)",
+  "providerReadback": {
+    "status": "scheduled",
+    "scheduledAt": "2026-10-19 09:00:00 (+08:00)",
+    "sender": "Fursay (hello@fursay.com)",
+    "audience": "Koko 電子報訂閱者 (1)",
+    "subject": "Mimi's Autumn Leaves 米米的秋天樹葉"
+  },
+  "finishedAt": "2026-09-22T14:45:47.045Z"
+}

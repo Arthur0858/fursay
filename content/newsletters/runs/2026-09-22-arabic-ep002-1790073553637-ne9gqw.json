@@ -1,0 +1,55 @@
+{
+  "runId": "1790073553637-ne9gqw",
+  "channel": "arabic",
+  "mode": "send",
+  "dryRun": true,
+  "startedAt": "2026-09-22T10:39:13.637Z",
+  "status": "dry_run_passed",
+  "episodeNo": 2,
+  "videoId": "_kA6Im_vi-0",
+  "videoUrl": "https://www.youtube.com/watch?v=_kA6Im_vi-0",
+  "inputPath": "content/newsletters/pending/1788941574542-y5fjwj-arabic-ep002.newsletter.json",
+  "qaErrors": [],
+  "newsletter": {
+    "subject": "هذا الأسبوع: نتعلّم كلمات المشاعر بالصينية مع نور وزيد",
+    "preview_text": "ثلاث كلمات بسيطة عن المشاعر: 開心 kāi xīn، 難過 nán guò، خائف 害怕 hài pà مع نشاط عائلي قصير.",
+    "hero_title": "لنتعرّف على مشاعرنا بالصينية",
+    "intro": "في حلقة EP002 من Arabic Kids Chinese، يتعلّم الأطفال كلمات صينية مرتبطة بالمشاعر والعواطف مع نور وزيد. استمعوا إلى الكلمات بهدوء، ثم اختاروا شعوراً واحداً ليتدرّب عليه الطفل في موقف صغير خلال الأسبوع.",
+    "learning_words": [
+      {
+        "term": "開心",
+        "pronunciation": "kāi xīn",
+        "meaning": "سعيد أو فرِح",
+        "example": "عندما يفرح الطفل بلعبة أو قصة، أشيروا إلى ابتسامته وقولوا 開心 kāi xīn."
+      },
+      {
+        "term": "難過",
+        "pronunciation": "nán guò",
+        "meaning": "حزين أو يشعر بالأسى",
+        "example": "إذا شعر الطفل بالحزن، سمّوا الشعور بلطف وقولوا 難過 nán guò، ثم امنحوه وقتاً للهدوء."
+      },
+      {
+        "term": "害怕",
+        "pronunciation": "hài pà",
+        "meaning": "خائف",
+        "example": "في موقف مخيف قليلاً، أمسكوا بيد الطفل وقولوا 害怕 hài pà قبل أن تتحدثوا عمّا يساعده."
+      }
+    ],
+    "parent_activity": "نشاط خمس دقائق: ارسموا ثلاث وجوه بسيطة للسعادة والحزن والخوف. يختار الطفل وجهاً، يقول الكلمة الصينية بمساعدة الوالد، ثم يذكر موقفاً صغيراً يناسبها. لا نحتاج إلى حفظ الكلمات كلها؛ يكفي تكرار كلمة واحدة في موقف آمن وحقيقي.",
+    "video_cta": "شاهدوا حلقة المشاعر الصينية مع الطفل",
+    "site_cta": "زوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال",
+    "closing": "تسمية الشعور تساعد الطفل على التوقف والاستماع إلى نفسه. اختاروا كلمة واحدة هذا الأسبوع وكرّروها بمحبة، ثم اتركوا للطفل مساحة ليعبّر بطريقته."
+  },
+  "htmlPreview": "<!doctype html>\n<html>\n<body style=\"margin:0;background:#f7f2e8;font-family:Arial,'Noto Sans TC',sans-serif;color:#2f2a25;\">\n  <div style=\"display:none;max-height:0;overflow:hidden;\">ثلاث كلمات بسيطة عن المشاعر: 開心 kāi xīn، 難過 nán guò، خائف 害怕 hài pà مع نشاط عائلي قصير.</div>\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f7f2e8;\">\n    <tr><td align=\"center\" style=\"padding:24px 12px;\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:640px;background:#fffaf1;border-radius:12px;overflow:hidden;\">\n        <tr>\n          <td style=\"padding:28px;text-align:right;direction:rtl;\">\n            <p style=\"margin:0 0 8px;color:#8a6f49;font-size:14px;\">Arabic Kids Chinese · EP002</p>\n            <h1 style=\"margin:0 0 14px;font-size:28px;line-height:1.2;color:#2e5836;\">لنتعرّف على مشاعرنا بالصينية</h1>\n            <p style=\"font-size:17px;line-height:1.7;margin:0 0 20px;\">في حلقة EP002 من Arabic Kids Chinese، يتعلّم الأطفال كلمات صينية مرتبطة بالمشاعر والعواطف مع نور وزيد. استمعوا إلى الكلمات بهدوء، ثم اختاروا شعوراً واحداً ليتدرّب عليه الطفل في موقف صغير خلال الأسبوع.</p>\n            <img src=\"https://i.ytimg.com/vi/_kA6Im_vi-0/hqdefault.jpg\" alt=\"我的心情 مشاعري | 學中文 EP002 | صيني للأطفال\" style=\"width:100%;height:auto;border-radius:10px;margin:0 0 22px;\">\n            <h2 style=\"font-size:20px;margin:18px 0 10px;\">Learning words</h2>\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #e8e1d5;border-collapse:collapse;\">\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>開心</strong><br><span style=\"color:#6d6258;\">kāi xīn</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">سعيد أو فرِح<br><em>عندما يفرح الطفل بلعبة أو قصة، أشيروا إلى ابتسامته وقولوا 開心 kāi xīn.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>難過</strong><br><span style=\"color:#6d6258;\">nán guò</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">حزين أو يشعر بالأسى<br><em>إذا شعر الطفل بالحزن، سمّوا الشعور بلطف وقولوا 難過 nán guò، ثم امنحوه وقتاً للهدوء.</em></td>\n    </tr>\n    <tr>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\"><strong>害怕</strong><br><span style=\"color:#6d6258;\">hài pà</span></td>\n      <td style=\"padding:12px;border-bottom:1px solid #e8e1d5;\">خائف<br><em>في موقف مخيف قليلاً، أمسكوا بيد الطفل وقولوا 害怕 hài pà قبل أن تتحدثوا عمّا يساعده.</em></td>\n    </tr></table>\n            <h2 style=\"font-size:20px;margin:24px 0 10px;\">Parent activity</h2>\n            <p style=\"font-size:16px;line-height:1.7;\">نشاط خمس دقائق: ارسموا ثلاث وجوه بسيطة للسعادة والحزن والخوف. يختار الطفل وجهاً، يقول الكلمة الصينية بمساعدة الوالد، ثم يذكر موقفاً صغيراً يناسبها. لا نحتاج إلى حفظ الكلمات كلها؛ يكفي تكرار كلمة واحدة في موقف آمن وحقيقي.</p>\n            <p style=\"margin:26px 0 12px;\">\n              <a href=\"https://www.youtube.com/watch?v=_kA6Im_vi-0\" style=\"display:inline-block;background:#2e9d5f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;\">شاهدوا حلقة المشاعر الصينية مع الطفل</a>\n            </p>\n            <p style=\"margin:0 0 20px;\">\n              <a href=\"https://fursay.com/arabic?subscribe=noor&amp;utm_source=creator_kit&amp;utm_medium=description&amp;utm_campaign=noor_story_funnel&amp;utm_content=creator_kit_sample\" style=\"color:#c05f18;font-weight:bold;\">زوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال</a>\n            </p>\n            <p style=\"font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;\">\n              Try Nour's 3-minute Chinese worksheet sample: https://fursay.com/product-samples/noor-worksheet?source_id=noor_creator_youtube_sample_preview&amp;creator=fursay&amp;placement=youtube_description. Free weekly story pack: https://fursay.com/creator/noor/newsletter<br>\n              <a href=\"https://fursay.com/creator/noor/newsletter\" style=\"color:#c05f18;font-weight:bold;\">https://fursay.com/creator/noor/newsletter</a>\n            </p>\n            <p style=\"font-size:16px;line-height:1.7;margin:20px 0 0;\">تسمية الشعور تساعد الطفل على التوقف والاستماع إلى نفسه. اختاروا كلمة واحدة هذا الأسبوع وكرّروها بمحبة، ثم اتركوا للطفل مساحة ليعبّر بطريقته.</p>\n          </td>\n        </tr>\n      </table>\n    </td></tr>\n  </table>\n</body>\n</html>",
+  "richTextPreview": "Arabic Kids Chinese - EP002\n\nلنتعرّف على مشاعرنا بالصينية\n\nفي حلقة EP002 من Arabic Kids Chinese، يتعلّم الأطفال كلمات صينية مرتبطة بالمشاعر والعواطف مع نور وزيد. استمعوا إلى الكلمات بهدوء، ثم اختاروا شعوراً واحداً ليتدرّب عليه الطفل في موقف صغير خلال الأسبوع.\n\nLearning words\n開心 - kāi xīn\nسعيد أو فرِح\nعندما يفرح الطفل بلعبة أو قصة، أشيروا إلى ابتسامته وقولوا 開心 kāi xīn.\n\n難過 - nán guò\nحزين أو يشعر بالأسى\nإذا شعر الطفل بالحزن، سمّوا الشعور بلطف وقولوا 難過 nán guò، ثم امنحوه وقتاً للهدوء.\n\n害怕 - hài pà\nخائف\nفي موقف مخيف قليلاً، أمسكوا بيد الطفل وقولوا 害怕 hài pà قبل أن تتحدثوا عمّا يساعده.\n\nParent activity\nنشاط خمس دقائق: ارسموا ثلاث وجوه بسيطة للسعادة والحزن والخوف. يختار الطفل وجهاً، يقول الكلمة الصينية بمساعدة الوالد، ثم يذكر موقفاً صغيراً يناسبها. لا نحتاج إلى حفظ الكلمات كلها؛ يكفي تكرار كلمة واحدة في موقف آمن وحقيقي.\n\nشاهدوا حلقة المشاعر الصينية مع الطفل\nhttps://www.youtube.com/watch?v=_kA6Im_vi-0\n\nزوروا Fursay لمزيد من موارد تعلّم الصينية للأطفال\nhttps://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample\n\nTry Nour's 3-minute Chinese worksheet sample: https://fursay.com/product-samples/noor-worksheet?source_id=noor_creator_youtube_sample_preview&creator=fursay&placement=youtube_description. Free weekly story pack: https://fursay.com/creator/noor/newsletter\nhttps://fursay.com/creator/noor/newsletter\n\nتسمية الشعور تساعد الطفل على التوقف والاستماع إلى نفسه. اختاروا كلمة واحدة هذا الأسبوع وكرّروها بمحبة، ثم اتركوا للطفل مساحة ليعبّر بطريقته.",
+  "creatorKit": {
+    "pack": "noor",
+    "sampleShortlink": "https://fursay.com/sample/noor",
+    "newsletterShortlink": "https://fursay.com/creator/noor/newsletter",
+    "trackedLandingUrl": "https://fursay.com/arabic?subscribe=noor&utm_source=creator_kit&utm_medium=description&utm_campaign=noor_story_funnel&utm_content=creator_kit_sample",
+    "qrSvg": "https://fursay.com/images/qr/sample-noor.svg"
+  },
+  "delivery": "scheduled",
+  "scheduledAt": "2026-09-23T09:00:00+08:00",
+  "finishedAt": "2026-09-22T10:39:13.647Z"
+}
