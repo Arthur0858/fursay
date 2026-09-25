@@ -9,7 +9,7 @@ const ACCOUNT_META = "ca-pub-4093856660317740";
 const DEFAULT_OUT = "/tmp/fursay-adsense-review-contract";
 const LOCALES = [{ prefix: "", code: "en" }, { prefix: "/zh", code: "zh" }, { prefix: "/ar", code: "ar" }];
 const TRUST = ["about", "editorial-method", "contact", "terms", "privacy", "support"];
-const NOINDEX_HEADERS = ["/links.json", "/share-kit.json", "/creator-kit.json", "/traffic-launch.json", "/noor-sprint-status.json", "/noor-sprint-action.json", "/deploy-readiness.json", "/conversion-health.json", "/monetization-roadmap.json", "/adsense-readiness.json", "/product-samples/koko-printable", "/product-samples/noor-worksheet"];
+const NOINDEX_HEADERS = ["/adsense-readiness.json", "/campaigns.json", "/conversion-health.json", "/creator-kit.json", "/deploy-readiness.json", "/links.json", "/monetization-roadmap.json", "/noor-sprint-action.json", "/noor-sprint-status.json", "/products.json", "/release.json", "/share-kit.json", "/shortlinks.json", "/site-health.json", "/traffic-launch.json", "/video-discovery.json", "/product-samples/koko-printable", "/product-samples/noor-worksheet"];
 
 function args() { const parsed = { baseUrl: "", outDir: DEFAULT_OUT }; const values = process.argv.slice(2); for (let i = 0; i < values.length; i += 1) { if (values[i] === "--base-url") parsed.baseUrl = values[++i].replace(/\/$/, ""); if (values[i] === "--out-dir") parsed.outDir = values[++i]; } return parsed; }
 function fileFor(path) { return path === "/" ? "index.html" : path.endsWith("/") ? `${path.slice(1)}index.html` : path.endsWith(".xml") || path.endsWith(".txt") || path.endsWith(".json") ? path.slice(1) : `${path.slice(1)}.html`; }
@@ -32,7 +32,7 @@ async function mainRun() {
   const sitemapResponse = await get(options.baseUrl, "/sitemap.xml");
   const urls = [...sitemapResponse.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   metrics.sitemapUrls = urls.length;
-  if (urls.length !== 72 || new Set(urls).size !== 72) failures.push(`sitemap_expected_72_unique:${urls.length}:${new Set(urls).size}`);
+  if (urls.length !== 84 || new Set(urls).size !== 84) failures.push(`sitemap_expected_84_unique:${urls.length}:${new Set(urls).size}`);
   if (urls.some((url) => !url.startsWith(`${ORIGIN}/`))) failures.push("sitemap_noncanonical_origin");
   for (const url of urls) {
     const path = new URL(url).pathname; const response = await get(options.baseUrl, path); const html = response.text;
@@ -98,7 +98,7 @@ async function mainRun() {
     if ([...leftH2].filter((value) => rightH2.has(value)).length > 2) failures.push(`${left.path}:${right.path}:shared_h2_over_2`);
   }
   metrics.distinctEditorialSources = sourceUsage.size;
-  if (sourceUsage.size < 16) failures.push(`distinct_editorial_sources:${sourceUsage.size}`);
+  if (sourceUsage.size < 26) failures.push(`distinct_editorial_sources:${sourceUsage.size}`);
   for (const [url, count] of sourceUsage) if (count > 9) failures.push(`source_supports_over_3_guides:${url}:${count}`);
   for (const locale of LOCALES) for (const name of TRUST) {
     const path = `${locale.prefix}/${name}`, response = await get(options.baseUrl, path); metrics.trustPages += 1;
@@ -111,8 +111,9 @@ async function mainRun() {
   if (urls.includes(`${ORIGIN}/links`)) failures.push("links_in_sitemap");
   const readinessResponse = await get(options.baseUrl, "/adsense-readiness.json");
   let readiness = {}; try { readiness = JSON.parse(readinessResponse.text); } catch { failures.push("adsense_readiness_invalid_json"); }
-  if (readiness.status !== "not_ready" || readiness.readyToSubmit !== false || readiness.adRuntimeEnabled !== false || readiness.publisherId !== "pub-4093856660317740") failures.push("adsense_readiness_unsafe_state");
-  if (readiness.contentTemplateRisk !== "passed" || readiness.distinctEditorialSources < 16 || readiness.minimumDistinctEditorialSources !== 16 || readiness.commercialIndexingPolicy !== "maintained" || readiness.operatorDisclosureMode !== "brand") failures.push("adsense_readiness_content_state");
+  if (readiness.schemaVersion !== 2 || readiness.status !== "not_ready" || readiness.readyToSubmit !== false || readiness.adRuntimeEnabled !== false || readiness.publisherId !== "pub-4093856660317740") failures.push("adsense_readiness_unsafe_state");
+  if (!readiness.stableWindowReadyAt || !readiness.evidenceGeneratedAt || readiness.lovetypesPrerequisite === "ready" || readiness.contentTemplateRisk !== "passed" || readiness.distinctEditorialSources < 26 || readiness.minimumDistinctEditorialSources !== 26 || readiness.commercialIndexingPolicy !== "maintained" || readiness.operatorDisclosureMode !== "brand") failures.push("adsense_readiness_content_state");
+  if (!readiness.externalGates || Object.values(readiness.externalGates).some((gate) => gate.status === "unknown" && gate.fresh !== false)) failures.push("adsense_readiness_external_evidence_state");
   if (options.baseUrl) for (const path of NOINDEX_HEADERS) { const response = await get(options.baseUrl, path); if (!String(response.headers["x-robots-tag"] || "").includes("noindex")) failures.push(`${path}:x_robots_tag`); }
   const result = { ok: failures.length === 0, mode: options.baseUrl ? "live" : "local", baseUrl: options.baseUrl || "", metrics, failures };
   await writeFile(resolve(options.outDir, "adsense-review-contract.json"), `${JSON.stringify(result, null, 2)}\n`);

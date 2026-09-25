@@ -219,12 +219,13 @@ async function main() {
   for (const page of PRESALE_PAGES) {
     const html = await readPage(args.baseUrl, page);
     const blocks = structuredDataBlocks(html, page.path, failures);
-    for (const type of ["WebPage", "Product", "FAQPage"]) {
+    for (const type of ["WebPage", "LearningResource", "FAQPage"]) {
       if (!hasType(blocks, type)) failures.push(`presale_missing_type:${page.path}:${type}`);
     }
-    const product = firstType(blocks, "Product");
-    if (product?.offers) failures.push(`presale_unreviewed_offer:${page.path}`);
-    if (product?.potentialAction?.["@type"] !== "DownloadAction") failures.push(`presale_download_action:${page.path}`);
+    const resource = firstType(blocks, "LearningResource");
+    if (resource?.offers) failures.push(`resource_has_offer:${page.path}`);
+    if (resource?.isAccessibleForFree !== true) failures.push(`resource_not_free:${page.path}`);
+    if (resource?.potentialAction?.["@type"] !== "DownloadAction") failures.push(`resource_download_action:${page.path}`);
     pages.push({ path: page.path, jsonLdBlocks: blocks.length });
   }
   for (const page of POLICY_PAGES) {

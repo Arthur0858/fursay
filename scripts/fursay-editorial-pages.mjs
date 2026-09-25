@@ -1,14 +1,20 @@
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { EDITORIAL_UPDATED, GUIDES, GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
+import { EDITORIAL_CURRENT, EDITORIAL_UPDATED, GUIDES, GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 import { EDITORIAL_DEPTH, EDITORIAL_FINAL_NOTES, EDITORIAL_LOCALE_EXTENSIONS, EDITORIAL_SOURCE_LIBRARY, EDITORIAL_SUPPLEMENTS } from "./fursay-editorial-depth.mjs";
+import { ROUND3_EDITORIAL_DEPTH, ROUND3_EDITORIAL_SOURCE_LIBRARY } from "./fursay-editorial-round3.mjs";
+import { ROUND3_EDITORIAL_EXPANSIONS } from "./fursay-editorial-round3-expansions.mjs";
+import { TRUST_OVERRIDES } from "./fursay-editorial-trust-overrides.mjs";
 
 const ORIGIN = "https://fursay.com";
 const ADSENSE_ACCOUNT = "ca-pub-4093856660317740";
 const PUBLISHER_ID = "pub-4093856660317740";
-const CSS = "/css/editorial-20260802-v2.css";
+const CSS = "/css/editorial-20260925-v1.css";
 const BRAND_CSS = "/css/brand-storybook-20260717-v1.css";
 const SHARED_JS = "/js/site-shared-20260615-sharekit1.js";
+const ALL_EDITORIAL_DEPTH = { ...EDITORIAL_DEPTH, ...ROUND3_EDITORIAL_DEPTH };
+const ALL_EDITORIAL_SOURCES = { ...EDITORIAL_SOURCE_LIBRARY, ...ROUND3_EDITORIAL_SOURCE_LIBRARY };
+const ADSENSE_EVIDENCE_PATH = resolve(process.cwd(), "content/adsense-external-evidence.json");
 
 const LOCALES = {
   en: { lang: "en", dir: "ltr", prefix: "", label: "EN", guides: "Parent guides", about: "About", products: "Products", home: "Home", method: "Editorial method", contact: "Contact & corrections", terms: "Terms", privacy: "Privacy", support: "Support" },
@@ -113,6 +119,7 @@ const TRUST = {
     ar: ["دعم Fursay", "مساعدة في صفحات القصص والعينات والاشتراك", [["المعلومات المطلوبة", "أرسلوا رابط الصفحة واللغة وحزمة Koko أو نور والجهاز والمتصفح ووصفًا قصيرًا إلى contact@fursay.com. لا ترسلوا كلمات مرور أو دفعًا أو معلومات طفل."], ["مشكلات الطباعة", "إذا فتح PDF ولم يطبع جيدًا فاذكروا حجم الورق وإعداد الملاءمة. تستخدم العينات الحالية US Letter. يمكن إرسال صورة بعد إزالة البيانات الشخصية."], ["مساعدة الاشتراك", "يمكن للمشترك البالغ استخدام رابط الإلغاء في أي رسالة. للطلبات الأخرى اكتبوا من العنوان المشترك ولا تضيفوا معلومات خاصة بطفل."], ["لا دعم لطلبات مدفوعة بعد", "لا يوجد زر شراء أو سعر عام أو رابط دفع، لذلك لا توجد طلبات Fursay مدفوعة للاسترداد. يبقى السعر والاسترداد ومزود الدفع والتتبع قيد المراجعة."], ["أسئلة المحتوى", "استخدموا مسار التصحيح لجملة عامة تبدو خاطئة أو غامضة. لا تقدم Fursay نصيحة طارئة أو طبية أو نمائية أو قانونية أو تعليمية فردية."]]],
   },
 };
+Object.assign(TRUST, TRUST_OVERRIDES);
 
 function esc(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;"); }
 function route(locale, suffix) { return `${LOCALES[locale].prefix}${suffix}` || "/"; }
@@ -146,16 +153,21 @@ function head(locale, suffix, title, description, type = "website") {
 }
 function articleBody(locale, guide) {
   const d = guide.details[locale];
-  const depth = EDITORIAL_DEPTH[guide.slug];
+  const depth = ALL_EDITORIAL_DEPTH[guide.slug];
   if (!depth) throw new Error(`Missing editorial depth for ${guide.slug}`);
   const details = [d.scene, d.goal, d.routine, d.example, d.observe, d.bridge, d.limit];
   const notes = depth.notes[locale];
   const supplements = EDITORIAL_SUPPLEMENTS[guide.slug]?.[locale] || [];
   const localeExtension = EDITORIAL_LOCALE_EXTENSIONS[guide.slug]?.[locale];
   const finalNote = EDITORIAL_FINAL_NOTES[guide.slug]?.[locale];
+  const expansion = ROUND3_EDITORIAL_EXPANSIONS[guide.slug];
   return depth.headings[locale].map((heading, index) => {
     const paragraphs = [details[index]];
     if (notes[index]) paragraphs.push(notes[index]);
+    if (index === 3 && locale === "zh" && expansion?.zh) paragraphs.push(expansion.zh);
+    if (index === 3 && locale === "ar" && expansion?.ar) paragraphs.push(expansion.ar);
+    if (index === 3 && locale === "zh" && expansion?.zhFollowup) paragraphs.push(expansion.zhFollowup);
+    if (index === 3 && locale === "ar" && expansion?.arFollowup) paragraphs.push(expansion.arFollowup);
     if (index === 3 && finalNote) paragraphs.push(finalNote);
     if (index === 4 && localeExtension) paragraphs.push(localeExtension);
     if (index === 5 && supplements[0]) paragraphs.push(supplements[0]);
@@ -163,35 +175,61 @@ function articleBody(locale, guide) {
     return `<section id="section-${index + 1}" data-guide-section><h2>${esc(heading)}</h2>${paragraphs.map((paragraph) => `<p data-guide-original>${esc(paragraph)}</p>`).join("")}</section>`;
   }).join("");
 }
+function guideTool(locale, tool) {
+  if (!tool?.items?.[locale]) return "";
+  const lead = locale === "zh"
+    ? "依序看一看，挑一項嘗試；任何一步都可以略過。"
+    : locale === "ar"
+      ? "اتبعوا الإشارات أو اختاروا واحدة، ويمكن ترك أي خطوة."
+      : "Use the prompts in order or choose one; any step may be skipped.";
+  return `<section class="guide-tool" data-guide-original-tool aria-labelledby="guide-tool-title"><h2 id="guide-tool-title">${esc(tool.title[locale])}</h2><p>${esc(lead)}</p><ol>${tool.items[locale].map((item) => `<li>${esc(item)}</li>`).join("")}</ol><p class="guide-tool-print-note">${locale === "zh" ? "可用瀏覽器列印功能列印此卡；不列印也能直接使用。" : locale === "ar" ? "يمكن طباعة هذه البطاقة من المتصفح أو استخدامها مباشرة من دون طباعة." : "Print this card from your browser, or use it directly without printing."}</p></section>`;
+}
 function guidePage(locale, guide) {
   const l = LOCALES[locale], c = COPY[locale], suffix = `/guides/${guide.slug}`, title = guide.title[locale], description = guide.description[locale];
-  const depth = EDITORIAL_DEPTH[guide.slug];
+  const depth = ALL_EDITORIAL_DEPTH[guide.slug];
+  const datePublished = guide.datePublished || EDITORIAL_UPDATED;
+  const dateModified = guide.dateModified || EDITORIAL_UPDATED;
   const guideRoute = route(locale, suffix); const story = route(locale, guide.world === "koko" ? "/koko" : "/arabic"); const product = route(locale, guide.world === "koko" ? "/products/koko-printable" : "/products/noor-worksheet");
   const organization = { "@type": "Organization", "@id": `${ORIGIN}/#organization`, name: "Fursay", url: ORIGIN, email: "contact@fursay.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "contact@fursay.com", availableLanguage: ["English", "Traditional Chinese", "Arabic"] } };
-  const schemas = { "@context": "https://schema.org", "@graph": [{ "@type": "Article", headline: title, description, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_UPDATED, inLanguage: l.lang, mainEntityOfPage: { "@id": `${ORIGIN}${guideRoute}` }, author: { "@type": "Organization", name: c.team, url: `${ORIGIN}${route(locale, "/about")}` }, publisher: { "@id": `${ORIGIN}/#organization` }, image: `${ORIGIN}/og-image.png` }, organization, { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: l.home, item: `${ORIGIN}${route(locale, "/")}` }, { "@type": "ListItem", position: 2, name: l.guides, item: `${ORIGIN}${route(locale, "/guides")}` }, { "@type": "ListItem", position: 3, name: title, item: `${ORIGIN}${guideRoute}` }] }] };
+  const schemas = { "@context": "https://schema.org", "@graph": [{ "@type": "Article", headline: title, description, datePublished, dateModified, inLanguage: l.lang, mainEntityOfPage: { "@id": `${ORIGIN}${guideRoute}` }, author: { "@type": "Organization", name: c.team, url: `${ORIGIN}${route(locale, "/about")}` }, publisher: { "@id": `${ORIGIN}/#organization` }, image: `${ORIGIN}/og-image.png` }, organization, { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: l.home, item: `${ORIGIN}${route(locale, "/")}` }, { "@type": "ListItem", position: 2, name: l.guides, item: `${ORIGIN}${route(locale, "/guides")}` }, { "@type": "ListItem", position: 3, name: title, item: `${ORIGIN}${guideRoute}` }] }] };
   const sourceHeading = locale === "zh" ? "資料來源與文章專屬說明" : locale === "ar" ? "المصادر وصلتها بهذا الدليل" : "Sources and guide-specific relevance";
   const relatedHeading = locale === "zh" ? "相關家長指南" : locale === "ar" ? "أدلة تحريرية مرتبطة" : "Related parent guides";
   const todayHeading = locale === "zh" ? "今天可以怎麼做" : locale === "ar" ? "ما الذي يمكن فعله اليوم" : "What you can do today";
-  const sources = depth.sources.map(([key, relevance]) => { const [name, url] = EDITORIAL_SOURCE_LIBRARY[key]; return `<li><a href="${esc(url)}" rel="noopener" target="_blank">${esc(name)}</a><p data-source-relevance>${esc(relevance[locale])}</p></li>`; }).join("");
+  const sources = depth.sources.map(([key, relevance]) => { const [name, url] = ALL_EDITORIAL_SOURCES[key]; return `<li><a href="${esc(url)}" rel="noopener" target="_blank">${esc(name)}</a><p data-source-relevance>${esc(relevance[locale])}</p></li>`; }).join("");
   const editorialLinks = depth.links.map((slug) => { const related = GUIDES.find((item) => item.slug === slug); return `<a href="${route(locale, `/guides/${slug}`)}">${esc(related.title[locale])}</a>`; }).join("");
-  return `${head(locale, suffix, title, description, "article")}<body class="brand-surface editorial-page">${nav(locale, suffix)}<main class="editorial-shell"><article><header class="editorial-hero"><p class="brand-kicker">${guide.world === "koko" ? "Koko · English story practice" : "Nour · Chinese story practice"}</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><div class="editorial-today"><h2>${esc(todayHeading)}</h2><p>${esc(depth.today[locale])}</p></div><p class="editorial-byline" data-guide-editorial-byline data-editorial-standard><strong>${esc(c.team)}</strong> · ${c.published}: <time datetime="${EDITORIAL_UPDATED}">${EDITORIAL_UPDATED}</time> · ${c.updated}: <time datetime="${EDITORIAL_UPDATED}">${EDITORIAL_UPDATED}</time></p><p class="editorial-boundary" data-editorial-standard>${esc(c.intro)}</p></header><nav class="editorial-toc" aria-label="${esc(c.contents)}"><strong>${esc(c.contents)}</strong><ol>${depth.headings[locale].map((item, i) => `<li><a href="#section-${i + 1}">${esc(item)}</a></li>`).join("")}</ol></nav><div class="editorial-body">${articleBody(locale, guide)}<section data-guide-sources><h2>${esc(sourceHeading)}</h2><p data-editorial-standard>${esc(c.sourceNote)}</p><ul class="source-list">${sources}</ul><p data-guide-revision><strong>${c.updated}:</strong> ${esc(guide.details[locale].revision)}</p><p data-editorial-standard><a href="${route(locale, "/editorial-method")}">${esc(l.method)}</a> · <a href="${route(locale, "/contact")}#corrections">${esc(c.correction)}</a></p></section><section class="editorial-related" data-editorial-links><h2>${esc(relatedHeading)}</h2>${editorialLinks}</section><aside class="editorial-next"><a class="brand-btn" href="${story}">${esc(c.related)}</a><a class="brand-btn brand-btn--secondary" href="${product}">${esc(c.sample)}</a></aside></div></article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schemas)}</script><script src="${SHARED_JS}"></script></body></html>`;
+  return `${head(locale, suffix, title, description, "article")}<body class="brand-surface editorial-page">${nav(locale, suffix)}<main class="editorial-shell"><article><header class="editorial-hero"><p class="brand-kicker">${guide.world === "koko" ? "Koko · English story practice" : "Nour · Chinese story practice"}</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><div class="editorial-today"><h2>${esc(todayHeading)}</h2><p>${esc(depth.today[locale])}</p></div><p class="editorial-byline" data-guide-editorial-byline data-editorial-standard><strong>${esc(c.team)}</strong> · ${c.published}: <time datetime="${datePublished}">${datePublished}</time> · ${c.updated}: <time datetime="${dateModified}">${dateModified}</time></p><p class="editorial-boundary" data-editorial-standard>${esc(c.intro)}</p></header><nav class="editorial-toc" aria-label="${esc(c.contents)}"><strong>${esc(c.contents)}</strong><ol>${depth.headings[locale].map((item, i) => `<li><a href="#section-${i + 1}">${esc(item)}</a></li>`).join("")}</ol></nav><div class="editorial-body">${articleBody(locale, guide)}${guideTool(locale, guide.tool)}<section data-guide-sources><h2>${esc(sourceHeading)}</h2><p data-editorial-standard>${esc(c.sourceNote)}</p><ul class="source-list">${sources}</ul><p data-guide-revision><strong>${c.updated}:</strong> ${esc(guide.details[locale].revision)}</p><p data-editorial-standard><a href="${route(locale, "/editorial-method")}">${esc(l.method)}</a> · <a href="${route(locale, "/contact")}#corrections">${esc(c.correction)}</a></p></section><section class="editorial-related" data-editorial-links><h2>${esc(relatedHeading)}</h2>${editorialLinks}</section><aside class="editorial-next"><a class="brand-btn" href="${story}">${esc(c.related)}</a><a class="brand-btn brand-btn--secondary" href="${product}">${esc(c.sample)}</a></aside></div></article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schemas)}</script><script src="${SHARED_JS}"></script></body></html>`;
 }
 function guidesHub(locale) {
   const l = LOCALES[locale];
   const title = locale === "zh" ? "家長雙語共讀指南" : locale === "ar" ? "أدلة القراءة الثنائية للوالدين" : "Parent guides for bilingual story time";
-  const description = locale === "zh" ? "八個可在家嘗試的英文與中文故事方法，附上具體例子、限制、資料來源與修正紀錄。" : locale === "ar" ? "ثمانية أدلة عملية لقصص الإنجليزية والصينية مع أمثلة وحدود ومصادر وسجل مراجعة." : "Eight practical guides for English and Chinese story moments, with examples, limits, sources, and revision notes.";
-  const groups = ["koko", "noor"].map((world) => `<section class="guide-group"><h2>${world === "koko" ? "Koko · English story practice" : "Nour · Chinese story practice"}</h2><div class="guide-grid">${GUIDES.filter((g) => g.world === world).map((g) => `<article class="guide-card"><p class="brand-kicker">${world === "koko" ? "English" : "Chinese + Arabic"}</p><h3><a href="${route(locale, `/guides/${g.slug}`)}">${esc(g.title[locale])}</a></h3><p>${esc(g.description[locale])}</p><p><strong>${COPY[locale].team}</strong> · ${EDITORIAL_UPDATED}</p></article>`).join("")}</div></section>`).join("");
-  const schema = { "@context": "https://schema.org", "@type": "CollectionPage", name: title, description, url: `${ORIGIN}${route(locale, "/guides")}`, inLanguage: l.lang, hasPart: GUIDES.map((g) => ({ "@type": "Article", name: g.title[locale], url: `${ORIGIN}${route(locale, `/guides/${g.slug}`)}` })) };
+  const count = GUIDE_SLUGS.length;
+  const description = locale === "zh" ? `${count} 篇可在家嘗試的英文與中文家庭情境指南，附具體步驟、限制、來源和可直接使用的小工具。` : locale === "ar" ? `${count} دليلًا عمليًا لمواقف عائلية مع الإنجليزية والصينية، بخطوات وحدود ومصادر وأدوات قابلة للاستخدام.` : `${count} practical guides for English and Chinese family moments, with distinct steps, limits, sources, and usable activities.`;
+  const starterSlugs = new Set(["english-storytime-without-fluent-english", "repetition-without-pressure", "three-chinese-words-a-day", "three-minute-chinese-routine"]);
+  const groupDefs = [
+    { key: "starter", title: localizedGuideHubTitle(locale, "starter"), select: (g) => starterSlugs.has(g.slug) },
+    { key: "koko", title: localizedGuideHubTitle(locale, "koko"), select: (g) => g.world === "koko" && !starterSlugs.has(g.slug) },
+    { key: "nour", title: localizedGuideHubTitle(locale, "nour"), select: (g) => g.world === "noor" && !starterSlugs.has(g.slug) },
+  ];
+  const groups = groupDefs.map((group) => `<section class="guide-group guide-group--${group.key}"><h2>${esc(group.title)}</h2><div class="guide-grid">${GUIDES.filter(group.select).map((g) => `<article class="guide-card"><p class="brand-kicker">${g.world === "koko" ? "Koko · English" : "Nour · Chinese"}</p><h3><a href="${route(locale, `/guides/${g.slug}`)}">${esc(g.title[locale])}</a></h3><p>${esc(g.description[locale])}</p><p><strong>${COPY[locale].team}</strong> · ${g.dateModified || EDITORIAL_UPDATED}</p></article>`).join("")}</div></section>`).join("");
+  const schema = { "@context": "https://schema.org", "@type": "CollectionPage", name: title, description, url: `${ORIGIN}${route(locale, "/guides")}`, inLanguage: l.lang, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_CURRENT, hasPart: GUIDES.map((g) => ({ "@type": "Article", name: g.title[locale], url: `${ORIGIN}${route(locale, `/guides/${g.slug}`)}` })) };
   return `${head(locale, "/guides", title, description)}<body class="brand-surface editorial-page">${nav(locale, "/guides")}<main class="editorial-shell"><header class="editorial-hero"><p class="brand-kicker">Fursay editorial library</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p>${esc(COPY[locale].intro)}</p></header>${groups}</main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="${SHARED_JS}"></script></body></html>`;
+}
+function localizedGuideHubTitle(locale, group) {
+  const titles = {
+    en: { starter: "Start with a small family routine", koko: "Koko · English story moments", nour: "Nour · Chinese story moments" },
+    zh: { starter: "從一個家庭小流程開始", koko: "Koko 的英文故事情境", nour: "努爾的中文故事情境" },
+    ar: { starter: "ابدأوا بروتين عائلي صغير", koko: "مواقف قصص Koko الإنجليزية", nour: "مواقف قصص نور الصينية" },
+  };
+  return titles[locale][group];
 }
 function trustPage(locale, kind) {
   const l = LOCALES[locale], [title, rawDescription, sections] = TRUST[kind][locale], suffix = `/${kind}`;
   const description = locale === "zh" && kind === "privacy" ? "說明家長導向親子故事網站採用的最少資料原則與成人提交界線" : locale === "zh" && kind === "support" ? "提供故事頁、免費樣本、列印與成人電子郵件訂閱的使用協助" : rawDescription;
   const organization = { "@type": "Organization", "@id": `${ORIGIN}/#organization`, name: "Fursay", url: ORIGIN, email: "contact@fursay.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "contact@fursay.com", availableLanguage: ["English", "Traditional Chinese", "Arabic"] } };
-  const schema = { "@context": "https://schema.org", "@graph": [{ "@type": "WebPage", name: title, description, url: `${ORIGIN}${route(locale, suffix)}`, inLanguage: l.lang, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_UPDATED, author: { "@id": `${ORIGIN}/#organization` }, publisher: { "@id": `${ORIGIN}/#organization` } }, organization] };
+  const schema = { "@context": "https://schema.org", "@graph": [{ "@type": "WebPage", name: title, description, url: `${ORIGIN}${route(locale, suffix)}`, inLanguage: l.lang, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_CURRENT, author: { "@id": `${ORIGIN}/#organization` }, publisher: { "@id": `${ORIGIN}/#organization` } }, organization] };
   const subjects = locale === "zh" ? ["Fursay 一般聯絡", "Fursay 內容修正", "Fursay 隱私請求", "Fursay 技術問題"] : locale === "ar" ? ["تواصل عام مع Fursay", "تصحيح محتوى Fursay", "طلب خصوصية Fursay", "مشكلة تقنية في Fursay"] : ["Fursay general contact", "Fursay content correction", "Fursay privacy request", "Fursay technical issue"];
   const renderedSections = sections.map(([h, p], i) => { const mail = kind === "contact" && i < 4 ? ` <a class="editorial-mail" href="mailto:contact@fursay.com?subject=${encodeURIComponent(subjects[i])}">contact@fursay.com</a>` : ""; return `<section${kind === "contact" && i === 1 ? ' id="corrections"' : ""}><h2>${esc(h)}</h2><p>${esc(p)}${mail}</p></section>`; }).join("");
-  return `${head(locale, suffix, title, description)}<body class="brand-surface editorial-page policy-brand-page">${nav(locale, suffix)}<main class="editorial-shell"><article class="policy-card editorial-trust"><header><p class="brand-kicker">Fursay trust & accountability</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p class="editorial-byline"><strong>Fursay</strong> · ${COPY[locale].updated}: <time datetime="${EDITORIAL_UPDATED}">${EDITORIAL_UPDATED}</time></p></header>${renderedSections}</article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="${SHARED_JS}"></script></body></html>`;
+  return `${head(locale, suffix, title, description)}<body class="brand-surface editorial-page policy-brand-page">${nav(locale, suffix)}<main class="editorial-shell"><article class="policy-card editorial-trust"><header><p class="brand-kicker">Fursay trust & accountability</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p class="editorial-byline"><strong>Fursay Family Learning Editorial Team</strong> · ${COPY[locale].updated}: <time datetime="${EDITORIAL_CURRENT}">${EDITORIAL_CURRENT}</time></p></header>${renderedSections}</article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="${SHARED_JS}"></script></body></html>`;
 }
 function patchExistingIndexable(siteDir) {
   const sitemap = readFileSync(resolve(siteDir, "sitemap.xml"), "utf8");
@@ -209,7 +247,16 @@ function patchExistingIndexable(siteDir) {
     if (!html.includes(`href="${CSS}"`)) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${CSS}"></head>`);
     html = html.replace(/<div class="stat-num">1000\+<\/div><div class="stat-label">(?:Stories|故事|集)<\/div>/g, '<div class="stat-num">Growing</div><div class="stat-label">story library</div>');
     html = html.replace(/<div class="stat-num">100\+<\/div><div class="stat-label">(?:Stories|故事|集)<\/div>/g, '<div class="stat-num">Growing</div><div class="stat-label">story library</div>');
+    html = html.replace(/<div class="stat-num">\+?1000<\/div><div class="stat-label">حلقة<\/div>/g, '<div class="stat-num">مكتبة</div><div class="stat-label">قصص</div>');
+    html = html.replace(/<div class="stat-num">\+?100<\/div><div class="stat-label">حلقة<\/div>/g, '<div class="stat-num">مكتبة</div><div class="stat-label">قصص</div>');
     html = html.replace(/觀看全部 1000\+ 集/g, "觀看故事頻道");
+    html = html.replace(/شاهد كل \+?1000 حلقة/g, "اكتشفوا قصص Koko");
+    html = html.replace("See what is being prepared. There is still no public price or payment link.", "Read family guides, try free PDF samples, and choose optional adult email updates.");
+    html = html.replace("查看正在準備的內容。目前仍沒有公開價格、付款連結或結帳。", "可閱讀家庭指南、下載免費 PDF 樣本，並自行選擇成人電子郵件更新。");
+    html = html.replace("شاهدوا ما يتم تحضيره. لا يوجد حتى الآن سعر عام أو رابط دفع أو إتمام شراء.", "اقرؤوا أدلة الأسرة وحمّلوا عينات PDF المجانية واختاروا تحديثات البريد للبالغين إن رغبتم.");
+    html = html.replace("Preview a printable, download the Koko PDF, or open the Nour story path. No payment or checkout is involved.", "Preview an activity, download the Koko PDF, or open Nour's story path. The free sample needs no email signup.");
+    html = html.replace("可以先預覽活動、下載 Koko PDF，或打開努爾故事入口。這裡沒有付款或結帳。", "可先預覽活動、下載 Koko PDF，或打開努爾故事入口；使用免費樣本不需加入電子郵件名單。");
+    html = html.replace("عاينوا نشاطا، نزّلوا ملف Koko، أو افتحوا مسار قصة نور. لا يوجد دفع أو إتمام شراء.", "عاينوا نشاطًا أو نزّلوا ملف Koko أو افتحوا قصة نور؛ لا تحتاج العينة المجانية إلى تسجيل بريد.");
     if (!html.includes("editorial-page") && !html.includes("data-editorial-nav")) {
       const locale = path.startsWith("/zh/") || path === "/zh/" ? "zh" : path.startsWith("/ar/") || path === "/ar/" ? "ar" : "en";
       const links = `<div class="editorial-utility-links" data-editorial-nav><a href="${route(locale, "/guides")}">${LOCALES[locale].guides}</a><a href="${route(locale, "/about")}">${LOCALES[locale].about}</a><a href="${route(locale, "/editorial-method")}">${LOCALES[locale].method}</a></div>`;
@@ -232,6 +279,8 @@ function patchLlms(siteDir) {
   let text = readFileSync(file, "utf8");
   text = text.replace(/Current expected Books\.com\.tw affiliate links: \d+/, "Current expected Books.com.tw affiliate links: 10");
   text = text.replace(/Current expected Amazon affiliate links: \d+/, "Current expected Amazon affiliate links: 20");
+  text = text.replace(/Koko printable presale-preparation page/gi, "Koko free printable family guide");
+  text = text.replace(/Nour worksheet presale-preparation page/gi, "Nour free worksheet family guide");
   const start = "Editorial library:";
   const end = "Creator and sharing references:";
   const lines = [start, ...Object.values(LOCALES).flatMap((locale) => [
@@ -267,7 +316,73 @@ function patchSiteStructure(siteDir) {
 function writeCss(siteDir) {
   const css = `.editorial-shell{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:48px 0 72px}.editorial-hero{max-width:820px;margin:0 auto 32px}.editorial-hero h1{font:800 clamp(2.25rem,5vw,4.5rem)/1.03 "Baloo 2","Cairo",sans-serif;color:#173f35}.editorial-lede{font-size:1.18rem;line-height:1.75;color:#365b52}.editorial-today{margin:24px 0;padding:20px 22px;border-radius:24px;background:#eef8f2;border:1px solid #cfe4d6}.editorial-today h2{margin:0 0 8px;font:800 1.35rem/1.2 "Baloo 2","Cairo",sans-serif;color:#215b4a}.editorial-today p{margin:0;line-height:1.7}.editorial-byline,.editorial-boundary{padding:14px 18px;border-radius:18px;background:#fff8e8;border:1px solid #eadbb8;line-height:1.6}.editorial-toc{max-width:820px;margin:0 auto 32px;padding:22px 26px;border-radius:24px;background:#eef8f2}.editorial-toc ol{columns:2;gap:36px}.editorial-toc li{margin:.55rem 0}.editorial-body{max-width:820px;margin:0 auto}.editorial-body section{scroll-margin-top:24px;margin:0 0 34px}.editorial-body h2,.guide-group h2,.editorial-trust h2{font:800 clamp(1.55rem,3vw,2.2rem)/1.15 "Baloo 2","Cairo",sans-serif;color:#215b4a}.editorial-body p,.editorial-trust p{font-size:1.05rem;line-height:1.85;color:#294940}.source-list li{margin:0 0 18px}.source-list p{font-size:.96rem}.editorial-related{display:flex;gap:12px;flex-wrap:wrap;padding:22px;border-radius:22px;background:#f4faf6}.editorial-related h2{flex-basis:100%;margin:0}.editorial-related a,.editorial-mail{font-weight:800;color:#1f624e;text-underline-offset:3px}.editorial-next{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}.guide-group{margin:54px 0}.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.guide-card{padding:26px;border-radius:26px;background:#fff;border:1px solid #d9e9df;box-shadow:0 12px 30px rgba(31,85,68,.08)}.guide-card h3{font:800 1.45rem/1.2 "Baloo 2","Cairo",sans-serif}.guide-card p{line-height:1.7}.editorial-trust{max-width:820px;margin:0 auto}.editorial-utility-links{display:flex;gap:12px;align-items:center;justify-content:center;padding:8px 16px;background:#eef8f2;font-weight:800}.editorial-utility-links a{color:#245948;text-decoration:none}body.picture-world .editorial-utility-links{position:absolute;top:calc(100% + 8px);right:0;width:max-content;max-width:100%;border:1px solid #d9e9df;border-radius:16px;box-shadow:0 8px 22px rgba(31,85,68,.1)}html[dir="rtl"] body.picture-world .editorial-utility-links{right:auto;left:0}@media(max-width:760px){.editorial-shell{padding-top:28px}.editorial-toc ol{columns:1}.guide-grid{grid-template-columns:1fr}.editorial-utility-links{flex-wrap:wrap;font-size:.9rem}.brand-nav__links{overflow-x:auto}.editorial-body p{font-size:1rem}}@media(prefers-reduced-motion:reduce){.editorial-page *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}`;
   const mobileEditorialNav = `@media(max-width:900px){.editorial-page .brand-nav__inner{flex-wrap:wrap;padding-block:8px}.editorial-page .brand-nav__links{display:flex;width:100%;order:3;margin:0;flex-wrap:wrap;justify-content:center;gap:4px}.editorial-page .brand-nav__links a{flex:0 1 auto;min-height:44px;padding-inline:10px}.editorial-page .editorial-shell{padding-top:32px}}`;
-  writeFileSync(resolve(siteDir, CSS.replace(/^\//, "")), `${css}${mobileEditorialNav}\n`);
+  const toolCss = `.guide-tool{margin:32px 0;padding:24px;border:2px solid #b8d9c7;border-radius:24px;background:#f4faf6;break-inside:avoid}.guide-tool h2{margin-top:0}.guide-tool ol{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;padding-left:1.4rem}.guide-tool li{padding:14px 14px 14px 8px;border-radius:16px;background:#fff;line-height:1.65}.guide-tool-print-note{font-size:.9rem!important;color:#49675c!important}@media print{body *{visibility:hidden!important}.guide-tool,.guide-tool *{visibility:visible!important}.guide-tool{position:absolute;inset:0;margin:0;padding:24px;border:0;box-shadow:none;max-width:100%}.guide-tool-print-note{display:none!important}.guide-tool li{border:1px solid #888}}`;
+  writeFileSync(resolve(siteDir, CSS.replace(/^\//, "")), `${css}${toolCss}${mobileEditorialNav}\n`);
+}
+
+function taipeiDate(date = new Date()) {
+  const values = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Taipei", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date).map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+function addDays(dateText, days) {
+  const date = new Date(`${dateText}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return null;
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+function writeAdsenseReadiness(siteDir) {
+  const evidence = existsSync(ADSENSE_EVIDENCE_PATH) ? JSON.parse(readFileSync(ADSENSE_EVIDENCE_PATH, "utf8")) : {};
+  const now = new Date();
+  const today = taipeiDate(now);
+  const maxAgeMs = 3 * 24 * 60 * 60 * 1000;
+  const sourceGates = evidence.gates || {};
+  const gates = Object.fromEntries(Object.entries(sourceGates).map(([key, entry = {}]) => {
+    const checkedMs = entry.checkedAt ? Date.parse(entry.checkedAt) : Number.NaN;
+    const ageMs = now.getTime() - checkedMs;
+    return [key, {
+      status: entry.status || "unknown",
+      checkedAt: entry.checkedAt || null,
+      source: entry.source || "not_recorded",
+      fresh: Number.isFinite(checkedMs) && ageMs >= 0 && ageMs <= maxAgeMs,
+      ...(key === "editorialPagesWithImpressions" ? { value: Number.isFinite(entry.value) ? entry.value : null, minimum: 5 } : {}),
+    }];
+  }));
+  const materialDeployment = evidence.lastMaterialDeployment || null;
+  const materialChange = EDITORIAL_CURRENT;
+  const stableAnchor = [materialDeployment, materialChange].filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(String(date || ""))).sort().at(-1) || null;
+  const stableWindowReadyAt = stableAnchor ? addDays(stableAnchor, 14) : null;
+  const stableWindowComplete = Boolean(stableWindowReadyAt && today >= stableWindowReadyAt);
+  const sourceUrls = new Set(Object.values(ALL_EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => ALL_EDITORIAL_SOURCES[key]?.[1]).filter(Boolean)));
+  const contentShapeReady = GUIDES.length === 12 && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
+  const evidenceFresh = Object.entries(gates).filter(([key]) => key !== "editorialPagesWithImpressions").every(([, gate]) => gate.fresh);
+  const loveReady = gates.lovetypesReady?.status === "ready" && gates.lovetypesReady.fresh;
+  const impressionsReady = gates.editorialPagesWithImpressions?.status === "passed" && gates.editorialPagesWithImpressions.value >= 5 && gates.editorialPagesWithImpressions.fresh;
+  const requiredStatuses = ["adsTxtAuthorized", "gscSitemapAccepted", "importantPagesRecrawled", "unexpectedUrlsLeavingIndex", "productionAuditGreen", "reviewActionAvailable"];
+  const requiredEvidenceReady = requiredStatuses.every((key) => gates[key]?.status === "passed" && gates[key].fresh);
+  const readyToSubmit = Boolean(contentShapeReady && sourceUrls.size >= 26 && loveReady && impressionsReady && requiredEvidenceReady && evidenceFresh && stableWindowComplete);
+  const readiness = {
+    schemaVersion: 2,
+    status: readyToSubmit ? "ready_to_submit" : "not_ready",
+    publisherId: PUBLISHER_ID,
+    lovetypesPrerequisite: gates.lovetypesReady?.status || "unknown",
+    adRuntimeEnabled: false,
+    reviewSubmitted: false,
+    minimumStableDays: 14,
+    maximumEvidenceAgeDays: 3,
+    lastMaterialDeployment: materialDeployment,
+    lastMaterialChange: materialChange,
+    stableWindowReadyAt,
+    stableWindowComplete,
+    evidenceGeneratedAt: now.toISOString(),
+    externalGates: gates,
+    contentTemplateRisk: contentShapeReady && sourceUrls.size >= 26 ? "passed" : "pending_remediation",
+    distinctEditorialSources: sourceUrls.size,
+    minimumDistinctEditorialSources: 26,
+    commercialIndexingPolicy: "maintained",
+    operatorDisclosureMode: "brand",
+    readyToSubmit,
+  };
+  writeFileSync(resolve(siteDir, "adsense-readiness.json"), `${JSON.stringify(readiness, null, 2)}\n`);
 }
 
 export function writeEditorialBundle(siteDir) {
@@ -278,8 +393,7 @@ export function writeEditorialBundle(siteDir) {
   }
   writeCss(siteDir);
   writeFileSync(resolve(siteDir, "ads.txt"), `google.com, ${PUBLISHER_ID}, DIRECT, f08c47fec0942fa0\n`);
-  const distinctSources = new Set(Object.values(EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => key))).size;
-  writeFileSync(resolve(siteDir, "adsense-readiness.json"), `${JSON.stringify({ schemaVersion: 1, status: "not_ready", contentTemplateRisk: "passed", distinctEditorialSources: distinctSources, minimumDistinctEditorialSources: 16, commercialIndexingPolicy: "maintained", operatorDisclosureMode: "brand", readyToSubmit: false, publisherId: PUBLISHER_ID, lovetypesPrerequisite: "ready", adRuntimeEnabled: false, reviewSubmitted: false, minimumStableDays: 14, maximumEvidenceAgeDays: 3, lastMaterialChange: EDITORIAL_UPDATED, externalGates: { lovetypesReady: false, adsTxtAuthorized: false, gscSitemapAccepted: false, importantPagesRecrawled: false, editorialPagesWithImpressions: { value: 0, minimum: 5, confirmed: false }, unexpectedUrlsLeavingIndex: false, productionAuditGreen: false, stableWindowComplete: false, reviewActionAvailable: false } }, null, 2)}\n`);
+  writeAdsenseReadiness(siteDir);
   patchLlms(siteDir);
   patchSiteStructure(siteDir);
   patchExistingIndexable(siteDir);
@@ -288,8 +402,13 @@ export function writeEditorialBundle(siteDir) {
 export function editorialSitemapEntries(sitemapUrl) {
   const localized = (suffix) => ({ en: `${ORIGIN}${suffix}`, "zh-TW": `${ORIGIN}/zh${suffix}`, ar: `${ORIGIN}/ar${suffix}`, "x-default": `${ORIGIN}${suffix}` });
   const paths = ["/guides", ...GUIDE_SLUGS.map((slug) => `/guides/${slug}`), "/about", "/editorial-method", "/contact", "/terms"];
+  const lastmodFor = (path) => {
+    const guide = path.startsWith("/guides/") ? GUIDES.find((item) => `/guides/${item.slug}` === path) : null;
+    return guide?.dateModified || (path === "/guides" || !path.startsWith("/guides/") ? EDITORIAL_CURRENT : EDITORIAL_UPDATED);
+  };
   return paths.flatMap((path) => {
     const alts = localized(path); const priority = path === "/guides" ? "0.8" : path.startsWith("/guides/") ? "0.7" : "0.4";
-    return [sitemapUrl(`${ORIGIN}${path}`, alts, priority), sitemapUrl(`${ORIGIN}/zh${path}`, alts, priority), sitemapUrl(`${ORIGIN}/ar${path}`, alts, priority)];
+    const lastmod = lastmodFor(path);
+    return [sitemapUrl(`${ORIGIN}${path}`, alts, priority, lastmod), sitemapUrl(`${ORIGIN}/zh${path}`, alts, priority, lastmod), sitemapUrl(`${ORIGIN}/ar${path}`, alts, priority, lastmod)];
   });
 }

@@ -178,6 +178,46 @@
       }
     },
     {
+      "key": "guide-koko-feelings-at-bedtime",
+      "route": "/guides/koko-feelings-at-bedtime",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/koko-feelings-at-bedtime",
+        "zh-TW": "/zh/guides/koko-feelings-at-bedtime",
+        "ar": "/ar/guides/koko-feelings-at-bedtime"
+      }
+    },
+    {
+      "key": "guide-koko-brave-after-a-hard-day",
+      "route": "/guides/koko-brave-after-a-hard-day",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/koko-brave-after-a-hard-day",
+        "zh-TW": "/zh/guides/koko-brave-after-a-hard-day",
+        "ar": "/ar/guides/koko-brave-after-a-hard-day"
+      }
+    },
+    {
+      "key": "guide-nour-hello-goodbye-at-the-door",
+      "route": "/guides/nour-hello-goodbye-at-the-door",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/nour-hello-goodbye-at-the-door",
+        "zh-TW": "/zh/guides/nour-hello-goodbye-at-the-door",
+        "ar": "/ar/guides/nour-hello-goodbye-at-the-door"
+      }
+    },
+    {
+      "key": "guide-nour-colors-at-the-table",
+      "route": "/guides/nour-colors-at-the-table",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/nour-colors-at-the-table",
+        "zh-TW": "/zh/guides/nour-colors-at-the-table",
+        "ar": "/ar/guides/nour-colors-at-the-table"
+      }
+    },
+    {
       "key": "about",
       "route": "/about",
       "type": "editorialTrust",
@@ -254,7 +294,7 @@
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
       "/css/sample-activity-20260718-v1.css",
-      "/css/editorial-20260802-v2.css"
+      "/css/editorial-20260925-v1.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js"

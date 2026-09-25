@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "lastMaterialDeployment": "2026-08-02",
+  "gates": {
+    "lovetypesReady": {
+      "status": "not_ready",
+      "checkedAt": "2026-09-25T00:00:00+08:00",
+      "source": "owner_report"
+    },
+    "adsTxtAuthorized": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "adsense_manual"
+    },
+    "gscSitemapAccepted": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual"
+    },
+    "importantPagesRecrawled": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual"
+    },
+    "editorialPagesWithImpressions": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual",
+      "value": null
+    },
+    "unexpectedUrlsLeavingIndex": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual"
+    },
+    "productionAuditGreen": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "production_audit"
+    },
+    "reviewActionAvailable": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "adsense_manual"
+    }
+  }
+}

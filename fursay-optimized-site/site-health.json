@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-08-02",
+  "updatedAt": "2026-09-25",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -166,6 +166,14 @@
       "https://fursay.com/support",
       "https://fursay.com/zh/support",
       "https://fursay.com/ar/support"
+    ],
+    "productFamilyGuidePages": [
+      "https://fursay.com/products/koko-printable",
+      "https://fursay.com/products/noor-worksheet",
+      "https://fursay.com/zh/products/koko-printable",
+      "https://fursay.com/zh/products/noor-worksheet",
+      "https://fursay.com/ar/products/koko-printable",
+      "https://fursay.com/ar/products/noor-worksheet"
     ]
   },
   "funnels": {
@@ -415,7 +423,7 @@
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
       "/css/sample-activity-20260718-v1.css",
-      "/css/editorial-20260802-v2.css"
+      "/css/editorial-20260925-v1.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js"

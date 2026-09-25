@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
 import { editorialSitemapEntries, writeEditorialBundle } from "./fursay-editorial-pages.mjs";
+import { EDITORIAL_CURRENT, EDITORIAL_UPDATED, GUIDES } from "./fursay-editorial-content.mjs";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -176,7 +177,7 @@ function writeReleaseManifest() {
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
       ],
-      productPresalePages: [
+      productFamilyGuidePages: [
         "https://fursay.com/products/koko-printable",
         "https://fursay.com/products/noor-worksheet",
         "https://fursay.com/zh/products/koko-printable",
@@ -284,6 +285,7 @@ function writeReleaseManifest() {
       "scripts/check-cache-headers.mjs",
       "scripts/check-deploy-readiness.mjs",
       "scripts/check-adsense-review-contract.mjs",
+      "scripts/check-adsense-public-copy-contract.mjs",
       "scripts/check-product-content-contract.mjs",
       "audit-fursay.mjs",
     ],
@@ -314,10 +316,10 @@ function writeReleaseManifest() {
       productInterestLinks: 24,
       productInfoLinks: 18,
       productLandingPages: 9,
-      productPresalePages: 6,
+      productFamilyGuidePages: 6,
       policyPages: 18,
-      editorialGuidePages: 24,
-      sitemapUrls: 72,
+      editorialGuidePages: 36,
+      sitemapUrls: 84,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
@@ -550,8 +552,16 @@ ${warnings}
   writeFileSync(resolve(siteDir, "deploy-readiness.html"), html + "\n");
 }
 
-function sitemapUrl(loc, alternates, priority) {
-  const lastmod = taipeiDateString();
+function sitemapLastmod(loc) {
+  const path = new URL(loc).pathname.replace(/^\/(?:zh|ar)(?=\/|$)/, "") || "/";
+  if (path === "/" || path === "/koko" && loc.includes("/ar/koko")) return EDITORIAL_CURRENT;
+  if (path === "/products" || path === "/products/koko-printable" || path === "/products/noor-worksheet") return EDITORIAL_CURRENT;
+  if (["/about", "/editorial-method", "/contact", "/terms", "/privacy", "/support", "/guides"].includes(path)) return EDITORIAL_CURRENT;
+  if (path.startsWith("/guides/")) return GUIDES.find((guide) => `/guides/${guide.slug}` === path)?.dateModified || EDITORIAL_UPDATED;
+  return EDITORIAL_UPDATED;
+}
+
+function sitemapUrl(loc, alternates, priority, lastmod = sitemapLastmod(loc)) {
   const alternateLines = Object.entries(alternates).map(([lang, href]) => (
     `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`
   ));
@@ -4345,7 +4355,7 @@ function writeSiteHealthManifest(siteDir) {
         "https://fursay.com/ar/products",
         "https://fursay.com/products.json",
       ],
-      productPresalePages: [
+      productFamilyGuidePages: [
         "https://fursay.com/products/koko-printable",
         "https://fursay.com/products/noor-worksheet",
         "https://fursay.com/zh/products/koko-printable",
@@ -4751,6 +4761,7 @@ async function main() {
   run("node", ["--check", "scripts/check-image-assets.mjs"]);
   run("node", ["--check", "scripts/check-cache-headers.mjs"]);
   run("node", ["--check", "scripts/check-adsense-review-contract.mjs"]);
+  run("node", ["--check", "scripts/check-adsense-public-copy-contract.mjs"]);
   run("node", ["--check", "scripts/check-product-content-contract.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["--check", "scripts/smoke-live.mjs"]);
@@ -4799,6 +4810,7 @@ async function main() {
   run("node", ["scripts/check-static-asset-structure.mjs", "--out-dir", join(outRoot, "static-asset-structure-local")]);
   run("node", ["scripts/check-image-assets.mjs", "--out-dir", join(outRoot, "image-assets-local")]);
   run("node", ["scripts/check-adsense-review-contract.mjs", "--out-dir", join(outRoot, "adsense-review-local")]);
+  run("node", ["scripts/check-adsense-public-copy-contract.mjs", "--out-dir", join(outRoot, "adsense-public-copy-local")]);
   run("node", ["scripts/check-product-content-contract.mjs", "--out-dir", join(outRoot, "product-content-local")]);
 
   if (!args.skipDeploy) {
@@ -4845,6 +4857,7 @@ async function main() {
     run("node", ["scripts/check-image-assets.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "image-assets-live")]);
     run("node", ["scripts/check-cache-headers.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "cache-live")]);
     run("node", ["scripts/check-adsense-review-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "adsense-review-live")]);
+    run("node", ["scripts/check-adsense-public-copy-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "adsense-public-copy-live")]);
     run("node", ["scripts/check-product-content-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "product-content-live")]);
     const auditOut = join(outRoot, "audit-live.json");
     const auditJson = run("node", ["audit-fursay.mjs", args.baseUrl], { capture: true });

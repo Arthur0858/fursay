@@ -50,10 +50,10 @@ Family actions:
 - Product waitlist page for families: https://fursay.com/products
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
-- Koko printable presale-preparation page: https://fursay.com/products/koko-printable
+- Koko free printable family guide: https://fursay.com/products/koko-printable
   - Traditional Chinese: https://fursay.com/zh/products/koko-printable
   - Arabic: https://fursay.com/ar/products/koko-printable
-- Nour worksheet presale-preparation page: https://fursay.com/products/noor-worksheet
+- Nour free worksheet family guide: https://fursay.com/products/noor-worksheet
   - Traditional Chinese: https://fursay.com/zh/products/noor-worksheet
   - Arabic: https://fursay.com/ar/products/noor-worksheet
 - Privacy: https://fursay.com/privacy
@@ -79,6 +79,10 @@ https://fursay.com/guides/chinese-storytime-for-arabic-speaking-families
 https://fursay.com/guides/pinyin-and-tones-for-parents
 https://fursay.com/guides/three-chinese-words-a-day
 https://fursay.com/guides/three-minute-chinese-routine
+https://fursay.com/guides/koko-feelings-at-bedtime
+https://fursay.com/guides/koko-brave-after-a-hard-day
+https://fursay.com/guides/nour-hello-goodbye-at-the-door
+https://fursay.com/guides/nour-colors-at-the-table
 https://fursay.com/zh/guides
 https://fursay.com/zh/about
 https://fursay.com/zh/editorial-method
@@ -92,6 +96,10 @@ https://fursay.com/zh/guides/chinese-storytime-for-arabic-speaking-families
 https://fursay.com/zh/guides/pinyin-and-tones-for-parents
 https://fursay.com/zh/guides/three-chinese-words-a-day
 https://fursay.com/zh/guides/three-minute-chinese-routine
+https://fursay.com/zh/guides/koko-feelings-at-bedtime
+https://fursay.com/zh/guides/koko-brave-after-a-hard-day
+https://fursay.com/zh/guides/nour-hello-goodbye-at-the-door
+https://fursay.com/zh/guides/nour-colors-at-the-table
 https://fursay.com/ar/guides
 https://fursay.com/ar/about
 https://fursay.com/ar/editorial-method
@@ -105,6 +113,10 @@ https://fursay.com/ar/guides/chinese-storytime-for-arabic-speaking-families
 https://fursay.com/ar/guides/pinyin-and-tones-for-parents
 https://fursay.com/ar/guides/three-chinese-words-a-day
 https://fursay.com/ar/guides/three-minute-chinese-routine
+https://fursay.com/ar/guides/koko-feelings-at-bedtime
+https://fursay.com/ar/guides/koko-brave-after-a-hard-day
+https://fursay.com/ar/guides/nour-hello-goodbye-at-the-door
+https://fursay.com/ar/guides/nour-colors-at-the-table
 
 Creator and sharing references:
 - Creator link for Koko descriptions: https://fursay.com/creator/koko

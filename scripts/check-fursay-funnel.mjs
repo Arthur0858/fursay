@@ -1335,7 +1335,9 @@ async function checkDiscoveryFiles(baseUrl) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(expectedLastmod)) failures.push(`release_date_invalid:${expectedLastmod || "none"}`);
   if (lastmods.some((value) => !/^\d{4}-\d{2}-\d{2}$/.test(value))) failures.push("sitemap_lastmod_invalid");
   if (lastmods.some((value) => value > currentDate)) failures.push(`sitemap_lastmod_in_future:${currentDate}`);
-  if (expectedLastmod && lastmods.some((value) => value !== expectedLastmod)) failures.push(`sitemap_lastmod_release_mismatch:${expectedLastmod}`);
+  const uniqueLastmods = new Set(lastmods);
+  if (uniqueLastmods.size < 2) failures.push(`sitemap_lastmod_not_page_specific:${uniqueLastmods.size}`);
+  if (expectedLastmod && !uniqueLastmods.has(expectedLastmod)) failures.push(`sitemap_missing_current_material_date:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
   if (!llms.includes("https://fursay.com/sitemap.xml") || !llms.includes("https://fursay.com/robots.txt")) {
     failures.push("llms_missing_sitemap_or_robots");
@@ -2325,6 +2327,7 @@ async function checkDiscoveryFiles(baseUrl) {
     data: {
       lastmodCount: lastmods.length,
       expectedLastmod,
+      distinctLastmodDates: uniqueLastmods.size,
       llmsBytes: Buffer.byteLength(llms),
       siteHealthBytes: Buffer.byteLength(siteHealthRaw),
       releaseBytes: Buffer.byteLength(releaseRaw),

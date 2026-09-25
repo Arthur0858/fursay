@@ -1,32 +1,73 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "status": "not_ready",
-  "contentTemplateRisk": "passed",
-  "distinctEditorialSources": 18,
-  "minimumDistinctEditorialSources": 16,
-  "commercialIndexingPolicy": "maintained",
-  "operatorDisclosureMode": "brand",
-  "readyToSubmit": false,
   "publisherId": "pub-4093856660317740",
-  "lovetypesPrerequisite": "ready",
+  "lovetypesPrerequisite": "not_ready",
   "adRuntimeEnabled": false,
   "reviewSubmitted": false,
   "minimumStableDays": 14,
   "maximumEvidenceAgeDays": 3,
-  "lastMaterialChange": "2026-08-02",
+  "lastMaterialDeployment": "2026-08-02",
+  "lastMaterialChange": "2026-09-25",
+  "stableWindowReadyAt": "2026-10-09",
+  "stableWindowComplete": false,
+  "evidenceGeneratedAt": "2026-09-25T07:36:38.098Z",
   "externalGates": {
-    "lovetypesReady": false,
-    "adsTxtAuthorized": false,
-    "gscSitemapAccepted": false,
-    "importantPagesRecrawled": false,
-    "editorialPagesWithImpressions": {
-      "value": 0,
-      "minimum": 5,
-      "confirmed": false
+    "lovetypesReady": {
+      "status": "not_ready",
+      "checkedAt": "2026-09-25T00:00:00+08:00",
+      "source": "owner_report",
+      "fresh": true
     },
-    "unexpectedUrlsLeavingIndex": false,
-    "productionAuditGreen": false,
-    "stableWindowComplete": false,
-    "reviewActionAvailable": false
-  }
+    "adsTxtAuthorized": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "adsense_manual",
+      "fresh": false
+    },
+    "gscSitemapAccepted": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual",
+      "fresh": false
+    },
+    "importantPagesRecrawled": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual",
+      "fresh": false
+    },
+    "editorialPagesWithImpressions": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual",
+      "fresh": false,
+      "value": null,
+      "minimum": 5
+    },
+    "unexpectedUrlsLeavingIndex": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "search_console_manual",
+      "fresh": false
+    },
+    "productionAuditGreen": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "production_audit",
+      "fresh": false
+    },
+    "reviewActionAvailable": {
+      "status": "unknown",
+      "checkedAt": null,
+      "source": "adsense_manual",
+      "fresh": false
+    }
+  },
+  "contentTemplateRisk": "passed",
+  "distinctEditorialSources": 29,
+  "minimumDistinctEditorialSources": 26,
+  "commercialIndexingPolicy": "maintained",
+  "operatorDisclosureMode": "brand",
+  "readyToSubmit": false
 }

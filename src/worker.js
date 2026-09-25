@@ -273,7 +273,7 @@ function withAssetHeaders(response, request) {
   ]);
 
   if (noindexFollowPaths.has(path)) headers.set("X-Robots-Tag", "noindex, follow");
-  else if (noindexPaths.has(path)) headers.set("X-Robots-Tag", "noindex, nofollow");
+  else if (noindexPaths.has(path) || path.toLowerCase().endsWith(".json")) headers.set("X-Robots-Tag", "noindex, nofollow");
 
   if (path === "/" || path.endsWith(".html") || !/\.[^/]+$/.test(path)) {
     headers.set("Cache-Control", "public, max-age=300, must-revalidate");

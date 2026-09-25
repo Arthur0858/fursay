@@ -129,7 +129,7 @@ async function main() {
       const html = await readText(args.baseUrl, pagePath);
       checkedPages.push(pagePath);
       checkNoCheckout(failures, pagePath, html);
-      requireContains(failures, pagePath, html, "presale-brand-page", "presale_body");
+      requireContains(failures, pagePath, html, "product-family-guide-page", "family_guide_body");
       requireContains(failures, pagePath, html, `data-product-sample-download="${spec.pack}"`, "tracked_download");
       requireContains(failures, pagePath, html, `data-product-interest="${spec.pack}"`, "interest_cta");
       requireContains(failures, pagePath, html, "data-interest-stage=", "interest_stage");
@@ -143,7 +143,8 @@ async function main() {
       if (count(html, /<link rel="alternate" hreflang=/g) !== 4) failures.push(`${pagePath}:hreflang_count`);
       const jsonLd = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
       const corpus = JSON.stringify(jsonLd);
-      for (const type of ["WebPage", "Product", "FAQPage"]) if (!corpus.includes(`\"@type\":\"${type}\"`)) failures.push(`${pagePath}:schema_${type}`);
+      for (const type of ["WebPage", "LearningResource", "FAQPage"]) if (!corpus.includes(`\"@type\":\"${type}\"`)) failures.push(`${pagePath}:schema_${type}`);
+      if (!corpus.includes('"isAccessibleForFree":true')) failures.push(`${pagePath}:schema_not_free`);
       if (corpus.includes(`\"@type\":\"Offer\"`)) failures.push(`${pagePath}:unreviewed_offer_schema`);
       if (spec.pack === "noor") {
         const expectedName = locale.key === "en" ? "Nour" : locale.key === "zh" ? "努爾" : "نور";
@@ -163,10 +164,8 @@ async function main() {
         const localizedNeedle = locale.key === "en" ? "Anonymous interaction signals" : locale.key === "zh" ? "匿名互動訊號" : "إشارات تفاعل مجهولة";
         requireContains(failures, pagePath, html, localizedNeedle, "anonymous_signal_copy");
       } else {
-        const disabledCopy = locale.key === "en" ? "no purchase button, public price, or payment link" : locale.key === "zh" ? "沒有購買按鈕、公開價格或付款連結" : "لا يوجد زر شراء أو سعر عام أو رابط دفع";
-        const reviewCopy = locale.key === "en" ? "remain review-required" : locale.key === "zh" ? "仍需審核" : "قيد المراجعة";
-        requireContains(failures, pagePath, html, disabledCopy, "checkout_disabled_copy");
-        requireContains(failures, pagePath, html, reviewCopy, "review_required_copy");
+        const futureTerms = locale.key === "en" ? "before an order is accepted" : locale.key === "zh" ? "接受訂單前" : "قبل قبول أي طلب";
+        requireContains(failures, pagePath, html, futureTerms, "future_order_terms_boundary");
       }
     }
   }
@@ -196,9 +195,9 @@ async function main() {
     if (!sitemap.includes(`<loc>${ORIGIN}${path}</loc>`)) failures.push(`sitemap_missing:${path}`);
   }
   if (release.liveExpectations?.productLandingPages !== 9) failures.push("release_product_landing_pages");
-  if (release.liveExpectations?.productPresalePages !== 6) failures.push("release_presale_pages");
+  if (release.liveExpectations?.productFamilyGuidePages !== 6) failures.push("release_family_guide_pages");
   if (release.liveExpectations?.policyPages !== 18) failures.push("release_policy_pages");
-  if ((release.deployment?.productPresalePages || []).length !== 6) failures.push("release_presale_urls");
+  if ((release.deployment?.productFamilyGuidePages || []).length !== 6) failures.push("release_family_guide_urls");
   if ((release.deployment?.privacyPages || []).length !== 3) failures.push("release_privacy_urls");
   if ((release.deployment?.supportPages || []).length !== 3) failures.push("release_support_urls");
 

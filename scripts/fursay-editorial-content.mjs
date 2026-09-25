@@ -1,4 +1,7 @@
+import { ROUND3_GUIDES, ROUND3_EDITORIAL_UPDATED } from "./fursay-editorial-round3.mjs";
+
 export const EDITORIAL_UPDATED = "2026-08-02";
+export const EDITORIAL_CURRENT = ROUND3_EDITORIAL_UPDATED;
 
 export const GUIDE_SLUGS = [
   "english-storytime-without-fluent-english",
@@ -9,6 +12,7 @@ export const GUIDE_SLUGS = [
   "pinyin-and-tones-for-parents",
   "three-chinese-words-a-day",
   "three-minute-chinese-routine",
+  ...ROUND3_GUIDES.map((guide) => guide.slug),
 ];
 
 const SOURCES = {
@@ -24,7 +28,7 @@ const SOURCES = {
 
 function localized(en, zh, ar) { return { en, zh, ar }; }
 
-export const GUIDES = [
+const CORE_GUIDES = [
   {
     slug: GUIDE_SLUGS[0], world: "koko", sources: SOURCES.sharedReading,
     title: localized("English story time when the parent is not fluent", "爸媽英文不流利，也能陪孩子讀英文故事", "وقت قصة إنجليزية حتى لو لم يكن الوالد طليقًا"),
@@ -290,3 +294,5 @@ export const GUIDES = [
     })
   },
 ];
+
+export const GUIDES = [...CORE_GUIDES, ...ROUND3_GUIDES];

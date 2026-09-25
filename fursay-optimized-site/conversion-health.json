@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-08-02",
+  "updatedAt": "2026-09-25",
   "source": {
     "branch": "main",
-    "commit": "6a91b66",
-    "summary": "fix: preserve follow crawling on links hub"
+    "commit": "86bffff",
+    "summary": "Record koko newsletter autopilot evidence"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
