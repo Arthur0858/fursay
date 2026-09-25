@@ -7,11 +7,11 @@
   "reviewSubmitted": false,
   "minimumStableDays": 14,
   "maximumEvidenceAgeDays": 3,
-  "lastMaterialDeployment": "2026-08-02",
+  "lastMaterialDeployment": "2026-09-25",
   "lastMaterialChange": "2026-09-25",
   "stableWindowReadyAt": "2026-10-09",
   "stableWindowComplete": false,
-  "evidenceGeneratedAt": "2026-09-25T07:36:38.098Z",
+  "evidenceGeneratedAt": "2026-09-25T11:43:29.411Z",
   "externalGates": {
     "lovetypesReady": {
       "status": "not_ready",

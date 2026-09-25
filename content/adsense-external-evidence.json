@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastMaterialDeployment": "2026-08-02",
+  "lastMaterialDeployment": "2026-09-25",
   "gates": {
     "lovetypesReady": {
       "status": "not_ready",
