@@ -8,6 +8,7 @@
 - Operations and product-validation page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/noor-sprint-status`, `/links`, `/deploy-readiness`, `/conversion-health`, `/monetization-roadmap`, and `/products` live in `/css/picture-world-tools-20260613-products1.css` so the main story pages do not load creator/share/deploy-only rules.
 - The watercolor product-family guide, free-sample, Privacy, and Support presentation layer lives in `/css/brand-storybook-20260717-v1.css`; brand icons are served from `/images/brand-icons.svg`.
 - The generated editorial hubs, long-form guides, trust pages, and reviewer-facing utility navigation use `/css/editorial-20260925-v1.css`; their source data and templates live in `scripts/fursay-editorial-content.mjs`, `scripts/fursay-editorial-depth.mjs`, `scripts/fursay-editorial-round3.mjs`, `scripts/fursay-editorial-round3-expansions.mjs`, `scripts/fursay-editorial-trust-overrides.mjs`, and `scripts/fursay-editorial-pages.mjs`.
+- Shared keyboard focus, skip-link, and reduced-motion refinements live in `/css/site-accessibility-20260925-v1.css`.
 - Home page common styles live in `/css/home-common-20260613-cache1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-cache1.css`, `/css/home-zh-page-20260613-cache1.css`, and `/css/home-ar-page-20260613-cache1.css`.
 - The focused three-language homepage journey and compact secondary-resource cards live in `/css/home-focus-20260718-v1.css`.
 - The three-page printable activity previews and print-only PDF layout live in `/css/sample-activity-20260718-v1.css`; both source HTML and this stylesheet are included in the PDF rebuild hash.
@@ -15,6 +16,7 @@
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260615-sharekit1.js`; page HTML should not add inline event handlers.
+- Subscribe-modal focus management and dialog state live in `/js/modal-accessibility-20260925-v1.js`.
 - Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints through the `FURSAY_EVENTS` Analytics Engine binding for dataset `fursay_events`. Query reporting still requires `CLOUDFLARE_ACCOUNT_ID` plus `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`, and token values must stay out of files and public reports.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Immutable CSS/JS fingerprints are recorded in `/data/immutable-asset-fingerprints.json`; after changing any long-cache CSS/JS filename or content, run `npm run assets:fingerprints` and keep `npm run assets:fingerprints:check` clean.

@@ -1,0 +1,38 @@
+.skip-link {
+  position: fixed;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 100000;
+  max-width: calc(100vw - 32px);
+  padding: 12px 16px;
+  transform: translateY(-180%);
+  border: 3px solid #0b6e69;
+  border-radius: 14px;
+  background: #fffdf8;
+  box-shadow: 0 8px 28px rgba(23, 63, 53, .2);
+  color: #173f35;
+  font: 800 1rem/1.35 "Nunito", "Cairo", sans-serif;
+  text-decoration: none;
+  transition: transform .16s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #173f35;
+  outline-offset: 3px;
+}
+
+main[id][tabindex="-1"]:focus {
+  outline: none;
+}
+
+#subscribeModal[role="dialog"]:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}

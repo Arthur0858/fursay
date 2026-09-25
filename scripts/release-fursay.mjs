@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
 import { editorialSitemapEntries, writeEditorialBundle } from "./fursay-editorial-pages.mjs";
@@ -111,6 +111,172 @@ const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator",
 const PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest";
 const ZH_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest";
 const AR_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest";
+const SITE_ACCESSIBILITY_CSS = "/css/site-accessibility-20260925-v1.css";
+const MODAL_ACCESSIBILITY_JS = "/js/modal-accessibility-20260925-v1.js";
+
+function htmlFilesUnder(directory, relative = "") {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = relative ? `${relative}/${entry.name}` : entry.name;
+    const absolutePath = resolve(directory, entry.name);
+    if (entry.isDirectory()) return htmlFilesUnder(absolutePath, relativePath);
+    return entry.isFile() && entry.name.endsWith(".html") ? [relativePath] : [];
+  });
+}
+
+function htmlAttribute(tag, name) {
+  return tag.match(new RegExp(`\\s${name}=(['\"])(.*?)\\1`, "i"))?.[2] || "";
+}
+
+function setHtmlAttribute(tag, name, value) {
+  const attribute = new RegExp(`\\s${name}\\s*=\\s*(['\"])(.*?)\\1`, "i");
+  if (attribute.test(tag)) return tag.replace(attribute, ` ${name}="${value}"`);
+  return tag.replace(/\s*\/?>$/, (ending) => ` ${name}="${value}"${ending.trimStart()}`);
+}
+
+function hasHtmlClass(tag, className) {
+  return htmlAttribute(tag, "class").split(/\s+/).includes(className);
+}
+
+function findOpeningTag(html, predicate) {
+  return [...html.matchAll(/<[a-z][^>]*>/gi)].map((match) => match[0]).find(predicate) || "";
+}
+
+function updateFirstOpeningTag(html, predicate, attributes) {
+  let updated = false;
+  return html.replace(/<[a-z][^>]*>/gi, (tag) => {
+    if (updated || !predicate(tag)) return tag;
+    updated = true;
+    return Object.entries(attributes).reduce((next, [name, value]) => setHtmlAttribute(next, name, value), tag);
+  });
+}
+
+function ensureMainLandmark(html, relativePath) {
+  const existingMain = html.match(/<main\b[^>]*>/i)?.[0];
+  if (existingMain) {
+    const targetId = htmlAttribute(existingMain, "id") || "main-content";
+    let updatedMain = existingMain;
+    if (!htmlAttribute(updatedMain, "id")) updatedMain = setHtmlAttribute(updatedMain, "id", targetId);
+    if (!/\stabindex\s*=/.test(updatedMain)) updatedMain = setHtmlAttribute(updatedMain, "tabindex", "-1");
+    return { html: html.replace(existingMain, updatedMain), targetId };
+  }
+
+  const navEnd = /<\/nav\s*>/i.exec(html);
+  const footer = /<footer\b/i.exec(html);
+  if (!navEnd || !footer) throw new Error(`cannot_add_main_landmark:${relativePath}`);
+  const afterNav = navEnd.index + navEnd[0].length;
+  const contentStartOffset = html.slice(afterNav).search(/<(?:section|article)\b/i);
+  const contentStart = contentStartOffset >= 0 ? afterNav + contentStartOffset : afterNav;
+  const footerIndex = html.search(/<footer\b/i);
+  if (footerIndex <= contentStart) throw new Error(`invalid_main_landmark_boundary:${relativePath}`);
+  const mainStart = '<main id="main-content" tabindex="-1">';
+  const rewritten = `${html.slice(0, contentStart)}${mainStart}${html.slice(contentStart, footerIndex)}</main>${html.slice(footerIndex)}`;
+  return { html: rewritten, targetId: "main-content" };
+}
+
+function ensurePageAccessibility(html, relativePath) {
+  const { html: withMain, targetId } = ensureMainLandmark(html, relativePath);
+  const locale = withMain.match(/<html\b[^>]*\blang=(['\"])(.*?)\1/i)?.[2] || "en";
+  const skipLabel = locale.toLowerCase().startsWith("zh")
+    ? "跳到主要內容"
+    : locale.toLowerCase().startsWith("ar")
+      ? "تخطي إلى المحتوى"
+      : "Skip to content";
+  let next = withMain;
+
+  if (!/<a\b[^>]*class=(['\"])[^'\"]*\bskip-link\b[^'\"]*\1/i.test(next)) {
+    const skipLink = `<a class="skip-link" href="#${targetId}">${skipLabel}</a>`;
+    if (!/<body\b[^>]*>/i.test(next)) throw new Error(`missing_body_for_skip_link:${relativePath}`);
+    next = next.replace(/<body\b[^>]*>/i, (bodyTag) => `${bodyTag}${skipLink}`);
+  }
+
+  if (!next.includes(`href="${SITE_ACCESSIBILITY_CSS}"`)) {
+    if (!/<\/head\s*>/i.test(next)) throw new Error(`missing_head_for_accessibility_css:${relativePath}`);
+    next = next.replace(/<\/head\s*>/i, `<link rel="stylesheet" href="${SITE_ACCESSIBILITY_CSS}"></head>`);
+  }
+
+  const hasModal = /<[^>]+\bid=(['\"])subscribeModal\1/i.test(next);
+  if (hasModal) {
+    const titleTag = findOpeningTag(next, (tag) => hasHtmlClass(tag, "modal-title"));
+    if (!titleTag) throw new Error(`subscribe_modal_missing_title:${relativePath}`);
+    const titleId = htmlAttribute(titleTag, "id") || "subscribeModalTitle";
+    next = updateFirstOpeningTag(next, (tag) => hasHtmlClass(tag, "modal-title"), { id: titleId });
+
+    const descriptionTag = findOpeningTag(next, (tag) => hasHtmlClass(tag, "modal-sub"));
+    const descriptionId = descriptionTag ? (htmlAttribute(descriptionTag, "id") || "subscribeModalDescription") : "";
+    if (descriptionId) {
+      next = updateFirstOpeningTag(next, (tag) => hasHtmlClass(tag, "modal-sub"), { id: descriptionId });
+    }
+
+    const dialogAttributes = {
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-hidden": "true",
+      "aria-labelledby": titleId,
+      tabindex: "-1",
+    };
+    if (descriptionId) dialogAttributes["aria-describedby"] = descriptionId;
+    next = updateFirstOpeningTag(next, (tag) => htmlAttribute(tag, "id") === "subscribeModal", dialogAttributes);
+
+    const hasSubscribeScript = next.includes(`src="${MODAL_ACCESSIBILITY_JS}"`);
+    if (!hasSubscribeScript) {
+      if (!/<\/body\s*>/i.test(next)) throw new Error(`missing_body_end_for_modal_accessibility:${relativePath}`);
+      next = next.replace(/<\/body\s*>/i, `<script src="${MODAL_ACCESSIBILITY_JS}"></script></body>`);
+    }
+
+    const statusTag = findOpeningTag(next, (tag) => htmlAttribute(tag, "id") === "sub-msg")
+      || findOpeningTag(next, (tag) => hasHtmlClass(tag, "modal-note"));
+    if (!statusTag) throw new Error(`subscribe_modal_missing_status:${relativePath}`);
+    const statusId = htmlAttribute(statusTag, "id");
+    next = updateFirstOpeningTag(next, (tag) => statusId
+      ? htmlAttribute(tag, "id") === statusId
+      : hasHtmlClass(tag, "modal-note"), {
+      role: "status",
+      "aria-live": "polite",
+      "aria-atomic": "true",
+    });
+    next = next.replace(/<[a-z][^>]*>/gi, (tag) => {
+      if (!/\bdata-(?:open-subscribe|product-interest)\s*=/.test(tag)) return tag;
+      return Object.entries({ "aria-haspopup": "dialog", "aria-controls": "subscribeModal" })
+        .reduce((updated, [name, value]) => setHtmlAttribute(updated, name, value), tag);
+    });
+  }
+
+  const navLinks = findOpeningTag(next, (tag) => htmlAttribute(tag, "id") === "navLinks" || hasHtmlClass(tag, "nav-links"));
+  if (navLinks) {
+    const navLinksId = htmlAttribute(navLinks, "id") || "navLinks";
+    next = updateFirstOpeningTag(next, (tag) => htmlAttribute(tag, "id") === "navLinks" || hasHtmlClass(tag, "nav-links"), { id: navLinksId });
+    next = next.replace(/<[a-z][^>]*>/gi, (tag) => {
+      if (!hasHtmlClass(tag, "nav-burger")) return tag;
+      return Object.entries({ "aria-controls": navLinksId, "aria-expanded": "false" })
+        .reduce((updated, [name, value]) => setHtmlAttribute(updated, name, value), tag);
+    });
+  }
+
+  const langMenu = findOpeningTag(next, (tag) => hasHtmlClass(tag, "lang-menu"));
+  if (langMenu) {
+    const langMenuId = htmlAttribute(langMenu, "id") || "languageMenu";
+    next = updateFirstOpeningTag(next, (tag) => hasHtmlClass(tag, "lang-menu"), { id: langMenuId });
+    next = updateFirstOpeningTag(next, (tag) => hasHtmlClass(tag, "lang-toggle"), {
+      "aria-controls": langMenuId,
+      "aria-expanded": "false",
+    });
+  }
+
+  if (!next.includes(`src="${MODAL_ACCESSIBILITY_JS}"`)) {
+    if (!/<\/body\s*>/i.test(next)) throw new Error(`missing_body_end_for_accessibility_js:${relativePath}`);
+    next = next.replace(/<\/body\s*>/i, `<script src="${MODAL_ACCESSIBILITY_JS}"></script></body>`);
+  }
+  return next;
+}
+
+function applyAccessibilityEnhancements(siteDir) {
+  for (const relativePath of htmlFilesUnder(siteDir).sort()) {
+    const file = resolve(siteDir, relativePath);
+    const html = readFileSync(file, "utf8");
+    const next = ensurePageAccessibility(html, relativePath);
+    if (next !== html) writeFileSync(file, next);
+  }
+}
 
 function shortlinkRoutes() {
   return [
@@ -353,6 +519,7 @@ function writeReleaseManifest() {
   writeMonetizationRoadmapPage(siteDir);
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
+  applyAccessibilityEnhancements(siteDir);
 }
 
 function writeDeployReadinessManifest(siteDir, source) {

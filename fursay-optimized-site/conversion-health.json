@@ -5,8 +5,8 @@
   "updatedAt": "2026-09-25",
   "source": {
     "branch": "main",
-    "commit": "ead036f",
-    "summary": "Add Fursay editorial guides and AdSense readiness"
+    "commit": "d6e81d8",
+    "summary": "Record Fursay deployment evidence date"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

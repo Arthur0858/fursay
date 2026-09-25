@@ -34,8 +34,9 @@ async function run() {
   const sitemap = await get(options.baseUrl, "/sitemap.xml");
   const urls = [...sitemap.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   if (urls.length !== 84 || new Set(urls).size !== 84) failures.push(`sitemap_count:${urls.length}`);
-  const forbiddenCopy = /presale[\s-]*preparation|review-required|checkoutEnabled|paymentLinksAllowed|publicPrice|正在準備|預售準備|審核中|قيد الإعداد|قيد المراجعة|البيع المسبق/i;
+  const forbiddenCopy = /presale[\s-]*preparation|review-required|checkoutEnabled|paymentLinksAllowed|publicPrice|what\s+is\s+being\s+prepared|still\s+no\s+public\s+price|no\s+public\s+price\s+or\s+payment\s+link|正在準備|預售準備|審核中|قيد الإعداد|قيد المراجعة|البيع المسبق/i;
   const unsupportedCount = /(?:\+\s*1000|1000\s*\+|\+\s*100|100\s*\+)\s*(?:stories|episodes|chapters|集|篇|حلقة)/i;
+  const unsupportedAdFreePromise = /no ads?[,]?\s*ever|لا إعلانات أبداً|لا اعلانات ابدا/i;
   for (const url of urls) {
     const path = new URL(url).pathname;
     const response = await get(options.baseUrl, path);
@@ -43,6 +44,7 @@ async function run() {
     const text = visible(response.text);
     if (forbiddenCopy.test(text)) failures.push(`${path}:unfinished_or_internal_copy`);
     if (unsupportedCount.test(text)) failures.push(`${path}:unsupported_content_count`);
+    if (unsupportedAdFreePromise.test(text)) failures.push(`${path}:unsupported_ad_free_promise`);
     if (/class=["'][^"']*presale-brand-page/i.test(response.text)) failures.push(`${path}:legacy_presale_css_class`);
     if (/^\/products\/(?:koko-printable|noor-worksheet)$/.test(path) || /^\/(?:zh|ar)\/products\/(?:koko-printable|noor-worksheet)$/.test(path)) {
       if (!response.text.includes('"@type":"LearningResource"') || !response.text.includes('"isAccessibleForFree":true') || !response.text.includes('"@type":"DownloadAction"')) failures.push(`${path}:free_learning_resource_schema`);

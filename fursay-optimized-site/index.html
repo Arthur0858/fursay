@@ -123,13 +123,13 @@
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
   <link rel="stylesheet" href="/css/home-focus-20260718-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-home">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-home"><a class="skip-link" href="#main-content">Skip to content</a>
 
   <!-- Navigation -->
   <nav id="mainNav">
     <a href="/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-    <button class="nav-burger" aria-label="Menu">☰</button>
+    <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
     <div class="nav-right">
       <ul class="nav-links" id="navLinks">
         <li><a href="#channels"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg> Story Worlds</a></li>
@@ -138,10 +138,10 @@
         <li><a href="/products"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> Products</a></li>
       </ul>
       <div class="lang-switcher" data-lang-menu>
-        <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
           <span>EN</span><span aria-hidden="true">⌄</span>
         </button>
-        <div class="lang-menu" role="menu">
+        <div class="lang-menu" role="menu" id="languageMenu">
           <a href="/" class="lang-btn active" aria-current="page" role="menuitem">EN</a>
           <a href="/zh/" class="lang-btn" role="menuitem">中文</a>
           <a href="/ar/" class="lang-btn" role="menuitem">عربي</a>
@@ -151,7 +151,7 @@
   <div class="editorial-utility-links" data-editorial-nav><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a></div></nav>
 
   <!-- Hero -->
-  <section class="hero">
+  <main id="main-content" tabindex="-1"><section class="hero">
     <div class="hero-bg-circles">
       <div class="circle1"></div>
       <div class="circle2"></div>
@@ -190,7 +190,7 @@
       </div>
       <div class="hero-buttons">
         <a href="#channels" class="btn btn-primary">Choose a story</a>
-        <button class="btn btn-secondary" data-open-subscribe="koko" data-signup-source="home_koko_weekly_pack">Get the Koko pack</button>
+        <button class="btn btn-secondary" data-open-subscribe="koko" data-signup-source="home_koko_weekly_pack" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Koko pack</button>
       </div>
     </div>
   </section>
@@ -289,8 +289,8 @@
         <p>Preview an activity, download the Koko PDF, or open Nour's story path. The free sample needs no email signup.</p>
       </div>
       <div class="home-pack-actions" aria-label="Choose a free story sample">
-        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">Get the Koko weekly pack</button>
-        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">Get the Nour weekly pack</button>
+        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Koko weekly pack</button>
+        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Nour weekly pack</button>
         <a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">Preview Koko printable</a>
         <a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="home_koko_printable_pdf">Download Koko PDF</a>
         <a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/arabic?subscribe=noor&amp;utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">Preview Nour sample</a>
@@ -323,8 +323,8 @@
         <p>Read family guides, try free PDF samples, and choose optional adult email updates.</p>
         <div class="home-explore-actions">
           <a class="btn btn-outline" href="/products?utm_source=home&amp;utm_medium=site&amp;utm_campaign=product_interest_validation&amp;utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="home_product_info">View both previews</a>
-          <button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="home_koko_sample_printable_interest">Koko interest list</button>
-          <button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">Nour interest list</button>
+          <button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="home_koko_sample_printable_interest" aria-haspopup="dialog" aria-controls="subscribeModal">Koko interest list</button>
+          <button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">Nour interest list</button>
         </div>
       </article>
       <article class="home-explore-card reveal">
@@ -389,7 +389,7 @@
 
 
   <!-- Footer -->
-  <footer>
+  </main><footer>
     <div class="f-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</div>
     <div class="footer-kicker">Parent-child bilingual stories, ready to read together</div>
     <div class="f-links"><a href="/">Home</a><a href="/koko">Koko's Forest</a><a href="/arabic">Arabic Kids Chinese</a><a href="/products">Products</a><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="mailto:contact@fursay.com">Contact</a></div>
@@ -397,12 +397,12 @@
   </footer>
 
   <!-- Subscribe Modal -->
-  <div id="subscribeModal" class="modal-overlay">
+  <div id="subscribeModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">✕</button>
       <span class="modal-emoji">📬</span>
-      <h3 class="modal-title">Get this week's story pack</h3>
-      <p class="modal-sub">One story, one bilingual phrase set, two parent questions, and one printable activity. No spam, ever.</p>
+      <h3 class="modal-title" id="subscribeModalTitle">Get this week's story pack</h3>
+      <p class="modal-sub" id="subscribeModalDescription">One story, one bilingual phrase set, two parent questions, and one printable activity. No spam, ever.</p>
       <form id="subscribe-form">
         <div class="modal-field">
           <label for="sub-email">Email address</label>
@@ -424,11 +424,11 @@
           </div>
         </div>
         <button type="submit" class="modal-submit">Send me the weekly pack</button>
-        <p id="sub-msg" class="modal-note is-hidden"></p>
+        <p id="sub-msg" class="modal-note is-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
       </form>
     </div>
   </div>
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>

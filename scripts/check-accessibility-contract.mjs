@@ -1,9 +1,13 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-accessibility-contract";
 const ORIGIN = "https://fursay.com";
+const ACCESSIBILITY_STYLESHEET_PATH = "/css/site-accessibility-20260925-v1.css";
+const ACCESSIBILITY_SCRIPT_PATH = "/js/modal-accessibility-20260925-v1.js";
+const ACCESSIBILITY_STYLESHEET = resolve(SITE_DIR, ACCESSIBILITY_STYLESHEET_PATH.slice(1));
+const ACCESSIBILITY_SCRIPT = resolve(SITE_DIR, ACCESSIBILITY_SCRIPT_PATH.slice(1));
 const PAGES = [
   { path: "/", file: "index.html" },
   { path: "/zh/", file: "zh/index.html" },
@@ -69,6 +73,75 @@ async function readPage(baseUrl, page) {
   return readFile(resolve(SITE_DIR, page.file), "utf8");
 }
 
+async function readAccessibilityAsset(baseUrl, path, localPath, failures, label) {
+  if (!baseUrl) return readFile(localPath, "utf8");
+  try {
+    const response = await fetch(new URL(path, `${baseUrl}/`));
+    if (!response.ok) {
+      failures.push(`${label}:http_${response.status}`);
+      return "";
+    }
+    return response.text();
+  } catch {
+    failures.push(`${label}:fetch_failed`);
+    return "";
+  }
+}
+
+function pageForRoute(route) {
+  const file = route === "/"
+    ? "index.html"
+    : route.endsWith("/")
+      ? `${route.slice(1)}index.html`
+      : `${route.replace(/^\//, "")}.html`;
+  return { path: route, file, rtl: route === "/ar/" || route.startsWith("/ar/") };
+}
+
+function pageForFile(file) {
+  let path;
+  if (file === "index.html") path = "/";
+  else if (file === "zh/index.html") path = "/zh/";
+  else if (file === "ar/index.html") path = "/ar/";
+  else path = `/${file.replace(/\.html$/i, "")}`;
+  return { path, file, rtl: file.startsWith("ar/") };
+}
+
+async function walkHtmlFiles(directory, prefix = "") {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const absolutePath = resolve(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walkHtmlFiles(absolutePath, relativePath));
+    else if (entry.isFile() && entry.name.endsWith(".html")) files.push(relativePath);
+  }
+  return files;
+}
+
+async function pagesToCheck(baseUrl) {
+  const pages = new Map(PAGES.map((page) => [page.path, page]));
+  if (baseUrl) {
+    const response = await fetch(`${baseUrl}/sitemap.xml`);
+    if (!response.ok) throw new Error(`/sitemap.xml status ${response.status}`);
+    const sitemap = await response.text();
+    for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+      pages.set(new URL(match[1]).pathname, pageForRoute(new URL(match[1]).pathname));
+    }
+  } else {
+    for (const file of await walkHtmlFiles(SITE_DIR)) {
+      const page = pageForFile(file);
+      pages.set(page.path, page);
+    }
+  }
+  return [...pages.values()].sort((a, b) => a.path.localeCompare(b.path));
+}
+
+function hasId(html, id) {
+  if (!id) return false;
+  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\bid=(['\"])${escaped}\\1`, "i").test(html);
+}
+
 function attr(tag, name) {
   const match = tag.match(new RegExp(`\\s${name}=(["'])(.*?)\\1`, "i"));
   return match?.[2] || "";
@@ -125,6 +198,16 @@ function checkPage(page, html) {
   const htmlTag = html.match(/<html\b[^>]*>/i)?.[0] || "";
   if (page.rtl && attr(htmlTag, "dir") !== "rtl") failures.push(`${page.path}:missing_rtl_dir`);
 
+  const mainTag = html.match(/<main\b[^>]*>/i)?.[0] || "";
+  const mainId = attr(mainTag, "id");
+  if (!mainTag || !mainId) failures.push(`${page.path}:missing_main_landmark_id`);
+  if (mainTag && attr(mainTag, "tabindex") !== "-1") failures.push(`${page.path}:main_landmark_not_programmatically_focusable`);
+  const skipLink = [...html.matchAll(/<a\b[^>]*>/gi)].map((match) => match[0]).find((tag) => attr(tag, "class").split(/\s+/).includes("skip-link"));
+  if (!skipLink) failures.push(`${page.path}:missing_skip_link`);
+  else if (attr(skipLink, "href") !== `#${mainId}`) failures.push(`${page.path}:skip_link_target_mismatch`);
+  if (!html.includes(`href="${ACCESSIBILITY_STYLESHEET_PATH}"`)) failures.push(`${page.path}:missing_accessibility_stylesheet`);
+  if (!html.includes(`src="${ACCESSIBILITY_SCRIPT_PATH}"`)) failures.push(`${page.path}:missing_modal_accessibility_script`);
+
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) {
     counts.images += 1;
     const tag = match[0];
@@ -143,8 +226,36 @@ function checkPage(page, html) {
     if (className.split(/\s+/).includes("lang-toggle") && attr(openTag, "aria-expanded") !== "false") {
       failures.push(`${page.path}:lang_toggle_missing_collapsed_state`);
     }
+    if (className.split(/\s+/).includes("lang-toggle") && !hasId(html, attr(openTag, "aria-controls"))) {
+      failures.push(`${page.path}:lang_toggle_control_target_missing`);
+    }
     if (className.split(/\s+/).includes("nav-burger") && !attr(openTag, "aria-label")) {
       failures.push(`${page.path}:nav_burger_missing_aria_label`);
+    }
+    if (className.split(/\s+/).includes("nav-burger")) {
+      if (attr(openTag, "aria-expanded") !== "false") failures.push(`${page.path}:nav_burger_missing_collapsed_state`);
+      if (!hasId(html, attr(openTag, "aria-controls"))) failures.push(`${page.path}:nav_burger_control_target_missing`);
+    }
+  }
+
+  const dialogTag = [...html.matchAll(/<[a-z][^>]*>/gi)].map((match) => match[0]).find((tag) => attr(tag, "id") === "subscribeModal");
+  if (dialogTag) {
+    if (attr(dialogTag, "role") !== "dialog") failures.push(`${page.path}:subscribe_modal_missing_dialog_role`);
+    if (attr(dialogTag, "aria-modal") !== "true") failures.push(`${page.path}:subscribe_modal_missing_aria_modal`);
+    if (attr(dialogTag, "aria-hidden") !== "true") failures.push(`${page.path}:subscribe_modal_initially_exposed`);
+    if (!hasId(html, attr(dialogTag, "aria-labelledby"))) failures.push(`${page.path}:subscribe_modal_missing_label_target`);
+    if (!hasId(html, attr(dialogTag, "aria-describedby"))) failures.push(`${page.path}:subscribe_modal_missing_description_target`);
+    const dialogStart = html.indexOf(dialogTag);
+    const dialogContent = html.slice(dialogStart);
+    const hasLiveStatus = [...dialogContent.matchAll(/<[a-z][^>]*>/gi)].map((match) => match[0]).some((tag) => {
+      const isStatusNode = attr(tag, "id") === "sub-msg" || attr(tag, "class").split(/\s+/).includes("modal-note");
+      return isStatusNode && attr(tag, "role") === "status" && attr(tag, "aria-live") === "polite";
+    });
+    if (!hasLiveStatus) failures.push(`${page.path}:subscribe_status_not_live`);
+    for (const trigger of [...html.matchAll(/<(?:a|button)\b[^>]*>/gi)].map((match) => match[0]).filter((tag) => /\bdata-(?:open-subscribe|product-interest)\s*=/.test(tag))) {
+      if (attr(trigger, "aria-haspopup") !== "dialog" || attr(trigger, "aria-controls") !== "subscribeModal") {
+        failures.push(`${page.path}:subscribe_trigger_missing_dialog_relationship`);
+      }
     }
   }
 
@@ -184,7 +295,30 @@ async function main() {
   const failures = [];
   const pages = [];
 
-  for (const page of PAGES) {
+  const accessibilityScript = await readAccessibilityAsset(
+    args.baseUrl,
+    ACCESSIBILITY_SCRIPT_PATH,
+    ACCESSIBILITY_SCRIPT,
+    failures,
+    "accessibility_script_unavailable",
+  );
+  const accessibilityStylesheet = await readAccessibilityAsset(
+    args.baseUrl,
+    ACCESSIBILITY_STYLESHEET_PATH,
+    ACCESSIBILITY_STYLESHEET,
+    failures,
+    "accessibility_stylesheet_unavailable",
+  );
+  if (!accessibilityScript.includes("target.focus({ preventScroll: true })")
+    || !accessibilityScript.includes("a.skip-link")) {
+    failures.push("skip_link_does_not_move_focus_to_main_content");
+  }
+  if (!accessibilityStylesheet.includes(".skip-link:focus")
+    || !accessibilityStylesheet.includes("prefers-reduced-motion: reduce")) {
+    failures.push("accessibility_styles_missing_focus_or_reduced_motion");
+  }
+
+  for (const page of await pagesToCheck(args.baseUrl)) {
     const html = await readPage(args.baseUrl, page);
     const result = checkPage(page, html);
     failures.push(...result.failures);

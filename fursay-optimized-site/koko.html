@@ -122,11 +122,11 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-koko">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-koko"><a class="skip-link" href="#main-content">Skip to content</a>
 <nav id="mainNav">
   <a href="/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-  <button class="nav-burger" aria-label="Menu">☰</button>
+  <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
   <div class="nav-right">
     <ul class="nav-links" id="navLinks">
       <li><a href="#videos">🌱 Start Here</a></li>
@@ -135,10 +135,10 @@
       <li><a href="#subscribe" class="nav-cta">📬 Story Pack</a></li>
     </ul>
     <div class="lang-switcher" data-lang-menu>
-      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
         <span>EN</span><span aria-hidden="true">⌄</span>
       </button>
-      <div class="lang-menu" role="menu">
+      <div class="lang-menu" role="menu" id="languageMenu">
         <a href="/koko" class="lang-btn active" aria-current="page" role="menuitem">EN</a>
         <a href="/zh/koko" class="lang-btn" role="menuitem">中文</a>
         <a href="/ar/koko" class="lang-btn" role="menuitem">عربي</a>
@@ -148,7 +148,7 @@
 <div class="editorial-utility-links" data-editorial-nav><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a></div></nav>
 
 <!-- Hero -->
-<section class="hero">
+<main id="main-content" tabindex="-1"><section class="hero">
   <div class="hero-text">
     <div class="hero-badge">🦊 English · Mandarin Bilingual</div>
     <h1><span>Koko's</span> <em>Forest Adventure</em></h1>
@@ -160,7 +160,7 @@
     </div>
     <div class="hero-btns">
       <a href="https://www.youtube.com/@KokosForest" target="_blank" rel="noopener" class="btn btn-green">▶ Watch a free story</a>
-      <a href="#subscribe" data-open-subscribe="koko" data-signup-source="koko_hero_weekly_pack" class="btn btn-outline">Get the weekly pack</a>
+      <a href="#subscribe" data-open-subscribe="koko" data-signup-source="koko_hero_weekly_pack" class="btn btn-outline" aria-haspopup="dialog" aria-controls="subscribeModal">Get the weekly pack</a>
     </div>
   </div>
   <div class="hero-visual">
@@ -355,8 +355,8 @@
         </ul>
         <div class="koko-sample-actions">
           <a class="btn btn-outline koko-sample-download" href="/download/koko-printable-sample?source_id=koko_lead_magnet_pdf&amp;creator=fursay&amp;placement=koko_lead_magnet" download data-product-sample-download="koko" data-interest-stage="koko_lead_magnet_pdf" data-signup-source="koko_lead_magnet_pdf">Download the PDF sample</a>
-          <button class="btn btn-newsletter koko-printable-interest-cta" data-product-interest="koko" data-interest-stage="lead_magnet_printable_interest" data-signup-source="koko_lead_magnet_printable_interest">I want the full 3-page printable</button>
-          <button class="btn btn-secondary koko-sample-cta" data-open-subscribe="koko" data-signup-source="koko_sample_pack_cta">Email me this Koko sample</button>
+          <button class="btn btn-newsletter koko-printable-interest-cta" data-product-interest="koko" data-interest-stage="lead_magnet_printable_interest" data-signup-source="koko_lead_magnet_printable_interest" aria-haspopup="dialog" aria-controls="subscribeModal">I want the full 3-page printable</button>
+          <button class="btn btn-secondary koko-sample-cta" data-open-subscribe="koko" data-signup-source="koko_sample_pack_cta" aria-haspopup="dialog" aria-controls="subscribeModal">Email me this Koko sample</button>
         </div>
       </div>
       <div class="koko-pack-steps">
@@ -388,7 +388,7 @@
         <span class="public-share-status" data-public-share-status aria-live="polite"></span>
       </div>
     </div>
-    <button class="newsletter-cta-btn" data-open-subscribe="koko" data-signup-source="koko_story_pack_section">Get the weekly pack</button>
+    <button class="newsletter-cta-btn" data-open-subscribe="koko" data-signup-source="koko_story_pack_section" aria-haspopup="dialog" aria-controls="subscribeModal">Get the weekly pack</button>
     <p class="newsletter-note">No spam, ever. Unsubscribe anytime.</p>
   </div>
 </section>
@@ -404,10 +404,10 @@
         <li>1 draw-and-say activity page</li>
         <li>1 parent prompt sheet for story time</li>
       </ul>
-      <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">I would use this 3-page pack</button>
+      <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable" aria-haspopup="dialog" aria-controls="subscribeModal">I would use this 3-page pack</button>
     </div>
     <div class="home-pack-actions" aria-label="Related product interest">
-      <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">Also tell me about Nour worksheets</button>
+      <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">Also tell me about Nour worksheets</button>
       <a class="btn btn-outline" href="/products?utm_source=koko&utm_medium=site&utm_campaign=product_interest_validation&utm_content=koko_product_info" data-product-info-link="koko" data-interest-stage="info_page" data-signup-source="koko_product_info">See the printable roadmap</a>
     </div>
   </div>
@@ -452,7 +452,7 @@
 <!-- ═══════════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════════════ -->
-<footer>
+</main><footer>
   <div class="f-logo">🐾 Fursay</div>
   <div class="footer-kicker">Parent-child bilingual stories, ready to read together</div>
   <div class="f-links">
@@ -464,18 +464,18 @@
   <div class="f-copy">© 2026 Fursay · fursay.com · Made with 🐾 and 💚</div>
 </footer>
 
-<div class="modal-overlay" id="subscribeModal">
+<div class="modal-overlay" id="subscribeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
     <span class="modal-emoji">📬</span>
-    <div class="modal-title">Get the weekly pack</div>
-    <p class="modal-sub">Get one Koko story, one English phrase, two questions, and one printable activity.</p>
+    <div class="modal-title" id="subscribeModalTitle">Get the weekly pack</div>
+    <p class="modal-sub" id="subscribeModalDescription">Get one Koko story, one English phrase, two questions, and one printable activity.</p>
     <form id="subscribeForm">
       <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required /></div>
       <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko" /><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor" /><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
       <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
     </form>
-    <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+    <p class="modal-note" role="status" aria-live="polite" aria-atomic="true">No spam, ever. Unsubscribe anytime.</p>
   </div>
 </div>
 
@@ -484,5 +484,5 @@
 ══════════════════════════════════════════════════ -->
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>

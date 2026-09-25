@@ -25,14 +25,16 @@ const EXPECTED_CSS = [
   "sample-activity-20260718-v1.css",
   "home-focus-20260718-v1.css",
   "editorial-20260925-v1.css",
+  "site-accessibility-20260925-v1.css",
 ];
 const EXPECTED_JS = [
   "site-shared-20260615-sharekit1.js",
+  "modal-accessibility-20260925-v1.js",
 ];
 const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_MAIN_SHARED_CSS_BYTES = 150_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
-const MAX_TOTAL_JS_BYTES = 35_000;
+const MAX_TOTAL_JS_BYTES = 40_000;
 const MAX_SINGLE_JS_BYTES = 35_000;
 const MAIN_STORY_HTML = new Set([
   "index.html",

@@ -88,6 +88,11 @@
       "sha256": "12c6d729f2b3adad7f6b335b653d6d1ff508db7a1ed9607575016d976366e245"
     },
     {
+      "path": "/css/site-accessibility-20260925-v1.css",
+      "bytes": 772,
+      "sha256": "6297bff9665337e1b92665a50d66314163dece73c041e73bcb45d7c5648977d5"
+    },
+    {
       "path": "/css/story-page-common-20260613-css1.css",
       "bytes": 3878,
       "sha256": "7fc76f5b5a856e91d4d4c423ef1ed46717f1e59b15479e698aee63b9a62eff1d"
@@ -96,6 +101,11 @@
       "path": "/css/storybook-skin-20260613-inline1.css",
       "bytes": 16771,
       "sha256": "5a47e687b0ff51f576b2639e8bf94f767d766f63107fc17eefa417d39103b92e"
+    },
+    {
+      "path": "/js/modal-accessibility-20260925-v1.js",
+      "bytes": 3453,
+      "sha256": "73b5dabff7f986ac36ab02cdefd82c1a07a5c38bb0ae163eff60ad26aa220fa2"
     },
     {
       "path": "/js/site-shared-20260615-sharekit1.js",

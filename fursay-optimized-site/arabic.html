@@ -122,11 +122,11 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-arabic">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-arabic"><a class="skip-link" href="#main-content">Skip to content</a>
 <nav id="mainNav">
   <a href="/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-  <button class="nav-burger" aria-label="Menu">☰</button>
+  <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
   <div class="nav-right">
     <ul class="nav-links" id="navLinks">
       <li><a href="#episodes">🌱 Start Here</a></li>
@@ -135,10 +135,10 @@
       <li><a href="#subscribe" class="nav-cta">📬 Story Pack</a></li>
     </ul>
     <div class="lang-switcher" data-lang-menu>
-      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
         <span>EN</span><span aria-hidden="true">⌄</span>
       </button>
-      <div class="lang-menu" role="menu">
+      <div class="lang-menu" role="menu" id="languageMenu">
         <a href="/arabic" class="lang-btn active" aria-current="page" role="menuitem">EN</a>
         <a href="/zh/arabic" class="lang-btn" role="menuitem">中文</a>
         <a href="/ar/arabic" class="lang-btn" role="menuitem">عربي</a>
@@ -148,7 +148,7 @@
 <div class="editorial-utility-links" data-editorial-nav><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a></div></nav>
 
 <!-- Hero -->
-<section class="hero">
+<main id="main-content" tabindex="-1"><section class="hero">
   <div class="hero-sun"></div>
   <div class="hero-dune"></div>
   <div class="hero-text">
@@ -163,7 +163,7 @@
     </div>
     <div class="hero-btns">
       <a href="https://www.youtube.com/@ArabicKidsChinese" target="_blank" rel="noopener" class="btn btn-orange">▶ Watch a free story</a>
-      <a href="#subscribe" data-open-subscribe="noor" data-signup-source="arabic_hero_weekly_pack" class="btn btn-outline">Get Nour's 3-minute pack</a>
+      <a href="#subscribe" data-open-subscribe="noor" data-signup-source="arabic_hero_weekly_pack" class="btn btn-outline" aria-haspopup="dialog" aria-controls="subscribeModal">Get Nour's 3-minute pack</a>
     </div>
   </div>
 
@@ -212,7 +212,7 @@
   <div class="center-cta-row">
     <a href="https://www.youtube.com/@ArabicKidsChinese" target="_blank" rel="noopener" class="btn btn-orange">🎬 Open the story library</a>
     <a href="/episodes/noor-greetings" class="btn btn-outline">Read the greetings guide</a>
-    <button class="btn btn-outline inline-cta-gap" data-open-subscribe="noor" data-signup-source="arabic_episode_story_pack">📬 Send me Nour's watch-along pack</button>
+    <button class="btn btn-outline inline-cta-gap" data-open-subscribe="noor" data-signup-source="arabic_episode_story_pack" aria-haspopup="dialog" aria-controls="subscribeModal">📬 Send me Nour's watch-along pack</button>
     <p class="newsletter-note">After the story, get one Chinese phrase, two parent questions, and one tiny activity.</p>
   </div>
 </section>
@@ -358,9 +358,9 @@
         </ul>
         <p class="noor-delivery-note">The first preview is free, so families can try the routine before any paid product exists.</p>
         <div class="noor-sample-actions" aria-label="Nour sample actions">
-          <button class="btn btn-newsletter noor-sample-cta" data-open-subscribe="noor" data-signup-source="arabic_sample_pack_cta">Email me this Nour sample pack</button>
+          <button class="btn btn-newsletter noor-sample-cta" data-open-subscribe="noor" data-signup-source="arabic_sample_pack_cta" aria-haspopup="dialog" aria-controls="subscribeModal">Email me this Nour sample pack</button>
           <a class="btn btn-outline noor-sample-download" href="/download/noor-worksheet-sample?source_id=noor_lead_magnet_pdf&amp;creator=fursay&amp;placement=noor_lead_magnet_pdf" download data-product-sample-download="noor" data-interest-stage="noor_lead_magnet_pdf" data-signup-source="noor_lead_magnet_pdf">Download PDF sample</a>
-          <button class="btn btn-secondary noor-sample-interest" data-product-interest="noor" data-interest-stage="lead_magnet_after_pdf" data-signup-source="noor_lead_magnet_interest_after_pdf">Notify me if the worksheet test opens</button>
+          <button class="btn btn-secondary noor-sample-interest" data-product-interest="noor" data-interest-stage="lead_magnet_after_pdf" data-signup-source="noor_lead_magnet_interest_after_pdf" aria-haspopup="dialog" aria-controls="subscribeModal">Notify me if the worksheet test opens</button>
         </div>
       </div>
       <div class="noor-pack-steps">
@@ -392,7 +392,7 @@
         <span class="public-share-status" data-public-share-status aria-live="polite"></span>
       </div>
     </div>
-    <button class="newsletter-cta-btn" data-open-subscribe="noor" data-signup-source="arabic_story_pack_section">Send me Nour's 3-minute pack</button>
+    <button class="newsletter-cta-btn" data-open-subscribe="noor" data-signup-source="arabic_story_pack_section" aria-haspopup="dialog" aria-controls="subscribeModal">Send me Nour's 3-minute pack</button>
     <p class="newsletter-note">No spam, ever. Unsubscribe anytime.</p>
   </div>
 </section>
@@ -403,10 +403,10 @@
       <span class="story-pick-kicker">Worksheet interest list</span>
       <h2>Want Nour 3-minute worksheets?</h2>
       <p>We are testing interest before paid packs. Join the list and get the free Nour story pack first.</p>
-      <button class="btn btn-newsletter" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">Join Nour worksheet interest list</button>
+      <button class="btn btn-newsletter" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">Join Nour worksheet interest list</button>
     </div>
     <div class="home-pack-actions" aria-label="Related product interest">
-      <button class="btn btn-secondary" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">Also tell me about Koko printables</button>
+      <button class="btn btn-secondary" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable" aria-haspopup="dialog" aria-controls="subscribeModal">Also tell me about Koko printables</button>
       <a class="btn btn-outline" href="/products?utm_source=arabic&utm_medium=site&utm_campaign=product_interest_validation&utm_content=arabic_product_info" data-product-info-link="noor" data-interest-stage="info_page" data-signup-source="arabic_product_info">Learn about the worksheet pack</a>
     </div>
   </div>
@@ -451,7 +451,7 @@
 <!-- ═══════════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════════════ -->
-<footer>
+</main><footer>
   <div class="f-logo">🐾 Fursay</div>
   <div class="footer-kicker">Parent-child bilingual stories, ready to read together</div>
   <div class="f-links">
@@ -463,18 +463,18 @@
   <div class="f-copy">© 2026 Fursay · fursay.com · Made with 🐾 and 💚</div>
 </footer>
 
-<div class="modal-overlay" id="subscribeModal">
+<div class="modal-overlay" id="subscribeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
     <span class="modal-emoji">📬</span>
-    <div class="modal-title">Get the 3-minute story pack</div>
-    <p class="modal-sub">One Nour and Zayd story, one Chinese phrase with Pinyin, two parent questions, and one tiny activity.</p>
+    <div class="modal-title" id="subscribeModalTitle">Get the 3-minute story pack</div>
+    <p class="modal-sub" id="subscribeModalDescription">One Nour and Zayd story, one Chinese phrase with Pinyin, two parent questions, and one tiny activity.</p>
     <form id="subscribeForm">
       <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required /></div>
       <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko" /><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor" /><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
       <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me Nour's 3-minute pack</button>
     </form>
-    <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
+    <p class="modal-note" role="status" aria-live="polite" aria-atomic="true">No spam, ever. Unsubscribe anytime.</p>
   </div>
 </div>
 
@@ -483,5 +483,5 @@
 ══════════════════════════════════════════════════ -->
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>

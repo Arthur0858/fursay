@@ -123,13 +123,13 @@
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
   <link rel="stylesheet" href="/css/home-focus-20260718-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-home">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-home"><a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
 
   <!-- Navigation -->
   <nav id="mainNav">
     <a href="/ar/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-    <button class="nav-burger" aria-label="Menu">☰</button>
+    <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
     <div class="nav-right">
       <ul class="nav-links" id="navLinks">
         <li><a href="#channels"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg> عوالم القصص</a></li>
@@ -138,10 +138,10 @@
         <li><a href="/ar/products"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> معاينة المنتجات</a></li>
       </ul>
       <div class="lang-switcher" data-lang-menu>
-        <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
           <span>عربي</span><span aria-hidden="true">⌄</span>
         </button>
-        <div class="lang-menu" role="menu">
+        <div class="lang-menu" role="menu" id="languageMenu">
           <a href="/" class="lang-btn" role="menuitem">EN</a>
           <a href="/zh/" class="lang-btn" role="menuitem">中文</a>
           <a href="/ar/" class="lang-btn active" aria-current="page" role="menuitem">عربي</a>
@@ -151,7 +151,7 @@
   <div class="editorial-utility-links" data-editorial-nav><a href="/ar/guides">دليل الوالدين</a><a href="/ar/about">من نحن</a><a href="/ar/editorial-method">منهج التحرير</a></div></nav>
 
   <!-- Hero -->
-  <section class="hero">
+  <main id="main-content" tabindex="-1"><section class="hero">
     <div class="hero-bg-circles">
       <div class="circle1"></div>
       <div class="circle2"></div>
@@ -190,7 +190,7 @@
       </div>
       <div class="hero-buttons">
         <a href="#channels" class="btn btn-primary">اختاروا قصة</a>
-        <button class="btn btn-secondary" data-open-subscribe="koko" data-signup-source="home_koko_weekly_pack">حزمة كوكو الإنجليزية</button>
+        <button class="btn btn-secondary" data-open-subscribe="koko" data-signup-source="home_koko_weekly_pack" aria-haspopup="dialog" aria-controls="subscribeModal">حزمة كوكو الإنجليزية</button>
       </div>
     </div>
   </section>
@@ -285,8 +285,8 @@
     <div class="story-pick-inner reveal">
       <div><span class="story-pick-kicker">عينة مجانية لوقت القصة</span><h2>شاهدوا حزمة قصة أولا، ثم قرروا إن كنتم تريدون الانضمام.</h2><p>عاينوا نشاطًا أو نزّلوا ملف Koko أو افتحوا قصة نور؛ لا تحتاج العينة المجانية إلى تسجيل بريد.</p></div>
       <div class="home-pack-actions" aria-label="اختيار عينة قصة مجانية">
-        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko">احصلوا على حزمة Koko الأسبوعية</button>
-        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor">احصلوا على حزمة نور الأسبوعية</button>
+        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko" aria-haspopup="dialog" aria-controls="subscribeModal">احصلوا على حزمة Koko الأسبوعية</button>
+        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor" aria-haspopup="dialog" aria-controls="subscribeModal">احصلوا على حزمة نور الأسبوعية</button>
         <a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=ar_home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">معاينة نشاط Koko</a>
         <a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=ar_home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="ar_home_koko_printable_pdf">تنزيل ملف Koko PDF</a>
         <a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/ar/arabic?subscribe=noor&amp;utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">معاينة قصة نور</a>
@@ -300,7 +300,7 @@
     <h2 class="section-title reveal">مسارات إضافية عند الحاجة فقط</h2><p class="section-sub reveal">استخدموها عندما تريد العائلة قصة أخرى أو معاينة منتج أو مساعدة.</p>
     <div class="home-explore-grid">
       <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg><h3>مكتبة القصص</h3><p>ابدؤوا بدليل واحد أو تصفحوا قوائم تشغيل القنوات الأصلية.</p><div class="home-explore-links"><a class="video-card unstyled-card-link home-explore-link" href="/ar/episodes/koko-feelings" data-latest-story="koko">دليل مشاعر Koko</a><a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@KokosForest/playlists" target="_blank" rel="noopener">قوائم Koko</a><a class="video-card unstyled-card-link home-explore-link" href="/ar/episodes/noor-greetings" data-latest-story="noor">دليل تحيات نور</a><a class="video-card unstyled-card-link home-explore-link" href="https://www.youtube.com/@ArabicKidsChinese/playlists" target="_blank" rel="noopener">قوائم نور</a></div></article>
-      <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg><h3>معاينة المواد المطبوعة</h3><p>اقرؤوا أدلة الأسرة وحمّلوا عينات PDF المجانية واختاروا تحديثات البريد للبالغين إن رغبتم.</p><div class="home-explore-actions"><a class="btn btn-outline" href="/ar/products?utm_source=home&amp;utm_medium=site&amp;utm_campaign=product_interest_validation&amp;utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="ar_home_product_info">عرض المعاينتين</a><button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="ar_home_koko_sample_printable_interest">قائمة اهتمام Koko</button><button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="ar_product_interest_noor_worksheet">قائمة اهتمام نور</button></div></article>
+      <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg><h3>معاينة المواد المطبوعة</h3><p>اقرؤوا أدلة الأسرة وحمّلوا عينات PDF المجانية واختاروا تحديثات البريد للبالغين إن رغبتم.</p><div class="home-explore-actions"><a class="btn btn-outline" href="/ar/products?utm_source=home&amp;utm_medium=site&amp;utm_campaign=product_interest_validation&amp;utm_content=home_product_info" data-product-info-link="all" data-interest-stage="info_page" data-signup-source="ar_home_product_info">عرض المعاينتين</a><button class="btn btn-outline home-koko-printable-interest" data-product-interest="koko" data-interest-stage="home_sample_printable_interest" data-signup-source="ar_home_koko_sample_printable_interest" aria-haspopup="dialog" aria-controls="subscribeModal">قائمة اهتمام Koko</button><button class="btn btn-outline" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="ar_product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">قائمة اهتمام نور</button></div></article>
       <article class="home-explore-card reveal"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#support"></use></svg><h3>مساعدة الوالدين</h3><p>أسئلة التنزيل واللغة والخصوصية وقائمة الاهتمام موجودة في مكان واحد.</p><div class="home-explore-links"><a class="home-explore-link" href="/ar/support">فتح الدعم</a><a class="home-explore-link" href="/ar/koko#booklist">قائمة قراءة Koko</a><a class="home-explore-link" href="/ar/arabic#booklist">قائمة قراءة نور</a></div></article>
     </div>
   </section>
@@ -358,19 +358,19 @@
 
 
   <!-- Footer -->
-  <footer>
+  </main><footer>
     <div class="f-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</div><div class="footer-kicker">قصص ثنائية اللغة جاهزة للقراءة مع العائلة</div>
     <div class="f-links"><a href="/ar/">الرئيسية</a><a href="/ar/koko">غابة كوكو</a><a href="/ar/arabic">الأطفال العرب يتعلمون الصينية</a><a href="/ar/products">معاينة المنتجات</a><a href="/ar/support">الدعم</a><a href="/ar/privacy">الخصوصية</a><a href="mailto:contact@fursay.com">تواصل معنا</a></div>
     <div class="f-copy">© 2026 Fursay · fursay.com · صُنع لوقت قصة عائلي هادئ</div>
   </footer>
 
   <!-- نافذة الاشتراك -->
-  <div id="subscribeModal" class="modal-overlay">
+  <div id="subscribeModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="إغلاق">✕</button>
       <span class="modal-emoji">📬</span>
-      <h3 class="modal-title">احصل على حزمة قصة هذا الأسبوع</h3>
-      <p class="modal-sub">قصة واحدة، عبارات ثنائية اللغة، سؤالان للوالدين، ونشاط قابل للطباعة. هذا كل شيء.</p>
+      <h3 class="modal-title" id="subscribeModalTitle">احصل على حزمة قصة هذا الأسبوع</h3>
+      <p class="modal-sub" id="subscribeModalDescription">قصة واحدة، عبارات ثنائية اللغة، سؤالان للوالدين، ونشاط قابل للطباعة. هذا كل شيء.</p>
       <form id="subscribe-form">
         <div class="modal-field">
           <label for="sub-email">البريد الإلكتروني *</label>
@@ -392,12 +392,12 @@
           </div>
         </div>
         <button type="submit" class="modal-submit">أرسلوا لي الحزمة الأسبوعية</button>
-        <p id="sub-msg" class="modal-note is-hidden"></p>
+        <p id="sub-msg" class="modal-note is-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
       </form>
-      <p class="modal-note">لا إعلانات أبداً. يمكنك إلغاء الاشتراك في أي وقت.</p>
+      <p class="modal-note">تحديثات البريد اختيارية ويمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>

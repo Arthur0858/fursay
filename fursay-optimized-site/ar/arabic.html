@@ -122,11 +122,11 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-arabic">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-arabic"><a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
 <nav id="mainNav">
   <a href="/ar/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-  <button class="nav-burger" aria-label="Menu">☰</button>
+  <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
   <div class="nav-right">
     <ul class="nav-links" id="navLinks">
       <li><a href="#episodes">🌱 ابدأوا هنا</a></li>
@@ -135,10 +135,10 @@
       <li><a href="#subscribe" class="nav-cta">📬 حزمة القصص</a></li>
     </ul>
     <div class="lang-switcher" data-lang-menu>
-      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
         <span>عربي</span><span aria-hidden="true">⌄</span>
       </button>
-      <div class="lang-menu" role="menu">
+      <div class="lang-menu" role="menu" id="languageMenu">
         <a href="/arabic" class="lang-btn" role="menuitem">EN</a>
         <a href="/zh/arabic" class="lang-btn" role="menuitem">中文</a>
         <a href="/ar/arabic" class="lang-btn active" aria-current="page" role="menuitem">عربي</a>
@@ -148,7 +148,7 @@
 <div class="editorial-utility-links" data-editorial-nav><a href="/ar/guides">دليل الوالدين</a><a href="/ar/about">من نحن</a><a href="/ar/editorial-method">منهج التحرير</a></div></nav>
 
 <!-- Hero -->
-<section class="hero">
+<main id="main-content" tabindex="-1"><section class="hero">
   <div class="hero-sun"></div>
   <div class="hero-dune"></div>
   <div class="hero-text">
@@ -163,7 +163,7 @@
     </div>
     <div class="hero-btns">
       <a href="https://www.youtube.com/@ArabicKidsChinese" target="_blank" rel="noopener" class="btn btn-orange">▶ شاهد قصة مجانية</a>
-      <a href="#subscribe" data-open-subscribe="noor" data-signup-source="arabic_hero_weekly_pack" class="btn btn-outline">احصلوا على حزمة نور في 3 دقائق</a>
+      <a href="#subscribe" data-open-subscribe="noor" data-signup-source="arabic_hero_weekly_pack" class="btn btn-outline" aria-haspopup="dialog" aria-controls="subscribeModal">احصلوا على حزمة نور في 3 دقائق</a>
     </div>
   </div>
 
@@ -208,7 +208,7 @@
   <div class="center-cta-row">
     <a href="https://www.youtube.com/@ArabicKidsChinese" target="_blank" rel="noopener" class="btn btn-orange">🎬 افتح مكتبة القصص</a>
     <a href="/ar/episodes/noor-greetings" class="btn btn-outline">اقرؤوا دليل التحيات</a>
-    <button class="btn btn-outline inline-cta-gap" data-open-subscribe="noor" data-signup-source="arabic_episode_story_pack">📬 أرسلوا لي حزمة نور للمشاهدة</button>
+    <button class="btn btn-outline inline-cta-gap" data-open-subscribe="noor" data-signup-source="arabic_episode_story_pack" aria-haspopup="dialog" aria-controls="subscribeModal">📬 أرسلوا لي حزمة نور للمشاهدة</button>
     <p class="newsletter-note">بعد القصة، تصل عبارة صينية واحدة، سؤالان للوالدين، ونشاط صغير.</p>
   </div>
 </section>
@@ -354,9 +354,9 @@
         </ul>
         <p class="noor-delivery-note">العينة الأولى مجانية لتجرب العائلة الروتين قبل وجود أي منتج مدفوع.</p>
         <div class="noor-sample-actions" aria-label="إجراءات عينة نور">
-          <button class="btn btn-newsletter noor-sample-cta" data-open-subscribe="noor" data-signup-source="arabic_sample_pack_cta">أرسلوا لي نموذج نور</button>
+          <button class="btn btn-newsletter noor-sample-cta" data-open-subscribe="noor" data-signup-source="arabic_sample_pack_cta" aria-haspopup="dialog" aria-controls="subscribeModal">أرسلوا لي نموذج نور</button>
           <a class="btn btn-outline noor-sample-download" href="/download/noor-worksheet-sample?source_id=noor_lead_magnet_pdf&amp;creator=fursay&amp;placement=noor_lead_magnet_pdf" download data-product-sample-download="noor" data-interest-stage="noor_lead_magnet_pdf" data-signup-source="noor_lead_magnet_pdf">تحميل عينة PDF</a>
-          <button class="btn btn-secondary noor-sample-interest" data-product-interest="noor" data-interest-stage="lead_magnet_after_pdf" data-signup-source="noor_lead_magnet_interest_after_pdf">أخبروني إذا فتحت ورقة نور التجريبية</button>
+          <button class="btn btn-secondary noor-sample-interest" data-product-interest="noor" data-interest-stage="lead_magnet_after_pdf" data-signup-source="noor_lead_magnet_interest_after_pdf" aria-haspopup="dialog" aria-controls="subscribeModal">أخبروني إذا فتحت ورقة نور التجريبية</button>
         </div>
       </div>
       <div class="noor-pack-steps">
@@ -388,7 +388,7 @@
         <span class="public-share-status" data-public-share-status aria-live="polite"></span>
       </div>
     </div>
-    <button class="newsletter-cta-btn" data-open-subscribe="noor" data-signup-source="arabic_story_pack_section">
+    <button class="newsletter-cta-btn" data-open-subscribe="noor" data-signup-source="arabic_story_pack_section" aria-haspopup="dialog" aria-controls="subscribeModal">
       📧 أرسلوا لي حزمة نور في 3 دقائق
     </button>
     <div class="newsletter-note">لا إزعاج · إلغاء الاشتراك في أي وقت</div>
@@ -401,10 +401,10 @@
       <span class="story-pick-kicker">قائمة اهتمام بأوراق العمل</span>
       <h2>هل تريدون أوراق نور في 3 دقائق؟</h2>
       <p>نقيس الاهتمام قبل فتح الدفع. انضموا إلى القائمة وستصلكم حزمة نور المجانية أولاً.</p>
-      <button class="btn btn-newsletter" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">انضموا لقائمة أوراق نور</button>
+      <button class="btn btn-newsletter" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">انضموا لقائمة أوراق نور</button>
     </div>
     <div class="home-pack-actions" aria-label="اهتمام بمنتج مرتبط">
-      <button class="btn btn-secondary" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">أخبروني أيضاً عن حزمة كوكو</button>
+      <button class="btn btn-secondary" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable" aria-haspopup="dialog" aria-controls="subscribeModal">أخبروني أيضاً عن حزمة كوكو</button>
       <a class="btn btn-outline" href="/ar/products?utm_source=ar_arabic&utm_medium=site&utm_campaign=product_interest_validation&utm_content=ar_arabic_product_info" data-product-info-link="noor" data-interest-stage="info_page" data-signup-source="ar_arabic_product_info">اطّلعوا على صفحة أوراق نور</a>
     </div>
   </div>
@@ -452,7 +452,7 @@
   </div>
 </section>
 
-<footer>
+</main><footer>
   <div class="f-logo">🐾 Fursay</div>
   <div class="f-links">
     <a href="/ar/">الرئيسية</a>
@@ -464,12 +464,12 @@
 </footer>
 
 <!-- Subscribe Modal -->
-<div class="modal-overlay" id="subscribeModal">
+<div class="modal-overlay" id="subscribeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe aria-label="إغلاق">✕</button>
     <span class="modal-emoji">📬</span>
-    <div class="modal-title">احصلوا على حزمة قصة في 3 دقائق</div>
-    <div class="modal-sub">قصة من نور وزيد، عبارة صينية مع البينيين، سؤالان للوالدين، ونشاط صغير.</div>
+    <div class="modal-title" id="subscribeModalTitle">احصلوا على حزمة قصة في 3 دقائق</div>
+    <div class="modal-sub" id="subscribeModalDescription">قصة من نور وزيد، عبارة صينية مع البينيين، سؤالان للوالدين، ونشاط صغير.</div>
     <form id="subscribeForm">
       <div class="modal-field">
         <label for="modalEmail">البريد الإلكتروني *</label>
@@ -487,11 +487,11 @@
         </div>
       </div>
       <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي حزمة نور في 3 دقائق</button>
-      <div class="modal-note">لا إزعاج · إلغاء الاشتراك في أي وقت</div>
+      <div class="modal-note" role="status" aria-live="polite" aria-atomic="true">لا إزعاج · إلغاء الاشتراك في أي وقت</div>
     </form>
   </div>
 </div>
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>

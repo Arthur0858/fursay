@@ -122,11 +122,11 @@
   <link rel="stylesheet" href="/css/picture-book-base-20260613-base1.css">
   <link rel="stylesheet" href="/css/picture-world-shared-20260613-traffic12.css">
   <link rel="stylesheet" href="/css/brand-storybook-20260717-v1.css">
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"></head>
-<body class="picture-world world-koko">
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20260925-v1.css"></head>
+<body class="picture-world world-koko"><a class="skip-link" href="#main-content">跳到主要內容</a>
 <nav id="mainNav">
   <a href="/zh/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
-  <button class="nav-burger" aria-label="Menu">☰</button>
+  <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
   <div class="nav-right">
     <ul class="nav-links" id="navLinks">
       <li><a href="#videos">🌱 從這裡開始</a></li>
@@ -135,10 +135,10 @@
       <li><a href="#subscribe" class="nav-cta">📬 每週故事包</a></li>
     </ul>
     <div class="lang-switcher" data-lang-menu>
-      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
         <span>中文</span><span aria-hidden="true">⌄</span>
       </button>
-      <div class="lang-menu" role="menu">
+      <div class="lang-menu" role="menu" id="languageMenu">
         <a href="/koko" class="lang-btn" role="menuitem">EN</a>
         <a href="/zh/koko" class="lang-btn active" aria-current="page" role="menuitem">中文</a>
         <a href="/ar/koko" class="lang-btn" role="menuitem">عربي</a>
@@ -148,7 +148,7 @@
 <div class="editorial-utility-links" data-editorial-nav><a href="/zh/guides">家長指南</a><a href="/zh/about">關於</a><a href="/zh/editorial-method">編輯方法</a></div></nav>
 
 <!-- Hero -->
-<section class="hero">
+<main id="main-content" tabindex="-1"><section class="hero">
   <div class="hero-text">
     <div class="hero-badge">🦊 英文 · 中文雙語</div>
     <h1>叩叩的<br/><em>森林冒險</em></h1>
@@ -160,7 +160,7 @@
     </div>
     <div class="hero-btns">
       <a href="https://www.youtube.com/@KokosForest" target="_blank" rel="noopener" class="btn btn-green">▶ 看一則免費故事</a>
-      <a href="#subscribe" data-open-subscribe="koko" data-signup-source="koko_hero_weekly_pack" class="btn btn-outline">取得每週陪讀包</a>
+      <a href="#subscribe" data-open-subscribe="koko" data-signup-source="koko_hero_weekly_pack" class="btn btn-outline" aria-haspopup="dialog" aria-controls="subscribeModal">取得每週陪讀包</a>
     </div>
   </div>
   <div class="hero-visual">
@@ -387,8 +387,8 @@
         </ul>
         <div class="koko-sample-actions">
           <a class="btn btn-outline koko-sample-download" href="/download/koko-printable-sample?source_id=zh_koko_lead_magnet_pdf&amp;creator=fursay&amp;placement=koko_lead_magnet" download data-product-sample-download="koko" data-interest-stage="koko_lead_magnet_pdf" data-signup-source="zh_koko_lead_magnet_pdf">下載 PDF 樣張</a>
-          <button class="btn btn-newsletter koko-printable-interest-cta" data-product-interest="koko" data-interest-stage="lead_magnet_printable_interest" data-signup-source="zh_koko_lead_magnet_printable_interest">我想要完整 3 頁可列印包</button>
-          <button class="btn btn-secondary koko-sample-cta" data-open-subscribe="koko" data-signup-source="koko_sample_pack_cta">把叩叩樣張寄給我</button>
+          <button class="btn btn-newsletter koko-printable-interest-cta" data-product-interest="koko" data-interest-stage="lead_magnet_printable_interest" data-signup-source="zh_koko_lead_magnet_printable_interest" aria-haspopup="dialog" aria-controls="subscribeModal">我想要完整 3 頁可列印包</button>
+          <button class="btn btn-secondary koko-sample-cta" data-open-subscribe="koko" data-signup-source="koko_sample_pack_cta" aria-haspopup="dialog" aria-controls="subscribeModal">把叩叩樣張寄給我</button>
         </div>
       </div>
       <div class="koko-pack-steps">
@@ -420,7 +420,7 @@
         <span class="public-share-status" data-public-share-status aria-live="polite"></span>
       </div>
     </div>
-    <button class="newsletter-cta-btn" data-open-subscribe="koko" data-signup-source="koko_story_pack_section">取得每週陪讀包</button>
+    <button class="newsletter-cta-btn" data-open-subscribe="koko" data-signup-source="koko_story_pack_section" aria-haspopup="dialog" aria-controls="subscribeModal">取得每週陪讀包</button>
     <p class="newsletter-note">絕不寄廣告。隨時可以退訂。</p>
   </div>
 </section>
@@ -436,10 +436,10 @@
         <li>1 頁畫一畫、說一說活動</li>
         <li>1 頁親子共讀提示</li>
       </ul>
-      <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable">我會用這份 3 頁包</button>
+      <button class="btn btn-newsletter" data-product-interest="koko" data-interest-stage="waitlist" data-signup-source="product_interest_koko_printable" aria-haspopup="dialog" aria-controls="subscribeModal">我會用這份 3 頁包</button>
     </div>
     <div class="home-pack-actions" aria-label="相關產品興趣">
-      <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet">也通知我努爾學習單</button>
+      <button class="btn btn-secondary" data-product-interest="noor" data-interest-stage="waitlist" data-signup-source="product_interest_noor_worksheet" aria-haspopup="dialog" aria-controls="subscribeModal">也通知我努爾學習單</button>
       <a class="btn btn-outline" href="/zh/products?utm_source=zh_koko&utm_medium=site&utm_campaign=product_interest_validation&utm_content=zh_koko_product_info" data-product-info-link="koko" data-interest-stage="info_page" data-signup-source="zh_koko_product_info">查看產品路線圖</a>
     </div>
   </div>
@@ -487,7 +487,7 @@
   </div>
 </section>
 
-<footer>
+</main><footer>
   <div class="f-logo">🐾 Fursay</div>
   <div class="footer-kicker">親子雙語故事，準備好一起陪讀</div>
   <div class="f-links">
@@ -499,12 +499,12 @@
   <div class="f-copy">© 2026 Fursay · fursay.com · 用 🐾 和 💚 製作</div>
 </footer>
 
-<div id="subscribeModal" class="modal-overlay">
+<div id="subscribeModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subscribeModalTitle" tabindex="-1" aria-describedby="subscribeModalDescription">
   <div class="modal-box">
     <button class="modal-close" data-close-subscribe aria-label="關閉">✕</button>
     <span class="modal-emoji">📬</span>
-    <h3 class="modal-title">取得叩叩每週故事包</h3>
-    <p class="modal-sub">一則故事、一組雙語詞句、兩個親子提問、一張可列印小活動。就這樣。</p>
+    <h3 class="modal-title" id="subscribeModalTitle">取得叩叩每週故事包</h3>
+    <p class="modal-sub" id="subscribeModalDescription">一則故事、一組雙語詞句、兩個親子提問、一張可列印小活動。就這樣。</p>
     <form id="subscribe-form">
       <div class="modal-field">
         <label for="sub-email">Email *</label>
@@ -526,12 +526,12 @@
         </div>
       </div>
       <button type="submit" class="modal-submit">寄給我每週陪讀包</button>
-      <p id="sub-msg" class="modal-note is-hidden"></p>
+      <p id="sub-msg" class="modal-note is-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
     </form>
     <p class="modal-note">絕不寄廣告。隨時可以退訂。</p>
   </div>
 </div>
 
 <script src="/js/site-shared-20260615-sharekit1.js"></script>
-</body>
+<script src="/js/modal-accessibility-20260925-v1.js"></script></body>
 </html>
