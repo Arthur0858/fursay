@@ -3,15 +3,25 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { createHash } from "node:crypto";
+import { validateProviderReadback } from "./newsletter-readback-contract.mjs";
+import { assertAllowedEpisode, acquireRunLock, readLedger, writeLedger, sanitizeInventory,
+  planSlots, requireGap, rollingSlots } from "./koko-slot-ledger.mjs";
 
 const ROOT = process.cwd();
 const STATE_PATH = path.join(ROOT, "content", "newsletters", "state.json");
+const STATE_LOCK_PATH = `${STATE_PATH}.lock`;
 const RUNS_DIR = path.join(ROOT, "content", "newsletters", "runs");
 const PENDING_DIR = path.join(ROOT, "content", "newsletters", "pending");
 const BROWSER_HANDOFF_DIR = path.join(ROOT, "content", "newsletters", "browser-handoff");
 const CREATOR_KIT_PATH = path.join(ROOT, "fursay-optimized-site", "creator-kit.json");
 const YOUTUBE_API = "https://www.googleapis.com/youtube/v3/playlistItems";
 const OPENAI_API = "https://api.openai.com/v1/responses";
+// Newsletter script generation now routes through DeepSeek's OpenAI-compatible
+// chat/completions endpoint. DEEPSEEK_API_KEY is read from ~/.hermes/.env
+// (same credential used by scripts/cua-probe/vision_read.py). Falls back to
+// OPENAI_API_KEY if DEEPSEEK_API_KEY is absent.
+const DEEPSEEK_API = "https://api.deepseek.com/v1/chat/completions";
 const MAILERLITE_API = "https://connect.mailerlite.com/api";
 const BLOCKED_COPY_PATTERN = /add your company postal address here|postal address here|lorem ipsum|placeholder|TODO/i;
 const CREATOR_PACK_BY_CHANNEL = {
@@ -27,6 +37,7 @@ const CHANNELS = {
   koko: {
     label: "Koko's Forest",
     groupEnv: "MAILERLITE_GROUP_KOKO",
+    groupName: "Koko 電子報訂閱者",
     uploadPlaylistId: "UU0X4CIwf6KoUMoIHwRxN3jw",
     youtubeUrl: "https://www.youtube.com/@KokosForest",
     siteUrl: "https://fursay.com/koko",
@@ -43,6 +54,7 @@ const CHANNELS = {
   arabic: {
     label: "Arabic Kids Chinese",
     groupEnv: "MAILERLITE_GROUP_NOOR",
+    groupName: "Noor subscribers",
     uploadPlaylistId: "UUOxmnonpfBvpiV8Vg5LEiYw",
     youtubeUrl: "https://www.youtube.com/@ArabicKidsChinese",
     siteUrl: "https://fursay.com/arabic",
@@ -74,6 +86,15 @@ function parseArgs(argv) {
     else if (item === "--failure-code") args.failureCode = argv[++i];
     else if (item === "--failure-detail") args.failureDetail = argv[++i];
     else if (item === "--handoff") args.handoff = argv[++i];
+    else if (item === "--readback-only") args.readbackOnly = true;
+    else if (item === "--provider-status") args.providerStatus = argv[++i];
+    else if (item === "--provider-scheduled-at") args.providerScheduledAt = argv[++i];
+    else if (item === "--provider-sender") args.providerSender = argv[++i];
+    else if (item === "--provider-audience") args.providerAudience = argv[++i];
+    else if (item === "--provider-subject") args.providerSubject = argv[++i];
+    else if (item === "--provider-content-verified") args.providerContentVerified = true;
+    else if (item === "--inventory") args.inventory = argv[++i];
+    else if (item === "--mutation-count") args.mutationCount = Number(argv[++i]);
     else if (item === "--dry-run") args.dryRun = true;
     else if (item === "--sync-only") args.syncOnly = true;
     else if (item === "--help" || item === "-h") args.help = true;
@@ -84,18 +105,21 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log(`Usage:
+  node scripts/newsletter-runner.mjs --mode inventory-record --channel koko --inventory <sanitized-browser-inventory.json>
+  node scripts/newsletter-runner.mjs --mode rolling-plan --channel koko
+  node scripts/newsletter-runner.mjs --mode mutation-start --channel koko --schedule-date YYYY-MM-DD
+  node scripts/newsletter-runner.mjs --mode mutation-bind --channel koko --schedule-date YYYY-MM-DD --campaign-id ID --campaign-url <same-review-url>
   node scripts/newsletter-runner.mjs --mode prepare --channel koko
   node scripts/newsletter-runner.mjs --mode api-preflight --channel koko
-  node scripts/newsletter-runner.mjs --mode send --channel koko --input content/newsletters/pending/<file>.newsletter.json
+  node scripts/newsletter-runner.mjs --mode send --dry-run --channel koko --input content/newsletters/pending/<file>.newsletter.json --schedule-date YYYY-MM-DD --schedule-time 09:00
   node scripts/newsletter-runner.mjs --mode chrome-handoff --channel koko --input content/newsletters/pending/<file>.newsletter.json
-  node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status scheduled --campaign-url <outbox-or-campaign-url>
-  node scripts/newsletter-runner.mjs --mode chrome-result --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status failed --failure-code login_required --failure-detail "MailerLite asked for login"
+  Koko mutations require the full handoff successCommand, readback-only, verified content, actual mutation count and a bound campaign ID.
+  node scripts/newsletter-runner.mjs --mode chrome-result --readback-only --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status scheduled --campaign-id <campaign-id> --campaign-url <campaign-url> --schedule-date YYYY-MM-DD --schedule-time 09:00 --provider-status scheduled --provider-scheduled-at "YYYY-MM-DD 09:00:00 (+08:00)" --provider-sender "Fursay (hello@fursay.com)" --provider-audience "Koko 電子報訂閱者 (N)" --provider-subject "<source subject>"
+  Koko failure: retain attempted_unknown and STOP; persist a sanitized receipt. No retry or replacement.
   node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-03 --schedule-time 09:00
 
-Legacy OpenAI API mode:
-  node scripts/newsletter-runner.mjs --channel koko
+Legacy mode (Arabic only; Koko rejects legacy/sync/content API):
   node scripts/newsletter-runner.mjs --channel arabic
-  node scripts/newsletter-runner.mjs --channel koko --dry-run
   node scripts/newsletter-runner.mjs --channel arabic --sync-only
 `);
 }
@@ -139,7 +163,27 @@ async function readState() {
 
 async function writeState(state) {
   await fs.mkdir(path.dirname(STATE_PATH), { recursive: true });
-  await fs.writeFile(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`);
+  let locked = false;
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    try {
+      await fs.mkdir(STATE_LOCK_PATH);
+      locked = true;
+      break;
+    } catch (error) {
+      if (error.code !== "EEXIST") throw error;
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+  }
+  if (!locked) throw new Error("newsletter_state_write_lock_timeout");
+
+  const temporaryPath = `${STATE_PATH}.tmp-${process.pid}-${Date.now()}`;
+  try {
+    await fs.writeFile(temporaryPath, `${JSON.stringify(state, null, 2)}\n`, { flag: "wx" });
+    await fs.rename(temporaryPath, STATE_PATH);
+  } finally {
+    await fs.rm(temporaryPath, { force: true }).catch(() => {});
+    await fs.rm(STATE_LOCK_PATH, { recursive: true, force: true });
+  }
 }
 
 function requireEnv(name) {
@@ -265,7 +309,8 @@ function selectNextEpisode(channelKey, state) {
   const channel = state.channels[channelKey];
   const sentNos = new Set((channel.episodes || []).filter((episode) => episode.sentAt).map((episode) => episode.episodeNo));
   const next = (channel.episodes || [])
-    .filter((episode) => !episode.sentAt && !sentNos.has(episode.episodeNo))
+    .filter((episode) => !(channelKey === "koko" && Number(episode.episodeNo) === 7)
+      && !episode.sentAt && !episode.scheduledAt && !sentNos.has(episode.episodeNo))
     .sort((a, b) => a.episodeNo - b.episodeNo)[0];
   if (!next) throw new Error(`No unsent episodes available for ${channelKey}`);
   return next;
@@ -382,9 +427,16 @@ function buildCodexRequest(channelKey, episode, runId) {
 }
 
 async function generateNewsletter(channelKey, episode) {
-  const apiKey = requireEnv("OPENAI_API_KEY");
-  const model = optionalEnv("OPENAI_MODEL") || "gpt-5.4-mini";
-  const data = await fetchJson(OPENAI_API, {
+  // Route newsletter generation through DeepSeek's OpenAI-compatible
+  // chat/completions endpoint. DEEPSEEK_API_KEY lives in ~/.hermes/.env
+  // (same credential used by scripts/cua-probe/vision_read.py); fall back to
+  // OPENAI_API_KEY so the script still runs if only that is present.
+  const apiKey = requireEnv("DEEPSEEK_API_KEY") || optionalEnv("OPENAI_API_KEY");
+  if (!apiKey) throw new Error("Missing required environment variable: DEEPSEEK_API_KEY (or OPENAI_API_KEY fallback)");
+  // Default to deepseek-chat, which api.deepseek.com accepts. Override with
+  // DEEPSEEK_MODEL (e.g. set to deepseek-v4-flash if your router/gateway maps it).
+  const model = optionalEnv("DEEPSEEK_MODEL") || "deepseek-chat";
+  const data = await fetchJson(DEEPSEEK_API, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -392,50 +444,23 @@ async function generateNewsletter(channelKey, episode) {
     },
     body: JSON.stringify({
       model,
-      input: buildPrompt(channelKey, episode),
-      text: {
-        format: {
-          type: "json_schema",
-          name: "fursay_newsletter",
-          strict: true,
-          schema: {
-            type: "object",
-            additionalProperties: false,
-            required: ["subject", "preview_text", "hero_title", "intro", "learning_words", "parent_activity", "video_cta", "site_cta", "closing"],
-            properties: {
-              subject: { type: "string" },
-              preview_text: { type: "string" },
-              hero_title: { type: "string" },
-              intro: { type: "string" },
-              learning_words: {
-                type: "array",
-                minItems: 3,
-                maxItems: 3,
-                items: {
-                  type: "object",
-                  additionalProperties: false,
-                  required: ["term", "pronunciation", "meaning", "example"],
-                  properties: {
-                    term: { type: "string" },
-                    pronunciation: { type: "string" },
-                    meaning: { type: "string" },
-                    example: { type: "string" }
-                  }
-                }
-              },
-              parent_activity: { type: "string" },
-              video_cta: { type: "string" },
-              site_cta: { type: "string" },
-              closing: { type: "string" }
-            }
-          }
+      messages: [
+        {
+          role: "system",
+          content: "You are a production-ready email newsletter writer for a kids English-learning brand. You return only valid JSON matching the requested shape, with no Markdown fences or comments."
+        },
+        {
+          role: "user",
+          content: buildPrompt(channelKey, episode)
         }
-      }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7
     })
   });
 
-  const outputText = data.output_text || data.output?.flatMap((item) => item.content || []).find((part) => part.text)?.text;
-  if (!outputText) throw new Error("OpenAI response did not include output_text");
+  const outputText = data.choices?.[0]?.message?.content;
+  if (!outputText) throw new Error("DeepSeek response did not include choices[0].message.content");
   return JSON.parse(outputText);
 }
 
@@ -472,6 +497,7 @@ function validateNewsletter(channelKey, episode, newsletter) {
 function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTextBody, trafficPack) {
   const errors = [];
   const config = CHANNELS[channelKey];
+  const newsletterCta = newsletterCtaParts(channelKey, trafficPack);
   const bodyText = `${newsletter.preview_text}\n${html}\n${richTextBody}`;
 
   if (BLOCKED_COPY_PATTERN.test(bodyText)) {
@@ -483,11 +509,11 @@ function validateDeliveryArtifact(channelKey, episode, newsletter, html, richTex
   if (!html.includes(escapeHtml(trafficPack.trackedLandingUrl)) || !richTextBody.includes(trafficPack.trackedLandingUrl)) {
     errors.push("rendered email must include the creator-kit tracked site CTA URL");
   }
-  const newsletterShortlink = trafficPack.placementLinks.newsletterBlurb.shortlink;
+  const newsletterShortlink = newsletterCta.shortlink;
   if (!html.includes(newsletterShortlink) || !richTextBody.includes(newsletterShortlink)) {
     errors.push("rendered email must include the creator-kit newsletter shortlink");
   }
-  if (!html.includes(escapeHtml(trafficPack.newsletterBlurb)) || !richTextBody.includes(trafficPack.newsletterBlurb)) {
+  if (!html.includes(escapeHtml(newsletterCta.blurb)) || !richTextBody.includes(newsletterCta.blurb)) {
     errors.push("rendered email must include the creator-kit newsletter blurb");
   }
   if (!html.includes(escapeHtml(newsletter.video_cta)) || !richTextBody.includes(newsletter.video_cta)) {
@@ -512,10 +538,22 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
+function newsletterCtaParts(channelKey, trafficPack) {
+  const shortlink = trafficPack.placementLinks.newsletterBlurb.shortlink;
+  const blurb = channelKey === "arabic"
+    ? String(trafficPack.newsletterBlurb)
+      .replace(shortlink, "")
+      .replace(/\s{2,}/g, " ")
+      .trim()
+    : String(trafficPack.newsletterBlurb);
+  return { blurb, shortlink };
+}
+
 function renderHtml(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
   const dir = channelKey === "arabic" ? "rtl" : "ltr";
   const align = channelKey === "arabic" ? "right" : "left";
+  const newsletterCta = newsletterCtaParts(channelKey, trafficPack);
   const words = newsletter.learning_words.map((word) => `
     <tr>
       <td style="padding:12px;border-bottom:1px solid #e8e1d5;"><strong>${escapeHtml(word.term)}</strong><br><span style="color:#6d6258;">${escapeHtml(word.pronunciation)}</span></td>
@@ -546,8 +584,8 @@ function renderHtml(channelKey, episode, newsletter, trafficPack) {
               <a href="${escapeHtml(trafficPack.trackedLandingUrl)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(newsletter.site_cta)}</a>
             </p>
             <p style="font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;">
-              ${escapeHtml(trafficPack.newsletterBlurb)}<br>
-              <a href="${escapeHtml(trafficPack.placementLinks.newsletterBlurb.shortlink)}" style="color:#c05f18;font-weight:bold;">${escapeHtml(trafficPack.placementLinks.newsletterBlurb.shortlink)}</a>
+              ${escapeHtml(newsletterCta.blurb)}<br>
+              <a href="${escapeHtml(newsletterCta.shortlink)}" style="color:#c05f18;font-weight:bold;">${channelKey === "arabic" ? "Free weekly story pack" : escapeHtml(newsletterCta.shortlink)}</a>
             </p>
             <p style="font-size:16px;line-height:1.7;margin:20px 0 0;">${escapeHtml(newsletter.closing)}</p>
           </td>
@@ -561,6 +599,7 @@ function renderHtml(channelKey, episode, newsletter, trafficPack) {
 
 function renderRichTextBody(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
+  const newsletterCta = newsletterCtaParts(channelKey, trafficPack);
   const words = newsletter.learning_words
     .map((word) => [
       `${word.term} - ${word.pronunciation}`,
@@ -588,8 +627,8 @@ function renderRichTextBody(channelKey, episode, newsletter, trafficPack) {
     newsletter.site_cta,
     trafficPack.trackedLandingUrl,
     "",
-    trafficPack.newsletterBlurb,
-    trafficPack.placementLinks.newsletterBlurb.shortlink,
+    newsletterCta.blurb,
+    newsletterCta.shortlink,
     "",
     newsletter.closing
   ].join("\n");
@@ -597,6 +636,7 @@ function renderRichTextBody(channelKey, episode, newsletter, trafficPack) {
 
 function buildEditorBlocks(channelKey, episode, newsletter, trafficPack) {
   const config = CHANNELS[channelKey];
+  const newsletterCta = newsletterCtaParts(channelKey, trafficPack);
   return [
     {
       name: "Header",
@@ -635,7 +675,7 @@ function buildEditorBlocks(channelKey, episode, newsletter, trafficPack) {
     },
     {
       name: "Sample pack CTA",
-      action: `Add a short text block with this sample-pack line and link: ${trafficPack.newsletterBlurb} ${trafficPack.placementLinks.newsletterBlurb.shortlink}.`
+      action: `Add a short text block with this sample-pack line and link: ${newsletterCta.blurb} ${newsletterCta.shortlink}.`
     },
     {
       name: "Footer QA",
@@ -711,6 +751,7 @@ function parseScheduleTime(value = "09:00") {
 
 function scheduleFor(channelKey, args = {}) {
   const delivery = args.delivery || "scheduled";
+  if (channelKey === "koko" && delivery !== "scheduled") throw new Error("koko_send_now_forbidden");
   if (!["scheduled", "instant"].includes(delivery)) {
     throw new Error("--delivery must be one of: scheduled, instant");
   }
@@ -720,6 +761,9 @@ function scheduleFor(channelKey, args = {}) {
   const date = args.scheduleDate || nextSendDate(channelKey);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("--schedule-date must use YYYY-MM-DD format");
   const { hours, minutes } = parseScheduleTime(args.scheduleTime || optionalEnv("NEWSLETTER_DEFAULT_TIME") || "09:00");
+  if (channelKey === "koko" && (hours !== "09" || minutes !== "00" || !rollingSlots().some(s => s.date === date))) {
+    throw new Error("koko_future_four_week_monday_0900_required");
+  }
   return { delivery, date, hours, minutes, scheduledAt: `${date}T${hours}:${minutes}:00+08:00` };
 }
 
@@ -737,6 +781,8 @@ async function runApiPreflight(args, run) {
   });
   const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
   if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
+  if (args.channel === "koko") assertKokoTarget({ groupName: group.name, groupActiveCount: group.active_count,
+    from, fromName: optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay" });
 
   const schedule = scheduleFor(args.channel, args);
   const warnings = [];
@@ -757,7 +803,7 @@ async function runApiPreflight(args, run) {
     delivery: schedule.delivery,
     scheduledAt: schedule.scheduledAt,
     warnings,
-    contentApiEnabled: envFlag("MAILERLITE_ALLOW_CONTENT_API_SEND"),
+    contentApiEnabled: args.channel === "koko" ? false : envFlag("MAILERLITE_ALLOW_CONTENT_API_SEND"),
     contentSubmission: "requires MailerLite Advanced plan when emails.*.content is sent by API"
   };
   return {
@@ -786,6 +832,7 @@ async function resolveMailerLiteTarget(channelKey, schedule) {
   });
   const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
   if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
+  if (channelKey === "koko") assertKokoTarget({ groupName: group.name, groupActiveCount: group.active_count, from, fromName });
 
   return {
     groupId,
@@ -797,6 +844,13 @@ async function resolveMailerLiteTarget(channelKey, schedule) {
     delivery: schedule.delivery,
     scheduledAt: schedule.scheduledAt
   };
+}
+
+function assertKokoTarget(target) {
+  if (target.from !== "hello@fursay.com" || target.fromName !== "Fursay"
+      || target.groupName !== "Koko 電子報訂閱者" || !(Number(target.groupActiveCount) > 0)) {
+    throw new Error("koko_sender_or_audience_preflight_failed");
+  }
 }
 
 async function createAndScheduleCampaign(channelKey, episode, newsletter, html, args = {}) {
@@ -936,8 +990,11 @@ function findEpisode(channelKey, state, episodeNo, videoId) {
 
 async function loadNewsletterInput(inputPath) {
   if (!inputPath) throw new Error("--input is required for newsletter delivery modes");
+  assertAllowedEpisode(parseArgs(process.argv).channel, null, inputPath);
   const fullPath = path.isAbsolute(inputPath) ? inputPath : path.join(ROOT, inputPath);
+  assertAllowedEpisode(parseArgs(process.argv).channel, null, await fs.realpath(fullPath));
   const data = JSON.parse(await fs.readFile(fullPath, "utf8"));
+  assertAllowedEpisode(parseArgs(process.argv).channel, data.episodeNo || data.episode_no || data.episode?.episodeNo);
   return { fullPath, data };
 }
 
@@ -959,18 +1016,26 @@ function normalizeNewsletterInput(newsletter) {
   return cleanNewsletter;
 }
 
-async function prepareNewsletterForDelivery(args, state, run) {
+async function prepareNewsletterForDelivery(args, state, run, { allowAlreadySent = false } = {}) {
   const { fullPath, data: newsletter } = await loadNewsletterInput(args.input);
   const episodeNo = newsletter.episodeNo || newsletter.episode_no || newsletter.episode?.episodeNo;
   const videoId = newsletter.videoId || newsletter.video_id || newsletter.episode?.videoId;
 
-  const episode = findEpisode(args.channel, state, episodeNo, videoId) || selectNextEpisode(args.channel, state);
-  if (episode.sentAt) throw new Error(`Episode already sent: ${args.channel} ep${episode.episodeNo}`);
+  assertAllowedEpisode(args.channel, episodeNo, args.input);
+  const episode = findEpisode(args.channel, state, episodeNo, videoId);
+  if (!episode || Number(episode.episodeNo) !== Number(episodeNo) || episode.videoId !== videoId) {
+    throw new Error("newsletter_source_identity_mismatch");
+  }
+  assertAllowedEpisode(args.channel, episode.episodeNo);
+  if (episode.sentAt && !allowAlreadySent && args.channel !== "koko") {
+    throw new Error(`Episode already sent: ${args.channel} ep${episode.episodeNo}`);
+  }
 
   run.episodeNo = episode.episodeNo;
   run.videoId = episode.videoId;
   run.videoUrl = episode.videoUrl;
   run.inputPath = projectPath(fullPath);
+  run.inputDigest = createHash("sha256").update(JSON.stringify(newsletter)).digest("hex");
 
   const cleanNewsletter = normalizeNewsletterInput(newsletter);
   const qaErrors = validateNewsletter(args.channel, episode, cleanNewsletter);
@@ -998,6 +1063,37 @@ async function prepareNewsletterForDelivery(args, state, run) {
 }
 
 async function runPrepare(args, state, run) {
+  if (args.channel === "koko") {
+    const ledger = await readLedger(ROOT);
+    const slots = planSlots(ledger);
+    const slot = slots.find(s => ["gap", "adopt_draft"].includes(s.decision));
+    if (!slot) {
+      run.status = slots.every(s => s.decision.startsWith("existing_")) ? "existing_scheduled" : "blocked";
+      run.externalActionCount = 0;
+      return { slots, status: run.status };
+    }
+    requireGap(ledger, slot.episodeNo, slot.date);
+    const episode = state.channels.koko.episodes.find(e => Number(e.episodeNo) === slot.episodeNo);
+    if (!episode) throw new Error("canonical_source_episode_missing");
+    assertAllowedEpisode("koko", episode.episodeNo);
+    run.episodeNo = episode.episodeNo;
+    const request = buildCodexRequest("koko", episode, `slot-${slot.date}`);
+    const requestFile = path.join(PENDING_DIR, `slot-${slot.date}-koko-ep${String(episode.episodeNo).padStart(3, "0")}.request.json`);
+    await fs.mkdir(PENDING_DIR, { recursive: true });
+    await fs.writeFile(requestFile, JSON.stringify(request, null, 2) + "\n", { flag: "wx", mode: 0o600 }).catch(async error => {
+      if (error.code !== "EEXIST") throw error;
+      const prior = JSON.parse(await fs.readFile(requestFile, "utf8"));
+      if (prior.episode?.videoId !== episode.videoId) throw new Error("prepare_idempotency_identity_mismatch");
+    });
+    run.status = "prepared";
+    run.requestPath = projectPath(requestFile);
+    run.newsletterOutputPath = request.requiredOutputPath;
+    run.videoUrl = episode.videoUrl;
+    run.scheduledAt = slot.scheduledAt;
+    return { status: run.status, episodeNo: episode.episodeNo, scheduleDate: slot.date,
+      requestPath: projectPath(requestFile), newsletterOutputPath: request.requiredOutputPath,
+      nextMode: "chrome-handoff", campaignId: slot.campaignId || null };
+  }
   const episodes = await syncEpisodes(args.channel, state);
   run.syncedEpisodes = episodes.length;
   const episode = selectNextEpisode(args.channel, state);
@@ -1027,6 +1123,7 @@ async function runPrepare(args, state, run) {
 }
 
 async function runSend(args, state, run) {
+  if (args.channel === "koko" && !args.dryRun) throw new Error("koko_content_api_forbidden_use_chrome");
   const { newsletter: cleanNewsletter, episode, html } = await prepareNewsletterForDelivery(args, state, run);
 
   if (args.dryRun) {
@@ -1057,9 +1154,28 @@ async function runSend(args, state, run) {
 }
 
 async function runChromeHandoff(args, state, run) {
+  let ledger;
+  let slot;
+  let existingJob;
+  if (args.channel === "koko") {
+    if (!args.scheduleDate || args.scheduleTime !== "09:00" || args.delivery !== "scheduled") {
+      throw new Error("koko_explicit_monday_0900_required");
+    }
+    const { data } = await loadNewsletterInput(args.input);
+    ledger = await readLedger(ROOT);
+    slot = requireGap(ledger, data.episodeNo, args.scheduleDate);
+    existingJob = ledger.jobs?.[args.scheduleDate];
+  }
   const { newsletter, episode, html, richTextBody, trafficPack } = await prepareNewsletterForDelivery(args, state, run);
   const schedule = scheduleFor(args.channel, args);
   const target = await resolveMailerLiteTarget(args.channel, schedule);
+  if (existingJob) {
+    if (existingJob.status !== "reserved" || existingJob.inputPath !== run.inputPath
+        || existingJob.inputDigest !== run.inputDigest) throw new Error("handoff_idempotency_identity_mismatch");
+    run.status = "existing_handoff";
+    run.browserHandoff = existingJob.handoff;
+    return { status: run.status, browserHandoff: existingJob.handoff, campaignId: existingJob.campaignId || null };
+  }
   const config = CHANNELS[args.channel];
   const warnings = [];
 
@@ -1104,10 +1220,13 @@ async function runChromeHandoff(args, state, run) {
       campaignUrl: "https://dashboard.mailerlite.com/campaigns",
       campaignType: "Regular campaign",
       editor: "Rich-text editor",
-      action: "Create or duplicate a regular campaign, build the email with MailerLite blocks in the listed order, choose the listed group, set the schedule, then confirm it appears in Outbox.",
+      action: "Adopt the exact correct Draft if the slot ledger provides its ID; otherwise create one campaign for a verified gap. Record mutation-start before browser writes, use Rich-text editor, schedule once, and reopen the same object for provider readback. Never duplicate an existing campaign.",
       editorBlocks: buildEditorBlocks(args.channel, episode, newsletter, trafficPack),
-      successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <outbox-or-campaign-url>${scheduleArgs(args)}`,
-      failureCommand: `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <login_required|ui_changed|group_missing|subscriber_empty|schedule_blocked|unknown> --failure-detail "<exact blocker>"`
+      mutationStartCommand: args.channel === "koko" ? `node scripts/newsletter-runner.mjs --mode mutation-start --channel koko --schedule-date ${slot.date}` : null,
+      mutationBindCommand: args.channel === "koko" ? `node scripts/newsletter-runner.mjs --mode mutation-bind --channel koko --schedule-date ${slot.date} --campaign-id <returned-id> --campaign-url <same-review-url>` : null,
+      existingCampaignId: slot?.campaignId || null,
+      successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result${args.channel === "koko" ? " --readback-only --provider-content-verified --mutation-count <actual-count> --campaign-id <same-id> --provider-status scheduled --provider-scheduled-at \"<date> 09:00:00 (+08:00)\" --provider-sender \"Fursay (hello@fursay.com)\" --provider-audience \"Koko 電子報訂閱者 (N)\" --provider-subject \"<source subject>\"" : ""} --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <same-campaign-review-url>${scheduleArgs(args)}`,
+      failureCommand: args.channel === "koko" ? "STOP: retain attempted_unknown after any browser mutation; reconcile the same campaign without retrying or creating a replacement. Before mutation, record a sanitized blocked receipt." : `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <failure-code> --failure-detail \"<blocker>\"`
     },
     postSendGmailCheck: buildPostSendGmailCheck(args.channel, trafficPack),
     warnings
@@ -1125,6 +1244,14 @@ async function runChromeHandoff(args, state, run) {
   };
   run.mailerLiteBrowserTarget = target;
   run.warnings = warnings;
+  if (ledger) {
+    ledger.jobs ||= {};
+    ledger.jobs[slot.date] = { episodeNo: slot.episodeNo, date: slot.date, status: "reserved",
+      inputPath: run.inputPath, campaignId: slot.campaignId || null, providerMutationCount: 0,
+      inputDigest: run.inputDigest,
+      handoff: run.browserHandoff, reservedAt: new Date().toISOString() };
+    await writeLedger(ROOT, ledger);
+  }
 
   return {
     status: run.status,
@@ -1143,10 +1270,87 @@ async function runChromeHandoff(args, state, run) {
 }
 
 async function runChromeResult(args, state, run) {
-  const { episode } = await prepareNewsletterForDelivery(args, state, run);
+  if (args.channel === "koko" && !args.readbackOnly) throw new Error("koko_requires_same_object_readback_only");
+  const readbackOnly = Boolean(args.readbackOnly);
+  const { episode, newsletter } = await prepareNewsletterForDelivery(args, state, run, { allowAlreadySent: readbackOnly });
   const allowed = ["scheduled", "sent", "failed"];
   if (!allowed.includes(args.browserStatus)) {
     throw new Error("--browser-status must be one of: scheduled, sent, failed");
+  }
+  if (readbackOnly && args.browserStatus !== "scheduled") {
+    throw new Error("--readback-only requires --browser-status scheduled");
+  }
+  if (readbackOnly) {
+    const requiredReadback = [
+      ["--campaign-id", args.campaignId],
+      ["--campaign-url", args.campaignUrl],
+      ["--provider-status", args.providerStatus],
+      ["--provider-scheduled-at", args.providerScheduledAt],
+      ["--provider-sender", args.providerSender],
+      ["--provider-audience", args.providerAudience],
+      ["--provider-subject", args.providerSubject]
+    ];
+    const missing = requiredReadback.filter(([, value]) => !String(value || "").trim()).map(([name]) => name);
+    if (!args.scheduleDate) missing.push("--schedule-date");
+    if (!args.scheduleTime) missing.push("--schedule-time");
+    if (missing.length) throw new Error(`--readback-only missing required provider fields: ${missing.join(", ")}`);
+    const schedule = scheduleFor(args.channel, args);
+    const readbackErrors = validateProviderReadback({
+      campaignId: args.campaignId,
+      campaignUrl: args.campaignUrl,
+      providerStatus: args.providerStatus,
+      providerScheduledAt: args.providerScheduledAt,
+      expectedScheduledAt: schedule.scheduledAt,
+      providerSender: args.providerSender,
+      expectedSender: args.channel === "koko" ? { name: "Fursay", email: "hello@fursay.com" } : {
+        name: optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay",
+        email: requireEnv("NEWSLETTER_FROM_EMAIL")
+      },
+      providerAudience: args.providerAudience,
+      expectedAudienceGroup: CHANNELS[args.channel].groupName,
+      providerSubject: args.providerSubject,
+      expectedSubject: newsletter.subject
+    });
+    if (readbackErrors.length) {
+      throw new Error(`provider_readback_contract_failed:${readbackErrors.join(",")}`);
+    }
+    if (args.channel === "koko") {
+      const slot = rollingSlots().find(s => s.date === args.scheduleDate && s.episodeNo === episode.episodeNo);
+      if (!slot || args.scheduleTime !== "09:00" || !String(args.providerScheduledAt).includes("+08:00")) {
+        throw new Error("koko_episode_slot_or_timezone_mismatch");
+      }
+      const ledger = await readLedger(ROOT);
+      const job = ledger.jobs?.[slot.date];
+      if ((ledger.inventory?.items || []).some(r => (r.episodeNo === episode.episodeNo || r.date === slot.date)
+          && r.campaignId !== args.campaignId)) throw new Error("readback_conflicts_with_inventory_campaign");
+      if (job) {
+        if (job.campaignId !== args.campaignId) throw new Error("job_not_same_campaign_or_id_not_bound");
+        if (job.inputPath !== run.inputPath || job.inputDigest !== run.inputDigest || job.episodeNo !== episode.episodeNo) {
+          throw new Error("job_source_readback_identity_mismatch");
+        }
+        if (job.status === "attempted_unknown") {
+          if (!args.providerContentVerified || !Number.isInteger(args.mutationCount) || args.mutationCount < 1) {
+            throw new Error("job_content_or_mutation_readback_missing");
+          }
+          Object.assign(job, { status: "scheduled_verified", campaignId: args.campaignId,
+            campaignUrl: args.campaignUrl, providerMutationCount: args.mutationCount });
+        } else if (job.status !== "scheduled_verified" || (args.mutationCount || 0) !== 0) {
+          throw new Error("existing_job_readback_must_be_read_only");
+        }
+        job.readbackAt = new Date().toISOString();
+      } else if ((args.mutationCount || 0) !== 0) {
+        throw new Error("mutation_result_requires_durable_job");
+      }
+      if (ledger.inventory) {
+        ledger.inventory.items = ledger.inventory.items.filter(r => r.episodeNo !== episode.episodeNo);
+        ledger.inventory.items.push({ episodeNo: episode.episodeNo, date: slot.date, section: "outbox",
+          status: "scheduled", campaignId: args.campaignId, campaignUrl: args.campaignUrl,
+          readback: { status: "scheduled", scheduledAt: slot.scheduledAt, sender: args.providerSender,
+            audience: args.providerAudience, subject: args.providerSubject,
+            readbackAt: new Date().toISOString(), contentVerified: Boolean(args.providerContentVerified) } });
+      }
+      await writeLedger(ROOT, ledger);
+    }
   }
 
   run.browserResult = {
@@ -1156,6 +1360,14 @@ async function runChromeResult(args, state, run) {
     failureCode: args.failureCode || null,
     failureDetail: args.failureDetail || null,
     handoffPath: args.handoff || null,
+    readbackOnly,
+    providerReadback: readbackOnly ? {
+      status: args.providerStatus,
+      scheduledAt: args.providerScheduledAt,
+      sender: args.providerSender,
+      audience: args.providerAudience,
+      subject: args.providerSubject
+    } : null,
     recordedAt: new Date().toISOString()
   };
 
@@ -1163,6 +1375,17 @@ async function runChromeResult(args, state, run) {
     run.status = "chrome_publish_failed";
     run.providerErrorCode = args.failureCode || "browser_publish_failed";
     run.error = args.failureDetail || "Chrome publishing failed before MailerLite outbox confirmation";
+  } else if (readbackOnly) {
+    run.status = "readback_verified";
+    run.executionState = "readback_only";
+    run.externalActionCount = 0;
+    run.providerMutationCount = 0;
+    if (args.channel === "koko" && args.mutationCount) run.providerMutationCount = args.mutationCount;
+    run.campaignId = args.campaignId;
+    run.campaignUrl = args.campaignUrl;
+    run.delivery = "scheduled";
+    run.scheduledAt = args.providerScheduledAt;
+    run.providerReadback = run.browserResult.providerReadback;
   } else {
     const schedule = scheduleFor(args.channel, args);
     run.status = args.browserStatus === "sent" ? "sent_by_chrome" : "scheduled_by_chrome";
@@ -1186,17 +1409,75 @@ async function runChromeResult(args, state, run) {
     scheduledAt: run.scheduledAt || null,
     browserStatus: args.browserStatus,
     failureCode: args.failureCode || null,
-    failureDetail: args.failureDetail || null
+    failureDetail: args.failureDetail || null,
+    readbackOnly,
+    providerReadback: run.providerReadback || null
   };
 }
 
-async function main() {
+async function mainUnlocked() {
   const args = parseArgs(process.argv);
   if (args.help) {
     printHelp();
     return;
   }
   if (!CHANNELS[args.channel]) throw new Error("--channel must be one of: koko, arabic");
+
+  if (args.channel === "koko" && ["inventory-record", "rolling-plan", "mutation-start", "mutation-bind"].includes(args.mode)) {
+    const ledger = await readLedger(ROOT);
+    if (args.mode === "inventory-record") {
+      assertAllowedEpisode("koko", null, args.inventory);
+      const input = JSON.parse(await fs.readFile(path.resolve(ROOT, args.inventory), "utf8"));
+      const subjects = {};
+      const slots = rollingSlots();
+      const names = await fs.readdir(PENDING_DIR).catch(error => { if (error.code === "ENOENT") return []; throw error; });
+      for (const name of names) {
+        const match = name.match(/-koko-ep(\d+)\.newsletter\.json$/);
+        if (!match || Number(match[1]) === 7 || !slots.some(s => s.episodeNo === Number(match[1]))) continue;
+        const { data: source } = await loadNewsletterInput(path.join(PENDING_DIR, name));
+        const no = Number(source.episodeNo || source.episode_no || source.episode?.episodeNo);
+        if (no !== Number(match[1]) || !String(source.subject || "").trim()) throw new Error("inventory_source_identity_missing");
+        if (subjects[no] && subjects[no] !== source.subject) throw new Error("inventory_source_subject_ambiguous");
+        subjects[no] = source.subject;
+      }
+      ledger.inventory = sanitizeInventory(input, subjects);
+      await writeLedger(ROOT, ledger);
+    } else if (args.mode === "mutation-bind") {
+      const job = ledger.jobs?.[args.scheduleDate];
+      if (!job || job.status !== "attempted_unknown" || !/^\d+$/.test(String(args.campaignId))
+          || args.campaignUrl !== `https://dashboard.mailerlite.com/campaigns/${args.campaignId}/review`
+          || (job.campaignId && job.campaignId !== args.campaignId)) {
+        throw new Error("mutation_bind_requires_original_campaign_id");
+      }
+      job.campaignId = args.campaignId;
+      job.campaignUrl = args.campaignUrl;
+      job.identityBoundAt = new Date().toISOString();
+      await writeLedger(ROOT, ledger);
+      console.log(JSON.stringify({ status: "attempted_unknown", date: job.date, campaignId: job.campaignId,
+        campaignUrl: job.campaignUrl, nextSafeAction: "same_object_readback_only_no_retry" }));
+      return;
+    } else if (args.mode === "mutation-start") {
+      const job = ledger.jobs?.[args.scheduleDate];
+      if (!job || job.status !== "reserved") throw new Error("mutation_job_missing_or_already_attempted");
+      requireGap(ledger, job.episodeNo, job.date);
+      job.status = "attempted_unknown";
+      job.attemptedAt = new Date().toISOString();
+      await writeLedger(ROOT, ledger);
+      console.log(JSON.stringify({ status: "mutation_intent_recorded", date: job.date,
+        episodeNo: job.episodeNo, campaignId: job.campaignId }));
+      return;
+    }
+    const slots = planSlots(ledger);
+    console.log(JSON.stringify({ status: slots.every(s => s.decision.startsWith("existing_")) ? "existing_scheduled" : "rolling_plan",
+      slots, authority: "codex", providerMutationCount: 0 }, null, 2));
+    return;
+  }
+  if (args.channel === "koko") {
+    assertAllowedEpisode("koko", null, args.input);
+    if (args.syncOnly || !["prepare", "api-preflight", "send", "chrome-handoff", "chrome-result"].includes(args.mode)) {
+      throw new Error("koko_legacy_sync_and_generation_disabled");
+    }
+  }
 
   await loadDotEnv();
   const state = await readState();
@@ -1298,7 +1579,8 @@ async function main() {
     });
     state.runs = state.runs.slice(0, 50);
     const artifact = await writeRunArtifact(run);
-    await writeState(state);
+    // Koko's slot ledger is provider scheduling evidence; it never advances sentAt.
+    if (args.channel !== "koko") await writeState(state);
     console.log(JSON.stringify({
       ...(result || {}),
       status: run.status,
@@ -1316,12 +1598,12 @@ async function main() {
       artifact,
       requestPath: run.requestPath || null,
       newsletterOutputPath: run.newsletterOutputPath || null,
-      retryCommand: run.mode === "send"
+      retryCommand: run.channel === "koko" ? null : run.mode === "send"
         ? `node scripts/newsletter-runner.mjs --mode send --channel ${run.channel} --input ${args.input || "<newsletter.json>"}${run.dryRun ? " --dry-run" : ""}`
         : run.mode === "chrome-handoff"
           ? `node scripts/newsletter-runner.mjs --mode chrome-handoff --channel ${run.channel} --input ${args.input || "<newsletter.json>"}`
         : run.mode === "chrome-result"
-          ? `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${run.channel} --input ${args.input || "<newsletter.json>"} --browser-status ${args.browserStatus || "<scheduled|failed>"}`
+          ? `node scripts/newsletter-runner.mjs --mode chrome-result${args.readbackOnly ? " --readback-only" : ""} --channel ${run.channel} --input ${args.input || "<newsletter.json>"} --browser-status ${args.browserStatus || "<scheduled|failed>"}`
         : run.mode === "prepare"
           ? `node scripts/newsletter-runner.mjs --mode prepare --channel ${run.channel}${run.dryRun ? " --dry-run" : ""}`
           : run.mode === "api-preflight"
@@ -1330,6 +1612,15 @@ async function main() {
       error: run.error || null
     }, null, 2));
   }
+}
+
+async function main() {
+  const args = parseArgs(process.argv);
+  if (args.help) return printHelp();
+  if (!CHANNELS[args.channel]) throw new Error("--channel must be one of: koko, arabic");
+  assertAllowedEpisode(args.channel, null, args.input);
+  const release = await acquireRunLock(ROOT, args.channel);
+  try { await mainUnlocked(); } finally { await release(); }
 }
 
 main().catch((error) => {

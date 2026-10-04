@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-import { access, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, realpath, stat, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
+import { normalizeHistoricalReceipt } from "./historical-newsletter-receipts.mjs";
+import { assertAllowedEpisode } from "./koko-slot-ledger.mjs";
 
 const ROOT = process.cwd();
 const NEWSLETTER_DIR = join(ROOT, "content", "newsletters");
 const DEFAULT_OUT = "/tmp/fursay-newsletter-state-contract";
+const REQUESTLESS_HISTORICAL_DAYS = 7;
 const CHANNELS = new Set(["koko", "arabic"]);
 const ARCHIVED_REQUEST_DIRS = ["content/newsletters/archive/obsolete-requests"];
 const RUN_STATUSES = new Set([
@@ -20,6 +23,9 @@ const RUN_STATUSES = new Set([
   "scheduled",
   "scheduled_by_chrome",
   "synced",
+  "existing_scheduled",
+  "existing_handoff",
+  "blocked",
 ]);
 const RUN_MODES = new Set(["api-preflight", "chrome-handoff", "chrome-result", "prepare", "send"]);
 const NEWSLETTER_FIELDS = [
@@ -59,8 +65,13 @@ async function exists(filePath) {
 async function readJson(relativePath, failures) {
   const fullPath = join(ROOT, relativePath);
   try {
+    // Contract checks must not open protected episode artifacts, including aliases.
+    for (const candidate of [relativePath, await realpath(fullPath)]) {
+      assertAllowedEpisode(/koko/i.test(candidate) ? "koko" : "arabic", null, candidate);
+    }
     return JSON.parse(await readFile(fullPath, "utf8"));
   } catch (error) {
+    if (error.message === "protected_episode_ep007") return null;
     failures.push(`${relativePath}:invalid_json:${error.message}`);
     return null;
   }
@@ -72,6 +83,7 @@ async function listFiles(relativeDir, suffix = "") {
   const entries = await readdir(fullDir, { withFileTypes: true });
   return entries
     .filter((entry) => entry.isFile() && (!suffix || entry.name.endsWith(suffix)))
+    .filter((entry) => !(/koko/i.test(entry.name) && /(?:^|[^a-z0-9])ep0*7(?:[^0-9]|$)/i.test(entry.name)))
     .map((entry) => `${relativeDir}/${entry.name}`)
     .sort();
 }
@@ -169,10 +181,37 @@ async function checkHandoff(relativePath, handoff, failures) {
   if (!(await exists(join(ROOT, mdPath)))) failures.push(`${relativePath}:missing_markdown_pair:${mdPath}`);
 }
 
+async function classifyRequestlessNewsletter(relativePath) {
+  try {
+    const metadata = await stat(join(ROOT, relativePath));
+    const ageDays = Math.max(0, (Date.now() - metadata.mtimeMs) / 86_400_000);
+    return {
+      classification: ageDays >= REQUESTLESS_HISTORICAL_DAYS ? "historical" : "active",
+      ageDays: Number(ageDays.toFixed(2)),
+      modifiedAt: new Date(metadata.mtimeMs).toISOString(),
+    };
+  } catch (error) {
+    return {
+      classification: "unknown",
+      ageDays: null,
+      modifiedAt: null,
+      reason: `stat_failed:${error?.code || "unknown"}`,
+    };
+  }
+}
+
 async function main() {
   const args = parseArgs();
   const failures = [];
   const warnings = [];
+  const warningClassification = {
+    newsletter_without_request: {
+      total: 0,
+      byClassification: { historical: 0, active: 0, unknown: 0 },
+      historicalThresholdDays: REQUESTLESS_HISTORICAL_DAYS,
+      details: [],
+    },
+  };
 
   for (const dir of ["content/newsletters/pending", "content/newsletters/runs", "content/newsletters/browser-handoff"]) {
     if (!existsSync(join(ROOT, dir))) failures.push(`missing_dir:${dir}`);
@@ -240,9 +279,25 @@ async function main() {
       if (newsletter.videoId !== request.episode?.videoId) failures.push(`${file}:videoId_request_mismatch`);
     } else {
       warnings.push(`${file}:newsletter_without_request`);
+      const detail = await classifyRequestlessNewsletter(file);
+      const bucket = warningClassification.newsletter_without_request;
+      bucket.total += 1;
+      bucket.byClassification[detail.classification] += 1;
+      bucket.details.push({
+        file,
+        code: "newsletter_without_request",
+        ...detail,
+      });
     }
   }
-  for (const file of runFiles) checkRun(file, parsed.get(file), failures);
+  const normalizedReceipts = [];
+  for (const file of runFiles) {
+    const native = normalizeHistoricalReceipt(file, parsed.get(file));
+    if (native) {
+      normalizedReceipts.push(native);
+      for (const issue of native.issues) failures.push(`${file}:${issue}`);
+    } else checkRun(file, parsed.get(file), failures);
+  }
   for (const file of handoffFiles) await checkHandoff(file, parsed.get(file), failures);
 
   const report = {
@@ -251,6 +306,8 @@ async function main() {
     failed: failures.length,
     warnings,
     failures,
+    warningClassification,
+    normalizedReceipts,
     counts: {
       requests: requestFiles.length,
       newsletters: newsletterFiles.length,

@@ -236,9 +236,40 @@ function redirectWithHeaders(location, status) {
   });
 }
 
+export function trialLanguageHref(href, requestUrl) {
+  const page = new URL(requestUrl);
+  const match = page.pathname.match(/^\/(?:zh\/|ar\/)?trials\/(koko|noor)-week-one(?:\.html)?\/?$/);
+  if (!match) return null;
+  let target;
+  try { target = new URL(href, page); } catch { return null; }
+  if (target.origin !== page.origin || !new RegExp(`^/(?:zh/|ar/)?trials/${match[1]}-week-one/?$`).test(target.pathname)) return null;
+  let changed = false;
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "source_id"]) {
+    const value = page.searchParams.get(key);
+    if (value && /^[a-z0-9_-]{1,80}$/i.test(value)) { target.searchParams.set(key, value); changed = true; }
+  }
+  return changed ? target.toString() : null;
+}
+
+function withTrialLanguageAttribution(response, request) {
+  // Query-specific HTML must not share an attributed response with another source.
+  if (response.status !== 200 || !trialLanguageHref(new URL(request.url).pathname.replace(/\.html$/, "").replace(/\/$/, ""), request.url)) return response;
+  const rewritten = new HTMLRewriter().on(".brand-language a", {
+    element(element) {
+      const href = trialLanguageHref(element.getAttribute("href") || "", request.url);
+      if (href) element.setAttribute("href", href);
+    }
+  }).transform(response);
+  const headers = new Headers(rewritten.headers);
+  headers.set("Cache-Control", "private, no-store");
+  headers.delete("ETag");
+  headers.delete("Content-Length");
+  return new Response(rewritten.body, {status: rewritten.status, statusText: rewritten.statusText, headers});
+}
+
 async function serveAsset(request, env) {
   const first = await env.ASSETS.fetch(request);
-  if (first.status !== 404) return withAssetHeaders(first, request);
+  if (first.status !== 404) return withTrialLanguageAttribution(withAssetHeaders(first, request), request);
 
   const url = new URL(request.url);
   if (/\.[^/]+$/.test(url.pathname)) {
@@ -249,7 +280,7 @@ async function serveAsset(request, env) {
   htmlUrl.pathname = url.pathname.endsWith("/") ? `${url.pathname}index.html` : `${url.pathname}.html`;
   const htmlRequest = new Request(htmlUrl, request);
   const html = await env.ASSETS.fetch(htmlRequest);
-  return withAssetHeaders(html.status === 404 ? first : html, request);
+  return withTrialLanguageAttribution(withAssetHeaders(html.status === 404 ? first : html, request), request);
 }
 
 function withAssetHeaders(response, request) {

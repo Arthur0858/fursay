@@ -1,0 +1,36 @@
+{
+  "sourceCssUrl": "https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&family=Cairo:wght@400;600;700;800&display=swap",
+  "sourceCssSha256": "163404953ee7870d42960a93b469779e3ed8ff097f08f0e3b2ff040d60a31150",
+  "downloadedAt": "2026-10-03",
+  "fontFiles": [
+    {
+      "url": "https://fonts.gstatic.com/s/baloo2/v23/wXKrE3kTposypRyd51jcAA.woff2",
+      "file": "fonts/wXKrE3kTposypRyd51jcAA.woff2",
+      "sha256": "26fb4610d4bc976d2584ca15e66c11465dbc1f267a10dca668fcb3080dfe59c1",
+      "localPath": "/fonts/home-20261004/baloo2-latin-26fb4610d4bc.woff2"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS4J0.woff2",
+      "file": "fonts/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS4J0.woff2",
+      "sha256": "748022f50c427456ad66031e855349be3448ee1f05a5f1eb59574ebe0c686749",
+      "localPath": "/fonts/home-20261004/cairo-arabic-748022f50c42.woff2"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS.woff2",
+      "file": "fonts/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS.woff2",
+      "sha256": "82c13cbd1352d76e97c3d335caa912ae68fecdc3949a43cf8d149eb892384c1b",
+      "localPath": "/fonts/home-20261004/cairo-latin-82c13cbd1352.woff2"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/nunito/v32/XRXV3I6Li01BKofINeaB.woff2",
+      "file": "fonts/XRXV3I6Li01BKofINeaB.woff2",
+      "sha256": "ba344451eab25b217a165363b1982048a5e5830a0daf36577973955a04cac793",
+      "localPath": "/fonts/home-20261004/nunito-latin-ba344451eab2.woff2"
+    }
+  ],
+  "licenseSources": {
+    "baloo2": "https://raw.githubusercontent.com/google/fonts/main/ofl/baloo2/OFL.txt",
+    "nunito": "https://raw.githubusercontent.com/google/fonts/main/ofl/nunito/OFL.txt",
+    "cairo": "https://raw.githubusercontent.com/google/fonts/main/ofl/cairo/OFL.txt"
+  }
+}

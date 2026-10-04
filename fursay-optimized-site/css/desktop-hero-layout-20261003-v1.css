@@ -1,0 +1,22 @@
+/* Desktop hero composition. Existing mobile rules and immutable URLs stay intact. */
+@media (min-width: 901px) {
+  body.picture-world.world-home .hero h1 {
+    font-size: clamp(2.4rem, 4vw, 3.5rem) !important;
+  }
+
+  body.brand-surface.product-family-guide-page .brand-hero h1 {
+    font-size: clamp(2.65rem, 4.5vw, 4rem);
+  }
+
+  /* Keep Zayd above the foreground squirrel when the shorter heading reduces hero height. */
+  body.picture-world.world-home .hero > .hero-float.float-4 {
+    top: 18% !important;
+  }
+}
+
+/* Centered copy needs the space: omit this decorative sticker through 980px. */
+@media (min-width: 901px) and (max-width: 980px) {
+  body.picture-world.world-home .hero > .hero-float.float-4 {
+    display: none !important;
+  }
+}

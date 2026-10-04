@@ -18,7 +18,8 @@
     "adsense:check": "node scripts/check-adsense-review-contract.mjs",
     "adsense:copy:check": "node scripts/check-adsense-public-copy-contract.mjs",
     "product:content:check": "node scripts/check-product-content-contract.mjs",
-    "smoke:live": "node scripts/smoke-live.mjs"
+    "smoke:live": "node scripts/smoke-live.mjs",
+    "test:accessibility": "node scripts/check-accessibility-browser.mjs"
   },
   "devDependencies": {
     "playwright": "^1.61.1",

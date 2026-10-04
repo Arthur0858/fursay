@@ -8,7 +8,9 @@
 - Operations and product-validation page styles for `/creator-kit`, `/share-kit`, `/traffic-launch`, `/noor-sprint-status`, `/links`, `/deploy-readiness`, `/conversion-health`, `/monetization-roadmap`, and `/products` live in `/css/picture-world-tools-20260613-products1.css` so the main story pages do not load creator/share/deploy-only rules.
 - The watercolor product-family guide, free-sample, Privacy, and Support presentation layer lives in `/css/brand-storybook-20260717-v1.css`; brand icons are served from `/images/brand-icons.svg`.
 - The generated editorial hubs, long-form guides, trust pages, and reviewer-facing utility navigation use `/css/editorial-20260925-v1.css`; their source data and templates live in `scripts/fursay-editorial-content.mjs`, `scripts/fursay-editorial-depth.mjs`, `scripts/fursay-editorial-round3.mjs`, `scripts/fursay-editorial-round3-expansions.mjs`, `scripts/fursay-editorial-trust-overrides.mjs`, and `scripts/fursay-editorial-pages.mjs`.
-- Shared keyboard focus, skip-link, and reduced-motion refinements live in `/css/site-accessibility-20260925-v1.css`.
+- Shared keyboard focus, skip-link, and reduced-motion refinements live in `/css/site-accessibility-20261002-v1.css`.
+- Desktop homepage and product-guide heading proportions and homepage character spacing live in `/css/desktop-hero-layout-20261003-v1.css`; mobile styles keep their existing rules.
+- Original homepage Baloo 2/Nunito/Cairo families are served on-site through `/css/home-fonts-20261004-v1.css`; official WOFF2 subsets, source hashes and OFL notices live in `/fonts/home-20261004/`. Existing CJK and Arabic CTA fallback rules remain unchanged.
 - Home page common styles live in `/css/home-common-20260613-cache1.css`; language-specific homepage overrides live in `/css/home-en-page-20260613-cache1.css`, `/css/home-zh-page-20260613-cache1.css`, and `/css/home-ar-page-20260613-cache1.css`.
 - The focused three-language homepage journey and compact secondary-resource cards live in `/css/home-focus-20260718-v1.css`.
 - The three-page printable activity previews and print-only PDF layout live in `/css/sample-activity-20260718-v1.css`; both source HTML and this stylesheet are included in the PDF rebuild hash.
@@ -16,7 +18,7 @@
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
 - Shared interactions live in `/js/site-shared-20260615-sharekit1.js`; page HTML should not add inline event handlers.
-- Subscribe-modal focus management and dialog state live in `/js/modal-accessibility-20260925-v1.js`.
+- Subscribe-modal focus management and dialog state live in `/js/modal-accessibility-20261002-v1.js`.
 - Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints through the `FURSAY_EVENTS` Analytics Engine binding for dataset `fursay_events`. Query reporting still requires `CLOUDFLARE_ACCOUNT_ID` plus `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`, and token values must stay out of files and public reports.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
 - Immutable CSS/JS fingerprints are recorded in `/data/immutable-asset-fingerprints.json`; after changing any long-cache CSS/JS filename or content, run `npm run assets:fingerprints` and keep `npm run assets:fingerprints:check` clean.
@@ -54,3 +56,11 @@
 - Event analytics fields are limited to event/page/campaign/pack/affiliate/outbound/interest dimensions plus a numeric `event_count`; email, name, phone, address, token, password, and subscriber payloads are not analytics fields.
 - `npm run report:events` is the local conversion report command for Analytics Engine after account enablement. The page-intent query covers subscribe opens, product info clicks, and product-interest clicks so the product funnel can distinguish browsing intent from waitlist intent. Without dashboard enablement or Cloudflare credentials it writes a pending-status report and does not query external APIs.
 - Owned products stay in interest-validation mode until the checkout gate has verified interest clicks, source-attributed sample traffic, price copy, disclosure copy, refund/support copy, checkout tracking, and a public sample-to-checkout route. Payment links are not allowed while `paymentLinksAllowed=false`.
+
+## Adult product trials
+
+Koko and Noor each offer a free seven-day activity prototype at `/trials/koko-week-one` and `/trials/noor-week-one`, with English, Traditional Chinese and Arabic routes. These noindex trial pages collect adult feedback through an optional compose link; opening it is an intent, not a verified reply. The product-only extension `/js/four-week-interest-20260930-v1.js` preserves source attribution for the existing adult interest interface. Shared scripts remain within the 35,000-byte budget.
+
+## Trial language attribution
+
+The Worker rewrites same-brand language links on Koko/Noor adult trial pages when bounded UTM/source identifiers are present. Query-specific responses use private, no-store and remove validators; no frontend asset, storage or completion event is added. `test/worker-trial-attribution.test.mjs` verifies route boundaries, rejected values, response headers and unchanged ordinary pages. `scripts/release-fursay.mjs` runs this test before the remaining checks, so a regression stops both check-only and deployment workflows. The response tests use an isolated HTMLRewriter adapter; deployed native behavior was separately read back on all six trial routes.

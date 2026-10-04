@@ -1,0 +1,12 @@
+// Adult-interest validation only; full packs are proposals, not available products.
+const COPY = {
+ en: {title: "Help shape a four-week family activity pack", intro: "Try the complete free sample first. We are considering four short weekly activities with a story moment, three words and a parent prompt. The full pack is not available yet. An adult can request updates without committing to buy.", weeks: ["Week 1 · Say hello and name a feeling", "Week 2 · Notice a small kindness", "Week 3 · Ask for help and take turns", "Week 4 · Tell a tiny story together"], cta: "I would like updates about the four-week pack", note: "Optional adult email signup. No child details, payment or purchase commitment."},
+ zh: {title: "一起決定四週親子活動包的內容", intro: "先試用完整免費樣本。我們正在規劃每週一個短活動，包含故事片段、三個詞語與家長引導。完整活動包尚未推出；成人可選擇接收消息，再決定是否需要。", weeks: ["第 1 週 · 打招呼與說出感受", "第 2 週 · 發現一個小小的善意", "第 3 週 · 求助與輪流", "第 4 週 · 一起說一個小故事"], cta: "我想收到四週活動包消息", note: "由成人自願訂閱；不需孩子資料、不收費，也不代表購買承諾。"},
+ ar: {title: "ساعدونا في تصميم حزمة أنشطة عائلية لأربعة أسابيع", intro: "جربوا العينة المجانية الكاملة أولا. نفكر في أربعة أنشطة أسبوعية قصيرة، تضم لحظة من قصة وثلاث كلمات وإرشادا للوالدين. الحزمة الكاملة ليست متاحة بعد. يمكن للبالغ طلب الأخبار دون التزام بالشراء.", weeks: ["الأسبوع الأول · التحية وتسمية شعور", "الأسبوع الثاني · ملاحظة لفتة لطيفة", "الأسبوع الثالث · طلب المساعدة وتبادل الأدوار", "الأسبوع الرابع · حكاية قصة صغيرة معا"], cta: "أريد أخبار حزمة الأسابيع الأربعة", note: "اشتراك اختياري للبالغين، دون بيانات الأطفال أو دفع أو التزام بالشراء."}
+};
+export function fourWeekPackSection(locale, pack) {
+ const c = COPY[locale];
+ const prefix = locale === "en" ? "" : `/${locale}`;
+ const trialLabel = locale === "zh" ? "先試用一週活動" : locale === "ar" ? "جربوا أسبوعا مجانيا" : "Try one free week";
+ return `<section class="brand-section brand-section--soft" id="four-week-pack" data-four-week-pack="${pack}"><div class="brand-shell"><div class="brand-section-head"><h2>${c.title}</h2><p>${c.intro}</p></div><ol>${c.weeks.map(w => `<li>${w}</li>`).join("")}</ol><div class="brand-actions"><a class="brand-btn" href="${prefix}/trials/${pack}-week-one?source_id=${pack}_week_one_entry&experiment_id=${pack}-week-one-v1&version=1" data-product-info-link="${pack}" data-interest-stage="week_one_trial_view">${trialLabel}</a><button type="button" class="brand-btn brand-btn--secondary" data-product-interest="${pack}" data-interest-stage="four_week_pack_interest" data-signup-source="${pack}_four_week_pack_interest">${c.cta}</button></div><p>${c.note}</p></div></section>`;
+}

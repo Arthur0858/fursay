@@ -4,7 +4,8 @@ import { readFile } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
+import { EDITORIAL_CURRENT, GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
+import { validateSitemapDates } from "./validate-sitemap-dates.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
@@ -1272,7 +1273,8 @@ async function checkDiscoveryFiles(baseUrl) {
   const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   const sitemapAlternateCount = (sitemap.match(/<xhtml:link /g) || []).length;
   const currentDate = taipeiDateString();
-  const expectedLastmod = release.releasedAt || siteHealth.updatedAt || "";
+  const releaseDate = release.releasedAt || siteHealth.updatedAt || "";
+  const expectedLastmod = EDITORIAL_CURRENT;
   const expectedSitemapLocs = [
     "https://fursay.com/",
     "https://fursay.com/zh/",
@@ -1331,13 +1333,14 @@ async function checkDiscoveryFiles(baseUrl) {
       if (!block.includes(alternate)) failures.push(`sitemap_product_alternate_missing:${productLoc}:${alternate}`);
     }
   }
-  if (lastmods.length !== expectedSitemapLocs.length) failures.push(`sitemap_lastmod_count:${lastmods.length}`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(expectedLastmod)) failures.push(`release_date_invalid:${expectedLastmod || "none"}`);
-  if (lastmods.some((value) => !/^\d{4}-\d{2}-\d{2}$/.test(value))) failures.push("sitemap_lastmod_invalid");
-  if (lastmods.some((value) => value > currentDate)) failures.push(`sitemap_lastmod_in_future:${currentDate}`);
+  failures.push(...validateSitemapDates({
+    lastmods,
+    expectedCount: expectedSitemapLocs.length,
+    releaseDate,
+    materialDate: expectedLastmod,
+    currentDate,
+  }));
   const uniqueLastmods = new Set(lastmods);
-  if (uniqueLastmods.size < 2) failures.push(`sitemap_lastmod_not_page_specific:${uniqueLastmods.size}`);
-  if (expectedLastmod && !uniqueLastmods.has(expectedLastmod)) failures.push(`sitemap_missing_current_material_date:${expectedLastmod}`);
   if (!robots.includes("Sitemap: https://fursay.com/sitemap.xml")) failures.push("robots_missing_sitemap");
   if (!llms.includes("https://fursay.com/sitemap.xml") || !llms.includes("https://fursay.com/robots.txt")) {
     failures.push("llms_missing_sitemap_or_robots");
@@ -2327,6 +2330,7 @@ async function checkDiscoveryFiles(baseUrl) {
     data: {
       lastmodCount: lastmods.length,
       expectedLastmod,
+      releaseDate,
       distinctLastmodDates: uniqueLastmods.size,
       llmsBytes: Buffer.byteLength(llms),
       siteHealthBytes: Buffer.byteLength(siteHealthRaw),

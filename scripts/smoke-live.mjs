@@ -4,13 +4,14 @@ import { join } from "node:path";
 
 const DEFAULT_BASE_URL = "https://fursay.com";
 const DEFAULT_OUT_DIR = "/tmp/fursay-smoke-live";
+const DEFAULT_GATE_TIMEOUT_MS = 60_000;
 
 const LIVE_GATES = [
-  { command: "node", args: ["scripts/check-fursay-funnel.mjs"] },
+  { command: "node", args: ["scripts/check-fursay-funnel.mjs"], timeoutMs: 120_000 },
   { command: "node", args: ["scripts/check-noor-list-activation.mjs"] },
   { command: "node", args: ["scripts/check-localized-cta-contract.mjs"] },
-  { command: "node", args: ["scripts/check-event-tracking-contract.mjs"] },
-  { command: "node", args: ["scripts/check-conversion-health-contract.mjs"] },
+  { command: "node", args: ["scripts/check-event-tracking-contract.mjs"], timeoutMs: 120_000 },
+  { command: "node", args: ["scripts/check-conversion-health-contract.mjs"], timeoutMs: 120_000 },
   { command: "node", args: ["scripts/check-growth-dashboard-contract.mjs"] },
   { command: "node", args: ["scripts/check-event-analytics-contract.mjs"] },
   { command: "node", args: ["scripts/query-event-analytics-report.mjs"], dryRun: true },
@@ -19,8 +20,8 @@ const LIVE_GATES = [
   { command: "node", args: ["scripts/check-semantic-funnel-contract.mjs"] },
   { command: "node", args: ["scripts/check-site-structure-contract.mjs"] },
   { command: "node", args: ["scripts/check-hero-preload-contract.mjs"] },
-  { command: "node", args: ["scripts/check-visual-layout-contract.mjs"] },
-  { command: "node", args: ["scripts/check-web-vitals-contract.mjs"] },
+  { command: "node", args: ["scripts/check-visual-layout-contract.mjs"], timeoutMs: 120_000 },
+  { command: "node", args: ["scripts/check-web-vitals-contract.mjs"], timeoutMs: 300_000 },
   { command: "node", args: ["scripts/check-internal-links-contract.mjs"] },
   { command: "node", args: ["scripts/check-newsletter-traffic-kit.mjs"] },
   { command: "node", args: ["scripts/check-public-kit-parity.mjs"] },
@@ -56,14 +57,19 @@ function parseArgs() {
     baseUrl: DEFAULT_BASE_URL,
     outDir: DEFAULT_OUT_DIR,
     retries: 1,
+    gateTimeoutMs: null,
   };
   for (let i = 0; i < args.length; i += 1) {
     if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
     else if (args[i] === "--out-dir") parsed.outDir = args[++i];
     else if (args[i] === "--retries") parsed.retries = Number(args[++i]);
+    else if (args[i] === "--gate-timeout-ms") parsed.gateTimeoutMs = Number(args[++i]);
   }
   if (!Number.isInteger(parsed.retries) || parsed.retries < 0) {
     throw new Error("--retries must be a non-negative integer");
+  }
+  if (parsed.gateTimeoutMs !== null && (!Number.isInteger(parsed.gateTimeoutMs) || parsed.gateTimeoutMs < 1_000)) {
+    throw new Error("--gate-timeout-ms must be an integer >= 1000");
   }
   return parsed;
 }
@@ -83,21 +89,37 @@ function runGate(gate, args) {
     gateArgs.push("--out-dir", join(args.outDir, slug));
   }
   const label = [gate.command, ...gateArgs].join(" ");
+  const timeoutMs = args.gateTimeoutMs ?? gate.timeoutMs ?? DEFAULT_GATE_TIMEOUT_MS;
   let lastStatus = 1;
+  let lastTimedOut = false;
   for (let attempt = 0; attempt <= args.retries; attempt += 1) {
     console.log(`\n$ ${label}${attempt > 0 ? ` (retry ${attempt}/${args.retries})` : ""}`);
     const result = spawnSync(gate.command, gateArgs, {
       cwd: process.cwd(),
       encoding: "utf8",
       stdio: "inherit",
+      timeout: timeoutMs,
+      killSignal: "SIGTERM",
     });
-    lastStatus = result.status || 0;
-    if (lastStatus === 0) return { gate: gate.args[0], ok: true, attempts: attempt + 1 };
+    const timedOut = result.error?.code === "ETIMEDOUT";
+    lastTimedOut = timedOut;
+    lastStatus = result.status ?? 1;
+    if (lastStatus === 0 && !timedOut) return { gate: gate.args[0], ok: true, attempts: attempt + 1, timeoutMs };
+    if (timedOut) {
+      console.warn(`Live smoke gate timed out after ${timeoutMs}ms: ${label}`);
+    }
     if (attempt < args.retries) {
       console.warn(`Live smoke gate failed; retrying once to rule out transient network or browser timing: ${label}`);
     }
   }
-  return { gate: gate.args[0], ok: false, attempts: args.retries + 1, status: lastStatus };
+  return {
+    gate: gate.args[0],
+    ok: false,
+    attempts: args.retries + 1,
+    status: lastStatus,
+    timedOut: lastTimedOut,
+    timeoutMs,
+  };
 }
 
 function main() {
@@ -110,9 +132,12 @@ function main() {
     baseUrl: args.baseUrl,
     outDir: args.outDir,
     retries: args.retries,
+    gateTimeoutMs: args.gateTimeoutMs ?? DEFAULT_GATE_TIMEOUT_MS,
+    perGateTimeoutMs: Object.fromEntries(LIVE_GATES.map((gate) => [gate.args[0], args.gateTimeoutMs ?? gate.timeoutMs ?? DEFAULT_GATE_TIMEOUT_MS])),
     gates: results.length,
     failed: failed.length,
     retryRecovered: results.filter((result) => result.ok && result.attempts > 1).length,
+    timedOut: results.filter((result) => result.timedOut).length,
     results,
   };
   writeFileSync(join(args.outDir, "smoke-live.json"), JSON.stringify(report, null, 2) + "\n");
@@ -122,6 +147,7 @@ function main() {
     gates: report.gates,
     failed: report.failed,
     retryRecovered: report.retryRecovered,
+    timedOut: report.timedOut,
   }, null, 2));
   if (!report.ok) process.exit(1);
 }
