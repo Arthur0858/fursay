@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { existsSync, statSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
@@ -128,6 +129,17 @@ async function clickVisible(page, selector) {
   }, selector);
 }
 
+// Event transport is asynchronous; observe real receipts before deciding which are missing.
+export async function waitForRequiredEvents(events, requiredEvents, timeoutMs = 3000) {
+  const deadline = Date.now() + timeoutMs;
+  while (!requiredEvents.every((name) => events.some((event) => event?.event === name))) {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) return false;
+    await new Promise((resolveWait) => setTimeout(resolveWait, Math.min(25, remaining)));
+  }
+  return true;
+}
+
 async function checkPage(browser, baseUrl, spec) {
   const pathname = spec.path;
   const failures = [];
@@ -162,11 +174,12 @@ async function checkPage(browser, baseUrl, spec) {
     await page.waitForTimeout(160);
   }
 
-  const eventNames = new Set(events.map((event) => event.event));
   const pageEvents = spec.affiliateRequired === false
     ? BASE_REQUIRED_EVENTS.filter((name) => name !== "fursay_affiliate_click")
     : BASE_REQUIRED_EVENTS;
   const requiredEvents = spec.productInterest ? [...pageEvents, PRODUCT_INTEREST_EVENT] : pageEvents;
+  await waitForRequiredEvents(events, requiredEvents);
+  const eventNames = new Set(events.map((event) => event.event));
   for (const name of requiredEvents) {
     if (!eventNames.has(name)) failures.push(`${pathname}:missing_event:${name}`);
   }
@@ -249,7 +262,9 @@ async function main() {
   if (!report.ok) process.exit(1);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  });
+}
