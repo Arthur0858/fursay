@@ -314,6 +314,7 @@ function writeReleaseManifest() {
     origin: "https://fursay.com",
     platform: "cloudflare-workers-static-assets",
     releasedAt: taipeiDateString(),
+    materialUpdatedAt: EDITORIAL_CURRENT,
     source,
     deployment: {
       workerName: "fursay",
@@ -4876,7 +4877,9 @@ async function main() {
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
 
-  if (!args.checkOnly) writeReleaseManifest();
+  // Local checks need the same generated assets as a release, including clean clones.
+  // --check-only still skips deployment, live checks, and Git push through parseArgs.
+  writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
