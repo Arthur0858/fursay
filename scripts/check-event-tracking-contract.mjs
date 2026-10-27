@@ -412,6 +412,11 @@ async function checkPage(browser, baseUrl, spec) {
       events: window.fursayEvents || [],
       dataLayer: window.dataLayer || [],
     }));
+    const submitMessage = page.locator('#sub-msg, #subscribeModal .modal-note').first();
+    if (!await submitMessage.isVisible()) failures.push(`${spec.path}:submit_failure_message_hidden`);
+    if (await submitMessage.textContent() !== 'Could not subscribe. Please try again.') {
+      failures.push(`${spec.path}:submit_failure_message_missing`);
+    }
     if (subscribeApiCalls !== 1) failures.push(`${spec.path}:api_stub_call_count:${subscribeApiCalls}`);
     if (!submitState.events.some((event) => event.event === "fursay_subscribe_submit_attempt")) {
       failures.push(`${spec.path}:missing_submit_attempt_event`);

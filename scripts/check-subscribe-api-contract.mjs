@@ -165,8 +165,11 @@ async function runLocal() {
   }, {
     MAILERLITE_API_TOKEN: "secret-token",
     MAILERLITE_GROUP_KOKO: "koko-group",
-  }, async () => {
+  }, async (url) => {
     externalCalls += 1;
+    if (url === "https://connect.mailerlite.com/api/subscribers/family%40example.test/groups/koko-group") {
+      return new Response("{}", { status: 200 });
+    }
     return new Response(JSON.stringify({ message: "already exists" }), { status: 409 });
   });
   checkCommonResponse(failures, "conflict", conflict, 200);
@@ -187,7 +190,7 @@ async function runLocal() {
   if (JSON.stringify(providerBody).includes("provider details")) failures.push("provider_fail:leaked_provider_detail");
   checks.push({ name: "provider_fail", status: providerFail.status, body: providerBody });
 
-  if (externalCalls !== 3) failures.push(`external_call_count:${externalCalls}`);
+  if (externalCalls !== 4) failures.push(`external_call_count:${externalCalls}`);
   return { mode: "local-worker", failures, checks };
 }
 

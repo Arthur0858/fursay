@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join, resolve } from "node:path";
 import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
 import { editorialSitemapEntries, writeEditorialBundle } from "./fursay-editorial-pages.mjs";
-import { EDITORIAL_CURRENT, EDITORIAL_UPDATED, GUIDES } from "./fursay-editorial-content.mjs";
+import { generateSitemapLastmods } from "./generate-sitemap-lastmods.mjs";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -736,23 +736,13 @@ ${warnings}
   writeFileSync(resolve(siteDir, "deploy-readiness.html"), html + "\n");
 }
 
-function sitemapLastmod(loc) {
-  const path = new URL(loc).pathname.replace(/^\/(?:zh|ar)(?=\/|$)/, "") || "/";
-  if (path === "/" || path === "/koko" && loc.includes("/ar/koko")) return EDITORIAL_CURRENT;
-  if (path === "/products" || path === "/products/koko-printable" || path === "/products/noor-worksheet") return EDITORIAL_CURRENT;
-  if (["/about", "/editorial-method", "/contact", "/terms", "/privacy", "/support", "/guides"].includes(path)) return EDITORIAL_CURRENT;
-  if (path.startsWith("/guides/")) return GUIDES.find((guide) => `/guides/${guide.slug}` === path)?.dateModified || EDITORIAL_UPDATED;
-  return EDITORIAL_UPDATED;
-}
-
-function sitemapUrl(loc, alternates, priority, lastmod = sitemapLastmod(loc)) {
+function sitemapUrl(loc, alternates, priority) {
   const alternateLines = Object.entries(alternates).map(([lang, href]) => (
     `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`
   ));
   return [
     "  <url>",
     `    <loc>${loc}</loc>`,
-    `    <lastmod>${lastmod}</lastmod>`,
     "    <changefreq>weekly</changefreq>",
     `    <priority>${priority}</priority>`,
     ...alternateLines,
@@ -857,7 +847,7 @@ function writeSitemap(siteDir) {
     "</urlset>",
     "",
   ].join("\n");
-  writeFileSync(resolve(siteDir, "sitemap.xml"), sitemap);
+  writeFileSync(resolve(siteDir, "sitemap.xml"), generateSitemapLastmods(sitemap, { siteDir }));
 }
 
 function campaignBase(source) {
@@ -4896,7 +4886,7 @@ async function main() {
   if (!args.checkOnly) writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
-  run("node", ["--test", "test/worker-trial-attribution.test.mjs"]);
+  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-subscribe.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);

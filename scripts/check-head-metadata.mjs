@@ -10,7 +10,7 @@ const PAGES = [
   { path: "/koko", file: "koko.html", lang: "en", canonical: "https://fursay.com/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/koko", file: "zh/koko.html", lang: "zh-TW", canonical: "https://fursay.com/zh/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/koko", file: "ar/koko.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/arabic", file: "arabic.html", lang: "en", canonical: "https://fursay.com/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
+  { path: "/arabic", file: "arabic.html", lang: "en", canonical: "https://fursay.com/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], title: "Chinese for Arabic-Speaking Kids — Bilingual Picture Stories with Pinyin | Fursay" },
   { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW", canonical: "https://fursay.com/zh/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 60 },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/links", file: "links.html", lang: "en", canonical: "https://fursay.com/links", ogImage: "https://fursay.com/og-image.png", robots: "noindex,follow" },
@@ -136,7 +136,8 @@ function checkPage(page, html, failures) {
   if (canonical !== page.canonical) failures.push(`${page.path}:canonical:${canonical || "none"}`);
   if (icon !== "/favicon.svg") failures.push(`${page.path}:icon:${icon || "none"}`);
   if (!themeColor) failures.push(`${page.path}:missing_theme_color`);
-  checkTextLength(failures, page, "title", title, 8, 80);
+  checkTextLength(failures, page, "title", title, 8, page.title ? [...page.title].length : 80);
+  if (page.title && title !== page.title) failures.push(`${page.path}:title_mismatch`);
   checkTextLength(failures, page, "description", description, page.minDescription || 20, 180);
 
   if (isNoindex) {
@@ -156,6 +157,8 @@ function checkPage(page, html, failures) {
   const twitterDescription = headValue(head, { type: "meta-name", name: "twitter:description" });
   const twitterImage = headValue(head, { type: "meta-name", name: "twitter:image" });
   const twitterImageAlt = headValue(head, { type: "meta-name", name: "twitter:image:alt" });
+  if (page.title && ogTitle !== page.title) failures.push(`${page.path}:og_title_mismatch`);
+  if (page.title && twitterTitle !== page.title) failures.push(`${page.path}:twitter_title_mismatch`);
   if (!ogTitle) failures.push(`${page.path}:missing_og_title`);
   if (!ogDescription) failures.push(`${page.path}:missing_og_description`);
   if (ogUrl !== page.canonical) failures.push(`${page.path}:og_url:${ogUrl || "none"}`);

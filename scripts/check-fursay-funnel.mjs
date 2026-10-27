@@ -4,8 +4,9 @@ import { readFile } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { EDITORIAL_CURRENT, GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
+import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 import { validateSitemapDates } from "./validate-sitemap-dates.mjs";
+import { createSitemapLastmodResolver } from "./generate-sitemap-lastmods.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
@@ -1274,7 +1275,10 @@ async function checkDiscoveryFiles(baseUrl) {
   const sitemapAlternateCount = (sitemap.match(/<xhtml:link /g) || []).length;
   const currentDate = taipeiDateString();
   const releaseDate = release.releasedAt || siteHealth.updatedAt || "";
-  const expectedLastmod = EDITORIAL_CURRENT;
+  const expectedLastmods = baseUrl ? undefined : sitemapLocs.map(createSitemapLastmodResolver({
+    siteDir: SITE_DIR,
+    repoDir: ROOT,
+  }));
   const expectedSitemapLocs = [
     "https://fursay.com/",
     "https://fursay.com/zh/",
@@ -1337,7 +1341,7 @@ async function checkDiscoveryFiles(baseUrl) {
     lastmods,
     expectedCount: expectedSitemapLocs.length,
     releaseDate,
-    materialDate: expectedLastmod,
+    expectedLastmods,
     currentDate,
   }));
   const uniqueLastmods = new Set(lastmods);
@@ -2329,7 +2333,7 @@ async function checkDiscoveryFiles(baseUrl) {
     failures,
     data: {
       lastmodCount: lastmods.length,
-      expectedLastmod,
+      lastmodSource: "file_git_commit_or_build_date",
       releaseDate,
       distinctLastmodDates: uniqueLastmods.size,
       llmsBytes: Buffer.byteLength(llms),
