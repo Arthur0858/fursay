@@ -221,7 +221,7 @@ async function main() {
   }
 
   if (!args.baseUrl) {
-    for (const [path, expectedPath, content] of [["/go", "/", "go_root"], ["/go/", "/", "go_root"], ["/go/x", "/", "go_unknown"], ["/GO/Koko-Sample/", "/download/koko-printable-sample", ""], ["/go/koko-newsletter", "/", ""]]) {
+    for (const [path, expectedPath, content] of [["/go", "/", "go_root"], ["/go/", "/", "go_root"], ["/go/x", "/", "go_unknown"], ["/GO/Koko-Sample/", "/download/koko-printable-sample", ""], ["/go/koko-newsletter", "/koko", ""]]) {
       const response = await fetchShortlink("", path);
       const location = new URL(response.headers.get("location"));
       if (response.status !== 302 || location.pathname !== expectedPath || (content && location.searchParams.get("utm_content") !== content) || location.searchParams.get("source_id") !== PASSTHROUGH_PROBE.source_id) failures.push("go_contract:" + path);

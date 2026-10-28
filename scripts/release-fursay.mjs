@@ -3440,7 +3440,7 @@ ${products}
       </div>
     </section>
   </main>
-  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
@@ -3689,7 +3689,7 @@ ${products}
       </div>
     </section>
   </main>
-  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="關閉">&times;</button>
       <span class="modal-emoji">📬</span>
@@ -3878,7 +3878,7 @@ ${products}
       </div>
     </section>
   </main>
-  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="إغلاق">&times;</button>
       <span class="modal-emoji">📬</span>
@@ -4074,7 +4074,7 @@ ${cards}
       </div>
     </section>
   </main>
-  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
@@ -4752,7 +4752,7 @@ function shareKitInterestButton(pack) {
 }
 
 function shareKitSubscribeModal() {
-  return `<style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
+  return `<style>.hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
