@@ -4,6 +4,9 @@
   "main": "src/worker.js",
   "compatibility_date": "2026-06-28",
   "keep_vars": true,
+  "observability": {
+    "enabled": true
+  },
   "assets": {
     "directory": "./fursay-optimized-site",
     "binding": "ASSETS",

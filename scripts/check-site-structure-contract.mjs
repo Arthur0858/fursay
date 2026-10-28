@@ -52,7 +52,8 @@ const EXPECTED_EDITORIAL_PAGES = {
     localizedRoutes: localizedRoutes(`/${name}`),
   }])),
 };
-const ALL_EXPECTED_PAGES = { ...EXPECTED_PAGES, ...EXPECTED_EDITORIAL_PAGES };
+const EXPECTED_PRODUCT_PAGES = Object.fromEntries([["product-koko","/products/koko-printable"],["product-noor","/products/noor-worksheet"],["trial-koko","/trials/koko-week-one"],["trial-noor","/trials/noor-week-one"]].map(([key,route])=>[key,{route,localizedRoutes:localizedRoutes(route)}]));
+const ALL_EXPECTED_PAGES = { ...EXPECTED_PAGES, ...EXPECTED_EDITORIAL_PAGES, ...EXPECTED_PRODUCT_PAGES };
 const EXPECTED_CHANNELS = {
   koko: {
     youtubeNeedle: "@KokosForest",
@@ -214,6 +215,12 @@ function validateChannels(structure, failures) {
   }
 }
 
+// Previous immutable URLs remain available to already-cached HTML.
+const RETAINED_ACCESSIBILITY_ASSETS = new Set([
+  "/css/site-accessibility-20260925-v1.css",
+  "/js/modal-accessibility-20260925-v1.js",
+]);
+
 async function validateAssets(structure, context, failures, data) {
   const cssAssets = structure.sharedAssets?.css || [];
   const jsAssets = structure.sharedAssets?.js || [];
@@ -244,10 +251,10 @@ async function validateAssets(structure, context, failures, data) {
     const cssFiles = (await readdir(resolve(root, "css"))).filter((name) => name.endsWith(".css")).map((name) => `/css/${name}`).sort();
     const jsFiles = (await readdir(resolve(root, "js"))).filter((name) => name.endsWith(".js")).map((name) => `/js/${name}`).sort();
     for (const file of cssFiles) {
-      if (!cssAssets.includes(file)) failures.push(`css_file_not_in_site_structure:${file}`);
+      if (!cssAssets.includes(file) && !RETAINED_ACCESSIBILITY_ASSETS.has(file)) failures.push(`css_file_not_in_site_structure:${file}`);
     }
     for (const file of jsFiles) {
-      if (!jsAssets.includes(file)) failures.push(`js_file_not_in_site_structure:${file}`);
+      if (!jsAssets.includes(file) && !RETAINED_ACCESSIBILITY_ASSETS.has(file)) failures.push(`js_file_not_in_site_structure:${file}`);
     }
   }
 }
@@ -310,7 +317,7 @@ async function validateLocalHtmlInventory(context, failures, data) {
     .map((file) => relative(context.root, file).split("\\").join("/"))
     .sort();
   data.htmlFiles = htmlFiles;
-  if (htmlFiles.length !== 94) failures.push(`html_file_count:${htmlFiles.length}`);
+  if (htmlFiles.length !== 100) failures.push(`html_file_count:${htmlFiles.length}`);
   for (const file of htmlFiles) {
     const html = await readLocalText(context.root, file);
     for (const href of [...stylesheetHrefs(html), ...scriptSrcs(html)]) {

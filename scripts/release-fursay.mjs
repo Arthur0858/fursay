@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join, resolve } from "node:path";
 import { writeBrandProductsBundle } from "./fursay-brand-pages.mjs";
 import { editorialSitemapEntries, writeEditorialBundle } from "./fursay-editorial-pages.mjs";
-import { EDITORIAL_CURRENT, EDITORIAL_UPDATED, GUIDES } from "./fursay-editorial-content.mjs";
+import { generateSitemapLastmods } from "./generate-sitemap-lastmods.mjs";
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
@@ -111,8 +111,9 @@ const SHORTLINK_PASSTHROUGH_PARAMS = ["utm_term", "ref", "source_id", "creator",
 const PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_product_interest";
 const ZH_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/zh/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_zh_product_interest";
 const AR_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest";
-const SITE_ACCESSIBILITY_CSS = "/css/site-accessibility-20260925-v1.css";
-const MODAL_ACCESSIBILITY_JS = "/js/modal-accessibility-20260925-v1.js";
+const SITE_ACCESSIBILITY_CSS = "/css/site-accessibility-20261002-v1.css";
+const MODAL_ACCESSIBILITY_JS = "/js/modal-accessibility-20261002-v1.js";
+const DESKTOP_HERO_CSS = "/css/desktop-hero-layout-20261003-v1.css";
 
 function htmlFilesUnder(directory, relative = "") {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -278,6 +279,20 @@ function applyAccessibilityEnhancements(siteDir) {
   }
 }
 
+function applyDesktopHeroLayout(siteDir) {
+  for (const relativePath of htmlFilesUnder(siteDir)) {
+    const file = resolve(siteDir, relativePath);
+    const html = readFileSync(file, "utf8");
+    const body = html.match(/<body\b[^>]*>/i)?.[0] || "";
+    const classes = new Set(htmlAttribute(body, "class").split(/\s+/));
+    const home = classes.has("picture-world") && classes.has("world-home");
+    const product = classes.has("brand-surface") && classes.has("product-family-guide-page");
+    if ((!home && !product) || html.includes(`href="${DESKTOP_HERO_CSS}"`)) continue;
+    if (!/<\/head\s*>/i.test(html)) throw new Error(`missing_head_for_desktop_hero_css:${relativePath}`);
+    writeFileSync(file, html.replace(/<\/head\s*>/i, `<link rel="stylesheet" href="${DESKTOP_HERO_CSS}"></head>`));
+  }
+}
+
 function shortlinkRoutes() {
   return [
     { path: "/join/koko", target: "/koko", pack: "koko", campaign: "koko_story_funnel", content: "join_koko" },
@@ -431,6 +446,7 @@ function writeReleaseManifest() {
       "scripts/check-social-preview-contract.mjs",
       "scripts/check-head-metadata.mjs",
       "scripts/check-accessibility-contract.mjs",
+      "scripts/check-accessibility-browser.mjs",
       "scripts/check-discovery-contract.mjs",
       "scripts/check-content-growth-contract.mjs",
       "scripts/check-episode-landing-contract.mjs",
@@ -520,6 +536,7 @@ function writeReleaseManifest() {
   writeConversionHealthPage(siteDir);
   writeSiteHealthManifest(siteDir);
   applyAccessibilityEnhancements(siteDir);
+  applyDesktopHeroLayout(siteDir);
 }
 
 function writeDeployReadinessManifest(siteDir, source) {
@@ -719,23 +736,13 @@ ${warnings}
   writeFileSync(resolve(siteDir, "deploy-readiness.html"), html + "\n");
 }
 
-function sitemapLastmod(loc) {
-  const path = new URL(loc).pathname.replace(/^\/(?:zh|ar)(?=\/|$)/, "") || "/";
-  if (path === "/" || path === "/koko" && loc.includes("/ar/koko")) return EDITORIAL_CURRENT;
-  if (path === "/products" || path === "/products/koko-printable" || path === "/products/noor-worksheet") return EDITORIAL_CURRENT;
-  if (["/about", "/editorial-method", "/contact", "/terms", "/privacy", "/support", "/guides"].includes(path)) return EDITORIAL_CURRENT;
-  if (path.startsWith("/guides/")) return GUIDES.find((guide) => `/guides/${guide.slug}` === path)?.dateModified || EDITORIAL_UPDATED;
-  return EDITORIAL_UPDATED;
-}
-
-function sitemapUrl(loc, alternates, priority, lastmod = sitemapLastmod(loc)) {
+function sitemapUrl(loc, alternates, priority) {
   const alternateLines = Object.entries(alternates).map(([lang, href]) => (
     `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`
   ));
   return [
     "  <url>",
     `    <loc>${loc}</loc>`,
-    `    <lastmod>${lastmod}</lastmod>`,
     "    <changefreq>weekly</changefreq>",
     `    <priority>${priority}</priority>`,
     ...alternateLines,
@@ -840,7 +847,7 @@ function writeSitemap(siteDir) {
     "</urlset>",
     "",
   ].join("\n");
-  writeFileSync(resolve(siteDir, "sitemap.xml"), sitemap);
+  writeFileSync(resolve(siteDir, "sitemap.xml"), generateSitemapLastmods(sitemap, { siteDir }));
 }
 
 function campaignBase(source) {
@@ -4879,6 +4886,7 @@ async function main() {
   if (!args.checkOnly) writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
+  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-subscribe.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
@@ -4898,6 +4906,11 @@ async function main() {
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-state-contract.mjs"]);
+  run("node", ["--check", "scripts/newsletter-runner.mjs"]);
+  run("node", ["--check", "scripts/newsletter-readback-contract.mjs"]);
+  run("node", ["--check", "scripts/test-newsletter-readback-contract.mjs"]);
+  run("node", ["--check", "scripts/koko-slot-ledger.mjs"]);
+  run("node", ["--check", "scripts/test-koko-slot-ledger.mjs"]);
   run("node", ["--check", "scripts/check-public-kit-parity.mjs"]);
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
@@ -4905,6 +4918,7 @@ async function main() {
   run("node", ["--check", "scripts/check-social-preview-contract.mjs"]);
   run("node", ["--check", "scripts/check-head-metadata.mjs"]);
   run("node", ["--check", "scripts/check-accessibility-contract.mjs"]);
+  run("node", ["--check", "scripts/check-accessibility-browser.mjs"]);
   run("node", ["--check", "scripts/check-discovery-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-growth-contract.mjs"]);
   run("node", ["--check", "scripts/check-episode-landing-contract.mjs"]);
@@ -4952,6 +4966,8 @@ async function main() {
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
   run("node", ["scripts/check-newsletter-state-contract.mjs", "--out-dir", join(outRoot, "newsletter-state-local")]);
+  run("node", ["--test", "scripts/test-newsletter-readback-contract.mjs"]);
+  run("node", ["--test", "scripts/test-koko-slot-ledger.mjs"]);
   run("node", ["scripts/check-public-kit-parity.mjs", "--out-dir", join(outRoot, "public-kit-parity-local")]);
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
@@ -4959,6 +4975,7 @@ async function main() {
   run("node", ["scripts/check-social-preview-contract.mjs", "--out-dir", join(outRoot, "social-preview-local")]);
   run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
   run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
+  run("node", ["scripts/check-accessibility-browser.mjs", "--out-dir", join(outRoot, "accessibility-browser-local")]);
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
   run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
   run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);

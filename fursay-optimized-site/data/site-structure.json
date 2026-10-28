@@ -256,6 +256,46 @@
         "zh-TW": "/zh/terms",
         "ar": "/ar/terms"
       }
+    },
+    {
+      "key": "product-koko",
+      "route": "/products/koko-printable",
+      "type": "product",
+      "localizedRoutes": {
+        "en": "/products/koko-printable",
+        "zh-TW": "/zh/products/koko-printable",
+        "ar": "/ar/products/koko-printable"
+      }
+    },
+    {
+      "key": "product-noor",
+      "route": "/products/noor-worksheet",
+      "type": "product",
+      "localizedRoutes": {
+        "en": "/products/noor-worksheet",
+        "zh-TW": "/zh/products/noor-worksheet",
+        "ar": "/ar/products/noor-worksheet"
+      }
+    },
+    {
+      "key": "trial-koko",
+      "route": "/trials/koko-week-one",
+      "type": "adultTrial",
+      "localizedRoutes": {
+        "en": "/trials/koko-week-one",
+        "zh-TW": "/zh/trials/koko-week-one",
+        "ar": "/ar/trials/koko-week-one"
+      }
+    },
+    {
+      "key": "trial-noor",
+      "route": "/trials/noor-week-one",
+      "type": "adultTrial",
+      "localizedRoutes": {
+        "en": "/trials/noor-week-one",
+        "zh-TW": "/zh/trials/noor-week-one",
+        "ar": "/ar/trials/noor-week-one"
+      }
     }
   ],
   "channels": {
@@ -295,11 +335,14 @@
       "/css/home-focus-20260718-v1.css",
       "/css/sample-activity-20260718-v1.css",
       "/css/editorial-20260925-v1.css",
-      "/css/site-accessibility-20260925-v1.css"
+      "/css/site-accessibility-20261002-v1.css",
+      "/css/desktop-hero-layout-20261003-v1.css",
+      "/css/home-fonts-20261004-v1.css"
     ],
     "js": [
       "/js/site-shared-20260615-sharekit1.js",
-      "/js/modal-accessibility-20260925-v1.js"
+      "/js/modal-accessibility-20261002-v1.js",
+      "/js/four-week-interest-20260930-v1.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",

@@ -807,7 +807,11 @@
         placement: payload.attribution.placement || '',
         status: res.status
       });
-      if (msg) msg.textContent = ok ? 'Subscribed successfully.' : (data.message || 'Please try again.');
+      if (msg) {
+        msg.classList.remove('is-hidden');
+        msg.style.display = 'block';
+        msg.textContent = ok ? 'Subscribed successfully.' : 'Could not subscribe. Please try again.';
+      }
       if (btn) btn.textContent = ok ? 'Subscribed!' : (btn.dataset.originalText || 'Subscribe');
       if (ok && event && event.target && typeof event.target.reset === 'function') event.target.reset();
       syncChecks();

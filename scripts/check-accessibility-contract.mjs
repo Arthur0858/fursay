@@ -4,8 +4,8 @@ import { resolve } from "node:path";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-accessibility-contract";
 const ORIGIN = "https://fursay.com";
-const ACCESSIBILITY_STYLESHEET_PATH = "/css/site-accessibility-20260925-v1.css";
-const ACCESSIBILITY_SCRIPT_PATH = "/js/modal-accessibility-20260925-v1.js";
+const ACCESSIBILITY_STYLESHEET_PATH = "/css/site-accessibility-20261002-v1.css";
+const ACCESSIBILITY_SCRIPT_PATH = "/js/modal-accessibility-20261002-v1.js";
 const ACCESSIBILITY_STYLESHEET = resolve(SITE_DIR, ACCESSIBILITY_STYLESHEET_PATH.slice(1));
 const ACCESSIBILITY_SCRIPT = resolve(SITE_DIR, ACCESSIBILITY_SCRIPT_PATH.slice(1));
 const PAGES = [

@@ -1,11 +1,16 @@
 {
-  "generatedAt": "2026-09-25",
+  "generatedAt": "2026-10-27",
   "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
   "assets": [
     {
       "path": "/css/brand-storybook-20260717-v1.css",
       "bytes": 13023,
       "sha256": "f49d660fa88c485d8c58beeb20e2a66a148f900849756a52fc53479de07acf19"
+    },
+    {
+      "path": "/css/desktop-hero-layout-20261003-v1.css",
+      "bytes": 747,
+      "sha256": "78c42fe7ab0ff2911d98e47537babdd759e42e1829f87a96051b211e3abbd0e5"
     },
     {
       "path": "/css/editorial-20260925-v1.css",
@@ -31,6 +36,11 @@
       "path": "/css/home-focus-20260718-v1.css",
       "bytes": 4393,
       "sha256": "e441c37f431da2a0ff91dee11d6917ff030e34e1b8056508bc23c3614819ed65"
+    },
+    {
+      "path": "/css/home-fonts-20261004-v1.css",
+      "bytes": 7931,
+      "sha256": "71b5794d0cfe029bac2c80b00a280be1edb9070104bd0dfea409287367ec7f18"
     },
     {
       "path": "/css/home-zh-page-20260613-cache1.css",
@@ -93,6 +103,11 @@
       "sha256": "6297bff9665337e1b92665a50d66314163dece73c041e73bcb45d7c5648977d5"
     },
     {
+      "path": "/css/site-accessibility-20261002-v1.css",
+      "bytes": 1351,
+      "sha256": "0875067da140a84162b1ef02aae52c66857a4d7582ba1853639106c5518eb858"
+    },
+    {
       "path": "/css/story-page-common-20260613-css1.css",
       "bytes": 3878,
       "sha256": "7fc76f5b5a856e91d4d4c423ef1ed46717f1e59b15479e698aee63b9a62eff1d"
@@ -108,9 +123,19 @@
       "sha256": "73b5dabff7f986ac36ab02cdefd82c1a07a5c38bb0ae163eff60ad26aa220fa2"
     },
     {
+      "path": "/js/modal-accessibility-20261002-v1.js",
+      "bytes": 3946,
+      "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
+    },
+    {
       "path": "/js/site-shared-20260615-sharekit1.js",
-      "bytes": 34377,
-      "sha256": "42057d36886e69a5853b65a2f727ccc87fe367f79dde32d995ff8d95f5517b2a"
+      "bytes": 34478,
+      "sha256": "543ecd6c0300989830e489abf4463bda36601964fca8ba2bdb7023ee8b78dfc1"
+    },
+    {
+      "path": "/js/four-week-interest-20260930-v1.js",
+      "bytes": 557,
+      "sha256": "c95e2b8c83311e07c793d28e0f3335af27dd7c72aaaad9ad29ba11ffa4eb647e"
     }
   ]
 }

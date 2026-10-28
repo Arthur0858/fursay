@@ -6,6 +6,7 @@ const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const IMMUTABLE_ASSET_MANIFEST = "data/immutable-asset-fingerprints.json";
 const EXPECTED_CSS = [
+  "home-fonts-20261004-v1.css",
   "home-common-20260613-cache1.css",
   "home-ar-page-20260613-cache1.css",
   "home-en-page-20260613-cache1.css",
@@ -25,12 +26,20 @@ const EXPECTED_CSS = [
   "sample-activity-20260718-v1.css",
   "home-focus-20260718-v1.css",
   "editorial-20260925-v1.css",
+  "site-accessibility-20261002-v1.css",
+  "desktop-hero-layout-20261003-v1.css",
   "site-accessibility-20260925-v1.css",
 ];
 const EXPECTED_JS = [
+  "four-week-interest-20260930-v1.js",
   "site-shared-20260615-sharekit1.js",
+  "modal-accessibility-20261002-v1.js",
   "modal-accessibility-20260925-v1.js",
 ];
+const RETAINED_ACCESSIBILITY_ASSETS = new Set([
+  "/css/site-accessibility-20260925-v1.css",
+  "/js/modal-accessibility-20260925-v1.js",
+]);
 const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_MAIN_SHARED_CSS_BYTES = 150_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
@@ -267,7 +276,13 @@ async function main() {
   const totalCssBytes = Object.values(assetSizes.css).reduce((sum, bytes) => sum + bytes, 0);
   const totalJsBytes = Object.values(assetSizes.js).reduce((sum, bytes) => sum + bytes, 0);
   if (totalCssBytes > MAX_TOTAL_CSS_BYTES) failures.push(`css_total_bytes:${totalCssBytes}`);
-  if (totalJsBytes > MAX_TOTAL_JS_BYTES) failures.push(`js_total_bytes:${totalJsBytes}`);
+  // Retain the previous immutable script for cached HTML. Keep the existing
+  // 40 kB budget for current assets; current pages must not load the old pair.
+  const activeJsBytes = totalJsBytes - (assetSizes.js["modal-accessibility-20260925-v1.js"] || 0);
+  if (activeJsBytes > MAX_TOTAL_JS_BYTES) failures.push(`js_total_bytes:${activeJsBytes}`);
+  for (const asset of RETAINED_ACCESSIBILITY_ASSETS) {
+    if ([...referenced.css, ...referenced.js].includes(asset)) failures.push(`retired_accessibility_asset_referenced:${asset}`);
+  }
 
   for (const asset of unique([...referenced.css, ...referenced.js])) {
     const bytes = await existsWithBytes(resolve(root, asset.replace(/^\//, "")));
@@ -300,8 +315,8 @@ async function main() {
     }
   }
 
-  const expectedCssRefs = EXPECTED_CSS.map((name) => `/css/${name}`);
-  const expectedJsRefs = EXPECTED_JS.map((name) => `/js/${name}`);
+  const expectedCssRefs = EXPECTED_CSS.map((name) => `/css/${name}`).filter((asset) => !RETAINED_ACCESSIBILITY_ASSETS.has(asset));
+  const expectedJsRefs = EXPECTED_JS.map((name) => `/js/${name}`).filter((asset) => !RETAINED_ACCESSIBILITY_ASSETS.has(asset));
   for (const asset of expectedCssRefs) {
     if (!referenced.css.includes(asset)) failures.push(`expected_css_not_referenced:${asset}`);
   }

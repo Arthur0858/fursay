@@ -236,9 +236,40 @@ function redirectWithHeaders(location, status) {
   });
 }
 
+export function trialLanguageHref(href, requestUrl) {
+  const page = new URL(requestUrl);
+  const match = page.pathname.match(/^\/(?:zh\/|ar\/)?trials\/(koko|noor)-week-one(?:\.html)?\/?$/);
+  if (!match) return null;
+  let target;
+  try { target = new URL(href, page); } catch { return null; }
+  if (target.origin !== page.origin || !new RegExp(`^/(?:zh/|ar/)?trials/${match[1]}-week-one/?$`).test(target.pathname)) return null;
+  let changed = false;
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "source_id"]) {
+    const value = page.searchParams.get(key);
+    if (value && /^[a-z0-9_-]{1,80}$/i.test(value)) { target.searchParams.set(key, value); changed = true; }
+  }
+  return changed ? target.toString() : null;
+}
+
+function withTrialLanguageAttribution(response, request) {
+  // Query-specific HTML must not share an attributed response with another source.
+  if (response.status !== 200 || !trialLanguageHref(new URL(request.url).pathname.replace(/\.html$/, "").replace(/\/$/, ""), request.url)) return response;
+  const rewritten = new HTMLRewriter().on(".brand-language a", {
+    element(element) {
+      const href = trialLanguageHref(element.getAttribute("href") || "", request.url);
+      if (href) element.setAttribute("href", href);
+    }
+  }).transform(response);
+  const headers = new Headers(rewritten.headers);
+  headers.set("Cache-Control", "private, no-store");
+  headers.delete("ETag");
+  headers.delete("Content-Length");
+  return new Response(rewritten.body, {status: rewritten.status, statusText: rewritten.statusText, headers});
+}
+
 async function serveAsset(request, env) {
   const first = await env.ASSETS.fetch(request);
-  if (first.status !== 404) return withAssetHeaders(first, request);
+  if (first.status !== 404) return withTrialLanguageAttribution(withAssetHeaders(first, request), request);
 
   const url = new URL(request.url);
   if (/\.[^/]+$/.test(url.pathname)) {
@@ -249,7 +280,7 @@ async function serveAsset(request, env) {
   htmlUrl.pathname = url.pathname.endsWith("/") ? `${url.pathname}index.html` : `${url.pathname}.html`;
   const htmlRequest = new Request(htmlUrl, request);
   const html = await env.ASSETS.fetch(htmlRequest);
-  return withAssetHeaders(html.status === 404 ? first : html, request);
+  return withTrialLanguageAttribution(withAssetHeaders(html.status === 404 ? first : html, request), request);
 }
 
 function withAssetHeaders(response, request) {
@@ -319,6 +350,10 @@ function corsHeaders() {
 
 async function handleSubscribe(request, env) {
   const headers = corsHeaders();
+  const logContext = { groups_count: 0, region: "unknown" };
+  const log = (level, event, status, extra = {}) => {
+    console[level](JSON.stringify({ event, status, ...logContext, ...extra }));
+  };
 
   try {
     let body;
@@ -337,14 +372,16 @@ async function handleSubscribe(request, env) {
       return json({ success: false, message: "Invalid email" }, 400, headers);
     }
 
-    const groupIds = new Set([env.MAILERLITE_GROUP_FURSAY_ALL].filter(Boolean));
-    if (Array.isArray(groups)) {
-      if (groups.includes("koko") && env.MAILERLITE_GROUP_KOKO) {
-        groupIds.add(env.MAILERLITE_GROUP_KOKO);
-      }
-      if (groups.includes("noor") && env.MAILERLITE_GROUP_NOOR) {
-        groupIds.add(env.MAILERLITE_GROUP_NOOR);
-      }
+    // Log only a bounded region code, never arbitrary request/provider text.
+    if (typeof region === "string" && /^[A-Z]{2}$/.test(region)) logContext.region = region;
+    const groupVars = ["MAILERLITE_GROUP_FURSAY_ALL"];
+    if (Array.isArray(groups) && groups.includes("koko")) groupVars.push("MAILERLITE_GROUP_KOKO");
+    if (Array.isArray(groups) && groups.includes("noor")) groupVars.push("MAILERLITE_GROUP_NOOR");
+    const missing = groupVars.filter((name) => !env[name]);
+    const groupIds = new Set(groupVars.map((name) => env[name]).filter(Boolean));
+    logContext.groups_count = groupIds.size;
+    if (missing.length) {
+      log("error", "subscribe_config_missing", "partial", { missing });
     }
 
     const fields = {};
@@ -359,29 +396,55 @@ async function handleSubscribe(request, env) {
 
     const apiToken = env.MAILERLITE_API_TOKEN || env.MAILERLITE_API_KEY;
     if (!apiToken) {
-      console.error("Missing MailerLite API token");
+      log("error", "subscribe_config_missing", 500, { missing: ["MAILERLITE_API_TOKEN", "MAILERLITE_API_KEY"] });
       return json({ success: false, message: "Subscription is not configured" }, 500, headers);
     }
 
+    const providerHeaders = {
+      "Authorization": `Bearer ${apiToken}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    };
     const response = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
+      headers: providerHeaders,
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok && response.status !== 409) {
-      const detail = await response.text();
-      console.error("MailerLite subscribe failed", response.status, detail);
+    if (response.status === 409) {
+      // A conflict does not prove that the requested memberships exist.
+      // Fall back to the encoded email when the conflict has no subscriber ID.
+      const existing = await response.json().catch(() => null);
+      const subscriberId = existing?.data?.id;
+      const subscriber = typeof subscriberId === "string" && subscriberId
+        ? subscriberId
+        : typeof subscriberId === "number" && Number.isFinite(subscriberId)
+          ? String(subscriberId)
+          : normalizedEmail;
+      let assignmentFailed = false;
+      for (const groupId of groupIds) {
+        try {
+          const assigned = await fetch(`https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(subscriber)}/groups/${encodeURIComponent(groupId)}`, {
+            method: "POST",
+            headers: providerHeaders
+          });
+          if (!assigned.ok) assignmentFailed = true;
+          log(assigned.ok ? "log" : "error", "subscribe_group_assignment", assigned.status);
+        } catch {
+          assignmentFailed = true;
+          log("error", "subscribe_group_assignment", "network_error");
+        }
+      }
+      if (assignmentFailed) return json({ success: false }, 502, headers);
+    } else if (!response.ok) {
+      log("error", "subscribe_provider_failed", response.status);
       return json({ success: false, message: "Subscription failed" }, 502, headers);
     }
 
+    log("log", "subscribe_completed", response.status);
     return json({ success: true, message: "Subscribed!" }, 200, headers);
-  } catch (error) {
-    console.error("Subscribe error", error);
+  } catch {
+    log("error", "subscribe_error", 500);
     return json({ success: false, message: "Subscription failed" }, 500, headers);
   }
 }

@@ -402,13 +402,8 @@ export function writeEditorialBundle(siteDir) {
 export function editorialSitemapEntries(sitemapUrl) {
   const localized = (suffix) => ({ en: `${ORIGIN}${suffix}`, "zh-TW": `${ORIGIN}/zh${suffix}`, ar: `${ORIGIN}/ar${suffix}`, "x-default": `${ORIGIN}${suffix}` });
   const paths = ["/guides", ...GUIDE_SLUGS.map((slug) => `/guides/${slug}`), "/about", "/editorial-method", "/contact", "/terms"];
-  const lastmodFor = (path) => {
-    const guide = path.startsWith("/guides/") ? GUIDES.find((item) => `/guides/${item.slug}` === path) : null;
-    return guide?.dateModified || (path === "/guides" || !path.startsWith("/guides/") ? EDITORIAL_CURRENT : EDITORIAL_UPDATED);
-  };
   return paths.flatMap((path) => {
     const alts = localized(path); const priority = path === "/guides" ? "0.8" : path.startsWith("/guides/") ? "0.7" : "0.4";
-    const lastmod = lastmodFor(path);
-    return [sitemapUrl(`${ORIGIN}${path}`, alts, priority, lastmod), sitemapUrl(`${ORIGIN}/zh${path}`, alts, priority, lastmod), sitemapUrl(`${ORIGIN}/ar${path}`, alts, priority, lastmod)];
+    return [sitemapUrl(`${ORIGIN}${path}`, alts, priority), sitemapUrl(`${ORIGIN}/zh${path}`, alts, priority), sitemapUrl(`${ORIGIN}/ar${path}`, alts, priority)];
   });
 }
