@@ -89,6 +89,10 @@ const KNOWN_EDITORIAL_ROUTES = new Set(["", "/zh", "/ar"].flatMap((prefix) => [
   ...GUIDE_SLUGS.map((slug) => `${prefix}/guides/${slug}`),
   ...["about", "editorial-method", "contact", "terms"].map((page) => `${prefix}/${page}`),
 ]));
+const KNOWN_TRIAL_ROUTES = new Set(["", "/zh", "/ar"].flatMap((prefix) => [
+  `${prefix}/trials/koko-week-one`,
+  `${prefix}/trials/noor-week-one`,
+]));
 const FAMILY_ACTION_FORBIDDEN_NEEDLES = [
   "Creator kit",
   "Traffic launch",
@@ -386,6 +390,7 @@ async function main() {
       || KNOWN_API_ROUTES.has(pathname)
       || WORKER_ONLY_ROUTES.has(pathname)
       || KNOWN_EDITORIAL_ROUTES.has(pathname)
+      || KNOWN_TRIAL_ROUTES.has(pathname)
       || pathname.startsWith("/images/qr/");
     if (!known) unknownOwnUrls.push(url);
   }
