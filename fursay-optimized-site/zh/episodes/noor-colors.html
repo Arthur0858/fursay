@@ -93,7 +93,8 @@
     ]
   }
   </script>
-<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20261002-v1.css"></head>
+<link rel="stylesheet" href="/css/editorial-20260925-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20261002-v1.css"><style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style>
+</head>
 <body class="picture-world world-arabic"><a class="skip-link" href="#main-content">跳到主要內容</a>
 <nav id="mainNav">
   <a href="/" class="nav-logo"><span>🐾</span> Fursay</a>
@@ -286,6 +287,7 @@
     <div class="modal-title" id="subscribeModalTitle">領取本週故事包</div>
     <p class="modal-sub" id="subscribeModalDescription">取得一則 努爾 故事、一個中文詞句、兩個親子問題，以及一個小活動。</p>
     <form id="subscribeForm">
+        <div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
       <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
       <div class="modal-field"><label>我想收到</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko 森林英文</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>努爾 阿語家庭中文</label></div></div>
       <button type="submit" class="modal-submit" id="modalSubmitBtn">寄給我本週故事包</button>
@@ -294,6 +296,6 @@
   </div>
 </div>
 
-<script src="/js/site-shared-20260615-sharekit1.js"></script>
+<script src="/js/site-shared-20261028-funnel1.js"></script>
 <script src="/js/modal-accessibility-20261002-v1.js"></script></body>
 </html>

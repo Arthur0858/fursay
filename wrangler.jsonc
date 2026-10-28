@@ -4,6 +4,11 @@
   "main": "src/worker.js",
   "compatibility_date": "2026-06-28",
   "keep_vars": true,
+  "vars": {
+    "MAILERLITE_GROUP_FURSAY_ALL": "185908848607888784",
+    "MAILERLITE_GROUP_KOKO": "185908812467668238",
+    "MAILERLITE_GROUP_NOOR": "185908830918411331"
+  },
   "observability": {
     "enabled": true
   },

@@ -16,6 +16,9 @@ export default {
       return json({ success: false, message: "Method not allowed" }, 405, corsHeaders());
     }
 
+    const goRedirect = goRedirectUrl(url);
+    if (goRedirect) return redirectWithHeaders(goRedirect, 302);
+
     const sampleDownloadRedirect = sampleDownloadRedirectUrl(url, request, env);
     if (sampleDownloadRedirect) {
       return redirectWithHeaders(sampleDownloadRedirect, 302);
@@ -34,6 +37,28 @@ export default {
     return serveAsset(request, env);
   }
 };
+
+function goRedirectUrl(url) {
+  const path = url.pathname.replace(/\/+$/, "").toLowerCase();
+  if (path !== "/go" && !path.startsWith("/go/")) return null;
+  const goRoutes = {
+    "/go/koko-sample": "/download/koko-printable-sample",
+    "/go/noor-sample": "/download/noor-worksheet-sample",
+    "/go/koko-newsletter": "/join/koko", "/go/koko": "/join/koko",
+    "/go/noor-newsletter": "/join/noor", "/go/noor": "/join/noor"
+  };
+  const route = goRoutes[path];
+  if (route?.startsWith("/join/")) return joinRedirectUrl(new URL(route + url.search, url.origin));
+  const target = new URL(route || "/", url.origin);
+  if (!route) {
+    target.searchParams.set("utm_source", "shortlink");
+    target.searchParams.set("utm_medium", "direct");
+    target.searchParams.set("utm_campaign", "go");
+    target.searchParams.set("utm_content", path === "/go" ? "go_root" : "go_unknown");
+  }
+  copyShortlinkPassthroughParams(url, target);
+  return target.toString();
+}
 
 function sampleDownloadRedirectUrl(url, request, env) {
   const path = url.pathname.replace(/\/+$/, "").toLowerCase();
@@ -280,6 +305,13 @@ async function serveAsset(request, env) {
   htmlUrl.pathname = url.pathname.endsWith("/") ? `${url.pathname}index.html` : `${url.pathname}.html`;
   const htmlRequest = new Request(htmlUrl, request);
   const html = await env.ASSETS.fetch(htmlRequest);
+  if (html.status === 404 && url.pathname !== "/" && url.pathname.endsWith("/")) {
+    const cleanPath = url.pathname.replace(/\/+$/, "");
+    const candidate = new URL(request.url);
+    candidate.pathname = `${cleanPath}.html`;
+    const cleanAsset = await env.ASSETS.fetch(new Request(candidate, request));
+    if (cleanAsset.status === 200) return redirectWithHeaders(`${url.origin}${cleanPath}${url.search}`, 301);
+  }
   return withTrialLanguageAttribution(withAssetHeaders(html.status === 404 ? first : html, request), request);
 }
 
@@ -365,7 +397,11 @@ async function handleSubscribe(request, env) {
     if (!body || typeof body !== "object" || Array.isArray(body)) {
       return json({ success: false, message: "Invalid request" }, 400, headers);
     }
-    const { email, groups, region, attribution } = body;
+    const { email, groups, region, attribution, website } = body;
+    if (typeof website === "string" && website.length > 0) {
+      log("log", "subscribe_honeypot", 200);
+      return json({ success: true, pending: true, status: "pending_confirmation" }, 200, headers);
+    }
     const normalizedEmail = typeof email === "string" ? email.trim() : "";
 
     if (!normalizedEmail || !normalizedEmail.includes("@")) {
@@ -411,6 +447,7 @@ async function handleSubscribe(request, env) {
       body: JSON.stringify(payload)
     });
 
+    let pending = false;
     if (response.status === 409) {
       // A conflict does not prove that the requested memberships exist.
       // Fall back to the encoded email when the conflict has no subscriber ID.
@@ -439,10 +476,13 @@ async function handleSubscribe(request, env) {
     } else if (!response.ok) {
       log("error", "subscribe_provider_failed", response.status);
       return json({ success: false, message: "Subscription failed" }, 502, headers);
+    } else {
+      const result = await response.json().catch(() => null);
+      pending = result?.data?.status === "unconfirmed";
     }
 
     log("log", "subscribe_completed", response.status);
-    return json({ success: true, message: "Subscribed!" }, 200, headers);
+    return json({ success: true, pending, status: pending ? "pending_confirmation" : "subscribed", message: "Subscribed!" }, 200, headers);
   } catch {
     log("error", "subscribe_error", 500);
     return json({ success: false, message: "Subscription failed" }, 500, headers);

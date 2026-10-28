@@ -113,6 +113,11 @@ async function runLocal() {
   checkCommonResponse(failures, "missing_token", missingToken, 500);
   checks.push({ name: "missing_token", status: missingToken.status, body: await readJson(missingToken) });
 
+  const honeypot = await localFetch({ method: "POST", ...jsonBody({ website: "bot" }) }, {}, noExternalFetch);
+  const honeypotBody = await readJson(honeypot);
+  if (honeypot.status !== 200 || !honeypotBody.pending || honeypotBody.status !== "pending_confirmation" || externalCalls !== 0) failures.push("honeypot:contract");
+  checks.push({ name: "honeypot", status: honeypot.status });
+
   let capturedPayload = null;
   const successFetch = async (url, init) => {
     externalCalls += 1;
@@ -120,7 +125,7 @@ async function runLocal() {
     if (url !== "https://connect.mailerlite.com/api/subscribers") {
       return new Response("bad url", { status: 500 });
     }
-    return new Response(JSON.stringify({ data: { id: "sub_1" } }), {
+    return new Response(JSON.stringify({ data: { id: "sub_1", status: "unconfirmed" } }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -150,7 +155,9 @@ async function runLocal() {
     MAILERLITE_FIELD_SOURCE_ID: "source_id",
   }, successFetch);
   checkCommonResponse(failures, "success", success, 200);
-  checks.push({ name: "success", status: success.status, body: await readJson(success), capturedPayload });
+  const successBody = await readJson(success);
+  if (successBody.pending !== true || successBody.status !== "pending_confirmation") failures.push("success:pending_contract");
+  checks.push({ name: "success", status: success.status, body: successBody, capturedPayload });
   if (capturedPayload?.email !== "Family@Example.test") failures.push(`success:email_not_trimmed:${capturedPayload?.email || "none"}`);
   if ((capturedPayload?.groups || []).join(",") !== "all,koko-group,noor-group") {
     failures.push(`success:bad_groups:${(capturedPayload?.groups || []).join(",") || "none"}`);
