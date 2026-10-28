@@ -157,3 +157,23 @@ test("missing token is a structured configuration failure with no upstream calls
   assert.equal(result.calls.length, 0);
   assert.equal(result.logs[0].event, "subscribe_config_missing");
 });
+
+test("honeypot returns pending without provider calls", async () => {
+  const result = await subscribe({ body: { website: "bot" } });
+  assert.deepEqual(result.body, { success: true, pending: true, status: "pending_confirmation" });
+  assert.equal(result.calls.length, 0);
+  assert.equal(result.logs[0].event, "subscribe_honeypot");
+});
+test("provider status selects pending response", async () => {
+  for (const [status, pending] of [["unconfirmed", true], ["active", false]]) {
+    const result = await subscribe({ provider: () => Response.json({ data: { status } }) });
+    assert.equal(result.body.pending, pending);
+    assert.equal(result.body.status, pending ? "pending_confirmation" : "subscribed");
+    assert.equal(result.body.message, "Subscribed!");
+  }
+});
+test("conflict response reports subscribed", async () => {
+  const result = await subscribe({ provider: (_call, index) => Response.json({}, { status: index === 1 ? 409 : 200 }) });
+  assert.equal(result.body.pending, false);
+  assert.equal(result.body.status, "subscribed");
+});

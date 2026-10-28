@@ -17,7 +17,7 @@
 - Koko common styles live in `/css/koko-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-cache1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-cache1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
-- Shared interactions live in `/js/site-shared-20260615-sharekit1.js`; page HTML should not add inline event handlers.
+- Shared interactions live in `/js/site-shared-20261028-funnel1.js`; page HTML should not add inline event handlers.
 - Subscribe-modal focus management and dialog state live in `/js/modal-accessibility-20261002-v1.js`.
 - Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints through the `FURSAY_EVENTS` Analytics Engine binding for dataset `fursay_events`. Query reporting still requires `CLOUDFLARE_ACCOUNT_ID` plus `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`, and token values must stay out of files and public reports.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.

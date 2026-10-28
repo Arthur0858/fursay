@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27",
+  "generatedAt": "2026-10-28",
   "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
   "assets": [
     {
@@ -118,6 +118,11 @@
       "sha256": "5a47e687b0ff51f576b2639e8bf94f767d766f63107fc17eefa417d39103b92e"
     },
     {
+      "path": "/js/four-week-interest-20260930-v1.js",
+      "bytes": 557,
+      "sha256": "c95e2b8c83311e07c793d28e0f3335af27dd7c72aaaad9ad29ba11ffa4eb647e"
+    },
+    {
       "path": "/js/modal-accessibility-20260925-v1.js",
       "bytes": 3453,
       "sha256": "73b5dabff7f986ac36ab02cdefd82c1a07a5c38bb0ae163eff60ad26aa220fa2"
@@ -128,14 +133,9 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20260615-sharekit1.js",
-      "bytes": 34478,
-      "sha256": "543ecd6c0300989830e489abf4463bda36601964fca8ba2bdb7023ee8b78dfc1"
-    },
-    {
-      "path": "/js/four-week-interest-20260930-v1.js",
-      "bytes": 557,
-      "sha256": "c95e2b8c83311e07c793d28e0f3335af27dd7c72aaaad9ad29ba11ffa4eb647e"
+      "path": "/js/site-shared-20261028-funnel1.js",
+      "bytes": 36097,
+      "sha256": "8bcad5307e8f2e4bf0a2517bbba1c07d24e5361b0116f27a45d6d8ae3a1ec844"
     }
   ]
 }

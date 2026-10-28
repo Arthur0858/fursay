@@ -1822,7 +1822,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2196,7 +2196,7 @@ ${rows}
       </table>
     </section>
   </main>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
@@ -3440,13 +3440,13 @@ ${products}
       </div>
     </section>
   </main>
-  <div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">Join the story pack list</div>
       <p class="modal-sub">Pick Koko or Nour and get updates when the weekly story pack is ready. No payment today.</p>
-      <form id="subscribeForm">
+      <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
@@ -3454,7 +3454,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -3689,13 +3689,13 @@ ${products}
       </div>
     </section>
   </main>
-  <div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="關閉">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">加入故事包名單</div>
       <p class="modal-sub">選擇叩叩或努爾，收到每週故事包與未來測試通知。今天不會收費。</p>
-      <form id="subscribeForm">
+      <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>我有興趣</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>叩叩森林英文故事</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>努爾阿語中文故事</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">寄給我每週故事包</button>
@@ -3703,7 +3703,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -3878,13 +3878,13 @@ ${products}
       </div>
     </section>
   </main>
-  <div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="إغلاق">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">انضموا إلى قائمة حزمة القصة</div>
       <p class="modal-sub">اختاروا كوكو أو نور لتلقي تحديثات حزمة القصة الأسبوعية. لا دفع اليوم.</p>
-      <form id="subscribeForm">
+      <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>أنا مهتم بـ</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>كوكو الإنجليزية</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>نور العربية الصينية</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي الحزمة الأسبوعية</button>
@@ -3892,7 +3892,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -4074,13 +4074,13 @@ ${cards}
       </div>
     </section>
   </main>
-  <div class="modal-overlay" id="subscribeModal">
+  <style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">${escapeHtml(spec.modalTitle)}</div>
       <p class="modal-sub">${escapeHtml(spec.modalSub)}</p>
-      <form id="subscribeForm">
+      <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>${escapeHtml(spec.modalInterestLabel)}</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">${escapeHtml(spec.modalSubmit)}</button>
@@ -4088,7 +4088,7 @@ ${cards}
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -4722,7 +4722,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -4752,13 +4752,13 @@ function shareKitInterestButton(pack) {
 }
 
 function shareKitSubscribeModal() {
-  return `<div class="modal-overlay" id="subscribeModal">
+  return `<style>.hp-field { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }</style><div class="modal-overlay" id="subscribeModal">
     <div class="modal-box">
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">Join the story pack list</div>
       <p class="modal-sub">Pick Koko or Nour and get updates after sharing a sample. No payment today.</p>
-      <form id="subscribeForm">
+      <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
         <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
@@ -4872,7 +4872,7 @@ function writeShareKitPage(siteDir, kit) {
 ${packCards}
   </main>
   ${shareKitSubscribeModal()}
-  <script src="/js/site-shared-20260615-sharekit1.js"></script>
+  <script src="/js/site-shared-20261028-funnel1.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");

@@ -740,6 +740,20 @@
 
   window.handleSubscribe = async function (event) {
     if (event) event.preventDefault();
+    var lang = (document.documentElement.lang || '').toLowerCase();
+    var copy = lang.startsWith('zh') ? {
+      success: '訂閱成功！請到信箱查看 Fursay 的歡迎信；沒看到的話，請檢查垃圾郵件或促銷內容匣。',
+      pending: '快完成了！請到信箱點確認連結，第一份陪讀包就會寄給你。沒看到的話，請檢查垃圾郵件匣。',
+      sending: '送出中…', error: '目前無法訂閱，請稍後再試。', button: '已送出'
+    } : lang.startsWith('ar') ? {
+      success: 'تم الاشتراك! تحقّقوا من بريدكم الإلكتروني لرسالة الترحيب من Fursay، وإن لم تجدوها فراجعوا مجلد الرسائل غير المرغوب فيها.',
+      pending: 'اقتربنا! افتحوا بريدكم الإلكتروني واضغطوا على رابط التأكيد لتبدأ حزمة القصص الأسبوعية. إن لم تجدوها فراجعوا مجلد الرسائل غير المرغوب فيها.',
+      sending: 'جارٍ الإرسال…', error: 'تعذّر الاشتراك الآن، حاولوا مرة أخرى لاحقًا.', button: 'تم'
+    } : {
+      success: "You're in! Check your inbox for a welcome email from Fursay. If you don't see it, look in Spam or Promotions.",
+      pending: "Almost done! Check your inbox and tap the confirmation link to start your weekly story pack. If you don't see it, look in Spam or Promotions.",
+      sending: 'Sending...', error: 'Could not subscribe right now. Please try again later.', button: 'Subscribed!'
+    };
     var emailEl = qs('modalEmail') || qs('sub-email');
     var nameEl = qs('sub-name');
     var msg = qs('sub-msg') || document.querySelector('#subscribeModal .modal-note');
@@ -762,6 +776,7 @@
     groups = Array.from(new Set(groups));
     var payload = {
       email: email,
+      website: qs('sub-website') ? qs('sub-website').value : '',
       name: nameEl ? nameEl.value.trim() : undefined,
       groups: groups,
       child_age: qs('modalAge') ? qs('modalAge').value : (qs('sub-age') ? qs('sub-age').value : ''),
@@ -781,12 +796,12 @@
     if (btn) {
       btn.disabled = true;
       btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
-      btn.textContent = 'Sending...';
+      btn.textContent = copy.sending;
     }
     if (msg) {
       msg.classList.remove('is-hidden');
       msg.style.display = 'block';
-      msg.textContent = 'Sending...';
+      msg.textContent = copy.sending;
     }
 
     try {
@@ -810,9 +825,9 @@
       if (msg) {
         msg.classList.remove('is-hidden');
         msg.style.display = 'block';
-        msg.textContent = ok ? 'Subscribed successfully.' : 'Could not subscribe. Please try again.';
+        msg.textContent = ok ? (data.pending ? copy.pending : copy.success) : copy.error;
       }
-      if (btn) btn.textContent = ok ? 'Subscribed!' : (btn.dataset.originalText || 'Subscribe');
+      if (btn) btn.textContent = ok ? copy.button : (btn.dataset.originalText || 'Subscribe');
       if (ok && event && event.target && typeof event.target.reset === 'function') event.target.reset();
       syncChecks();
     } catch (e) {
@@ -824,7 +839,7 @@
         creator: payload.attribution.creator || '',
         placement: payload.attribution.placement || ''
       });
-      if (msg) msg.textContent = 'Could not connect. Please try again later.';
+      if (msg) msg.textContent = copy.error;
       if (btn) btn.textContent = btn.dataset.originalText || 'Subscribe';
     } finally {
       if (btn) setTimeout(function () { btn.disabled = false; }, 500);
