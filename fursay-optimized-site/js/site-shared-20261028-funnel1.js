@@ -752,7 +752,7 @@
     } : {
       success: "You're in! Check your inbox for a welcome email from Fursay. If you don't see it, look in Spam or Promotions.",
       pending: "Almost done! Check your inbox and tap the confirmation link to start your weekly story pack. If you don't see it, look in Spam or Promotions.",
-      sending: 'Sending...', error: 'Could not subscribe right now. Please try again later.', button: 'Subscribed!'
+      sending: 'Sending...', error: 'Could not subscribe. Please try again.', button: 'Subscribed!'
     };
     var emailEl = qs('modalEmail') || qs('sub-email');
     var nameEl = qs('sub-name');
