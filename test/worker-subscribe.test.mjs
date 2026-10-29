@@ -11,7 +11,7 @@ const ENV = {
   MAILERLITE_GROUP_NOOR: "noor"
 };
 
-async function subscribe({ env = ENV, body = {}, provider } = {}) {
+async function subscribe({ env = ENV, body = {}, provider, referer } = {}) {
   const originalFetch = globalThis.fetch;
   const originalError = console.error;
   const originalLog = console.log;
@@ -37,7 +37,7 @@ async function subscribe({ env = ENV, body = {}, provider } = {}) {
   try {
     const response = await worker.fetch(new Request("https://fursay.com/api/subscribe", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(referer ? { Referer: referer } : {}) },
       body: JSON.stringify({ email: EMAIL, groups: ["koko", "noor"], region: "TW", ...body })
     }), env);
     return { status: response.status, body: await response.json(), calls, logs };
@@ -176,4 +176,21 @@ test("conflict response reports subscribed", async () => {
   const result = await subscribe({ provider: (_call, index) => Response.json({}, { status: index === 1 ? 409 : 200 }) });
   assert.equal(result.body.pending, false);
   assert.equal(result.body.status, "subscribed");
+});
+
+
+test("subscriber attribution uses body first, same-origin Referer fallback, and bounded clean values", async () => {
+  const result = await subscribe({
+    env: { ...ENV, MAILERLITE_ENABLE_ATTRIBUTION_FIELDS: "true" },
+    referer: "https://fursay.com/koko?utm_source=referral&utm_medium=email&utm_campaign=launch",
+    body: { utm_source: "  direct\u0000source  ", utm_medium: "x".repeat(300), signup_page: "/guides/test?private=yes#top", attribution: { utm_source: "legacy" } }
+  });
+  assert.equal(result.status, 200);
+  assert.deepEqual(JSON.parse(result.calls[0].body).fields, {
+    region: "TW", utm_source: "directsource", utm_medium: "x".repeat(255), utm_campaign: "launch", signup_page: "/guides/test"
+  });
+  const fallback = await subscribe({ referer: "https://fursay.com/arabic?utm_source=news&utm_medium=email&utm_campaign=hello#part" });
+  assert.deepEqual(JSON.parse(fallback.calls[0].body).fields, { region: "TW", utm_source: "news", utm_medium: "email", utm_campaign: "hello", signup_page: "/arabic" });
+  const external = await subscribe({ referer: "https://elsewhere.test/path?utm_source=outside", body: { signup_page: "https://elsewhere.test/path" } });
+  assert.deepEqual(JSON.parse(external.calls[0].body).fields, { region: "TW" });
 });
