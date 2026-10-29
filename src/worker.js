@@ -305,6 +305,12 @@ async function serveAsset(request, env) {
   htmlUrl.pathname = url.pathname.endsWith("/") ? `${url.pathname}index.html` : `${url.pathname}.html`;
   const htmlRequest = new Request(htmlUrl, request);
   const html = await env.ASSETS.fetch(htmlRequest);
+  if (html.status === 404 && !url.pathname.endsWith("/")) {
+    const candidate = new URL(request.url);
+    candidate.pathname = `${url.pathname}/index.html`;
+    const indexAsset = await env.ASSETS.fetch(new Request(candidate, request));
+    if (indexAsset.status === 200) return redirectWithHeaders(`${url.origin}${url.pathname}/${url.search}`, 301);
+  }
   if (html.status === 404 && url.pathname !== "/" && url.pathname.endsWith("/")) {
     const cleanPath = url.pathname.replace(/\/+$/, "");
     const candidate = new URL(request.url);

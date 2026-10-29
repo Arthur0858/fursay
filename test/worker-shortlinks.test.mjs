@@ -5,7 +5,7 @@ import worker from "../src/worker.js";
 const origin = "https://fursay.com";
 const assets = { fetch: async request => {
   const path = new URL(request.url).pathname;
-  return new Response(path, { status: ["/koko.html", "/zh/index.html"].includes(path) ? 200 : 404 });
+  return new Response(path, { status: ["/koko.html", "/zh/index.html", "/ar/index.html"].includes(path) ? 200 : 404 });
 } };
 const get = path => worker.fetch(new Request(origin + path), { ASSETS: assets });
 test("go root and unknown routes carry owned attribution", async () => {
@@ -36,4 +36,16 @@ test("trailing slash redirects only existing clean HTML pages", async () => {
   assert.ok(response.headers.get("x-content-type-options"));
   assert.equal((await get("/zh/")).status, 200);
   assert.equal((await get("/nope/")).status, 404);
+});
+test("directory paths redirect to their trailing slash", async () => {
+  for (const path of ["/zh", "/ar"]) {
+    for (const search of ["", "?utm_source=x&ref=abc"]) {
+      const response = await get(path + search);
+      assert.equal(response.status, 301);
+      assert.equal(response.headers.get("location"), origin + path + "/" + search);
+      assert.ok(response.headers.get("x-content-type-options"));
+    }
+  }
+  assert.equal((await get("/zh/")).status, 200);
+  assert.equal((await get("/nope")).status, 404);
 });
