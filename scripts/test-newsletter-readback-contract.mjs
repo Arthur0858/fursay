@@ -11,8 +11,8 @@ const valid = {
   expectedScheduledAt: "2026-09-28T09:00:00+08:00",
   providerSender: "Fursay (hello@fursay.com)",
   expectedSender: { name: "Fursay", email: "hello@fursay.com" },
-  providerAudience: "Koko 電子報訂閱者 (2)",
-  expectedAudienceGroup: "Koko 電子報訂閱者",
+  providerAudience: "KOKO subscribers (2)",
+  expectedAudienceGroup: "KOKO subscribers",
   providerSubject: "A source-verified subject",
   expectedSubject: "A source-verified subject"
 };
@@ -69,7 +69,7 @@ test("rejects sender name or mailbox drift", () => {
 test("rejects wrong audience and empty active group", () => {
   const wrongGroup = validateProviderReadback({ ...valid, providerAudience: "Other group (2)" }, now);
   assert.ok(wrongGroup.includes("provider_audience_mismatch"));
-  const empty = validateProviderReadback({ ...valid, providerAudience: "Koko 電子報訂閱者 (0)" }, now);
+  const empty = validateProviderReadback({ ...valid, providerAudience: "KOKO subscribers (0)" }, now);
   assert.ok(empty.includes("provider_audience_empty"));
 });
 

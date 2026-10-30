@@ -37,7 +37,8 @@ const CHANNELS = {
   koko: {
     label: "Koko's Forest",
     groupEnv: "MAILERLITE_GROUP_KOKO",
-    groupName: "Koko 電子報訂閱者",
+    groupId: "185908812467668238",
+    groupName: "KOKO subscribers",
     uploadPlaylistId: "UU0X4CIwf6KoUMoIHwRxN3jw",
     youtubeUrl: "https://www.youtube.com/@KokosForest",
     siteUrl: "https://fursay.com/koko",
@@ -114,7 +115,7 @@ function printHelp() {
   node scripts/newsletter-runner.mjs --mode send --dry-run --channel koko --input content/newsletters/pending/<file>.newsletter.json --schedule-date YYYY-MM-DD --schedule-time 09:00
   node scripts/newsletter-runner.mjs --mode chrome-handoff --channel koko --input content/newsletters/pending/<file>.newsletter.json
   Koko mutations require the full handoff successCommand, readback-only, verified content, actual mutation count and a bound campaign ID.
-  node scripts/newsletter-runner.mjs --mode chrome-result --readback-only --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status scheduled --campaign-id <campaign-id> --campaign-url <campaign-url> --schedule-date YYYY-MM-DD --schedule-time 09:00 --provider-status scheduled --provider-scheduled-at "YYYY-MM-DD 09:00:00 (+08:00)" --provider-sender "Fursay (hello@fursay.com)" --provider-audience "Koko 電子報訂閱者 (N)" --provider-subject "<source subject>"
+  node scripts/newsletter-runner.mjs --mode chrome-result --readback-only --channel koko --input content/newsletters/pending/<file>.newsletter.json --browser-status scheduled --campaign-id <campaign-id> --campaign-url <campaign-url> --schedule-date YYYY-MM-DD --schedule-time 09:00 --provider-status scheduled --provider-scheduled-at "YYYY-MM-DD 09:00:00 (+08:00)" --provider-sender "Fursay (hello@fursay.com)" --provider-audience "KOKO subscribers (N)" --provider-subject "<source subject>"
   Koko failure: retain attempted_unknown and STOP; persist a sanitized receipt. No retry or replacement.
   node scripts/newsletter-runner.mjs --mode send --channel arabic --input content/newsletters/pending/<file>.newsletter.json --schedule-date 2026-06-03 --schedule-time 09:00
 
@@ -194,6 +195,15 @@ function requireEnv(name) {
 
 function optionalEnv(name) {
   return process.env[name] || "";
+}
+
+function resolveGroupId(config) {
+  if (!config.groupId) return requireEnv(config.groupEnv);
+  const envGroupId = optionalEnv(config.groupEnv);
+  if (envGroupId && envGroupId !== config.groupId) {
+    console.warn(`Warning: ${config.groupEnv} differs from configured group id; using ${config.groupId}`);
+  }
+  return config.groupId;
 }
 
 function envFlag(name) {
@@ -770,7 +780,7 @@ function scheduleFor(channelKey, args = {}) {
 async function runApiPreflight(args, run) {
   const config = CHANNELS[args.channel];
   const token = requireEnv("MAILERLITE_API_TOKEN");
-  const groupId = requireEnv(config.groupEnv);
+  const groupId = resolveGroupId(config);
   const from = requireEnv("NEWSLETTER_FROM_EMAIL");
   const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(from)) throw new Error("NEWSLETTER_FROM_EMAIL must be a valid email address");
@@ -780,8 +790,8 @@ async function runApiPreflight(args, run) {
     headers: mailerLiteHeaders(token)
   });
   const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
-  if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
-  if (args.channel === "koko") assertKokoTarget({ groupName: group.name, groupActiveCount: group.active_count,
+  if (!group) throw new Error(`Configured group id ${config.groupId ? groupId : `from ${config.groupEnv}`} was not found in MailerLite`);
+  if (args.channel === "koko") assertKokoTarget({ groupId: group.id, groupActiveCount: group.active_count,
     from, fromName: optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay" });
 
   const schedule = scheduleFor(args.channel, args);
@@ -822,7 +832,7 @@ async function runApiPreflight(args, run) {
 async function resolveMailerLiteTarget(channelKey, schedule) {
   const config = CHANNELS[channelKey];
   const token = requireEnv("MAILERLITE_API_TOKEN");
-  const groupId = requireEnv(config.groupEnv);
+  const groupId = resolveGroupId(config);
   const from = requireEnv("NEWSLETTER_FROM_EMAIL");
   const fromName = optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay";
   const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
@@ -831,8 +841,8 @@ async function resolveMailerLiteTarget(channelKey, schedule) {
     headers: mailerLiteHeaders(token)
   });
   const group = (groups.data || []).find((item) => String(item.id) === String(groupId));
-  if (!group) throw new Error(`Configured group id from ${config.groupEnv} was not found in MailerLite`);
-  if (channelKey === "koko") assertKokoTarget({ groupName: group.name, groupActiveCount: group.active_count, from, fromName });
+  if (!group) throw new Error(`Configured group id ${config.groupId ? groupId : `from ${config.groupEnv}`} was not found in MailerLite`);
+  if (channelKey === "koko") assertKokoTarget({ groupId: group.id, groupActiveCount: group.active_count, from, fromName });
 
   return {
     groupId,
@@ -848,7 +858,7 @@ async function resolveMailerLiteTarget(channelKey, schedule) {
 
 function assertKokoTarget(target) {
   if (target.from !== "hello@fursay.com" || target.fromName !== "Fursay"
-      || target.groupName !== "Koko 電子報訂閱者" || !(Number(target.groupActiveCount) > 0)) {
+      || String(target.groupId) !== "185908812467668238" || !(Number(target.groupActiveCount) > 0)) {
     throw new Error("koko_sender_or_audience_preflight_failed");
   }
 }
@@ -856,7 +866,7 @@ function assertKokoTarget(target) {
 async function createAndScheduleCampaign(channelKey, episode, newsletter, html, args = {}) {
   const config = CHANNELS[channelKey];
   const token = requireEnv("MAILERLITE_API_TOKEN");
-  const groupId = requireEnv(config.groupEnv);
+  const groupId = resolveGroupId(config);
   const from = requireEnv("NEWSLETTER_FROM_EMAIL");
   const fromName = optionalEnv("NEWSLETTER_FROM_NAME") || "Fursay";
   const replyTo = optionalEnv("NEWSLETTER_REPLY_TO") || from;
@@ -1225,7 +1235,7 @@ async function runChromeHandoff(args, state, run) {
       mutationStartCommand: args.channel === "koko" ? `node scripts/newsletter-runner.mjs --mode mutation-start --channel koko --schedule-date ${slot.date}` : null,
       mutationBindCommand: args.channel === "koko" ? `node scripts/newsletter-runner.mjs --mode mutation-bind --channel koko --schedule-date ${slot.date} --campaign-id <returned-id> --campaign-url <same-review-url>` : null,
       existingCampaignId: slot?.campaignId || null,
-      successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result${args.channel === "koko" ? " --readback-only --provider-content-verified --mutation-count <actual-count> --campaign-id <same-id> --provider-status scheduled --provider-scheduled-at \"<date> 09:00:00 (+08:00)\" --provider-sender \"Fursay (hello@fursay.com)\" --provider-audience \"Koko 電子報訂閱者 (N)\" --provider-subject \"<source subject>\"" : ""} --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <same-campaign-review-url>${scheduleArgs(args)}`,
+      successCommand: `node scripts/newsletter-runner.mjs --mode chrome-result${args.channel === "koko" ? " --readback-only --provider-content-verified --mutation-count <actual-count> --campaign-id <same-id> --provider-status scheduled --provider-scheduled-at \"<date> 09:00:00 (+08:00)\" --provider-sender \"Fursay (hello@fursay.com)\" --provider-audience \"KOKO subscribers (N)\" --provider-subject \"<source subject>\"" : ""} --channel ${args.channel} --input ${run.inputPath} --browser-status scheduled --campaign-url <same-campaign-review-url>${scheduleArgs(args)}`,
       failureCommand: args.channel === "koko" ? "STOP: retain attempted_unknown after any browser mutation; reconcile the same campaign without retrying or creating a replacement. Before mutation, record a sanitized blocked receipt." : `node scripts/newsletter-runner.mjs --mode chrome-result --channel ${args.channel} --input ${run.inputPath} --browser-status failed --failure-code <failure-code> --failure-detail \"<blocker>\"`
     },
     postSendGmailCheck: buildPostSendGmailCheck(args.channel, trafficPack),

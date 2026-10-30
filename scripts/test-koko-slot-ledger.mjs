@@ -20,7 +20,7 @@ function inventory() {
     items: slots.map((s, i) => ({ ...s, section: "outbox", status: "scheduled", campaignId: `${100 + i}`,
       campaignUrl: `https://dashboard.mailerlite.com/campaigns/${100 + i}/review`, readback: {
         status: "scheduled", scheduledAt: s.scheduledAt, sender: "Fursay (hello@fursay.com)",
-        audience: "Koko 電子報訂閱者 (1)", subject: subjects[s.episodeNo], readbackAt: new Date(now).toISOString(),
+        audience: "KOKO subscribers (1)", subject: subjects[s.episodeNo], readbackAt: new Date(now).toISOString(),
         contentVerified: true } })) };
 }
 function ledger(input = inventory()) {
@@ -208,7 +208,7 @@ test("partial or wrong-object readback leaves unknown; complete readback never m
     "--campaign-id","100","--campaign-url","https://dashboard.mailerlite.com/campaigns/100/review",
     "--schedule-date",slot.date,"--schedule-time","09:00","--provider-status","scheduled",
     "--provider-scheduled-at",slot.scheduledAt,"--provider-sender","Fursay (hello@fursay.com)",
-    "--provider-audience","Koko 電子報訂閱者 (1)","--provider-subject",source.subject];
+    "--provider-audience","KOKO subscribers (1)","--provider-subject",source.subject];
   const call = args => spawnSync(process.execPath,[runner,"--channel","koko",...args],{cwd:root,encoding:"utf8",timeout:10000});
   try {
     await writeLedger(root,value);

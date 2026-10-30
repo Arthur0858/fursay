@@ -75,7 +75,7 @@ export function sanitizeInventory(input, subjects, now = Date.now()) {
         providerStatus: r.status, providerScheduledAt: r.scheduledAt,
         expectedScheduledAt: slot.scheduledAt, providerSender: r.sender,
         expectedSender: { name: "Fursay", email: "hello@fursay.com" },
-        providerAudience: r.audience, expectedAudienceGroup: "Koko 電子報訂閱者",
+        providerAudience: r.audience, expectedAudienceGroup: "KOKO subscribers",
         providerSubject: r.subject, expectedSubject: subjects[item.episodeNo] }, now);
       if (slot.episodeNo !== item.episodeNo || !fresh(r.readbackAt, now)
           || !String(r.scheduledAt).includes("+08:00") || errors.length) {
