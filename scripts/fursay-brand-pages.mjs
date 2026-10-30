@@ -8,7 +8,7 @@ const ORIGIN = "https://fursay.com";
 const BRAND_CSS = "/css/brand-storybook-20260717-v1.css";
 const SAMPLE_ACTIVITY_CSS = "/css/sample-activity-20260718-v1.css";
 const TOOLS_CSS = "/css/picture-world-tools-20260613-products1.css";
-const SHARED_JS = "/js/site-shared-20261028-funnel1.js";
+const SHARED_JS = "/js/site-shared-20261029-attribution1.js";
 const ADSENSE_ACCOUNT = "ca-pub-4093856660317740";
 
 const LOCALES = {

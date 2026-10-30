@@ -262,7 +262,7 @@ const CORE_GUIDES = [
   },
   {
     slug: GUIDE_SLUGS[7], world: "noor", sources: SOURCES.sharedReading,
-    title: localized("A three-minute Chinese routine that can stop on time", "能準時結束的三分鐘中文小習慣", "روتين صيني لثلاث دقائق ينتهي في وقته"),
+    title: localized("A three-minute Chinese routine that stops on time", "能準時結束的三分鐘中文小習慣", "روتين صيني لثلاث دقائق ينتهي في وقته"),
     description: localized("Build a repeatable beginning, middle, and ending so a short Chinese activity remains calm and honest.", "用固定的開始、中段與結尾，讓短中文活動保持平靜、可重複，也誠實面對家庭狀態。", "ابنوا بداية ووسطًا ونهاية قابلة للتكرار كي يبقى النشاط الصيني القصير هادئًا وصادقًا."),
     details: localized({
       scene: "A parent says the activity will take three minutes, but keeps adding one more word, question, and worksheet box. The child learns that the promised ending is unreliable. A trustworthy short routine needs an ending that adults honor.",

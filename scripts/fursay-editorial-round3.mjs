@@ -116,7 +116,7 @@ export const ROUND3_GUIDES = [
   ),
   guide(
     "koko-brave-after-a-hard-day", "koko",
-    localized("After a hard day, let Koko's brave moment stay small", "辛苦的一天後，陪 Koko 做一件小小的勇敢事", "بعد يوم صعب، اجعلوا شجاعة Koko صغيرة"),
+    localized("After a hard day, keep Koko's brave moment small", "辛苦的一天後，陪 Koko 做一件小小的勇敢事", "بعد يوم صعب، اجعلوا شجاعة Koko صغيرة"),
     localized("A story-based way to talk about trying again that leaves room for rest, uncertainty, and a child's own meaning of brave.", "用故事談再試一次時，也替休息、不確定與孩子自己的勇敢定義留位置。", "طريقة قصصية للحديث عن المحاولة من جديد مع مساحة للراحة والتردد وتعريف الطفل للشجاعة."),
     localized("We revised this guide to distinguish bravery from compliance, added a rest-first alternative, and made a two-choice reflection card.", "本次修訂區分勇敢與服從，加入先休息的替代方式與雙選項回想卡。", "نقحنا الدليل للفصل بين الشجاعة والطاعة، وأضفنا خيار الراحة أولًا وبطاقة تأمل ذات خيارين."),
     {
@@ -274,7 +274,7 @@ export const ROUND3_GUIDES = [
   ),
   guide(
     "nour-colors-at-the-table", "noor",
-    localized("A no-prep Nour color game for an ordinary family table", "餐桌旁的努爾顏色遊戲：不用備課也能開始", "لعبة ألوان نور على مائدة الأسرة بلا تجهيز"),
+    localized("A no-prep Nour color game for the family table", "餐桌旁的努爾顏色遊戲：不用備課也能開始", "لعبة ألوان نور على مائدة الأسرة بلا تجهيز"),
     localized("Use two safe, familiar objects at the table to connect one Chinese color word with a real choice, without turning dinner into a lesson.", "用餐桌上兩件熟悉又安全的物品，把一個中文顏色詞放進真實選擇，不把吃飯變成上課。", "استخدموا غرضين مألوفين وآمنين على المائدة لربط كلمة لون صينية باختيار حقيقي من دون تحويل الطعام إلى درس."),
     localized("We added a low-ink color mat, a food-allergy and choking-safety boundary, and a version that works with no printed materials.", "本次新增低墨水顏色墊、不把食物當玩具的安全界線，以及完全不列印的版本。", "أضفنا بساط ألوان منخفض الحبر وحدود سلامة للطعام والاختناق ونسخة بلا طباعة."),
     {

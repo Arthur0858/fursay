@@ -429,6 +429,7 @@ async function handleSubscribe(request, env) {
     const fields = {};
     if (region) fields.region = region;
     Object.assign(fields, attributionFields(attribution, env));
+    Object.assign(fields, subscriberAttribution(body, request));
 
     const payload = {
       email: normalizedEmail,
@@ -605,6 +606,30 @@ function json(data, status, headers) {
       "Content-Type": "application/json"
     }
   }));
+}
+
+function subscriberAttribution(body, request) {
+  const clean = (value) => typeof value === "string"
+    ? value.replace(/[\x00-\x1f\x7f-\x9f]/g, "").trim().slice(0, 255)
+    : "";
+  let referer;
+  try {
+    const candidate = new URL(request.headers.get("Referer"));
+    if (candidate.origin === new URL(request.url).origin) referer = candidate;
+  } catch {} // Missing or malformed attribution must never block signup.
+  const fields = {};
+  for (const key of ["utm_source", "utm_medium", "utm_campaign"]) {
+    const value = clean(body[key]) || clean(referer?.searchParams.get(key));
+    if (value) fields[key] = value;
+  }
+  const path = (value) => {
+    value = clean(value);
+    if (!value.startsWith("/") || value.startsWith("//")) return "";
+    return clean(value.split(/[?#]/, 1)[0]);
+  };
+  const signupPage = path(body.signup_page) || path(referer?.pathname);
+  if (signupPage) fields.signup_page = signupPage;
+  return fields;
 }
 
 function attributionFields(attribution, env) {

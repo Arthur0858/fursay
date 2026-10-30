@@ -781,8 +781,12 @@
       groups: groups,
       child_age: qs('modalAge') ? qs('modalAge').value : (qs('sub-age') ? qs('sub-age').value : ''),
       region: qs('modalRegion') ? qs('modalRegion').value : (qs('sub-region') ? qs('sub-region').value : ''),
-      attribution: collectSubscribeAttribution()
+      attribution: collectSubscribeAttribution(),
+      signup_page: window.location.pathname || '/'
     };
+    ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (key) {
+      if (payload.attribution[key]) payload[key] = payload.attribution[key];
+    });
     emitFursayEvent('fursay_subscribe_submit_attempt', {
       pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
       groups: groups.join(','),

@@ -10,7 +10,7 @@ const PAGES = [
   { path: "/koko", file: "koko.html", lang: "en", canonical: "https://fursay.com/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/zh/koko", file: "zh/koko.html", lang: "zh-TW", canonical: "https://fursay.com/zh/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 70 },
   { path: "/ar/koko", file: "ar/koko.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/koko", ogImage: "https://fursay.com/og-koko.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
-  { path: "/arabic", file: "arabic.html", lang: "en", canonical: "https://fursay.com/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], title: "Chinese for Arabic-Speaking Kids — Bilingual Picture Stories with Pinyin | Fursay" },
+  { path: "/arabic", file: "arabic.html", lang: "en", canonical: "https://fursay.com/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], title: "Chinese Tales with Pinyin for Arabic-Speaking Kids | Fursay" },
   { path: "/zh/arabic", file: "zh/arabic.html", lang: "zh-TW", canonical: "https://fursay.com/zh/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"], minDescription: 60 },
   { path: "/ar/arabic", file: "ar/arabic.html", lang: "ar", dir: "rtl", canonical: "https://fursay.com/ar/arabic", ogImage: "https://fursay.com/og-noor.png", alternates: ["en", "zh-TW", "ar", "x-default"] },
   { path: "/links", file: "links.html", lang: "en", canonical: "https://fursay.com/links", ogImage: "https://fursay.com/og-image.png", robots: "noindex,follow" },
