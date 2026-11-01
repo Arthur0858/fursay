@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30",
+  "generatedAt": "2026-11-01",
   "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
   "assets": [
     {
@@ -46,6 +46,11 @@
       "path": "/css/home-zh-page-20260613-cache1.css",
       "bytes": 14628,
       "sha256": "ce906775cf72607565d8e4c9b7d1e3009b9cf96a94eff7ebc7511f9716c0def9"
+    },
+    {
+      "path": "/css/inline-subscribe-20261101.css",
+      "bytes": 790,
+      "sha256": "7e086e9cba4d3b6cfeedde4c4bb2780616089bf710a8ce9644580aa19d51b75c"
     },
     {
       "path": "/css/koko-ar-page-20260613-cache1.css",
@@ -136,6 +141,11 @@
       "path": "/js/site-shared-20261029-attribution1.js",
       "bytes": 36292,
       "sha256": "d3f77a63d3eb6ac7527bdf6a07157974eb98a345724da66ee382f90e1b437b66"
+    },
+    {
+      "path": "/js/site-shared-20261101-inline-signup.js",
+      "bytes": 36895,
+      "sha256": "1f4698f46b5fa69b11665c96730f70c6ce8e386a4a2af2a7b2ad51417717223d"
     }
   ]
 }
