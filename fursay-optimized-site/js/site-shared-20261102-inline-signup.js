@@ -822,7 +822,7 @@
       });
       var data = {};
       try { data = await res.json(); } catch (e) {}
-      var ok = res.ok && data.success !== false;
+      var ok = res.ok && data !== null && typeof data === 'object' && data.success === true;
       emitFursayEvent(ok ? 'fursay_subscribe_submit_success' : 'fursay_subscribe_submit_failure', {
         pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
         groups: groups.join(','),
