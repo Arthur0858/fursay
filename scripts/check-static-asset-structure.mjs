@@ -6,6 +6,7 @@ const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const IMMUTABLE_ASSET_MANIFEST = "data/immutable-asset-fingerprints.json";
 const EXPECTED_CSS = [
+  "inline-subscribe-20261101.css",
   "home-fonts-20261004-v1.css",
   "home-common-20260613-cache1.css",
   "home-ar-page-20260613-cache1.css",
@@ -33,6 +34,7 @@ const EXPECTED_CSS = [
 const EXPECTED_JS = [
   "four-week-interest-20260930-v1.js",
   "site-shared-20261029-attribution1.js",
+  "site-shared-20261101-inline-signup.js",
   "modal-accessibility-20261002-v1.js",
   "modal-accessibility-20260925-v1.js",
 ];
@@ -43,7 +45,8 @@ const RETAINED_ACCESSIBILITY_ASSETS = new Set([
 const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_MAIN_SHARED_CSS_BYTES = 150_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
-const MAX_TOTAL_JS_BYTES = 41_000;
+// Both immutable shared versions coexist for cached pages; each page loads only one.
+const MAX_TOTAL_JS_BYTES = 80_000;
 const MAX_SINGLE_JS_BYTES = 37_000;
 const MAIN_STORY_HTML = new Set([
   "index.html",
