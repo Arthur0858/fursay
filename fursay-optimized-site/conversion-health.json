@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-09-25",
+  "updatedAt": "2026-11-02",
   "source": {
-    "branch": "main",
-    "commit": "d6e81d8",
-    "summary": "Record Fursay deployment evidence date"
+    "branch": "codex/fursay-fur008-20261102",
+    "commit": "ee7c852",
+    "summary": "Merge pull request #11 from Arthur0858/codex/fursay-campaigns-home-sample-direct-20261102"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

@@ -288,7 +288,7 @@ async function validateHtmlRoutes(structure, context, failures, data) {
     pushMismatch(failures, `html_lang:${entry.route}`, lang, entry.locale);
     pushMismatch(failures, `html_dir:${entry.route}`, dir, entry.locale === "ar" ? "rtl" : "ltr");
     pushMismatch(failures, `html_canonical:${entry.route}`, canonical, expectedCanonical);
-    if (!["/js/site-shared-20261029-attribution1.js", "/js/site-shared-20261102-inline-signup.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
+    if (!["/js/site-shared-20261102-cadence-modal-compact.js", "/js/site-shared-20261102-cadence-inline-compact.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
 
     if (entry.channel) {
       const channel = structure.channels?.[entry.channel];

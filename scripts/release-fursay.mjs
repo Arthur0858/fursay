@@ -1,3 +1,4 @@
+import { subscriptionNote } from "./subscription-note.mjs";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -439,6 +440,7 @@ function writeReleaseManifest() {
       "scripts/check-internal-links-contract.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
       "scripts/check-newsletter-state-contract.mjs",
+      "scripts/check-subscription-copy-contract.mjs",
       "scripts/check-public-kit-parity.mjs",
       "scripts/check-amazon-affiliate-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
@@ -870,7 +872,7 @@ function socialShareUrls(pack) {
   const shareUrl = `https://fursay.com/share/${pack}`;
   const whatsappUrl = `${shareUrl}?ref=whatsapp&placement=direct_social_share`;
   const lineUrl = `${shareUrl}?ref=line&placement=direct_social_share`;
-  const label = pack === "koko" ? "Koko weekly story pack" : "قصة نور الصينية في 3 دقائق";
+  const label = pack === "koko" ? "Koko story pack" : "قصة نور الصينية في 3 دقائق";
   return {
     whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${label}: ${whatsappUrl}`)}`,
     line: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`,
@@ -879,7 +881,7 @@ function socialShareUrls(pack) {
 
 function bioProfileCopy(pack) {
   return pack === "koko"
-    ? "Koko's Forest Adventure: weekly English story packs for Mandarin-speaking families. Start here: https://fursay.com/bio/koko"
+    ? "Koko's Forest Adventure: English story packs for Mandarin-speaking families. Start here: https://fursay.com/bio/koko"
     : "قصة نور الصينية في 3 دقائق للعائلات العربية: قصة قصيرة، عبارة صينية مع Pinyin، ونشاط بسيط. ابدؤوا هنا: https://fursay.com/bio/noor";
 }
 
@@ -904,11 +906,11 @@ function writeCampaignManifest(siteDir, source) {
       },
       copyKit: {
         version: "2026-06-13",
-        qrLabel: "Koko weekly story pack",
-        shortHeadline: "Get Koko's weekly English story pack",
-        videoDescription: "Get the free Koko weekly story pack: https://fursay.com/sample/koko",
-        familyShareText: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/sample/koko",
-        familyShareMessage: "Koko's Forest Adventure weekly pack is ready for family story time: https://fursay.com/share/koko",
+        qrLabel: "Koko story pack",
+        shortHeadline: "Get Koko's English story pack",
+        videoDescription: "Get the free Koko story pack: https://fursay.com/sample/koko",
+        familyShareText: "Koko's Forest Adventure story pack is ready for family story time: https://fursay.com/sample/koko",
+        familyShareMessage: "Koko's Forest Adventure story pack is ready for family story time: https://fursay.com/share/koko",
         bioProfileCopy: bioProfileCopy("koko"),
         primaryShortlink: "https://fursay.com/sample/koko",
         shareShortlink: "https://fursay.com/share/koko",
@@ -1008,10 +1010,10 @@ function writeLinksManifest(siteDir, source) {
     primaryRoute: "https://fursay.com/links",
     packs: {
       koko: linkCard(
-        "Koko weekly English story pack",
+        "Koko English story pack",
         "English stories and parent prompts for Mandarin-speaking families.",
         {
-          label: "Get Koko's weekly pack",
+          label: "Get Koko's story pack",
           url: campaigns.koko.shortlinks.sample,
           pack: "koko",
           attribution: {
@@ -1228,7 +1230,7 @@ function writeCreatorKit(siteDir, source, campaigns) {
         ? `Try Nour's 3-minute Chinese worksheet sample with Arabic parent prompts: ${productSamplePreviewUrl}\nCreator social link: ${placementLinks.socialCaption.shortlink}`
         : `${campaign.copyKit.shortHeadline}. Preview this week's family story pack: ${placementLinks.socialCaption.shortlink}`;
       const newsletterBlurb = pack === "noor"
-        ? `Try Nour's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}. Free weekly story pack: ${placementLinks.newsletterBlurb.shortlink}`
+        ? `Try Nour's 3-minute Chinese worksheet sample: ${productSamplePreviewUrl}. Free story pack: ${placementLinks.newsletterBlurb.shortlink}`
         : `${campaign.copyKit.familyShareText.replace(sample, placementLinks.newsletterBlurb.shortlink)}`;
       return [pack, {
         audience: campaign.audience,
@@ -1288,7 +1290,7 @@ function writeShareKit(siteDir, source) {
     const productSamplePreviewUrl = `https://fursay.com${productSamplePreviewPath}?source_id=${pack}_share_kit_sample_preview&creator=fursay&placement=share_kit_sample_preview`;
     const productSampleDownloadUrl = `https://fursay.com${productSampleDownloadPath}?source_id=${pack}_share_kit_pdf_sample&creator=fursay&placement=share_kit_pdf_sample`;
     return [pack, {
-      title: pack === "koko" ? "Koko weekly English story pack" : "Nour 3-minute Chinese story pack",
+      title: pack === "koko" ? "Koko English story pack" : "Nour 3-minute Chinese story pack",
       audience: campaign.audience,
       campaign: campaign.campaign,
       storyWorld: campaign.landingPages?.storyWorld || "",
@@ -1724,7 +1726,7 @@ function buildTrafficLaunchKit(siteDir, source) {
       },
     ];
     return [pack, {
-      title: pack === "koko" ? "Koko weekly English story pack" : "Nour 3-minute Chinese story pack",
+      title: pack === "koko" ? "Koko English story pack" : "Nour 3-minute Chinese story pack",
       campaign: campaign.campaign,
       audience: campaign.audience,
       primaryGoal: campaign.primaryGoal,
@@ -1822,7 +1824,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2196,7 +2198,7 @@ ${rows}
       </table>
     </section>
   </main>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
@@ -3427,7 +3429,7 @@ ${products}
         </article>
         <article>
           <h3>What will I receive now?</h3>
-          <p>You can join the weekly story pack list and choose Koko, Nour, or both inside the signup form.</p>
+          <p>You can join the story pack list and choose Koko, Nour, or both inside the signup form.</p>
         </article>
         <article>
           <h3>When will the paid packs open?</h3>
@@ -3445,16 +3447,16 @@ ${products}
       <button class="modal-close" data-close-subscribe aria-label="Close">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">Join the story pack list</div>
-      <p class="modal-sub">Pick Koko or Nour and get updates when the weekly story pack is ready. No payment today.</p>
+      <p class="modal-sub">Pick Koko or Nour and get updates when the story pack is ready. No payment today.</p>
       <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+        ${subscriptionNote("en")}<button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the free story pack</button>
       </form>
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -3676,7 +3678,7 @@ ${products}
         </article>
         <article>
           <h3>現在會收到什麼？</h3>
-          <p>你可以加入每週故事包名單，並在表單裡選擇叩叩、努爾或兩者都要。</p>
+          <p>你可以加入故事包名單，並在表單裡選擇叩叩、努爾或兩者都要。</p>
         </article>
         <article>
           <h3>什麼時候會開放付費包？</h3>
@@ -3694,16 +3696,16 @@ ${products}
       <button class="modal-close" data-close-subscribe aria-label="關閉">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">加入故事包名單</div>
-      <p class="modal-sub">選擇叩叩或努爾，收到每週故事包與未來測試通知。今天不會收費。</p>
+      <p class="modal-sub">選擇叩叩或努爾，收到故事包與未來測試通知。今天不會收費。</p>
       <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>我有興趣</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>叩叩森林英文故事</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>努爾阿語中文故事</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">寄給我每週故事包</button>
+        ${subscriptionNote("zh")}<button type="submit" class="modal-submit" id="modalSubmitBtn">寄給我免費故事包</button>
       </form>
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -3865,7 +3867,7 @@ ${products}
         </article>
         <article>
           <h3>ماذا سأحصل الآن؟</h3>
-          <p>يمكنكم الانضمام إلى قائمة حزمة القصص الأسبوعية واختيار كوكو أو نور أو كليهما داخل النموذج.</p>
+          <p>يمكنكم الانضمام إلى قائمة حزمة القصص واختيار كوكو أو نور أو كليهما داخل النموذج.</p>
         </article>
         <article>
           <h3>متى تفتح الحزم المدفوعة؟</h3>
@@ -3883,16 +3885,16 @@ ${products}
       <button class="modal-close" data-close-subscribe aria-label="إغلاق">&times;</button>
       <span class="modal-emoji">📬</span>
       <div class="modal-title">انضموا إلى قائمة حزمة القصة</div>
-      <p class="modal-sub">اختاروا كوكو أو نور لتلقي تحديثات حزمة القصة الأسبوعية. لا دفع اليوم.</p>
+      <p class="modal-sub">اختاروا كوكو أو نور لتلقي تحديثات حزمة القصة. لا دفع اليوم.</p>
       <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>أنا مهتم بـ</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>كوكو الإنجليزية</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>نور العربية الصينية</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي الحزمة الأسبوعية</button>
+        ${subscriptionNote("ar")}<button type="submit" class="modal-submit" id="modalSubmitBtn">أرسلوا لي الحزمة المجانية</button>
       </form>
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -3938,7 +3940,7 @@ function samplePageSpec(product) {
       modalTitle: "انضموا إلى قائمة حزمة القصة",
       modalSub: "ابدؤوا بالحزمة المجانية أولا. حزم العينات المدفوعة غير مفتوحة بعد.",
       modalInterestLabel: "أنا مهتم بـ",
-      modalSubmit: "أرسلوا لي الحزمة الأسبوعية",
+      modalSubmit: "أرسلوا لي الحزمة المجانية",
       modalNote: "لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.",
       waitlistPack: "noor",
       waitlistSource: "sample_preview_noor_worksheet",
@@ -3985,7 +3987,7 @@ function samplePageSpec(product) {
     modalTitle: "Join the story pack list",
     modalSub: "Get the free story pack first. Paid sample packs are not open yet.",
     modalInterestLabel: "I'm interested in",
-    modalSubmit: "Send me the weekly pack",
+    modalSubmit: "Send me the free story pack",
     modalNote: "No spam, ever. Unsubscribe anytime.",
     waitlistPack: "koko",
     waitlistSource: "sample_preview_koko_printable",
@@ -4083,12 +4085,12 @@ ${cards}
       <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>${escapeHtml(spec.modalInterestLabel)}</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">${escapeHtml(spec.modalSubmit)}</button>
+        ${subscriptionNote(spec.lang)}<button type="submit" class="modal-submit" id="modalSubmitBtn">${escapeHtml(spec.modalSubmit)}</button>
       </form>
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -4722,7 +4724,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -4761,7 +4763,7 @@ function shareKitSubscribeModal() {
       <form id="subscribeForm"><div class="hp-field" aria-hidden="true"><label for="sub-website">Website</label><input type="text" id="sub-website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="modal-field"><label for="modalEmail">Email *</label><input type="email" id="modalEmail" placeholder="your@email.com" required></div>
         <div class="modal-field"><label>I'm interested in</label><div class="modal-checks"><label class="modal-check"><input type="checkbox" name="groups" value="koko"><span class="check-dot"></span>Koko's Forest (English)</label><label class="modal-check"><input type="checkbox" name="groups" value="noor"><span class="check-dot"></span>Nour's Adventure (Arabic-Chinese)</label></div></div>
-        <button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the weekly pack</button>
+        ${subscriptionNote("en")}<button type="submit" class="modal-submit" id="modalSubmitBtn">Send me the free story pack</button>
       </form>
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
@@ -4872,7 +4874,7 @@ function writeShareKitPage(siteDir, kit) {
 ${packCards}
   </main>
   ${shareKitSubscribeModal()}
-  <script src="/js/site-shared-20261029-attribution1.js"></script>
+  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
@@ -4906,6 +4908,7 @@ async function main() {
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-state-contract.mjs"]);
+  run("node", ["--check", "scripts/check-subscription-copy-contract.mjs"]);
   run("node", ["--check", "scripts/newsletter-runner.mjs"]);
   run("node", ["--check", "scripts/newsletter-readback-contract.mjs"]);
   run("node", ["--check", "scripts/test-newsletter-readback-contract.mjs"]);
@@ -4966,6 +4969,7 @@ async function main() {
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
   run("node", ["scripts/check-newsletter-state-contract.mjs", "--out-dir", join(outRoot, "newsletter-state-local")]);
+  run("node", ["scripts/check-subscription-copy-contract.mjs"]);
   run("node", ["--test", "scripts/test-newsletter-readback-contract.mjs"]);
   run("node", ["--test", "scripts/test-koko-slot-ledger.mjs"]);
   run("node", ["scripts/check-public-kit-parity.mjs", "--out-dir", join(outRoot, "public-kit-parity-local")]);
@@ -5013,6 +5017,7 @@ async function main() {
     run("node", ["scripts/check-subscribe-api-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscribe-api-live")]);
     run("node", ["scripts/check-content-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "content-structure-live")]);
     run("node", ["scripts/check-semantic-funnel-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "semantic-funnel-live")]);
+    run("node", ["scripts/check-subscription-copy-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "subscription-copy-live")]);
     run("node", ["scripts/check-site-structure-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "site-structure-live")]);
     run("node", ["scripts/check-hero-preload-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "hero-preload-live")]);
     run("node", ["scripts/check-visual-layout-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "visual-layout-live")]);
