@@ -23,7 +23,7 @@ const PAGES = [
         creator: "fursay",
         placement: "home_weekly_pack",
       },
-      noor: "/arabic",
+      noor: "/product-samples/noor-worksheet",
     },
   },
   {
@@ -42,7 +42,7 @@ const PAGES = [
         creator: "fursay",
         placement: "home_weekly_pack",
       },
-      noor: "/zh/arabic",
+      noor: "/product-samples/noor-worksheet",
     },
   },
   {
@@ -62,7 +62,7 @@ const PAGES = [
         creator: "fursay",
         placement: "home_weekly_pack",
       },
-      noor: "/ar/arabic",
+      noor: "/product-samples/noor-worksheet",
     },
   },
   {
@@ -268,7 +268,7 @@ async function checkPage(browser, baseUrl, spec) {
       const url = new URL(link.href, "https://fursay.com");
       if (typeof expected === "string") {
         if (url.pathname !== expected) failures.push(`bad_home_sample_path:${pack}:${url.pathname}`);
-        if (url.searchParams.get("subscribe") !== pack) failures.push(`bad_home_sample_subscribe:${pack}:${url.searchParams.get("subscribe") || "none"}`);
+        if (url.searchParams.has("subscribe")) failures.push(`bad_home_sample_subscribe:${pack}`);
         if (url.searchParams.get("utm_source") !== "home") failures.push(`bad_home_sample_source:${pack}:${url.searchParams.get("utm_source") || "none"}`);
       } else {
         if (url.pathname !== expected.path) failures.push(`bad_home_sample_path:${pack}:${url.pathname}`);
