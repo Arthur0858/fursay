@@ -542,7 +542,7 @@ async function checkPage(browser, baseUrl, path) {
         creator: "fursay",
         placement: "home_weekly_pack",
       },
-      { pack: "noor", pathNeedle: path === "/" ? "/arabic" : `${path.replace(/\/$/, "")}/arabic`, campaign: "noor_story_funnel", content: "home_noor_sample_link" },
+      { pack: "noor", pathNeedle: "/product-samples/noor-worksheet", campaign: "noor_story_funnel", content: "home_noor_sample_link" },
     ];
     for (const expected of expectedSampleLinks) {
       const href = sampleLinks.get(expected.pack) || "";
@@ -553,7 +553,7 @@ async function checkPage(browser, baseUrl, path) {
         if (!href.includes(`creator=${expected.creator}`)) failures.push(`home_bad_koko_sample_creator:${href || "none"}`);
         if (!href.includes(`placement=${expected.placement}`)) failures.push(`home_bad_koko_sample_placement:${href || "none"}`);
       } else {
-        if (!href.includes(`subscribe=${expected.pack}`)) failures.push(`home_bad_${expected.pack}_sample_subscribe:${href || "none"}`);
+        if (new URL(href, baseUrl).searchParams.has("subscribe")) failures.push(`home_bad_${expected.pack}_sample_subscribe:${href || "none"}`);
         if (!href.includes("utm_source=home") || !href.includes("utm_medium=site")) failures.push(`home_bad_${expected.pack}_sample_utm_source_medium`);
         if (!href.includes(`utm_campaign=${expected.campaign}`) || !href.includes(`utm_content=${expected.content}`)) {
           failures.push(`home_bad_${expected.pack}_sample_campaign:${href || "none"}`);

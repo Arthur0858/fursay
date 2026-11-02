@@ -136,3 +136,5 @@ Before scheduling, preview the footer. Stop and record a `chrome-result` failure
 - Koko: after Monday 09:10 Asia/Taipei, find the latest Fursay/Koko Gmail message.
 - Arabic: after Wednesday 09:10 Asia/Taipei, find the latest Fursay/Arabic Gmail message.
 - Confirm the message exists, contains the YouTube CTA and site CTA, has no blocked placeholder text, and did not collapse into a single plain-text paragraph.
+
+Deliberate signup links can use `subscribe` (or the legacy `pack` and `group` parameters) to open the signup modal. Sample-preview links must not carry `subscribe`, so visitors can view previews without opening signup. Free sample previews and PDF downloads do not require email.

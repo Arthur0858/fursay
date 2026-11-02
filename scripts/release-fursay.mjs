@@ -940,7 +940,7 @@ function writeCampaignManifest(siteDir, source) {
       },
       landingPages: {
         storyWorld: "https://fursay.com/arabic",
-        homeSample: "https://fursay.com/arabic?subscribe=noor&utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
+        homeSample: "https://fursay.com/product-samples/noor-worksheet?utm_source=home&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=home_noor_sample_link",
         sampleSchema: "https://fursay.com/arabic?subscribe=noor&utm_source=structured_data&utm_medium=site&utm_campaign=noor_story_funnel&utm_content=noor_sample_pack_schema",
       },
       copyKit: {
