@@ -7,6 +7,7 @@ import { chromium } from "playwright";
 import { GUIDE_SLUGS } from "./fursay-editorial-content.mjs";
 import { validateSitemapDates } from "./validate-sitemap-dates.mjs";
 import { createSitemapLastmodResolver } from "./generate-sitemap-lastmods.mjs";
+import { isNoorHomeSampleDirectPreview } from "./noor-home-sample-contract.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SITE_DIR = resolve(ROOT, "fursay-optimized-site");
@@ -1961,8 +1962,8 @@ async function checkDiscoveryFiles(baseUrl) {
       if (!campaign.landingPages?.homeSample?.includes("/product-samples/koko-printable")) failures.push("campaigns_koko_home_sample_path");
       if (!campaign.landingPages?.homeSample?.includes("source_id=home_koko_sample_preview")) failures.push("campaigns_koko_home_sample_source_id");
       if (!campaign.landingPages?.homeSample?.includes("placement=home_weekly_pack")) failures.push("campaigns_koko_home_sample_placement");
-    } else if (!campaign.landingPages?.homeSample?.includes(`subscribe=${pack}`)) {
-      failures.push(`campaigns_${pack}_home_sample_subscribe`);
+    } else if (!isNoorHomeSampleDirectPreview(campaign.landingPages?.homeSample)) {
+      failures.push("campaigns_noor_home_sample_direct_preview");
     }
     if (!campaign.landingPages?.sampleSchema?.includes("utm_source=structured_data")) failures.push(`campaigns_${pack}_schema_source`);
     if (campaign.copyKit?.primaryShortlink !== expectedSample) failures.push(`campaigns_${pack}_copy_primary_shortlink:${campaign.copyKit?.primaryShortlink || "none"}`);
