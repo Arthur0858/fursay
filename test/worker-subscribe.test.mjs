@@ -187,10 +187,14 @@ test("subscriber attribution uses body first, same-origin Referer fallback, and 
   });
   assert.equal(result.status, 200);
   assert.deepEqual(JSON.parse(result.calls[0].body).fields, {
-    region: "TW", utm_source: "directsource", utm_medium: "x".repeat(255), utm_campaign: "launch", signup_page: "/guides/test"
+    region: "TW", utm_source: "directsource", utm_medium: "x".repeat(255), utm_campaign: "launch", signup_page: "fursay.com/guides/test"
   });
   const fallback = await subscribe({ referer: "https://fursay.com/arabic?utm_source=news&utm_medium=email&utm_campaign=hello#part" });
-  assert.deepEqual(JSON.parse(fallback.calls[0].body).fields, { region: "TW", utm_source: "news", utm_medium: "email", utm_campaign: "hello", signup_page: "/arabic" });
+  assert.deepEqual(JSON.parse(fallback.calls[0].body).fields, { region: "TW", utm_source: "news", utm_medium: "email", utm_campaign: "hello", signup_page: "fursay.com/arabic" });
   const external = await subscribe({ referer: "https://elsewhere.test/path?utm_source=outside", body: { signup_page: "https://elsewhere.test/path" } });
   assert.deepEqual(JSON.parse(external.calls[0].body).fields, { region: "TW" });
+  const longPath = await subscribe({ body: { signup_page: `/${"a".repeat(300)}` } });
+  assert.equal(JSON.parse(longPath.calls[0].body).fields.signup_page, `fursay.com/${"a".repeat(244)}`);
+  const root = await subscribe({ body: { signup_page: "/" } });
+  assert.equal(JSON.parse(root.calls[0].body).fields.signup_page, "fursay.com/");
 });

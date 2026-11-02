@@ -628,7 +628,7 @@ function subscriberAttribution(body, request) {
     return clean(value.split(/[?#]/, 1)[0]);
   };
   const signupPage = path(body.signup_page) || path(referer?.pathname);
-  if (signupPage) fields.signup_page = signupPage;
+  if (signupPage) fields.signup_page = `fursay.com${signupPage}`.slice(0, 255);
   return fields;
 }
 
