@@ -334,7 +334,7 @@
       "/css/brand-storybook-20260717-v1.css",
       "/css/home-focus-20260718-v1.css",
       "/css/sample-activity-20260718-v1.css",
-      "/css/editorial-20260925-v1.css",
+      "/css/editorial-20261102-v1.css",
       "/css/site-accessibility-20261002-v1.css",
       "/css/desktop-hero-layout-20261003-v1.css",
       "/css/home-fonts-20261004-v1.css",
@@ -344,7 +344,8 @@
       "/js/site-shared-20261102-pinned-cadence.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261102-pinned-cadence-inline.js"
+      "/js/site-shared-20261102-pinned-cadence-inline.js",
+      "/js/editorial-nav-20261102-v1.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",

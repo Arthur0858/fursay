@@ -1,0 +1,1 @@
+(function(){var nav=document.getElementById('mainNav');if(!nav)return;function measure(){document.documentElement.style.setProperty('--editorial-nav-height',nav.getBoundingClientRect().height+'px')}measure();if(window.ResizeObserver)new ResizeObserver(measure).observe(nav);else window.addEventListener('resize',measure)})();

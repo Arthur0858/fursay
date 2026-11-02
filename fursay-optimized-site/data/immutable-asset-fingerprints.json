@@ -13,9 +13,9 @@
       "sha256": "78c42fe7ab0ff2911d98e47537babdd759e42e1829f87a96051b211e3abbd0e5"
     },
     {
-      "path": "/css/editorial-20260925-v1.css",
-      "bytes": 3904,
-      "sha256": "b6e7667d1ada347c04707bdc82daf04bdbd55cb0813e44acc129be36a88a8dc5"
+      "path": "/css/editorial-20261102-v1.css",
+      "bytes": 4426,
+      "sha256": "18e05f8b612323f43e3733397964f0d31fd8cd5adf25bce1add5524f9052d46e"
     },
     {
       "path": "/css/home-ar-page-20260613-cache1.css",
@@ -121,6 +121,11 @@
       "path": "/css/storybook-skin-20260613-inline1.css",
       "bytes": 16771,
       "sha256": "5a47e687b0ff51f576b2639e8bf94f767d766f63107fc17eefa417d39103b92e"
+    },
+    {
+      "path": "/js/editorial-nav-20261102-v1.js",
+      "bytes": 326,
+      "sha256": "c2f21025c3ad8c5ec1e9916c98b5e6908debb3ebb09c513cd72c844d535c5931"
     },
     {
       "path": "/js/four-week-interest-20260930-v1.js",

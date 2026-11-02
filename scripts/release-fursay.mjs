@@ -436,6 +436,7 @@ function writeReleaseManifest() {
       "scripts/check-site-structure-contract.mjs",
       "scripts/check-hero-preload-contract.mjs",
       "scripts/check-visual-layout-contract.mjs",
+      "scripts/check-editorial-utility-layout.mjs",
       "scripts/check-web-vitals-contract.mjs",
       "scripts/check-internal-links-contract.mjs",
       "scripts/check-newsletter-traffic-kit.mjs",
@@ -4905,6 +4906,7 @@ async function main() {
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-hero-preload-contract.mjs"]);
   run("node", ["--check", "scripts/check-visual-layout-contract.mjs"]);
+  run("node", ["--check", "scripts/check-editorial-utility-layout.mjs"]);
   run("node", ["--check", "scripts/check-web-vitals-contract.mjs"]);
   run("node", ["--check", "scripts/check-internal-links-contract.mjs"]);
   run("node", ["--check", "scripts/check-newsletter-traffic-kit.mjs"]);
@@ -4967,6 +4969,7 @@ async function main() {
   run("node", ["scripts/check-semantic-funnel-contract.mjs", "--out-dir", join(outRoot, "semantic-funnel-local")]);
   run("node", ["scripts/check-site-structure-contract.mjs", "--out-dir", join(outRoot, "site-structure-local")]);
   run("node", ["scripts/check-hero-preload-contract.mjs", "--out-dir", join(outRoot, "hero-preload-local")]);
+  run("node", ["scripts/check-editorial-utility-layout.mjs"]);
   run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
   run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
