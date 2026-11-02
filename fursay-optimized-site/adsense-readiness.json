@@ -10,14 +10,14 @@
   "lastMaterialDeployment": "2026-09-25",
   "lastMaterialChange": "2026-09-25",
   "stableWindowReadyAt": "2026-10-09",
-  "stableWindowComplete": false,
-  "evidenceGeneratedAt": "2026-09-25T12:59:47.808Z",
+  "stableWindowComplete": true,
+  "evidenceGeneratedAt": "2026-11-02T13:13:21.331Z",
   "externalGates": {
     "lovetypesReady": {
       "status": "not_ready",
       "checkedAt": "2026-09-25T00:00:00+08:00",
       "source": "owner_report",
-      "fresh": true
+      "fresh": false
     },
     "adsTxtAuthorized": {
       "status": "unknown",

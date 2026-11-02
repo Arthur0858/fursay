@@ -329,7 +329,7 @@ function selectNextEpisode(channelKey, state) {
 function buildPrompt(channelKey, episode) {
   const config = CHANNELS[channelKey];
   return [
-    `Create one production-ready weekly email newsletter for ${config.label}.`,
+    `Create one production-ready email newsletter for ${config.label}.`,
     `Audience: ${config.audience}.`,
     `Language mode: ${config.languageBrief}.`,
     `Source video: episode ${String(episode.episodeNo).padStart(3, "0")}, title "${episode.title}", URL ${episode.videoUrl}.`,
@@ -425,7 +425,7 @@ function buildCodexRequest(channelKey, episode, runId) {
     requiredOutputPath: projectPath(outputPath),
     requiredSchema: schema,
     instructions: [
-      `Create one production-ready weekly email newsletter for ${config.label}.`,
+      `Create one production-ready email newsletter for ${config.label}.`,
       `Use only the episode title, description, and video URL as source context.`,
       `Return and save exactly one JSON object matching requiredSchema at requiredOutputPath.`,
       "Do not include Markdown fences, comments, or extra top-level fields.",
@@ -595,7 +595,7 @@ function renderHtml(channelKey, episode, newsletter, trafficPack) {
             </p>
             <p style="font-size:15px;line-height:1.65;margin:18px 0 0;background:#f7f2e8;border-radius:10px;padding:14px;">
               ${escapeHtml(newsletterCta.blurb)}<br>
-              <a href="${escapeHtml(newsletterCta.shortlink)}" style="color:#c05f18;font-weight:bold;">${channelKey === "arabic" ? "Free weekly story pack" : escapeHtml(newsletterCta.shortlink)}</a>
+              <a href="${escapeHtml(newsletterCta.shortlink)}" style="color:#c05f18;font-weight:bold;">${channelKey === "arabic" ? "Free story pack" : escapeHtml(newsletterCta.shortlink)}</a>
             </p>
             <p style="font-size:16px;line-height:1.7;margin:20px 0 0;">${escapeHtml(newsletter.closing)}</p>
           </td>

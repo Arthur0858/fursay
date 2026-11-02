@@ -22,9 +22,9 @@ const PACKS = {
     leadClass: "koko-lead-magnet",
     leadAttr: "data-koko-lead-magnet",
     leadVariant: "weekly-sample-v1",
-    promiseNeedles: ["weekly", "story", "pack"],
-    zhPromiseNeedles: ["每週", "故事"],
-    arPromiseNeedles: ["الأسبوعية"],
+    promiseNeedles: ["at most one email a week", "story", "pack"],
+    zhPromiseNeedles: ["不定期，最多每週一封", "故事"],
+    arPromiseNeedles: ["رسائل غير منتظمة، بحد أقصى رسالة واحدة في الأسبوع", "قصة"],
   },
   noor: {
     campaign: "noor_story_funnel",
@@ -187,7 +187,7 @@ function checkPage(spec, html, manifests) {
     if (shareKit[pack]?.sampleShortlink !== config.sampleShortlink) failures.push(`${spec.path}:share_kit_sample:${pack}:${shareKit[pack]?.sampleShortlink || "none"}`);
     if (creatorKit[pack]?.sampleShortlink !== config.sampleShortlink) failures.push(`${spec.path}:creator_kit_sample:${pack}:${creatorKit[pack]?.sampleShortlink || "none"}`);
     if (videoDiscovery[pack]?.subscribeShortlink !== config.sampleShortlink) failures.push(`${spec.path}:video_discovery_sample:${pack}:${videoDiscovery[pack]?.subscribeShortlink || "none"}`);
-    if (!campaign.copyKit?.shortHeadline || !textHasAll(campaign.copyKit.shortHeadline, localeNeedles(pack, "en").slice(0, 2))) {
+    if (!campaign.copyKit?.shortHeadline || !textHasAll(campaign.copyKit.shortHeadline, (pack === "koko" ? ["story", "pack"] : localeNeedles(pack, "en").slice(0, 2)))) {
       failures.push(`${spec.path}:campaign_headline_weak:${pack}`);
     }
 
