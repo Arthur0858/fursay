@@ -138,14 +138,14 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20261029-attribution1.js",
-      "bytes": 36292,
-      "sha256": "d3f77a63d3eb6ac7527bdf6a07157974eb98a345724da66ee382f90e1b437b66"
+      "path": "/js/site-shared-20261102-pinned-watch-inline.js",
+      "bytes": 36988,
+      "sha256": "e4f149ee24a083247ce5d0ec40f06de4db2e1f09b4d2d9b869d96720b0004c96"
     },
     {
-      "path": "/js/site-shared-20261102-inline-signup.js",
-      "bytes": 36939,
-      "sha256": "510ac87db184c00294b8a0bc865415a14758cc351cd5b0a69a3de8873e3e31fb"
+      "path": "/js/site-shared-20261102-pinned-watch.js",
+      "bytes": 36341,
+      "sha256": "a0e67f97ed90ee742a939bcc2a2e776550c84526edd1fed4f1653a0410f12082"
     }
   ]
 }

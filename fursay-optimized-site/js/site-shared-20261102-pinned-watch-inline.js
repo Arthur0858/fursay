@@ -275,7 +275,7 @@
     });
 
     document.addEventListener('submit', function (event) {
-      if (event.target && event.target.matches('#subscribeModal form')) {
+      if (event.target && event.target.matches('#subscribeModal form, form[data-subscribe-placement]')) {
         window.handleSubscribe(event);
       }
     });
@@ -387,7 +387,7 @@
         url.searchParams.set('utm_medium', 'site');
         url.searchParams.set('utm_campaign', pageCampaign());
         url.searchParams.set('utm_content', linkContent(anchor, url));
-        if (/^\/@(?:KokosForest|ArabicKidsChinese)\/?$/.test(url.pathname)) {
+        if (anchor.hasAttribute('data-youtube-subscribe') && /^\/@(?:KokosForest|ArabicKidsChinese)\/?$/.test(url.pathname)) {
           url.searchParams.set('sub_confirmation', '1');
         }
         anchor.href = url.toString();
@@ -754,10 +754,12 @@
       pending: "Almost done! Check your inbox and tap the confirmation link to start your weekly story pack. If you don't see it, look in Spam or Promotions.",
       sending: 'Sending...', error: 'Could not subscribe. Please try again.', button: 'Subscribed!'
     };
-    var emailEl = qs('modalEmail') || qs('sub-email');
+    var form = event && event.target;
+    var inline = form && form.matches('[data-subscribe-placement]');
+    var emailEl = inline ? form.querySelector('[type=email]') : (qs('modalEmail') || qs('sub-email'));
     var nameEl = qs('sub-name');
-    var msg = qs('sub-msg') || document.querySelector('#subscribeModal .modal-note');
-    var btn = qs('modalSubmitBtn') || (event && event.target ? event.target.querySelector('[type="submit"]') : null);
+    var msg = inline ? form.querySelector('[role=status]') : (qs('sub-msg') || document.querySelector('#subscribeModal .modal-note'));
+    var btn = inline ? form.querySelector('[type=submit]') : (qs('modalSubmitBtn') || (form ? form.querySelector('[type="submit"]') : null));
     var email = emailEl ? emailEl.value.trim() : '';
 
     if (!email) {
@@ -769,14 +771,14 @@
       return;
     }
 
-    var groups = Array.from(document.querySelectorAll('#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')).map(function (input) {
+    var groups = Array.from((inline ? form : document).querySelectorAll(inline ? 'input[name="groups"]:checked' : '#subscribeModal input[name="groups"]:checked, #subscribeModal input[name="channel"]:checked')).map(function (input) {
       if (input.value === 'arabic') return 'noor';
       return input.value;
     });
     groups = Array.from(new Set(groups));
     var payload = {
       email: email,
-      website: qs('sub-website') ? qs('sub-website').value : '',
+      website: inline ? form.querySelector('[name=website]').value : (qs('sub-website') ? qs('sub-website').value : ''),
       name: nameEl ? nameEl.value.trim() : undefined,
       groups: groups,
       child_age: qs('modalAge') ? qs('modalAge').value : (qs('sub-age') ? qs('sub-age').value : ''),
@@ -784,6 +786,10 @@
       attribution: collectSubscribeAttribution(),
       signup_page: window.location.pathname || '/'
     };
+    if (inline) {
+      payload.attribution.signup_source = form.dataset.signupSource;
+      payload.attribution.placement = form.dataset.subscribePlacement + (form.dataset.guideSlug ? '_' + form.dataset.guideSlug : '');
+    }
     ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (key) {
       if (payload.attribution[key]) payload[key] = payload.attribution[key];
     });
@@ -816,7 +822,7 @@
       });
       var data = {};
       try { data = await res.json(); } catch (e) {}
-      var ok = res.ok && data.success !== false;
+      var ok = res.ok && data !== null && typeof data === 'object' && data.success === true;
       emitFursayEvent(ok ? 'fursay_subscribe_submit_success' : 'fursay_subscribe_submit_failure', {
         pack: payload.attribution.subscribe_intent || payload.attribution.entry_pack || '',
         groups: groups.join(','),

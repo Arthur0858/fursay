@@ -1,0 +1,33 @@
+{
+  "koko": {
+    "world": "Koko",
+    "videoId": "WIynqs8seyo",
+    "title": "Koko and Turtly: Turtly's Scary Story Adventure",
+    "length": "about 4:35",
+    "captionNote": "YouTube auto captions",
+    "practiceWords": [
+      "happy",
+      "sad",
+      "brave"
+    ],
+    "verifiedOn": "2026-11-02"
+  },
+  "noor": {
+    "world": "Nour",
+    "videoId": "ZFNENccdxTE",
+    "title": "禮貌的話 الكلمات المهذبة | 學中文 EP171",
+    "length": "about 3:45",
+    "captionNote": "YouTube auto captions",
+    "practiceWords": [
+      "hello",
+      "goodbye",
+      "thank you"
+    ],
+    "episodeWords": [
+      "ni hao",
+      "zai jian",
+      "xie xie"
+    ],
+    "verifiedOn": "2026-11-02"
+  }
+}

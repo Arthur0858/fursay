@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20261029-attribution1.js";
+const SHARED_JS = "/js/site-shared-20261102-pinned-watch.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",

@@ -341,10 +341,10 @@
       "/css/inline-subscribe-20261101.css"
     ],
     "js": [
-      "/js/site-shared-20261029-attribution1.js",
+      "/js/site-shared-20261102-pinned-watch.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261102-inline-signup.js"
+      "/js/site-shared-20261102-pinned-watch-inline.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
