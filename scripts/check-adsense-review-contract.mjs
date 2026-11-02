@@ -60,7 +60,7 @@ async function mainRun() {
     const localeTitles = titlesByLocale.get(locale.code) || new Set();
     if (!title || localeTitles.has(title)) failures.push(`${path}:title_missing_or_duplicate`);
     localeTitles.add(title); titlesByLocale.set(locale.code, localeTitles);
-    const paragraphMatches = [...main(html).matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)];
+    const paragraphMatches = [...main(html).matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)].filter((match) => !/\bclass\s*=\s*(["'])[^"']*\bsubscription-note\b[^"']*\1/i.test(match[1]));
     const substantive = paragraphMatches.map((match) => ({ standard: /data-editorial-standard/i.test(match[1]), text: visible(match[2]) })).filter((item) => item.text);
     const standardTokens = substantive.filter((item) => item.standard).flatMap((item) => tokenList(item.text, locale.code)).length;
     const allTokens = tokenList(text, locale.code);

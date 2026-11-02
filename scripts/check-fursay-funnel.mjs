@@ -1490,7 +1490,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.funnels?.koko?.creator !== "https://fursay.com/creator/koko") failures.push("release_bad_koko_creator");
   if (release.funnels?.noor?.creator !== "https://fursay.com/creator/noor") failures.push("release_bad_noor_creator");
   if (release.assets?.css !== "/css/picture-world-shared-20260613-traffic12.css") failures.push(`release_css:${release.assets?.css || "none"}`);
-  if (release.assets?.js !== "/js/site-shared-20261102-pinned-watch.js") failures.push(`release_js:${release.assets?.js || "none"}`);
+  if (release.assets?.js !== "/js/site-shared-20261102-pinned-cadence.js") failures.push(`release_js:${release.assets?.js || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-cache-headers.mjs")) failures.push("release_missing_cache_gate");
   if (release.deployment?.campaignManifest !== "https://fursay.com/campaigns.json") {
     failures.push(`release_campaign_manifest:${release.deployment?.campaignManifest || "none"}`);
@@ -1938,7 +1938,7 @@ async function checkDiscoveryFiles(baseUrl) {
     const expectedWhatsappShare = `${expectedShare}?ref=whatsapp&placement=direct_social_share`;
     const expectedLineShare = `${expectedShare}?ref=line&placement=direct_social_share`;
     const expectedCreator = `https://fursay.com/creator/${pack}`;
-    const expectedWhatsappLabel = pack === "koko" ? "Koko weekly story pack" : "قصة نور الصينية في 3 دقائق";
+    const expectedWhatsappLabel = pack === "koko" ? "Koko story pack" : "قصة نور الصينية في 3 دقائق";
     const expectedWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${expectedWhatsappLabel}: ${expectedWhatsappShare}`)}`;
     const expectedLine = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(expectedLineShare)}`;
     const expectedQr = `https://fursay.com/images/qr/sample-${pack}.svg`;
@@ -2322,7 +2322,7 @@ async function checkDiscoveryFiles(baseUrl) {
   ]) {
     if (!siteHealth.sharedAssets?.css?.includes(asset)) failures.push(`site_health_missing_page_css:${asset}`);
   }
-  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20261102-pinned-watch.js")) {
+  if (!siteHealth.sharedAssets?.js?.includes("/js/site-shared-20261102-pinned-cadence.js")) {
     failures.push("site_health_missing_current_shared_js");
   }
   return {

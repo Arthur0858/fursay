@@ -127,7 +127,7 @@ export async function checkPage(browser, origin, spec) {
       let opener = page.locator("[data-open-subscribe]").first();
       const close = overlay.locator("[data-close-subscribe]");
       const email = overlay.locator('input[type="email"]');
-      const order = [close, email, ...await overlay.locator('input[name="groups"], input[name="channel"]').all(), overlay.locator('[type="submit"]')];
+      const order = [close, email, ...await overlay.locator('input[name="groups"], input[name="channel"]').all(), overlay.locator('.subscription-note a'), overlay.locator('[type="submit"]')];
       const originalInert = await page.locator("body > *").evaluateAll((elements) => elements.map((el) => el.hasAttribute("inert")));
       async function open() {
         await opener.focus();

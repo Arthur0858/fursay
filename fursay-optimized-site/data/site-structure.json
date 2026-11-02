@@ -88,6 +88,46 @@
       }
     },
     {
+      "key": "product-koko",
+      "route": "/products/koko-printable",
+      "type": "product",
+      "localizedRoutes": {
+        "en": "/products/koko-printable",
+        "zh-TW": "/zh/products/koko-printable",
+        "ar": "/ar/products/koko-printable"
+      }
+    },
+    {
+      "key": "product-noor",
+      "route": "/products/noor-worksheet",
+      "type": "product",
+      "localizedRoutes": {
+        "en": "/products/noor-worksheet",
+        "zh-TW": "/zh/products/noor-worksheet",
+        "ar": "/ar/products/noor-worksheet"
+      }
+    },
+    {
+      "key": "trial-koko",
+      "route": "/trials/koko-week-one",
+      "type": "adultTrial",
+      "localizedRoutes": {
+        "en": "/trials/koko-week-one",
+        "zh-TW": "/zh/trials/koko-week-one",
+        "ar": "/ar/trials/koko-week-one"
+      }
+    },
+    {
+      "key": "trial-noor",
+      "route": "/trials/noor-week-one",
+      "type": "adultTrial",
+      "localizedRoutes": {
+        "en": "/trials/noor-week-one",
+        "zh-TW": "/zh/trials/noor-week-one",
+        "ar": "/ar/trials/noor-week-one"
+      }
+    },
+    {
       "key": "guides",
       "route": "/guides",
       "type": "editorialHub",
@@ -256,46 +296,6 @@
         "zh-TW": "/zh/terms",
         "ar": "/ar/terms"
       }
-    },
-    {
-      "key": "product-koko",
-      "route": "/products/koko-printable",
-      "type": "product",
-      "localizedRoutes": {
-        "en": "/products/koko-printable",
-        "zh-TW": "/zh/products/koko-printable",
-        "ar": "/ar/products/koko-printable"
-      }
-    },
-    {
-      "key": "product-noor",
-      "route": "/products/noor-worksheet",
-      "type": "product",
-      "localizedRoutes": {
-        "en": "/products/noor-worksheet",
-        "zh-TW": "/zh/products/noor-worksheet",
-        "ar": "/ar/products/noor-worksheet"
-      }
-    },
-    {
-      "key": "trial-koko",
-      "route": "/trials/koko-week-one",
-      "type": "adultTrial",
-      "localizedRoutes": {
-        "en": "/trials/koko-week-one",
-        "zh-TW": "/zh/trials/koko-week-one",
-        "ar": "/ar/trials/koko-week-one"
-      }
-    },
-    {
-      "key": "trial-noor",
-      "route": "/trials/noor-week-one",
-      "type": "adultTrial",
-      "localizedRoutes": {
-        "en": "/trials/noor-week-one",
-        "zh-TW": "/zh/trials/noor-week-one",
-        "ar": "/ar/trials/noor-week-one"
-      }
     }
   ],
   "channels": {
@@ -341,10 +341,10 @@
       "/css/inline-subscribe-20261101.css"
     ],
     "js": [
-      "/js/site-shared-20261102-pinned-watch.js",
+      "/js/site-shared-20261102-pinned-cadence.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261102-pinned-watch-inline.js"
+      "/js/site-shared-20261102-pinned-cadence-inline.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",

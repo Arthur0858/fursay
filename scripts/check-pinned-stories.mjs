@@ -27,7 +27,7 @@ for (const [key, page, episode] of [['koko', 'koko', 'koko-feelings'], ['noor', 
     }
   }
 }
-for (const file of ['site-shared-20261102-pinned-watch.js', 'site-shared-20261102-pinned-watch-inline.js']) {
+for (const file of ['site-shared-20261102-pinned-cadence.js', 'site-shared-20261102-pinned-cadence-inline.js']) {
   const js = readFileSync(root + 'js/' + file, 'utf8');
   assert.match(js, /if \(anchor\.hasAttribute\('data-youtube-subscribe'\) &&[^\n]+\) \{\s*url\.searchParams\.set\('sub_confirmation', '1'\)/);
 }

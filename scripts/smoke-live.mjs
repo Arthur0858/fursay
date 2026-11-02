@@ -18,6 +18,7 @@ const LIVE_GATES = [
   { command: "node", args: ["scripts/check-subscribe-api-contract.mjs"] },
   { command: "node", args: ["scripts/check-content-structure-contract.mjs"] },
   { command: "node", args: ["scripts/check-semantic-funnel-contract.mjs"] },
+  { command: "node", args: ["scripts/check-subscription-copy-contract.mjs"] },
   { command: "node", args: ["scripts/check-site-structure-contract.mjs"] },
   { command: "node", args: ["scripts/check-hero-preload-contract.mjs"] },
   { command: "node", args: ["scripts/check-visual-layout-contract.mjs"], timeoutMs: 120_000 },
