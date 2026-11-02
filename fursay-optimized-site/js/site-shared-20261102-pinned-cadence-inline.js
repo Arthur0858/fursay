@@ -387,7 +387,7 @@ function initOutboundAttribution() {
       url.searchParams.set('utm_medium', 'site');
       url.searchParams.set('utm_campaign', pageCampaign());
       url.searchParams.set('utm_content', linkContent(anchor, url));
-      if (/^\/@(?:KokosForest|ArabicKidsChinese)\/?$/.test(url.pathname)) {
+      if (anchor.hasAttribute('data-youtube-subscribe') && /^\/@(?:KokosForest|ArabicKidsChinese)\/?$/.test(url.pathname)) {
         url.searchParams.set('sub_confirmation', '1');
       }
       anchor.href = url.toString();

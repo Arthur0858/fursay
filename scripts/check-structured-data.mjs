@@ -149,7 +149,7 @@ function checkHome(page, blocks, failures) {
   }
 }
 
-function checkStory(page, blocks, videoDiscovery, failures) {
+function checkStory(page, blocks, videoDiscovery, pinnedStories, failures) {
   const channel = videoDiscovery.channels?.[page.pack];
   if (!channel) {
     failures.push(`missing_video_channel:${page.pack}`);
@@ -178,16 +178,18 @@ function checkStory(page, blocks, videoDiscovery, failures) {
   requireIncludes(failures, series?.sameAs, channel.youtubeChannel, `story_same_as_channel:${page.path}`);
   requireIncludes(failures, series?.sameAs, channel.youtubeVideos, `story_same_as_videos:${page.path}`);
   requireIncludes(failures, series?.sameAs, channel.youtubePlaylists, `story_same_as_playlists:${page.path}`);
-  if (series?.subjectOf?.["@type"] !== "ItemList") failures.push(`story_playlist_type:${page.path}:${series?.subjectOf?.["@type"] || "none"}`);
-  if (series?.subjectOf?.name !== channel.playlistName) failures.push(`story_playlist_name:${page.path}:${series?.subjectOf?.name || "none"}`);
-  if (series?.subjectOf?.url !== channel.youtubeVideos) failures.push(`story_playlist_url:${page.path}:${series?.subjectOf?.url || "none"}`);
-  if (series?.subjectOf?.sameAs !== channel.youtubePlaylists) failures.push(`story_playlist_same_as:${page.path}:${series?.subjectOf?.sameAs || "none"}`);
-  if (series?.subjectOf?.identifier !== channel.uploadsPlaylistId) failures.push(`story_playlist_identifier:${page.path}:${series?.subjectOf?.identifier || "none"}`);
-  if (series?.subjectOf?.potentialAction?.["@type"] !== "WatchAction") failures.push(`story_playlist_action:${page.path}`);
-  if (series?.subjectOf?.potentialAction?.target?.["@type"] !== "EntryPoint") failures.push(`story_playlist_entrypoint:${page.path}`);
-  if (series?.subjectOf?.potentialAction?.target?.urlTemplate !== channel.playlistEmbed) {
-    failures.push(`story_playlist_embed:${page.path}:${series?.subjectOf?.potentialAction?.target?.urlTemplate || "none"}`);
-  }
+  const pinned = pinnedStories[page.pack];
+  const video = series?.subjectOf;
+  const watchUrl = `https://www.youtube.com/watch?v=${pinned?.videoId}`;
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${pinned?.videoId}`;
+  if (!pinned?.videoId || !pinned?.title) failures.push(`story_missing_pinned_data:${page.path}`);
+  if (video?.["@type"] !== "VideoObject") failures.push(`story_video_type:${page.path}`);
+  if (video?.name !== pinned?.title) failures.push(`story_video_name:${page.path}`);
+  if (video?.url !== watchUrl) failures.push(`story_video_url:${page.path}`);
+  if (video?.embedUrl !== embedUrl) failures.push(`story_video_embed:${page.path}`);
+  if (video?.potentialAction?.["@type"] !== "WatchAction") failures.push(`story_video_action:${page.path}`);
+  if (video?.potentialAction?.target?.["@type"] !== "EntryPoint") failures.push(`story_video_entrypoint:${page.path}`);
+  if (video?.potentialAction?.target?.urlTemplate !== embedUrl) failures.push(`story_video_action_embed:${page.path}`);
 
   if (samplePack?.potentialAction?.target !== expectedAction.toString()) {
     failures.push(`story_sample_action:${page.path}:${samplePack?.potentialAction?.target || "none"}`);
@@ -203,6 +205,7 @@ async function main() {
   const failures = [];
   const pages = [];
   const videoDiscovery = await readJson(args.baseUrl, "/video-discovery.json");
+  const pinnedStories = await readJson(args.baseUrl, "/data/pinned-stories.json");
 
   for (const page of HOME_PAGES) {
     const html = await readPage(args.baseUrl, page);
@@ -213,7 +216,7 @@ async function main() {
   for (const page of STORY_PAGES) {
     const html = await readPage(args.baseUrl, page);
     const blocks = structuredDataBlocks(html, page.path, failures);
-    checkStory(page, blocks, videoDiscovery, failures);
+    checkStory(page, blocks, videoDiscovery, pinnedStories, failures);
     pages.push({ path: page.path, jsonLdBlocks: blocks.length });
   }
   for (const page of PRESALE_PAGES) {

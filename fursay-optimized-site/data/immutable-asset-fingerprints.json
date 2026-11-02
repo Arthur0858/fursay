@@ -138,14 +138,14 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20261102-cadence-inline-compact.js",
-      "bytes": 35287,
-      "sha256": "b9ff2275cfcaefa162ca80a9bac03e20b6f8e48fa00f540fd5faac15ddf47ef6"
+      "path": "/js/site-shared-20261102-pinned-cadence-inline.js",
+      "bytes": 35336,
+      "sha256": "dd5b77eb2b39330b066191fd1abc34c80ee888d94cad8ca812791131486badc9"
     },
     {
-      "path": "/js/site-shared-20261102-cadence-modal-compact.js",
-      "bytes": 34652,
-      "sha256": "77adc1a49fd6a41c89a0687033c493be5cd73ed17094bdfa6e9a5c7480bfa175"
+      "path": "/js/site-shared-20261102-pinned-cadence.js",
+      "bytes": 34701,
+      "sha256": "b007cb42292a2960131c8fb37252becc2a2096e0201c85a92b88a32b956d7735"
     }
   ]
 }

@@ -4,9 +4,9 @@
   "platform": "cloudflare-workers-static-assets",
   "updatedAt": "2026-11-02",
   "source": {
-    "branch": "codex/fursay-fur008-20261102",
-    "commit": "ee7c852",
-    "summary": "Merge pull request #11 from Arthur0858/codex/fursay-campaigns-home-sample-direct-20261102"
+    "branch": "codex/fursay-fur005-20261102",
+    "commit": "d1eae93",
+    "summary": "FUR-005: pin one starter story per world; watch links no longer trigger channel subscribe"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",

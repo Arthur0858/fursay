@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-09-25",
+  "updatedAt": "2026-11-02",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -434,12 +434,14 @@
       "/css/editorial-20260925-v1.css",
       "/css/site-accessibility-20261002-v1.css",
       "/css/desktop-hero-layout-20261003-v1.css",
-      "/css/home-fonts-20261004-v1.css"
+      "/css/home-fonts-20261004-v1.css",
+      "/css/inline-subscribe-20261101.css"
     ],
     "js": [
-      "/js/site-shared-20261102-cadence-modal-compact.js",
+      "/js/site-shared-20261102-pinned-cadence.js",
       "/js/modal-accessibility-20261002-v1.js",
-      "/js/four-week-interest-20260930-v1.js"
+      "/js/four-week-interest-20260930-v1.js",
+      "/js/site-shared-20261102-pinned-cadence-inline.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",

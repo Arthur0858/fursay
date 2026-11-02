@@ -259,7 +259,7 @@ async function validateAssets(structure, context, failures, data) {
   }
 }
 
-async function validateHtmlRoutes(structure, context, failures, data) {
+async function validateHtmlRoutes(structure, stories, context, failures, data) {
   const expectedRouteEntries = [];
   for (const page of structure.pages || []) {
     for (const [locale, route] of Object.entries(page.localizedRoutes || {})) {
@@ -288,14 +288,21 @@ async function validateHtmlRoutes(structure, context, failures, data) {
     pushMismatch(failures, `html_lang:${entry.route}`, lang, entry.locale);
     pushMismatch(failures, `html_dir:${entry.route}`, dir, entry.locale === "ar" ? "rtl" : "ltr");
     pushMismatch(failures, `html_canonical:${entry.route}`, canonical, expectedCanonical);
-    if (!["/js/site-shared-20261102-cadence-modal-compact.js", "/js/site-shared-20261102-cadence-inline-compact.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
+    if (!["/js/site-shared-20261102-pinned-cadence.js", "/js/site-shared-20261102-pinned-cadence-inline.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
 
     if (entry.channel) {
       const channel = structure.channels?.[entry.channel];
       const expectedWorldClass = entry.channel === "koko" ? "world-koko" : "world-arabic";
       if (!classes.includes(expectedWorldClass)) failures.push(`html_missing_channel_body_class:${entry.route}:${expectedWorldClass}`);
       if (channel?.youtube && !html.includes(channel.youtube)) failures.push(`html_missing_channel_youtube:${entry.route}`);
-      if (channel?.playlistEmbed && !html.includes(channel.playlistEmbed)) failures.push(`html_missing_channel_playlist:${entry.route}`);
+      const pinnedPage = ["koko", "arabic", "episode-koko-feelings", "episode-noor-greetings"].includes(entry.page);
+      if (pinnedPage) {
+        const videoId = stories[entry.channel]?.videoId;
+        if (!videoId || !/^[A-Za-z0-9_-]{11}$/.test(videoId)) failures.push(`invalid_pinned_video:${entry.channel}`);
+        else if (![...html.matchAll(/<iframe\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)].some((match) => match[1] === `https://www.youtube-nocookie.com/embed/${videoId}`)) failures.push(`html_missing_pinned_player:${entry.route}`);
+        const links = [...html.matchAll(/<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>/gi)].map((match) => match[1]);
+        if (!channel?.youtube || !links.some((href) => href === channel.youtube || href === `${channel.youtube}/playlists`)) failures.push(`html_missing_secondary_channel_link:${entry.route}`);
+      } else if (channel?.playlistEmbed && !html.includes(channel.playlistEmbed)) failures.push(`html_missing_channel_playlist:${entry.route}`);
     }
     data.routes.push({ ...entry, file, css, js });
   }
@@ -336,6 +343,7 @@ async function main() {
   };
   const raw = await readText(context, context.baseUrl ? "/data/site-structure.json" : "data/site-structure.json");
   const structure = JSON.parse(raw);
+  const stories = JSON.parse(await readText(context, context.baseUrl ? "/data/pinned-stories.json" : "data/pinned-stories.json"));
   const data = {
     mode: context.baseUrl ? "live" : "local",
     routes: [],
@@ -347,7 +355,7 @@ async function main() {
   validatePages(structure, failures);
   validateChannels(structure, failures);
   await validateAssets(structure, context, failures, data);
-  await validateHtmlRoutes(structure, context, failures, data);
+  await validateHtmlRoutes(structure, stories, context, failures, data);
   await validateLocalHtmlInventory(context, failures, data);
 
   await mkdir(args.outDir, { recursive: true });

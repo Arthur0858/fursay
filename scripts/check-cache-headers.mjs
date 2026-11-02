@@ -108,7 +108,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20261102-cadence-modal-compact.js",
+    path: "/js/site-shared-20261102-pinned-cadence.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",

@@ -33,8 +33,8 @@ const EXPECTED_CSS = [
 ];
 const EXPECTED_JS = [
   "four-week-interest-20260930-v1.js",
-  "site-shared-20261102-cadence-modal-compact.js",
-  "site-shared-20261102-cadence-inline-compact.js",
+  "site-shared-20261102-pinned-cadence.js",
+  "site-shared-20261102-pinned-cadence-inline.js",
   "modal-accessibility-20261002-v1.js",
   "modal-accessibility-20260925-v1.js",
 ];

@@ -452,6 +452,7 @@ function writeReleaseManifest() {
       "scripts/check-discovery-contract.mjs",
       "scripts/check-content-growth-contract.mjs",
       "scripts/check-episode-landing-contract.mjs",
+      "scripts/check-pinned-stories.mjs",
       "scripts/check-monetization-interest-contract.mjs",
       "scripts/check-product-readiness-contract.mjs",
       "scripts/check-monetization-roadmap-contract.mjs",
@@ -1824,7 +1825,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2198,7 +2199,7 @@ ${rows}
       </table>
     </section>
   </main>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
@@ -3456,7 +3457,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -3705,7 +3706,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -3894,7 +3895,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -4090,7 +4091,7 @@ ${cards}
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -4724,7 +4725,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -4874,7 +4875,7 @@ function writeShareKitPage(siteDir, kit) {
 ${packCards}
   </main>
   ${shareKitSubscribeModal()}
-  <script src="/js/site-shared-20261102-cadence-modal-compact.js"></script>
+  <script src="/js/site-shared-20261102-pinned-cadence.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
@@ -4925,6 +4926,7 @@ async function main() {
   run("node", ["--check", "scripts/check-discovery-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-growth-contract.mjs"]);
   run("node", ["--check", "scripts/check-episode-landing-contract.mjs"]);
+  run("node", ["--check", "scripts/check-pinned-stories.mjs"]);
   run("node", ["--check", "scripts/check-monetization-interest-contract.mjs"]);
   run("node", ["--check", "scripts/check-product-readiness-contract.mjs"]);
   run("node", ["--check", "scripts/check-monetization-roadmap-contract.mjs"]);
@@ -4983,6 +4985,7 @@ async function main() {
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
   run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
   run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);
+  run("node", ["scripts/check-pinned-stories.mjs"]);
   run("node", ["scripts/check-monetization-interest-contract.mjs", "--out-dir", join(outRoot, "monetization-interest-local")]);
   run("node", ["scripts/check-product-readiness-contract.mjs", "--out-dir", join(outRoot, "product-readiness-local")]);
   run("node", ["scripts/check-monetization-roadmap-contract.mjs", "--out-dir", join(outRoot, "monetization-roadmap-local")]);
