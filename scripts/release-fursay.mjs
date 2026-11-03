@@ -492,7 +492,7 @@ function writeReleaseManifest() {
       affiliateEventTrackingPages: 15,
       productInfoEventTrackingPages: 18,
       eventTrackingSubmitPages: 3,
-      anonymousConversionEvents: 15,
+      anonymousConversionEvents: 16,
       conversionDashboardSections: 7,
       eventAnalyticsBlobFields: 18,
       eventAnalyticsDoubleFields: 1,

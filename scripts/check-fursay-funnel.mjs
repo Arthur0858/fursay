@@ -1558,7 +1558,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.eventTrackingPages !== 18) failures.push(`release_event_tracking_pages:${release.liveExpectations?.eventTrackingPages || "none"}`);
   if (release.liveExpectations?.affiliateEventTrackingPages !== 15) failures.push(`release_affiliate_event_tracking_pages:${release.liveExpectations?.affiliateEventTrackingPages || "none"}`);
   if (release.liveExpectations?.eventTrackingSubmitPages !== 3) failures.push(`release_event_tracking_submit_pages:${release.liveExpectations?.eventTrackingSubmitPages || "none"}`);
-  if (release.liveExpectations?.anonymousConversionEvents !== 15) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
+  if (release.liveExpectations?.anonymousConversionEvents !== 16) failures.push(`release_anonymous_conversion_events:${release.liveExpectations?.anonymousConversionEvents || "none"}`);
   if (release.liveExpectations?.eventAnalyticsBlobFields !== 18) failures.push(`release_event_analytics_blob_fields:${release.liveExpectations?.eventAnalyticsBlobFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsDoubleFields !== 1) failures.push(`release_event_analytics_double_fields:${release.liveExpectations?.eventAnalyticsDoubleFields || "none"}`);
   if (release.liveExpectations?.eventAnalyticsReportQueries !== 12) failures.push(`release_event_analytics_report_queries:${release.liveExpectations?.eventAnalyticsReportQueries || "none"}`);
