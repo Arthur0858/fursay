@@ -347,14 +347,18 @@ function withAssetHeaders(response, request) {
 
   if (path === "/" || path.endsWith(".html") || !/\.[^/]+$/.test(path)) {
     headers.set("Cache-Control", "public, max-age=300, must-revalidate");
+  } else if (response.status >= 400) {
+    headers.set("Cache-Control", "no-store");
   } else if (/\.(?:css|js)$/i.test(path)) {
-    if (url.searchParams.has("v") || /-\d{8}-[a-z0-9-]+\.(?:css|js)$/i.test(path)) {
+    if ((response.status === 200 || response.status === 206 || response.status === 304) && (url.searchParams.has("v") || /-\d{8}-[a-z0-9-]+\.(?:css|js)$/i.test(path))) {
       headers.set("Cache-Control", "public, max-age=31536000, immutable");
     } else {
       headers.set("Cache-Control", "public, max-age=300, must-revalidate");
     }
   } else if (/\.(?:avif|webp|png|jpg|jpeg|gif|svg|ico|woff2?)$/i.test(path)) {
-    headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    headers.set("Cache-Control", response.status === 200 || response.status === 206 || response.status === 304
+      ? "public, max-age=31536000, immutable"
+      : "public, max-age=300, must-revalidate");
   } else if (/\.(?:xml|txt|json)$/i.test(path)) {
     headers.set("Cache-Control", "public, max-age=3600");
   }
