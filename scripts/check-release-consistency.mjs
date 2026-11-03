@@ -31,6 +31,7 @@ const BADGE_PAGES = [
 ];
 const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
   "scripts/check-editorial-utility-layout.mjs",
+  "scripts/check-koko-nour-contract.mjs",
   "scripts/check-pinned-stories.mjs",
   "scripts/check-accessibility-browser.mjs",
   "scripts/check-analytics-enablement-contract.mjs",
