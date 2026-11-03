@@ -1,3 +1,4 @@
+import { ZH_META_DESCRIPTIONS } from "./zh-meta-descriptions.mjs";
 import { sisterSiteLink } from "./sister-site-footer.mjs";
 import { inlineSubscribe } from "./inline-subscribe.mjs";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -146,6 +147,7 @@ function baseHead(locale, suffix, title, description, type = "website") {
   return `<!doctype html><html lang="${l.lang}"${l.dir === "rtl" ? ' dir="rtl"' : ""}><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Fursay</title><meta name="description" content="${esc(description)}"><meta name="google-adsense-account" content="${ADSENSE_ACCOUNT}"><link rel="canonical" href="${canonical}">${alternateLinks(suffix)}<link rel="icon" href="/favicon.svg"><meta name="theme-color" content="#2d6a4f"><meta property="og:type" content="${type}"><meta property="og:site_name" content="Fursay"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${ORIGIN}/og-image.png"><meta name="twitter:card" content="summary_large_image"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/picture-world-tools-20260613-products1.css"><link rel="stylesheet" href="${BRAND_CSS}"><link rel="stylesheet" href="${CSS}"></head>`;
 }
 function head(locale, suffix, title, description, type = "website") {
+  if (locale === "zh") description = ZH_META_DESCRIPTIONS[suffix] || description;
   const lang = LOCALES[locale].lang;
   const ogLocale = { en: "en_US", "zh-TW": "zh_TW", ar: "ar_SA" }[lang];
   const alternates = ["en_US", "zh_TW", "ar_SA"].filter((value) => value !== ogLocale);
