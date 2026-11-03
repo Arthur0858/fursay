@@ -115,7 +115,7 @@ async function runLocal() {
 
   const honeypot = await localFetch({ method: "POST", ...jsonBody({ website: "bot" }) }, {}, noExternalFetch);
   const honeypotBody = await readJson(honeypot);
-  if (honeypot.status !== 200 || !honeypotBody.pending || honeypotBody.status !== "pending_confirmation" || externalCalls !== 0) failures.push("honeypot:contract");
+  if (honeypot.status !== 200 || !honeypotBody.pending || honeypotBody.status !== "pending" || externalCalls !== 0) failures.push("honeypot:contract");
   checks.push({ name: "honeypot", status: honeypot.status });
 
   let capturedPayload = null;
@@ -156,7 +156,7 @@ async function runLocal() {
   }, successFetch);
   checkCommonResponse(failures, "success", success, 200);
   const successBody = await readJson(success);
-  if (successBody.pending !== true || successBody.status !== "pending_confirmation") failures.push("success:pending_contract");
+  if (successBody.pending !== true || successBody.status !== "pending") failures.push("success:pending_contract");
   checks.push({ name: "success", status: success.status, body: successBody, capturedPayload });
   if (capturedPayload?.email !== "Family@Example.test") failures.push(`success:email_not_trimmed:${capturedPayload?.email || "none"}`);
   if ((capturedPayload?.groups || []).join(",") !== "all,koko-group,noor-group") {

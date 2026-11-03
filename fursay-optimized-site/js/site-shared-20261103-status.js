@@ -743,14 +743,17 @@ window.handleSubscribe = async function (event) {
   var lang = (document.documentElement.lang || '').toLowerCase();
   var copy = lang.startsWith('zh') ? {
     success: '訂閱成功！請到信箱查看 Fursay 的歡迎信；沒看到的話，請檢查垃圾郵件或促銷內容匣。',
+    partial: '我們收到你的信箱了，但部分選擇的故事包暫時無法加入。我們會處理，你仍會收到歡迎信。',
     pending: '快完成了！請到信箱點確認連結，第一份陪讀包就會寄給你。沒看到的話，請檢查垃圾郵件匣。',
     sending: '送出中…', error: '目前無法訂閱，請稍後再試。', button: '已送出'
   } : lang.startsWith('ar') ? {
     success: 'تم الاشتراك! تحقّقوا من بريدكم الإلكتروني لرسالة الترحيب من Fursay، وإن لم تجدوها فراجعوا مجلد الرسائل غير المرغوب فيها.',
+    partial: 'وصلنا بريدكم، لكن تعذرت إضافة بعض حزم القصص الآن. سنصلح ذلك وستصلكم رسالة الترحيب.',
     pending: 'اقتربنا! افتحوا بريدكم الإلكتروني واضغطوا على رابط التأكيد لتبدأ حزمة القصص. إن لم تجدوها فراجعوا مجلد الرسائل غير المرغوب فيها.',
     sending: 'جارٍ الإرسال…', error: 'تعذّر الاشتراك الآن، حاولوا مرة أخرى لاحقًا.', button: 'تم'
   } : {
     success: "You're in! Check your inbox for a welcome email from Fursay. If you don't see it, look in Spam or Promotions.",
+    partial: "We received your email, but couldn’t add some story packs right now. We’ll fix it, and you’ll still get the welcome email.",
     pending: "Almost done! Check your inbox and tap the confirmation link to start your story pack. If you don't see it, look in Spam or Promotions.",
     sending: 'Sending...', error: 'Could not subscribe. Please try again.', button: 'Subscribed!'
   };
@@ -829,7 +832,7 @@ window.handleSubscribe = async function (event) {
     if (msg) {
       msg.classList.remove('is-hidden');
       msg.style.display = 'block';
-      msg.textContent = ok ? (data.pending ? copy.pending : copy.success) : copy.error;
+      msg.textContent = ok ? (data.status === 'partial' ? copy.partial : data.status === 'pending' ? copy.pending : data.status === 'subscribed' ? copy.success : data.pending ? copy.pending : copy.success) : copy.error;
     }
     if (btn) btn.textContent = ok ? copy.button : (btn.dataset.originalText || 'Subscribe');
     if (ok && event && event.target && typeof event.target.reset === 'function') event.target.reset();

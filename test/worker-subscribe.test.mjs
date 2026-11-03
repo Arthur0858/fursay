@@ -69,6 +69,10 @@ test("missing default or requested group config is logged while available groups
     for (const name of missing) delete env[name];
     const result = await subscribe({ env });
     assert.equal(result.status, 200);
+    assert.equal(result.body.status, "partial");
+    assert.equal(result.body.partial, true);
+    assert.equal(result.body.pending, false);
+    assert.equal(JSON.stringify(result.body).includes("MAILERLITE"), false);
     const warning = result.logs.find((entry) => entry.event === "subscribe_config_missing");
     assert.equal(warning.level, "error");
     assert.deepEqual(warning.missing, missing);
@@ -160,22 +164,28 @@ test("missing token is a structured configuration failure with no upstream calls
 
 test("honeypot returns pending without provider calls", async () => {
   const result = await subscribe({ body: { website: "bot" } });
-  assert.deepEqual(result.body, { success: true, pending: true, status: "pending_confirmation" });
+  assert.deepEqual(result.body, { success: true, pending: true, status: "pending" });
   assert.equal(result.calls.length, 0);
   assert.equal(result.logs[0].event, "subscribe_honeypot");
 });
-test("provider status selects pending response", async () => {
-  for (const [status, pending] of [["unconfirmed", true], ["active", false]]) {
+test("provider status selects the response, including partial pending", async () => {
+  for (const [status, pending] of [["unconfirmed", true], ["active", false], ["other", false]]) {
     const result = await subscribe({ provider: () => Response.json({ data: { status } }) });
     assert.equal(result.body.pending, pending);
-    assert.equal(result.body.status, pending ? "pending_confirmation" : "subscribed");
-    assert.equal(result.body.message, "Subscribed!");
+    assert.equal(result.body.status, pending ? "pending" : "subscribed");
+    assert.equal(result.body.success, true);
   }
+  const env = { ...ENV, MAILERLITE_GROUP_NOOR: "" };
+  const partial = await subscribe({ env, provider: () => Response.json({ data: { status: "unconfirmed" } }) });
+  assert.deepEqual(partial.body, { success: true, pending: true, status: "partial", partial: true });
 });
-test("conflict response reports subscribed", async () => {
-  const result = await subscribe({ provider: (_call, index) => Response.json({}, { status: index === 1 ? 409 : 200 }) });
-  assert.equal(result.body.pending, false);
-  assert.equal(result.body.status, "subscribed");
+test("conflict reports subscribed only with active status", async () => {
+  for (const [status, pending] of [["active", false], ["unconfirmed", true], ["unknown", true], [undefined, true]]) {
+    const result = await subscribe({ provider: (_call, index) => Response.json(index === 1 ? { data: { status } } : {}, { status: index === 1 ? 409 : 200 }) });
+    assert.equal(result.status, 200);
+    assert.equal(result.body.pending, pending);
+    assert.equal(result.body.status, pending ? "pending" : "subscribed");
+  }
 });
 
 
