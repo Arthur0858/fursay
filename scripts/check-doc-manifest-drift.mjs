@@ -42,6 +42,7 @@ const STATUS_MANIFESTS_WITHOUT_SOURCE = new Set([
 const LIVE_SMOKE_EXCLUDES = new Set([
   "scripts/check-editorial-utility-layout.mjs",
   "scripts/check-koko-nour-contract.mjs",
+  "scripts/check-locale-route-map.mjs",
   "scripts/check-pinned-stories.mjs",
   "scripts/check-accessibility-browser.mjs",
   "scripts/check-deploy-readiness.mjs",
@@ -211,6 +212,10 @@ async function checkLocalDocs(failures, details) {
   failures.push(...exactArrayFailures("site_health_product_sample_previews", [
     `${ORIGIN}/product-samples/koko-printable`,
     `${ORIGIN}/product-samples/noor-worksheet`,
+    `${ORIGIN}/zh/product-samples/koko-printable`,
+    `${ORIGIN}/zh/product-samples/noor-worksheet`,
+    `${ORIGIN}/ar/product-samples/koko-printable`,
+    `${ORIGIN}/ar/product-samples/noor-worksheet`,
   ], normalizeArray(siteHealth.routes?.productSamplePreviews)));
   failures.push(...exactArrayFailures("site_health_product_sample_downloads", [
     `${ORIGIN}/downloads/koko-printable-sample.pdf`,

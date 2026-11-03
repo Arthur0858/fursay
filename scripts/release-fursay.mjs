@@ -358,6 +358,10 @@ function writeReleaseManifest() {
       productSamplePreviews: [
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
+        "https://fursay.com/zh/product-samples/koko-printable",
+        "https://fursay.com/zh/product-samples/noor-worksheet",
+        "https://fursay.com/ar/product-samples/koko-printable",
+        "https://fursay.com/ar/product-samples/noor-worksheet",
       ],
       productFamilyGuidePages: [
         "https://fursay.com/products/koko-printable",
@@ -474,6 +478,7 @@ function writeReleaseManifest() {
       "scripts/check-adsense-public-copy-contract.mjs",
       "scripts/check-product-content-contract.mjs",
       "scripts/check-koko-nour-contract.mjs",
+      "scripts/check-locale-route-map.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
@@ -513,10 +518,10 @@ function writeReleaseManifest() {
       productSampleDownloadFiles: 2,
       monetizationRoadmapStages: 4,
       monetizationRoadmapProducts: 2,
-      visualLayoutChecks: 104,
+      visualLayoutChecks: 120,
       checkoutGateRequirements: 6,
       webVitalsChecks: 18,
-      cacheHeaderChecks: 70,
+      cacheHeaderChecks: 74,
       badAuditCount: 0,
       liveSmokeCallsMailerLite: false,
     },
@@ -4555,6 +4560,10 @@ function writeSiteHealthManifest(siteDir) {
       productSamplePreviews: [
         "https://fursay.com/product-samples/koko-printable",
         "https://fursay.com/product-samples/noor-worksheet",
+        "https://fursay.com/zh/product-samples/koko-printable",
+        "https://fursay.com/zh/product-samples/noor-worksheet",
+        "https://fursay.com/ar/product-samples/koko-printable",
+        "https://fursay.com/ar/product-samples/noor-worksheet",
       ],
       productSampleDownloads: [
         "https://fursay.com/downloads/koko-printable-sample.pdf",
@@ -4953,6 +4962,7 @@ async function main() {
   run("node", ["--check", "scripts/check-adsense-public-copy-contract.mjs"]);
   run("node", ["--check", "scripts/check-product-content-contract.mjs"]);
   run("node", ["--check", "scripts/check-koko-nour-contract.mjs"]);
+  run("node", ["--check", "scripts/check-locale-route-map.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
@@ -5009,6 +5019,7 @@ async function main() {
   run("node", ["scripts/check-adsense-public-copy-contract.mjs", "--out-dir", join(outRoot, "adsense-public-copy-local")]);
   run("node", ["scripts/check-product-content-contract.mjs", "--out-dir", join(outRoot, "product-content-local")]);
   run("node", ["scripts/check-koko-nour-contract.mjs"]);
+  run("node", ["scripts/check-locale-route-map.mjs"]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);

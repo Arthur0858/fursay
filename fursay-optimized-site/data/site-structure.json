@@ -128,6 +128,26 @@
       }
     },
     {
+      "key": "sample-koko",
+      "route": "/product-samples/koko-printable",
+      "type": "productSample",
+      "localizedRoutes": {
+        "en": "/product-samples/koko-printable",
+        "zh-TW": "/zh/product-samples/koko-printable",
+        "ar": "/ar/product-samples/koko-printable"
+      }
+    },
+    {
+      "key": "sample-noor",
+      "route": "/product-samples/noor-worksheet",
+      "type": "productSample",
+      "localizedRoutes": {
+        "en": "/product-samples/noor-worksheet",
+        "zh-TW": "/zh/product-samples/noor-worksheet",
+        "ar": "/ar/product-samples/noor-worksheet"
+      }
+    },
+    {
       "key": "guides",
       "route": "/guides",
       "type": "editorialHub",

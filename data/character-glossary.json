@@ -1,0 +1,15 @@
+{
+  "characters": {
+    "koko": { "en": "Koko", "zh-Hant": "叩叩", "ar": "كوكو" },
+    "nour": { "en": "Nour", "zh-Hant": "努爾", "ar": "نور" },
+    "zayd": { "en": "Zayd", "zh-Hant": "Zayd", "ar": "زيد" }
+  },
+  "chinese": {
+    "hello": "你好 nǐ hǎo",
+    "goodbye": "再見 zài jiàn",
+    "thanks": "謝謝 xiè xie",
+    "red": "紅色 hóng sè",
+    "blue": "藍色 lán sè",
+    "green": "綠色 lǜ sè"
+  }
+}

@@ -1580,7 +1580,7 @@ async function checkDiscoveryFiles(baseUrl) {
   if (release.liveExpectations?.monetizationRoadmapStages !== 4) failures.push(`release_monetization_roadmap_stages:${release.liveExpectations?.monetizationRoadmapStages || "none"}`);
   if (release.liveExpectations?.monetizationRoadmapProducts !== 2) failures.push(`release_monetization_roadmap_products:${release.liveExpectations?.monetizationRoadmapProducts || "none"}`);
   if (release.liveExpectations?.checkoutGateRequirements !== 6) failures.push(`release_checkout_gate_requirements:${release.liveExpectations?.checkoutGateRequirements || "none"}`);
-  if (release.liveExpectations?.cacheHeaderChecks !== 70) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
+  if (release.liveExpectations?.cacheHeaderChecks !== 74) failures.push(`release_cache_expectation:${release.liveExpectations?.cacheHeaderChecks || "none"}`);
   if (!release.qualityGates?.includes("scripts/check-deploy-readiness.mjs")) failures.push("release_missing_deploy_readiness_gate");
   if (!release.qualityGates?.includes("scripts/check-amazon-affiliate-links.mjs")) failures.push("release_missing_amazon_affiliate_gate");
   if (!release.qualityGates?.includes("scripts/check-conversion-health-contract.mjs")) failures.push("release_missing_conversion_health_gate");

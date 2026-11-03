@@ -63,7 +63,11 @@ Family actions:
   - Traditional Chinese: https://fursay.com/zh/support
   - Arabic: https://fursay.com/ar/support
 - Koko printable sample preview: https://fursay.com/product-samples/koko-printable
+  - Traditional Chinese: https://fursay.com/zh/product-samples/koko-printable
+  - Arabic: https://fursay.com/ar/product-samples/koko-printable
 - Nour worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
+  - Traditional Chinese: https://fursay.com/zh/product-samples/noor-worksheet
+  - Arabic: https://fursay.com/ar/product-samples/noor-worksheet
 
 Editorial library:
 https://fursay.com/guides
@@ -179,7 +183,11 @@ Technical discovery:
 - Traditional Chinese product waitlist page for families: https://fursay.com/zh/products
 - Arabic product waitlist page for families: https://fursay.com/ar/products
 - Koko printable sample preview: https://fursay.com/product-samples/koko-printable
+  - Traditional Chinese: https://fursay.com/zh/product-samples/koko-printable
+  - Arabic: https://fursay.com/ar/product-samples/koko-printable
 - Nour worksheet sample preview: https://fursay.com/product-samples/noor-worksheet
+  - Traditional Chinese: https://fursay.com/zh/product-samples/noor-worksheet
+  - Arabic: https://fursay.com/ar/product-samples/noor-worksheet
 - Product interest manifest: https://fursay.com/products.json
 - Shortlinks: https://fursay.com/shortlinks.json
 - Deploy readiness gate: npm run deploy:ready

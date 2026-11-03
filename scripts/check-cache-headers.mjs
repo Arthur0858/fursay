@@ -311,6 +311,10 @@ const CHECKS = [
     cacheIncludes: ["public", "max-age=300", "must-revalidate"],
     contentTypeIncludes: "text/html",
   },
+  { path: "/zh/product-samples/koko-printable", status: 200, cacheIncludes: ["public", "max-age=300", "must-revalidate"], contentTypeIncludes: "text/html" },
+  { path: "/zh/product-samples/noor-worksheet", status: 200, cacheIncludes: ["public", "max-age=300", "must-revalidate"], contentTypeIncludes: "text/html" },
+  { path: "/ar/product-samples/koko-printable", status: 200, cacheIncludes: ["public", "max-age=300", "must-revalidate"], contentTypeIncludes: "text/html" },
+  { path: "/ar/product-samples/noor-worksheet", status: 200, cacheIncludes: ["public", "max-age=300", "must-revalidate"], contentTypeIncludes: "text/html" },
   {
     path: "/product-samples/koko-printable",
     status: 200,
