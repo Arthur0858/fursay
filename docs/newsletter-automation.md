@@ -141,10 +141,10 @@ Deliberate signup links can use `subscribe` (or the legacy `pack` and `group` pa
 
 ## Welcome email by language
 
-**Not done by this PR.** Each rollout step requires owner approval. The existing “Fursay 歡迎信（API 訂閱）” automation remains Chinese-only until the branches are changed. An unknown custom field may cause subscriber creation to fail.
+The owner approved enabling the signup language flag after the custom field was created. The existing “Fursay 歡迎信（API 訂閱）” automation remains Chinese-only until the branches are changed. An unknown custom field may cause subscriber creation to fail.
 
-1. In MailerLite, create a subscriber custom field of type text with the exact key `signup_language` (lowercase).
-2. Set the Worker variable `MAILERLITE_ENABLE_SIGNUP_LANGUAGE` to `1`, `true`, or `yes` only after the field exists.
+1. **Done 2026-11-03:** Created the MailerLite subscriber custom field `signup_language` as a text field.
+2. **Done:** Set `MAILERLITE_ENABLE_SIGNUP_LANGUAGE` to `1` in `wrangler.jsonc`.
 3. Deploy the Worker.
 4. Edit the existing group-join welcome automation. After its existing trigger, add conditions on `signup_language` to route `zh` to the Chinese email and `ar` to the Arabic email; route `en` to English, and use English as the default for empty or unrecognized values. Configure the conditions in sequence if the editor only offers yes/no branches. Each path must send exactly one welcome email. Use the reviewed copy in `content/newsletters/welcome/{en,zh,ar}.md`, retaining the provider's unsubscribe footer. Review the trigger, each condition and email, and the default path before enabling the revised automation.
 
