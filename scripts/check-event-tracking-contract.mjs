@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20261103-status.js";
+const SHARED_JS = "/js/site-shared-20261103-events.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -391,6 +391,7 @@ async function checkPage(browser, baseUrl, spec) {
   if (sampleDownloadMeta) {
     const sampleDownloadEvent = [...sampleDownloadState.events].reverse().find((event) => event.event === "fursay_product_sample_download_click");
     assertEventShape(failures, `${spec.path}:sample_download_click`, spec, sampleDownloadEvent);
+    if (sampleDownloadState.events.filter((event) => event.event === "fursay_product_sample_download_click").length !== 1) failures.push(`${spec.path}:sample_download_click_count`);
     if (sampleDownloadEvent?.detail?.product_interest !== sampleDownloadMeta.interest) failures.push(`${spec.path}:sample_download_interest:${sampleDownloadEvent?.detail?.product_interest || "none"}`);
     if (sampleDownloadEvent?.detail?.interest_stage !== sampleDownloadMeta.stage) failures.push(`${spec.path}:sample_download_stage:${sampleDownloadEvent?.detail?.interest_stage || "none"}`);
     if (sampleDownloadEvent?.detail?.signup_source !== sampleDownloadMeta.signupSource) failures.push(`${spec.path}:sample_download_source:${sampleDownloadEvent?.detail?.signup_source || "none"}`);

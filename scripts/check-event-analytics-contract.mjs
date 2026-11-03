@@ -151,7 +151,7 @@ async function runLocal() {
   if (!downloadLocation.includes("/downloads/noor-worksheet-sample.pdf")) failures.push(`tracked_download:location:${downloadLocation || "none"}`);
   if (downloadPoints.length !== 1) failures.push(`tracked_download:data_point_count:${downloadPoints.length}`);
   const downloadPoint = downloadPoints[0] || {};
-  if (downloadPoint.blobs?.[0] !== "fursay_product_sample_download_click") failures.push(`tracked_download:event:${downloadPoint.blobs?.[0] || "none"}`);
+  if (downloadPoint.blobs?.[0] !== "fursay_product_sample_download_request") failures.push(`tracked_download:event:${downloadPoint.blobs?.[0] || "none"}`);
   if (downloadPoint.blobs?.[1] !== "/download/noor-worksheet-sample") failures.push(`tracked_download:path:${downloadPoint.blobs?.[1] || "none"}`);
   if (downloadPoint.blobs?.[5] !== "noor") failures.push(`tracked_download:pack:${downloadPoint.blobs?.[5] || "none"}`);
   if (downloadPoint.blobs?.[12] !== "noor") failures.push(`tracked_download:product_interest:${downloadPoint.blobs?.[12] || "none"}`);

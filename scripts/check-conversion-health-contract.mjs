@@ -223,7 +223,7 @@ async function main() {
     if (!noorVariantSourceIds.has(sourceId)) failures.push(`missing_noor_variant_source_id:${sourceId}`);
   }
   if (conversionHealth.events?.length !== release.liveExpectations?.anonymousConversionEvents) failures.push("event_count_expectation_mismatch");
-  for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT, PRODUCT_SAMPLE_DOWNLOAD_EVENT]) {
+  for (const name of [...BASE_REQUIRED_EVENTS, PRODUCT_INTEREST_EVENT, PRODUCT_SAMPLE_DOWNLOAD_EVENT, "fursay_product_sample_download_request"]) {
     if (!conversionHealth.events?.includes(name)) failures.push(`manifest_missing_event:${name}`);
   }
 

@@ -442,10 +442,10 @@
       "/css/inline-subscribe-20261101.css"
     ],
     "js": [
-      "/js/site-shared-20261103-status.js",
+      "/js/site-shared-20261103-events.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261103-status-inline.js",
+      "/js/site-shared-20261103-events-inline.js",
       "/js/editorial-nav-20261102-v1.js"
     ],
     "scenes": [

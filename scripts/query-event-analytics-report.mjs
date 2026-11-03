@@ -19,6 +19,7 @@ const PAGE_INTENT_EVENTS = [
   "fursay_product_info_click",
   "fursay_product_interest_click",
   "fursay_product_sample_download_click",
+  "fursay_product_sample_download_request",
 ];
 const PRODUCT_SIGNAL_EVENTS = {
   productInfoClicks: "fursay_product_info_click",
@@ -77,7 +78,7 @@ function windowQueries(days) {
       family: "noor_growth_signals",
       windowDays: days,
       description: `Nour-specific subscriber, story-pack, PDF sample, and worksheet validation signals in the last ${days} days.`,
-      sql: `SELECT blob1 AS event, blob2 AS path, blob6 AS pack, blob7 AS signup_source, blob13 AS product_interest, blob14 AS interest_stage, blob16 AS source_id, blob17 AS creator, blob18 AS placement, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND ${DECISION_TRAFFIC_FILTER} AND (blob6 = 'noor' OR blob13 = 'noor' OR blob2 LIKE '%arabic%' OR blob2 LIKE '%noor%' OR blob16 LIKE 'noor_%') AND blob1 IN ('fursay_subscribe_open_click','fursay_subscribe_modal_open','fursay_subscribe_submit_attempt','fursay_subscribe_submit_success','fursay_product_info_click','fursay_product_interest_click','fursay_product_sample_download_click') GROUP BY event, path, pack, signup_source, product_interest, interest_stage, source_id, creator, placement ORDER BY events DESC LIMIT 100 FORMAT JSON`,
+      sql: `SELECT blob1 AS event, blob2 AS path, blob6 AS pack, blob7 AS signup_source, blob13 AS product_interest, blob14 AS interest_stage, blob16 AS source_id, blob17 AS creator, blob18 AS placement, SUM(_sample_interval * double1) AS events FROM ${DATASET} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY AND ${DECISION_TRAFFIC_FILTER} AND (blob6 = 'noor' OR blob13 = 'noor' OR blob2 LIKE '%arabic%' OR blob2 LIKE '%noor%' OR blob16 LIKE 'noor_%') AND blob1 IN ('fursay_subscribe_open_click','fursay_subscribe_modal_open','fursay_subscribe_submit_attempt','fursay_subscribe_submit_success','fursay_product_info_click','fursay_product_interest_click','fursay_product_sample_download_click','fursay_product_sample_download_request') GROUP BY event, path, pack, signup_source, product_interest, interest_stage, source_id, creator, placement ORDER BY events DESC LIMIT 100 FORMAT JSON`,
     },
   ];
 }
