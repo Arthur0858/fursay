@@ -411,7 +411,7 @@ async function handleSubscribe(request, env) {
     const { email, groups, region, attribution, website } = body;
     if (typeof website === "string" && website.length > 0) {
       log("log", "subscribe_honeypot", 200);
-      return json({ success: true, pending: true, status: "pending_confirmation" }, 200, headers);
+      return json({ success: true, pending: true, status: "pending" }, 200, headers);
     }
     const normalizedEmail = typeof email === "string" ? email.trim() : "";
 
@@ -464,6 +464,7 @@ async function handleSubscribe(request, env) {
       // A conflict does not prove that the requested memberships exist.
       // Fall back to the encoded email when the conflict has no subscriber ID.
       const existing = await response.json().catch(() => null);
+      pending = existing?.data?.status !== "active";
       const subscriberId = existing?.data?.id;
       const subscriber = typeof subscriberId === "string" && subscriberId
         ? subscriberId
@@ -494,7 +495,7 @@ async function handleSubscribe(request, env) {
     }
 
     log("log", "subscribe_completed", response.status);
-    return json({ success: true, pending, status: pending ? "pending_confirmation" : "subscribed", message: "Subscribed!" }, 200, headers);
+    return json({ success: true, pending, status: missing.length ? "partial" : pending ? "pending" : "subscribed", ...(missing.length ? { partial: true } : {}) }, 200, headers);
   } catch {
     log("error", "subscribe_error", 500);
     return json({ success: false, message: "Subscription failed" }, 500, headers);
