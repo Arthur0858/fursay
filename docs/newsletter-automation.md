@@ -138,3 +138,16 @@ Before scheduling, preview the footer. Stop and record a `chrome-result` failure
 - Confirm the message exists, contains the YouTube CTA and site CTA, has no blocked placeholder text, and did not collapse into a single plain-text paragraph.
 
 Deliberate signup links can use `subscribe` (or the legacy `pack` and `group` parameters) to open the signup modal. Sample-preview links must not carry `subscribe`, so visitors can view previews without opening signup. Free sample previews and PDF downloads do not require email.
+
+## Welcome email by language
+
+**Not done by this PR.** Each rollout step requires owner approval. The existing “Fursay 歡迎信（API 訂閱）” automation remains Chinese-only until the branches are changed. An unknown custom field may cause subscriber creation to fail.
+
+1. In MailerLite, create a subscriber custom field of type text with the exact key `signup_language` (lowercase).
+2. Set the Worker variable `MAILERLITE_ENABLE_SIGNUP_LANGUAGE` to `1`, `true`, or `yes` only after the field exists.
+3. Deploy the Worker.
+4. Edit the existing group-join welcome automation. After its existing trigger, add conditions on `signup_language` to route `zh` to the Chinese email and `ar` to the Arabic email; route `en` to English, and use English as the default for empty or unrecognized values. Configure the conditions in sequence if the editor only offers yes/no branches. Each path must send exactly one welcome email. Use the reviewed copy in `content/newsletters/welcome/{en,zh,ar}.md`, retaining the provider's unsubscribe footer. Review the trigger, each condition and email, and the default path before enabling the revised automation.
+
+Existing subscribers may have no `signup_language`; leave their field empty unless the owner has reliable language information. If they enter this automation later, the default branch sends English. Changing the automation does not itself send a welcome email to existing subscribers.
+
+The Worker sends this field only when `MAILERLITE_ENABLE_SIGNUP_LANGUAGE` is enabled, independently of `MAILERLITE_ENABLE_ATTRIBUTION_FIELDS`; that flag still controls the separate optional attribution fields. Client-supplied language is ignored and the validated signup page determines the value.
