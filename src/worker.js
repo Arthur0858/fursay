@@ -2,6 +2,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/favicon.ico") {
+      return redirectWithHeaders(`${url.origin}/favicon.svg${url.search}`, 301);
+    }
+
     if (request.method === "OPTIONS" && url.pathname.startsWith("/api/")) {
       return withSecurityHeaders(new Response(null, { headers: corsHeaders() }));
     }
@@ -372,6 +376,16 @@ function withAssetHeaders(response, request) {
 
 function withSecurityHeaders(response) {
   const headers = new Headers(response.headers);
+  const contentType = headers.get("Content-Type");
+  if (contentType) {
+    const [mediaType] = contentType.split(";");
+    const type = mediaType.trim().toLowerCase();
+    if (type === "text/html") {
+      headers.set("Content-Type", "text/html; charset=utf-8");
+    } else if (["text/css", "text/javascript", "application/javascript", "application/xml", "text/plain"].includes(type) && !/;\s*charset\s*=/i.test(contentType)) {
+      headers.set("Content-Type", `${contentType}; charset=utf-8`);
+    }
+  }
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
