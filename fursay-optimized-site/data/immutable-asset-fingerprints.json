@@ -143,14 +143,14 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20261103-status-inline.js",
-      "bytes": 35919,
-      "sha256": "947bf6921ed6d76705045b25e35534d21f97fda11c8f1a100904aec169b18bdf"
+      "path": "/js/site-shared-20261103-events-inline.js",
+      "bytes": 35915,
+      "sha256": "e47dc9d51602b3daf2b6c7596b6e5198a9f7f88782c1c8200d14c21b45dd2d80"
     },
     {
-      "path": "/js/site-shared-20261103-status.js",
-      "bytes": 35284,
-      "sha256": "ad019a266e0fa99bafbef4fd04ce47bbeb4b6a95ddfe63562cc2e791dce23f44"
+      "path": "/js/site-shared-20261103-events.js",
+      "bytes": 35280,
+      "sha256": "c35c1dcfa7638a9f9b5cd0c7067fefaa1c1ee8c2f758b61b078da86b0c70e6d4"
     }
   ]
 }

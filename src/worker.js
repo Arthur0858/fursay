@@ -79,8 +79,8 @@ function sampleDownloadRedirectUrl(url, request, env) {
   const route = downloadRoutes[path];
   if (!route) return null;
 
-  writeAnonymousEvent({
-    event: "fursay_product_sample_download_click",
+  if (request.method === "GET") writeAnonymousEvent({
+    event: "fursay_product_sample_download_request",
     detail: {
       path: url.pathname,
       page_pack: route.pack,

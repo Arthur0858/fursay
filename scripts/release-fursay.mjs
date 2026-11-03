@@ -1832,7 +1832,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2206,7 +2206,7 @@ ${rows}
       </table>
     </section>
   </main>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
@@ -2636,6 +2636,7 @@ function writeConversionHealth(siteDir, source) {
       "fursay_product_interest_click",
       "fursay_product_info_click",
       "fursay_product_sample_download_click",
+      "fursay_product_sample_download_request",
     ],
     coverage: {
       publicStoryPages: release.liveExpectations.pages,
@@ -3464,7 +3465,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -3713,7 +3714,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -3902,7 +3903,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -4098,7 +4099,7 @@ ${cards}
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -4736,7 +4737,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -4886,7 +4887,7 @@ function writeShareKitPage(siteDir, kit) {
 ${packCards}
   </main>
   ${shareKitSubscribeModal()}
-  <script src="/js/site-shared-20261103-status.js"></script>
+  <script src="/js/site-shared-20261103-events.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
