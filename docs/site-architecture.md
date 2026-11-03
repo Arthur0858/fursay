@@ -17,7 +17,7 @@
 - Koko common styles live in `/css/koko-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/koko-en-page-20260613-cache1.css` for `/koko` and `/zh/koko`; RTL page-specific overrides live in `/css/koko-ar-page-20260613-cache1.css` for `/ar/koko`.
 - Noor common styles live in `/css/noor-common-20260613-cache1.css`; LTR page-specific overrides live in `/css/noor-ltr-page-20260613-cache1.css` for `/arabic` and `/zh/arabic`.
 - Noor RTL page-specific overrides live in `/css/noor-rtl-page-20260613-cache1.css` for `/ar/arabic`.
-- Shared interactions live in `/js/site-shared-20261103-events.js`; guide and products inline signups use `/js/site-shared-20261103-events-inline.js` and `/css/inline-subscribe-20261101.css`. Page HTML should not add inline event handlers.
+- Shared interactions live in `/js/site-shared-20261103-attrsafe.js`; guide and products inline signups use `/js/site-shared-20261103-attrsafe-inline.js` and `/css/inline-subscribe-20261101.css`. Page HTML should not add inline event handlers.
 - Subscribe-modal focus management and dialog state live in `/js/modal-accessibility-20261002-v1.js`.
 - Anonymous conversion events post to `/api/event`; the Worker writes sanitized datapoints through the `FURSAY_EVENTS` Analytics Engine binding for dataset `fursay_events`. Query reporting still requires `CLOUDFLARE_ACCOUNT_ID` plus `CLOUDFLARE_ANALYTICS_TOKEN` or `CLOUDFLARE_API_TOKEN`, and token values must stay out of files and public reports.
 - Site structure, locales, channels, and shared assets are recorded in `/data/site-structure.json`.
@@ -68,3 +68,5 @@ The Worker rewrites same-brand language links on Koko/Noor adult trial pages whe
 - `data/character-glossary.json` supplies character names and learning phrases; `scripts/locale-route-map.mjs` maps corresponding resources across locales.
 
 Sample download clicks are client interaction events (`fursay_product_sample_download_click`); GET requests to download redirects are recorded separately as `fursay_product_sample_download_request`. HEAD requests are not counted. A redirect request does not establish PDF delivery. Historical click counts may include both signals.
+
+Anonymous event URLs retain only approved HTTPS hosts, a validated path, and single lowercase slug values for `utm_source`, `utm_medium`, `utm_campaign`, and `utm_content`; userinfo, fragments, other query parameters and invalid values are discarded. Affiliate product IDs are limited to the site’s known catalog and outbound kind to `youtube`. The event contract compares filtered URLs because complete URLs can contain personal data.

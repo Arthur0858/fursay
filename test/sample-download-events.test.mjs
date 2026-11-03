@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import worker from '../src/worker.js';
 
-for (const bundle of ['site-shared-20261103-events.js', 'site-shared-20261103-events-inline.js']) {
+for (const bundle of ['site-shared-20261103-attrsafe.js', 'site-shared-20261103-attrsafe-inline.js']) {
   for (const beaconResult of [true, false, undefined]) {
     test(`${bundle}: sample click with Beacon ${beaconResult}`, () => {
       const source = readFileSync(new URL(`../fursay-optimized-site/js/${bundle}`, import.meta.url), 'utf8');

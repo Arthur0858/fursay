@@ -1,3 +1,4 @@
+import { expectedEventUrl, expectedEventSlug } from "./event-contract-helpers.mjs";
 import { createServer } from "node:http";
 import { existsSync, statSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -6,7 +7,7 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20261103-events.js";
+const SHARED_JS = "/js/site-shared-20261103-attrsafe.js";
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -395,7 +396,7 @@ async function checkPage(browser, baseUrl, spec) {
     if (sampleDownloadEvent?.detail?.product_interest !== sampleDownloadMeta.interest) failures.push(`${spec.path}:sample_download_interest:${sampleDownloadEvent?.detail?.product_interest || "none"}`);
     if (sampleDownloadEvent?.detail?.interest_stage !== sampleDownloadMeta.stage) failures.push(`${spec.path}:sample_download_stage:${sampleDownloadEvent?.detail?.interest_stage || "none"}`);
     if (sampleDownloadEvent?.detail?.signup_source !== sampleDownloadMeta.signupSource) failures.push(`${spec.path}:sample_download_source:${sampleDownloadEvent?.detail?.signup_source || "none"}`);
-    if (sampleDownloadEvent?.detail?.link_url !== sampleDownloadMeta.href) failures.push(`${spec.path}:sample_download_link_url:${sampleDownloadEvent?.detail?.link_url || "none"}`);
+    if (sampleDownloadEvent?.detail?.link_url !== expectedEventUrl(sampleDownloadMeta.href)) failures.push(`${spec.path}:sample_download_link_url:${sampleDownloadEvent?.detail?.link_url || "none"}`);
     if (!sampleDownloadState.dataLayer.some((entry) => entry.event === "fursay_product_sample_download_click")) {
       failures.push(`${spec.path}:data_layer_missing_sample_download_click`);
     }
@@ -501,9 +502,9 @@ async function checkShareKitSampleTracking(browser, baseUrl) {
     if (sampleDownloadEvent?.detail?.product_interest !== sampleDownloadMeta.interest) failures.push(`share-kit:sample_download_interest:${sampleDownloadEvent?.detail?.product_interest || "none"}`);
     if (sampleDownloadEvent?.detail?.interest_stage !== sampleDownloadMeta.stage) failures.push(`share-kit:sample_download_stage:${sampleDownloadEvent?.detail?.interest_stage || "none"}`);
     if (sampleDownloadEvent?.detail?.signup_source !== sampleDownloadMeta.signupSource) failures.push(`share-kit:sample_download_source:${sampleDownloadEvent?.detail?.signup_source || "none"}`);
-    if (sampleDownloadEvent?.detail?.source_id !== sampleDownloadMeta.sourceId) failures.push(`share-kit:sample_download_source_id:${sampleDownloadEvent?.detail?.source_id || "none"}`);
-    if (sampleDownloadEvent?.detail?.creator !== sampleDownloadMeta.creator) failures.push(`share-kit:sample_download_creator:${sampleDownloadEvent?.detail?.creator || "none"}`);
-    if (sampleDownloadEvent?.detail?.placement !== sampleDownloadMeta.placement) failures.push(`share-kit:sample_download_placement:${sampleDownloadEvent?.detail?.placement || "none"}`);
+    if (sampleDownloadEvent?.detail?.source_id !== (expectedEventSlug(sampleDownloadMeta.sourceId) || undefined)) failures.push(`share-kit:sample_download_source_id:${sampleDownloadEvent?.detail?.source_id || "none"}`);
+    if (sampleDownloadEvent?.detail?.creator !== (expectedEventSlug(sampleDownloadMeta.creator) || undefined)) failures.push(`share-kit:sample_download_creator:${sampleDownloadEvent?.detail?.creator || "none"}`);
+    if (sampleDownloadEvent?.detail?.placement !== (expectedEventSlug(sampleDownloadMeta.placement) || undefined)) failures.push(`share-kit:sample_download_placement:${sampleDownloadEvent?.detail?.placement || "none"}`);
     if (!sampleDownloadState.dataLayer.some((entry) => entry.event === "fursay_product_sample_download_click")) failures.push("share-kit:data_layer_missing_sample_download_click");
     if (!sampleDownloadState.navigationBlocked) failures.push("share-kit:sample_download_test_navigation_not_blocked");
   }
@@ -534,10 +535,10 @@ async function checkShareKitSampleTracking(browser, baseUrl) {
     const copyEvent = [...copyState.events].reverse().find((event) => event.event === "fursay_kit_copy_click");
     if (!copyEvent) failures.push("share-kit:missing_kit_copy_event");
     if (copyEvent?.detail?.copy_kind !== "share_kit") failures.push(`share-kit:copy_kind:${copyEvent?.detail?.copy_kind || "none"}`);
-    if (copyEvent?.detail?.link_url !== copyMeta.value) failures.push(`share-kit:copy_link_url:${copyEvent?.detail?.link_url || "none"}`);
-    if (copyEvent?.detail?.source_id !== copyMeta.sourceId) failures.push(`share-kit:copy_source_id:${copyEvent?.detail?.source_id || "none"}`);
-    if (copyEvent?.detail?.creator !== copyMeta.creator) failures.push(`share-kit:copy_creator:${copyEvent?.detail?.creator || "none"}`);
-    if (copyEvent?.detail?.placement !== copyMeta.placement) failures.push(`share-kit:copy_placement:${copyEvent?.detail?.placement || "none"}`);
+    if (copyEvent?.detail?.link_url !== expectedEventUrl(copyMeta.value)) failures.push(`share-kit:copy_link_url:${copyEvent?.detail?.link_url || "none"}`);
+    if (copyEvent?.detail?.source_id !== (expectedEventSlug(copyMeta.sourceId) || undefined)) failures.push(`share-kit:copy_source_id:${copyEvent?.detail?.source_id || "none"}`);
+    if (copyEvent?.detail?.creator !== (expectedEventSlug(copyMeta.creator) || undefined)) failures.push(`share-kit:copy_creator:${copyEvent?.detail?.creator || "none"}`);
+    if (copyEvent?.detail?.placement !== (expectedEventSlug(copyMeta.placement) || undefined)) failures.push(`share-kit:copy_placement:${copyEvent?.detail?.placement || "none"}`);
     if (!copyState.dataLayer.some((entry) => entry.event === "fursay_kit_copy_click")) failures.push("share-kit:data_layer_missing_kit_copy_click");
   }
 
