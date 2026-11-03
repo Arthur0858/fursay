@@ -198,3 +198,23 @@ test("subscriber attribution uses body first, same-origin Referer fallback, and 
   const root = await subscribe({ body: { signup_page: "/" } });
   assert.equal(JSON.parse(root.calls[0].body).fields.signup_page, "fursay.com/");
 });
+
+test("signup language comes from the validated page, not client language", async () => {
+  for (const flag of [undefined, "", "false", "0"]) {
+    const result = await subscribe({ env: { ...ENV, MAILERLITE_ENABLE_SIGNUP_LANGUAGE: flag }, body: { signup_page: "/zh" } });
+    assert.equal(Object.hasOwn(JSON.parse(result.calls[0].body).fields, "signup_language"), false);
+  }
+  for (const [signup_page, language, expected] of [
+    ["/zh", "ar", "zh"], ["/zh/koko", "ar", "zh"], ["/ar/noor", "zh", "ar"],
+    ["/", "zh", "en"], ["/koko", "ar", "en"],
+    ["/zh/", "forged text", "zh"], ["/ar/", null, "ar"],
+    ["https://elsewhere.test/zh/", "zh", "en"], [undefined, "zh", "en"]
+  ]) {
+    for (const flag of ["1", "true", "yes", "TRUE"]) {
+      const result = await subscribe({ env: { ...ENV, MAILERLITE_ENABLE_SIGNUP_LANGUAGE: flag }, body: { signup_page, language } });
+      assert.equal(JSON.parse(result.calls[0].body).fields.signup_language, expected, signup_page);
+    }
+  }
+  const fallback = await subscribe({ env: { ...ENV, MAILERLITE_ENABLE_SIGNUP_LANGUAGE: "1" }, referer: "https://fursay.com/ar/koko", body: { signup_page: "//elsewhere.test/zh/", language: "zh" } });
+  assert.equal(JSON.parse(fallback.calls[0].body).fields.signup_language, "ar");
+});

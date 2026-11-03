@@ -434,7 +434,7 @@ async function handleSubscribe(request, env) {
     const fields = {};
     if (region) fields.region = region;
     Object.assign(fields, attributionFields(attribution, env));
-    Object.assign(fields, subscriberAttribution(body, request));
+    Object.assign(fields, subscriberAttribution(body, request, env));
 
     const payload = {
       email: normalizedEmail,
@@ -613,7 +613,7 @@ function json(data, status, headers) {
   }));
 }
 
-function subscriberAttribution(body, request) {
+function subscriberAttribution(body, request, env) {
   const clean = (value) => typeof value === "string"
     ? value.replace(/[\x00-\x1f\x7f-\x9f]/g, "").trim().slice(0, 255)
     : "";
@@ -633,6 +633,9 @@ function subscriberAttribution(body, request) {
     return clean(value.split(/[?#]/, 1)[0]);
   };
   const signupPage = path(body.signup_page) || path(referer?.pathname);
+  if (env && ["1", "true", "yes"].includes(String(env.MAILERLITE_ENABLE_SIGNUP_LANGUAGE || "").toLowerCase())) {
+    fields.signup_language = /^\/zh(?:\/|$)/.test(signupPage) ? "zh" : /^\/ar(?:\/|$)/.test(signupPage) ? "ar" : "en";
+  }
   if (signupPage) fields.signup_page = `fursay.com${signupPage}`.slice(0, 255);
   return fields;
 }
