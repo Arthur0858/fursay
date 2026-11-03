@@ -473,6 +473,7 @@ function writeReleaseManifest() {
       "scripts/check-adsense-review-contract.mjs",
       "scripts/check-adsense-public-copy-contract.mjs",
       "scripts/check-product-content-contract.mjs",
+      "scripts/check-koko-nour-contract.mjs",
       "audit-fursay.mjs",
     ],
     liveExpectations: {
@@ -4951,6 +4952,7 @@ async function main() {
   run("node", ["--check", "scripts/check-adsense-review-contract.mjs"]);
   run("node", ["--check", "scripts/check-adsense-public-copy-contract.mjs"]);
   run("node", ["--check", "scripts/check-product-content-contract.mjs"]);
+  run("node", ["--check", "scripts/check-koko-nour-contract.mjs"]);
   run("node", ["--check", "scripts/check-deploy-readiness.mjs"]);
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
@@ -5006,6 +5008,7 @@ async function main() {
   run("node", ["scripts/check-adsense-review-contract.mjs", "--out-dir", join(outRoot, "adsense-review-local")]);
   run("node", ["scripts/check-adsense-public-copy-contract.mjs", "--out-dir", join(outRoot, "adsense-public-copy-local")]);
   run("node", ["scripts/check-product-content-contract.mjs", "--out-dir", join(outRoot, "product-content-local")]);
+  run("node", ["scripts/check-koko-nour-contract.mjs"]);
 
   if (!args.skipDeploy) {
     run("npx", ["wrangler", "deploy"]);
