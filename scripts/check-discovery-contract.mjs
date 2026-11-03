@@ -41,7 +41,7 @@ const PUBLIC_PAGES = [
   "/support",
   "/zh/support",
   "/ar/support",
-  "/product-samples/koko-printable",
+  "/zh/product-samples/koko-printable", "/zh/product-samples/noor-worksheet", "/ar/product-samples/koko-printable", "/ar/product-samples/noor-worksheet", "/product-samples/koko-printable",
   "/product-samples/noor-worksheet",
   "/episodes/koko-feelings",
   "/zh/episodes/koko-feelings",

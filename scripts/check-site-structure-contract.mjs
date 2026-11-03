@@ -52,7 +52,7 @@ const EXPECTED_EDITORIAL_PAGES = {
     localizedRoutes: localizedRoutes(`/${name}`),
   }])),
 };
-const EXPECTED_PRODUCT_PAGES = Object.fromEntries([["product-koko","/products/koko-printable"],["product-noor","/products/noor-worksheet"],["trial-koko","/trials/koko-week-one"],["trial-noor","/trials/noor-week-one"]].map(([key,route])=>[key,{route,localizedRoutes:localizedRoutes(route)}]));
+const EXPECTED_PRODUCT_PAGES = Object.fromEntries([["product-koko","/products/koko-printable"],["product-noor","/products/noor-worksheet"],["sample-koko","/product-samples/koko-printable"],["sample-noor","/product-samples/noor-worksheet"],["trial-koko","/trials/koko-week-one"],["trial-noor","/trials/noor-week-one"]].map(([key,route])=>[key,{route,localizedRoutes:localizedRoutes(route)}]));
 const ALL_EXPECTED_PAGES = { ...EXPECTED_PAGES, ...EXPECTED_EDITORIAL_PAGES, ...EXPECTED_PRODUCT_PAGES };
 const EXPECTED_CHANNELS = {
   koko: {
@@ -324,7 +324,7 @@ async function validateLocalHtmlInventory(context, failures, data) {
     .map((file) => relative(context.root, file).split("\\").join("/"))
     .sort();
   data.htmlFiles = htmlFiles;
-  if (htmlFiles.length !== 100) failures.push(`html_file_count:${htmlFiles.length}`);
+  if (htmlFiles.length !== 104) failures.push(`html_file_count:${htmlFiles.length}`);
   for (const file of htmlFiles) {
     const html = await readLocalText(context.root, file);
     for (const href of [...stylesheetHrefs(html), ...scriptSrcs(html)]) {

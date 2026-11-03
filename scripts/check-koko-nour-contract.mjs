@@ -27,7 +27,7 @@ for (const [prefix, [sample, product, get, join, story, worksheet, use]] of Obje
   const html = readFileSync(root + prefix + 'products/noor-worksheet.html', 'utf8');
   for (const value of [worksheet, use, '3–6', '6–8']) assert.ok(html.includes(value), `${prefix}worksheet: ${value}`);
 }
-for (const [path, values] of [['product-samples/koko-printable.html', locales[''].slice(2, 4)], ['product-samples/noor-worksheet.html', locales['ar/'].slice(5)]]) {
+for (const [path, values] of [['product-samples/koko-printable.html', locales[''].slice(2, 4)], ['ar/product-samples/noor-worksheet.html', locales['ar/'].slice(5)]]) {
  const html = readFileSync(root + path, 'utf8');
  for (const value of values) assert.ok(html.includes(value), `${path}: ${value}`);
 }

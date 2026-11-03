@@ -11,7 +11,7 @@
       "bytes": 506350
     },
     "noor-worksheet-sample.pdf": {
-      "source": "product-samples/noor-worksheet.html",
+      "source": "ar/product-samples/noor-worksheet.html",
       "assets": [
         "css/sample-activity-20260718-v1.css"
       ],

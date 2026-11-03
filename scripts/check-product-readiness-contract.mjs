@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { SAMPLES } from "./build-product-sample-pdfs.mjs";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-product-readiness-contract";
@@ -75,6 +76,15 @@ async function main() {
   const roadmap = await readJson(args.baseUrl, "/monetization-roadmap.json");
   const release = await readJson(args.baseUrl, "/release.json");
   const sitemap = await readText(args.baseUrl, "/sitemap.xml");
+  const pdfManifest = JSON.parse(await readFile(resolve(process.cwd(), "data/product-sample-pdfs.json"), "utf8"));
+  for (const [output, source] of Object.entries({
+    "koko-printable-sample.pdf": "product-samples/koko-printable.html",
+    "noor-worksheet-sample.pdf": "ar/product-samples/noor-worksheet.html",
+  })) {
+    const sample = SAMPLES.find((item) => item.output === output);
+    if (sample?.source !== source || sample?.path !== `/${source.slice(0, -5)}`) failures.push(`pdf_generator_source:${output}`);
+    if (pdfManifest.samples?.[output]?.source !== source) failures.push(`pdf_manifest_source:${output}`);
+  }
 
   const expectedPresale = {
     status: "presale_preparation",
@@ -170,22 +180,28 @@ async function main() {
     }
   }
 
-  for (const spec of PRODUCTS) {
-    const locale = spec.pack === "noor" ? "ar" : "en";
-    const html = await readText(args.baseUrl, spec.sample);
-    checkedPages.push(spec.sample);
-    checkNoCheckout(failures, spec.sample, html);
-    requireContains(failures, spec.sample, html, 'name="robots" content="noindex,follow"', "noindex");
-    requireContains(failures, spec.sample, html, `data-product-sample-download="${spec.pack}"`, "sample_download");
-    requireContains(failures, spec.sample, html, `data-product-interest="${spec.pack}"`, "sample_interest");
-    requireContains(failures, spec.sample, html, "trust-strip", "trust_strip");
-    requireContains(failures, spec.sample, html, "sample-activity-20260718-v1.css", "sample_activity_css");
-    requireContains(failures, spec.sample, html, "sample-activity-preview", "sample_activity_preview");
+  for (const locale of LOCALES) for (const spec of PRODUCTS) {
+    const samplePath = `${locale.prefix}${spec.sample}`;
+    const html = await readText(args.baseUrl, samplePath);
+    checkedPages.push(samplePath);
+    checkNoCheckout(failures, samplePath, html);
+    requireContains(failures, samplePath, html, 'name="robots" content="noindex,follow"', "noindex");
+    requireContains(failures, samplePath, html, `data-product-sample-download="${spec.pack}"`, "sample_download");
+    requireContains(failures, samplePath, html, `data-product-interest="${spec.pack}"`, "sample_interest");
+    requireContains(failures, samplePath, html, "trust-strip", "trust_strip");
+    requireContains(failures, samplePath, html, "sample-activity-20260718-v1.css", "sample_activity_css");
+    requireContains(failures, samplePath, html, "sample-activity-preview", "sample_activity_preview");
     const sampleSheets = count(html, /data-sample-sheet=/g);
-    if (sampleSheets !== spec.pages) failures.push(`${spec.sample}:sample_sheet_count:${sampleSheets}`);
-    if (count(html, /<link rel="alternate" hreflang=/g) !== 0) failures.push(`${spec.sample}:noindex_hreflang`);
-    if (spec.pack === "noor" && !html.includes("نور")) failures.push(`${spec.sample}:arabic_nour_name`);
-    if (!html.includes(`lang="${locale}"`)) failures.push(`${spec.sample}:lang`);
+    if (sampleSheets !== spec.pages) failures.push(`${samplePath}:sample_sheet_count:${sampleSheets}`);
+    if (count(html, /<link rel="alternate" hreflang=/g) !== 0) failures.push(`${samplePath}:noindex_hreflang`);
+    const htmlTag = html.match(/<html\b[^>]*>/i)?.[0] || "";
+    if (!htmlTag.includes(`lang="${locale.lang}"`)) failures.push(`${samplePath}:lang`);
+    if (locale.dir && !htmlTag.includes(`dir="${locale.dir}"`)) failures.push(`${samplePath}:dir`);
+    if (spec.pack === "noor" && locale.key === "ar") {
+      for (const value of ["ملاحظة للوالدين", "你好", "謝謝", "再見", "nǐ hǎo", "xiè xie", "zài jiàn"]) {
+        if (!html.includes(value)) failures.push(`${samplePath}:arabic_activity_missing:${value}`);
+      }
+    }
   }
 
   for (const path of [

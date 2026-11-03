@@ -3,12 +3,13 @@ import { existsSync, mkdirSync, readFileSync, statSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 import { createHash } from "node:crypto";
+import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DOWNLOAD_DIR = resolve(SITE_DIR, "downloads");
 const MANIFEST_PATH = resolve(process.cwd(), "data/product-sample-pdfs.json");
-const SAMPLES = [
+export const SAMPLES = [
   {
     path: "/product-samples/koko-printable",
     source: "product-samples/koko-printable.html",
@@ -17,8 +18,8 @@ const SAMPLES = [
     expectedPages: 3,
   },
   {
-    path: "/product-samples/noor-worksheet",
-    source: "product-samples/noor-worksheet.html",
+    path: "/ar/product-samples/noor-worksheet",
+    source: "ar/product-samples/noor-worksheet.html",
     output: "noor-worksheet-sample.pdf",
     assets: ["css/sample-activity-20260718-v1.css"],
     expectedPages: 3,
@@ -170,7 +171,7 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((error) => {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });

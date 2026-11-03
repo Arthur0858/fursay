@@ -339,6 +339,7 @@ function withAssetHeaders(response, request) {
     "/adsense-readiness.json",
     "/product-samples/koko-printable", "/product-samples/koko-printable.html",
     "/product-samples/noor-worksheet", "/product-samples/noor-worksheet.html",
+    ...["zh", "ar"].flatMap(locale => ["koko-printable", "noor-worksheet"].flatMap(slug => [`/${locale}/product-samples/${slug}`, `/${locale}/product-samples/${slug}.html`])),
   ]);
 
   if (noindexFollowPaths.has(path)) headers.set("X-Robots-Tag", "noindex, follow");

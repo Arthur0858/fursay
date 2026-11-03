@@ -2,7 +2,7 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-03",
   "deployment": {
     "workerName": "fursay",
     "assetsBinding": "ASSETS",
@@ -132,7 +132,11 @@
     ],
     "productSamplePreviews": [
       "https://fursay.com/product-samples/koko-printable",
-      "https://fursay.com/product-samples/noor-worksheet"
+      "https://fursay.com/product-samples/noor-worksheet",
+      "https://fursay.com/zh/product-samples/koko-printable",
+      "https://fursay.com/zh/product-samples/noor-worksheet",
+      "https://fursay.com/ar/product-samples/koko-printable",
+      "https://fursay.com/ar/product-samples/noor-worksheet"
     ],
     "productSampleDownloads": [
       "https://fursay.com/downloads/koko-printable-sample.pdf",
@@ -441,7 +445,8 @@
       "/js/site-shared-20261102-pinned-cadence.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261102-pinned-cadence-inline.js"
+      "/js/site-shared-20261102-pinned-cadence-inline.js",
+      "/js/editorial-nav-20261102-v1.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
