@@ -6,6 +6,10 @@ export default {
       return redirectWithHeaders(`${url.origin}/favicon.svg${url.search}`, 301);
     }
 
+    if (url.pathname === "/en" || url.pathname === "/en/") {
+      return redirectWithHeaders(`${url.origin}/${url.search}`, 301);
+    }
+
     if (request.method === "OPTIONS" && url.pathname.startsWith("/api/")) {
       return withSecurityHeaders(new Response(null, { headers: corsHeaders() }));
     }

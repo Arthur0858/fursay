@@ -4901,7 +4901,7 @@ async function main() {
   if (!args.checkOnly) writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
-  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
+  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/worker-en-redirect.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
