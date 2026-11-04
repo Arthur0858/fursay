@@ -527,26 +527,26 @@ async function handleEvent(request, env) {
     const event = sanitizeEvent(body);
     if (!event.event) return json({ success: false, message: "Invalid event" }, 400, corsHeaders());
     const sink = writeAnonymousEvent(event, request, env);
-    console.log("Fursay anonymous event", JSON.stringify(event));
+    console.log("Fursay anonymous event accepted");
     return json({ success: true, sink }, 200, corsHeaders());
   } catch (error) {
-    console.error("Event intake failed", error);
+    console.error("Event intake failed");
     return json({ success: false, message: "Event intake failed" }, 500, corsHeaders());
   }
 }
 
 function writeAnonymousEvent(event, request, env) {
+  event = sanitizeEvent(event);
   const binding = env?.FURSAY_EVENTS;
   if (!binding || typeof binding.writeDataPoint !== "function") return "worker_logs";
 
   try {
     const detail = event.detail || {};
-    const requestUrl = new URL(request.url);
     binding.writeDataPoint({
-      indexes: [safeAnalyticsValue(detail.path || requestUrl.pathname, 96)],
+      indexes: [safeAnalyticsValue(detail.path || "/", 96)],
       blobs: [
         safeAnalyticsValue(event.event),
-        safeAnalyticsValue(detail.path || requestUrl.pathname),
+        safeAnalyticsValue(detail.path || "/"),
         safeAnalyticsValue(detail.locale),
         safeAnalyticsValue(detail.page_pack),
         safeAnalyticsValue(detail.campaign),
@@ -568,7 +568,7 @@ function writeAnonymousEvent(event, request, env) {
     });
     return "analytics_engine";
   } catch (error) {
-    console.error("Analytics Engine event write failed", error);
+    console.error("Analytics Engine event write failed");
     return "worker_logs";
   }
 }
@@ -577,45 +577,54 @@ function safeAnalyticsValue(value, limit = 180) {
   return String(value || "").replace(/[\r\n\t]/g, " ").trim().slice(0, limit);
 }
 
-function sanitizeEvent(body) {
-  const allowedDetailKeys = new Set([
-    "path",
-    "locale",
-    "page_pack",
-    "campaign",
-    "pack",
-    "signup_source",
-    "market",
-    "product_id",
-    "outbound_host",
-    "outbound_path",
-    "link_text",
-    "link_content",
-    "share_url",
-    "link_url",
-    "copy_kind",
-    "product_interest",
-    "interest_stage",
-    "source_id",
-    "creator",
-    "placement"
-  ]);
-  const blocked = /email|name|phone|address|token|secret|password/i;
-  const event = typeof body?.event === "string" ? body.event.replace(/[^a-z0-9_:-]/gi, "").slice(0, 80) : "";
-  const detail = {};
-  if (body?.detail && typeof body.detail === "object" && !Array.isArray(body.detail)) {
-    for (const [key, value] of Object.entries(body.detail)) {
-      if (!allowedDetailKeys.has(key) || blocked.test(key)) continue;
-      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-        detail[key] = String(value).replace(/[\r\n\t]/g, " ").trim().slice(0, 180);
-      }
+function safeEventSlug(value, strict = false) {
+  if (typeof value !== "string" || !/^[a-z0-9][a-z0-9_-]{0,63}$/i.test(value) || (strict && value !== value.toLowerCase()) || /(?:\d[ _-]*){7}/.test(value)) return "";
+  return value;
+}
+
+function safeEventPath(value) {
+  if (typeof value !== "string" || value.length > 180) return "";
+  const path = value.split(/[?#]/, 1)[0];
+  if (!/^\/(?!\/)[a-z0-9_@./-]*$/i.test(path) || /(?:\d[ _-]*){7}/.test(path) || path.includes("..")) return "";
+  return path;
+}
+
+function safeEventUrl(value) {
+  if (typeof value !== "string" || value.length > 2048) return "";
+  try {
+    const url = new URL(value, "https://fursay.com");
+    if (url.protocol !== "https:" || !["fursay.com", "www.fursay.com", "youtube.com", "www.youtube.com", "youtu.be", "amazon.com", "www.amazon.com", "books.com.tw", "www.books.com.tw"].includes(url.hostname) || url.port) return "";
+    const path = safeEventPath(url.pathname);
+    if (!path) return "";
+    const params = new URLSearchParams();
+    for (const name of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+      const values = url.searchParams.getAll(name);
+      if (values.length === 1 && safeEventSlug(values[0], true)) params.set(name, values[0]);
     }
+    return url.origin + path + (params.size ? `?${params}` : "");
+  } catch { return ""; }
+}
+
+function sanitizeEvent(body) {
+  const slugKeys = ["locale", "page_pack", "campaign", "pack", "signup_source", "market", "link_text", "link_content", "copy_kind", "product_interest", "interest_stage", "source_id", "creator", "placement"];
+  const detail = {};
+  const input = body?.detail && typeof body.detail === "object" && !Array.isArray(body.detail) ? body.detail : {};
+  for (const key of slugKeys) {
+    const value = safeEventSlug(input[key], ["source_id", "creator", "placement"].includes(key));
+    if (value) detail[key] = value;
   }
-  return {
-    event,
-    detail,
-    ts: typeof body?.ts === "string" ? body.ts.slice(0, 40) : new Date().toISOString()
-  };
+  if (['0312527748','0316012491','0316450014','054515734X','0545560519','0805047905','0996099948','1419713108','B0DRVXFBMR','0010568432','0010661414','0010706003','0010785383','0010960916','0010985365'].includes(input.product_id)) detail.product_id = input.product_id;
+  if (input.outbound_kind === "youtube") detail.outbound_kind = input.outbound_kind;
+  for (const key of ["path", "outbound_path"]) {
+    const value = safeEventPath(input[key]);
+    if (value) detail[key] = value;
+  }
+  for (const key of ["link_url", "share_url"]) {
+    const value = safeEventUrl(input[key]);
+    if (value) detail[key] = value;
+  }
+  if (["youtube.com", "www.youtube.com", "youtu.be", "amazon.com", "www.amazon.com", "books.com.tw", "www.books.com.tw", "fursay.com", "www.fursay.com"].includes(input.outbound_host)) detail.outbound_host = input.outbound_host;
+  return { event: safeEventSlug(body?.event), detail };
 }
 
 function json(data, status, headers) {
