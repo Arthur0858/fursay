@@ -8,6 +8,8 @@ import { chromium } from "playwright";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
 const SHARED_JS = "/js/site-shared-20261103-attrsafe.js";
+const SHARED_JS_INLINE = "/js/site-shared-20261103-attrsafe-inline.js";
+const SHARED_JS_OPTIONS = [SHARED_JS, SHARED_JS_INLINE];
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
@@ -608,14 +610,14 @@ async function main() {
   const htmlChecks = [];
   for (const spec of PAGES) {
     const html = await readPageHtml(args.baseUrl ? baseUrl : "", spec.path);
-    const hasShared = html.includes(SHARED_JS);
+    const hasShared = SHARED_JS_OPTIONS.some((asset) => html.includes(asset));
     const legacyHits = LEGACY_JS.filter((legacy) => html.includes(legacy));
     const hasLegacy = legacyHits.length > 0;
     if (!hasShared) failures.push(`${spec.path}:missing_shared_js`);
     if (hasLegacy) failures.push(`${spec.path}:legacy_js_reference:${legacyHits.join(",")}`);
     htmlChecks.push({ path: spec.path, hasShared, hasLegacy, legacyHits });
   }
-  if (!existsSync(resolve(SITE_DIR, `.${SHARED_JS}`))) failures.push("shared_js_file_missing");
+  if (!SHARED_JS_OPTIONS.some((asset) => existsSync(resolve(SITE_DIR, `.${asset}`)))) failures.push("shared_js_file_missing");
   for (const legacy of LEGACY_JS) {
     if (existsSync(resolve(SITE_DIR, `.${legacy}`))) failures.push(`legacy_js_file_still_present:${legacy}`);
   }

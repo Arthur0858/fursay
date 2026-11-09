@@ -1,4 +1,5 @@
 import { subscriptionNote } from "./subscription-note.mjs";
+import { inlineSubscribe } from "./inline-subscribe.mjs";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -114,6 +115,9 @@ const ZH_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/zh/products?utm_sour
 const AR_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/ar/products?utm_source=links&utm_medium=social_profile&utm_campaign=product_interest_validation&utm_content=links_ar_product_interest";
 const SITE_ACCESSIBILITY_CSS = "/css/site-accessibility-20261002-v1.css";
 const MODAL_ACCESSIBILITY_JS = "/js/modal-accessibility-20261002-v1.js";
+const INLINE_SUBSCRIBE_CSS = "/css/inline-subscribe-20261101.css";
+const SHARED_JS_ATTRSAFE = "/js/site-shared-20261103-attrsafe.js";
+const SHARED_JS_ATTRSAFE_INLINE = "/js/site-shared-20261103-attrsafe-inline.js";
 const DESKTOP_HERO_CSS = "/css/desktop-hero-layout-20261003-v1.css";
 
 function htmlFilesUnder(directory, relative = "") {
@@ -313,6 +317,102 @@ function shortlinkRoutes() {
     { path: "/creator/noor/social", target: "/arabic", pack: "noor", source: "social", medium: "profile", campaign: "noor_story_funnel", content: "creator_kit_social" },
     { path: "/creator/noor/newsletter", target: "/arabic", pack: "noor", source: "newsletter", medium: "email", campaign: "noor_story_funnel", content: "creator_kit_newsletter" },
   ];
+}
+
+
+function ensureInlineSubscribeAssets(html) {
+  let next = html;
+  if (!next.includes(`href="${INLINE_SUBSCRIBE_CSS}"`)) {
+    if (!/<\/head\s*>/i.test(next)) throw new Error("missing_head_for_inline_subscribe_css");
+    next = next.replace(/<\/head\s*>/i, `<link rel="stylesheet" href="${INLINE_SUBSCRIBE_CSS}"></head>`);
+  }
+  if (next.includes(`src="${SHARED_JS_ATTRSAFE}"`) && !next.includes(`src="${SHARED_JS_ATTRSAFE_INLINE}"`)) {
+    next = next.replaceAll(`src="${SHARED_JS_ATTRSAFE}"`, `src="${SHARED_JS_ATTRSAFE_INLINE}"`);
+  } else if (!next.includes(`src="${SHARED_JS_ATTRSAFE_INLINE}"`) && !next.includes(`src="${SHARED_JS_ATTRSAFE}"`)) {
+    if (!/<\/body\s*>/i.test(next)) throw new Error("missing_body_for_inline_subscribe_js");
+    next = next.replace(/<\/body\s*>/i, `<script src="${SHARED_JS_ATTRSAFE_INLINE}"></script></body>`);
+  }
+  return next;
+}
+
+function closeSectionEnd(html, sectionId) {
+  const idNeedle = `id="${sectionId}"`;
+  const idIndex = html.indexOf(idNeedle);
+  if (idIndex < 0) return -1;
+  const start = html.lastIndexOf("<section", idIndex);
+  if (start < 0) return -1;
+  let pos = start;
+  let depth = 0;
+  while (pos < html.length) {
+    const nextOpen = html.indexOf("<section", pos);
+    const nextClose = html.indexOf("</section>", pos);
+    if (nextClose < 0) return -1;
+    if (nextOpen >= 0 && nextOpen < nextClose) {
+      depth += 1;
+      pos = nextOpen + 8;
+      continue;
+    }
+    depth -= 1;
+    pos = nextClose + "</section>".length;
+    if (depth === 0) return pos;
+  }
+  return -1;
+}
+
+function applyHomeKokoInlineSubscribe(siteDir) {
+  const targets = [
+    {
+      relativePath: "index.html",
+      locale: "en",
+      kind: "home",
+      placement: "home_mid",
+      group: "koko",
+    },
+    {
+      relativePath: "zh/index.html",
+      locale: "zh",
+      kind: "home",
+      placement: "home_mid",
+      group: "koko",
+    },
+    {
+      relativePath: "koko.html",
+      locale: "en",
+      kind: "koko",
+      placement: "koko_subscribe",
+      group: "koko",
+    },
+    {
+      relativePath: "zh/koko.html",
+      locale: "zh",
+      kind: "koko",
+      placement: "koko_subscribe",
+      group: "koko",
+    },
+  ];
+
+  for (const target of targets) {
+    const file = resolve(siteDir, target.relativePath);
+    if (!existsSync(file)) throw new Error(`missing_home_koko_page:${target.relativePath}`);
+    let html = readFileSync(file, "utf8");
+    html = ensureInlineSubscribeAssets(html);
+
+    const placementAttr = `data-subscribe-placement="${target.placement}"`;
+    if (!html.includes(placementAttr)) {
+      const block = inlineSubscribe(target.locale, target.placement, "", target.group);
+      if (target.kind === "home") {
+        const end = closeSectionEnd(html, "weekly-pack");
+        if (end < 0) throw new Error(`missing_weekly_pack:${target.relativePath}`);
+        html = `${html.slice(0, end)}\n\n  ${block}${html.slice(end)}`;
+      } else {
+        const note = html.match(/<p class="newsletter-note">[\s\S]*?<\/p>/);
+        if (!note) throw new Error(`missing_newsletter_note:${target.relativePath}`);
+        html = `${html.slice(0, note.index)}\n    ${block}\n    ${html.slice(note.index)}`;
+      }
+    }
+
+    writeFileSync(file, html);
+  }
 }
 
 function writeReleaseManifest() {
@@ -547,6 +647,7 @@ function writeReleaseManifest() {
   writeSiteHealthManifest(siteDir);
   applyAccessibilityEnhancements(siteDir);
   applyDesktopHeroLayout(siteDir);
+  applyHomeKokoInlineSubscribe(siteDir);
 }
 
 function writeDeployReadinessManifest(siteDir, source) {
