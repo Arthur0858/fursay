@@ -35,6 +35,7 @@ for (const page of pages) {
     const cadence = { en: /occasional, at most one email a week/i, zh: /不定期，最多每週一封/, ar: /رسائل غير منتظمة، بحد أقصى رسالة واحدة في الأسبوع/ }[lang];
     const privacy = { en: '/privacy', zh: '/zh/privacy', ar: '/ar/privacy' }[lang];
     if (!/18\+/.test(note) || !cadence.test(note) || !note.includes(`href="${privacy}"`) || form.indexOf(note) > form.search(/<button\b[^>]*type="submit"/i)) failures.push(`${page}: missing subscription note before submit`);
+    if (lang === 'en' && !/chinese only|no English newsletter/i.test(note)) failures.push(`${page}: missing Chinese-only newsletter disclosure`);
     const samplePromise = { en: /first email[^.]*sample[^.]*confirm/i, zh: /確認訂閱後[^。]*第一封[^。]*樣本/, ar: /الرسالة الأولى[^.]*نموذج قصير[^.]*تأكيد الاشتراك/ }[lang];
     if (samplePromise.test(note)) failures.push(`${page}: sample email promise in subscription note`);
   }
