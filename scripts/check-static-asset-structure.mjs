@@ -38,6 +38,7 @@ const EXPECTED_JS = [
   "site-shared-20261103-attrsafe-inline.js",
   "modal-accessibility-20261002-v1.js",
   "modal-accessibility-20260925-v1.js",
+  "turnstile-subscribe-20261110-v1.js",
 ];
 const RETAINED_ASSETS = new Set([
   "/css/site-accessibility-20260925-v1.css",
@@ -47,7 +48,8 @@ const MAX_TOTAL_CSS_BYTES = 370_000;
 const MAX_MAIN_SHARED_CSS_BYTES = 150_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
 // Both immutable shared versions coexist for cached pages; each page loads only one.
-const MAX_TOTAL_JS_BYTES = 80_000;
+// +4 KB headroom for the Turnstile subscribe helper (turnstile-subscribe-20261110-v1.js).
+const MAX_TOTAL_JS_BYTES = 84_000;
 const MAX_SINGLE_JS_BYTES = 37_000;
 const MAIN_STORY_HTML = new Set([
   "index.html",

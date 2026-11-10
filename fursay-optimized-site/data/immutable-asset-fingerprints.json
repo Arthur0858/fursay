@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03",
+  "generatedAt": "2026-11-10",
   "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
   "assets": [
     {
@@ -151,6 +151,11 @@
       "path": "/js/site-shared-20261103-attrsafe.js",
       "bytes": 34808,
       "sha256": "0b9c059ea4b861429f8904d308297700e28a32528428f9b5c2ba44248f944100"
+    },
+    {
+      "path": "/js/turnstile-subscribe-20261110-v1.js",
+      "bytes": 3969,
+      "sha256": "31e14bec9a052e9bb94135522990c44a243da32d856b4e8a92f0641de654bd99"
     }
   ]
 }

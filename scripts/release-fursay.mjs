@@ -119,6 +119,8 @@ const INLINE_SUBSCRIBE_CSS = "/css/inline-subscribe-20261101.css";
 const SHARED_JS_ATTRSAFE = "/js/site-shared-20261103-attrsafe.js";
 const SHARED_JS_ATTRSAFE_INLINE = "/js/site-shared-20261103-attrsafe-inline.js";
 const DESKTOP_HERO_CSS = "/css/desktop-hero-layout-20261003-v1.css";
+const TURNSTILE_SUBSCRIBE_JS = "/js/turnstile-subscribe-20261110-v1.js";
+const TURNSTILE_SUBSCRIBE_TAG = `<script src="${TURNSTILE_SUBSCRIBE_JS}" defer></script>`;
 
 function htmlFilesUnder(directory, relative = "") {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -357,6 +359,27 @@ function closeSectionEnd(html, sectionId) {
     if (depth === 0) return pos;
   }
   return -1;
+}
+
+// Every page with a subscribe form (modal or inline) loads the Turnstile helper once.
+// The helper is safe-off without a sitekey, and the Worker only enforces tokens when
+// the TURNSTILE_SECRET_KEY Worker secret exists.
+function ensureTurnstileSubscribeAsset(html) {
+  const hasForm = html.includes('id="subscribeModal"') || html.includes("data-subscribe-placement=");
+  if (!hasForm || html.includes(`src="${TURNSTILE_SUBSCRIBE_JS}"`)) return html;
+  const shared = html.match(/<script src="\/js\/site-shared-20261103-attrsafe(?:-inline)?\.js"><\/script>/);
+  if (shared) return html.replace(shared[0], `${shared[0]}${TURNSTILE_SUBSCRIBE_TAG}`);
+  if (!/<\/body\s*>/i.test(html)) throw new Error("missing_body_for_turnstile_subscribe_js");
+  return html.replace(/<\/body\s*>/i, `${TURNSTILE_SUBSCRIBE_TAG}</body>`);
+}
+
+function applyTurnstileSubscribeAsset(siteDir) {
+  for (const relativePath of htmlFilesUnder(siteDir).sort()) {
+    const file = resolve(siteDir, relativePath);
+    const html = readFileSync(file, "utf8");
+    const next = ensureTurnstileSubscribeAsset(html);
+    if (next !== html) writeFileSync(file, next);
+  }
 }
 
 function applyHomeKokoInlineSubscribe(siteDir) {
@@ -648,6 +671,7 @@ function writeReleaseManifest() {
   applyAccessibilityEnhancements(siteDir);
   applyDesktopHeroLayout(siteDir);
   applyHomeKokoInlineSubscribe(siteDir);
+  applyTurnstileSubscribeAsset(siteDir);
 }
 
 function writeDeployReadinessManifest(siteDir, source) {
@@ -5002,7 +5026,7 @@ async function main() {
   if (!args.checkOnly) writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
-  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/worker-en-redirect.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
+  run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/worker-turnstile.test.mjs", "test/turnstile-subscribe-assets.test.mjs", "test/worker-en-redirect.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
   run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);

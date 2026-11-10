@@ -437,6 +437,17 @@ async function handleSubscribe(request, env) {
       return json({ success: false, message: "Invalid email" }, 400, headers);
     }
 
+    // Turnstile runs after the honeypot and email checks and before any MailerLite call.
+    const turnstile = await verifyTurnstile(body, request, env);
+    if (!turnstile.ok) {
+      log("log", "subscribe_turnstile_rejected", turnstile.status, { reason: turnstile.reason });
+      return json({
+        success: false,
+        message: turnstile.status === 503 ? "Verification temporarily unavailable. Please try again." : "Verification failed. Please try again.",
+        field: "cf-turnstile-response"
+      }, turnstile.status, headers);
+    }
+
     // Log only a bounded region code, never arbitrary request/provider text.
     if (typeof region === "string" && /^[A-Z]{2}$/.test(region)) logContext.region = region;
     const groupVars = ["MAILERLITE_GROUP_FURSAY_ALL"];
@@ -518,6 +529,53 @@ async function handleSubscribe(request, env) {
     log("error", "subscribe_error", 500);
     return json({ success: false, message: "Subscription failed" }, 500, headers);
   }
+}
+
+const TURNSTILE_SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const TURNSTILE_ACTION = "subscribe";
+const DEFAULT_TURNSTILE_HOSTNAMES = ["fursay.com", "www.fursay.com"];
+
+/**
+ * Server-side Turnstile check for /api/subscribe.
+ * Safe-off: without the TURNSTILE_SECRET_KEY Worker secret it returns { ok: true, skipped: true }
+ * and the subscribe flow is unchanged. With the secret it fails closed:
+ * missing/oversized token or a failed check -> 403, siteverify unreachable or non-2xx -> 503.
+ * TURNSTILE_HOSTNAMES (optional, comma-separated) overrides the accepted frontend hostnames.
+ */
+export async function verifyTurnstile(body, request, env) {
+  const secret = typeof env?.TURNSTILE_SECRET_KEY === "string" ? env.TURNSTILE_SECRET_KEY.trim() : "";
+  if (!secret) return { ok: true, skipped: true };
+
+  const token = body ? body["cf-turnstile-response"] : undefined;
+  if (typeof token !== "string" || token.length === 0 || token.length > 2048) {
+    return { ok: false, status: 403, reason: "missing_token" };
+  }
+  const configured = typeof env.TURNSTILE_HOSTNAMES === "string"
+    ? env.TURNSTILE_HOSTNAMES.split(",").map((host) => host.trim().toLowerCase()).filter(Boolean)
+    : [];
+  const hostnames = new Set(configured.length ? configured : DEFAULT_TURNSTILE_HOSTNAMES);
+
+  const form = new URLSearchParams({ secret, response: token });
+  const remoteIp = request.headers.get("CF-Connecting-IP");
+  if (remoteIp) form.set("remoteip", remoteIp);
+
+  let result;
+  try {
+    const response = await fetch(TURNSTILE_SITEVERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form,
+      signal: AbortSignal.timeout(10000)
+    });
+    if (!response.ok) throw new Error("siteverify_status");
+    result = await response.json();
+  } catch {
+    return { ok: false, status: 503, reason: "siteverify_unavailable" };
+  }
+  if (!result || result.success !== true || result.action !== TURNSTILE_ACTION || !hostnames.has(String(result.hostname || "").toLowerCase())) {
+    return { ok: false, status: 403, reason: "verification_failed" };
+  }
+  return { ok: true };
 }
 
 async function handleEvent(request, env) {
