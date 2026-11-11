@@ -15,7 +15,7 @@ const ADSENSE_ACCOUNT = "ca-pub-4093856660317740";
 const PUBLISHER_ID = "pub-4093856660317740";
 const CSS = "/css/editorial-20261102-v1.css";
 const BRAND_CSS = "/css/brand-storybook-20260717-v1.css";
-const SHARED_JS = "/js/site-shared-20261111-asinfix.js";
+const SHARED_JS = "/js/site-shared-20261111-click.js";
 const ALL_EDITORIAL_DEPTH = { ...EDITORIAL_DEPTH, ...ROUND3_EDITORIAL_DEPTH };
 const ALL_EDITORIAL_SOURCES = { ...EDITORIAL_SOURCE_LIBRARY, ...ROUND3_EDITORIAL_SOURCE_LIBRARY };
 const ADSENSE_EVIDENCE_PATH = resolve(process.cwd(), "content/adsense-external-evidence.json");
@@ -216,7 +216,7 @@ function guidePage(locale, guide) {
   const todayHeading = locale === "zh" ? "今天可以怎麼做" : locale === "ar" ? "ما الذي يمكن فعله اليوم" : "What you can do today";
   const sources = depth.sources.map(([key, relevance]) => { const [name, url] = ALL_EDITORIAL_SOURCES[key]; return `<li><a href="${esc(url)}" rel="noopener" target="_blank">${esc(name)}</a><p data-source-relevance>${esc(relevance[locale])}</p></li>`; }).join("");
   const editorialLinks = depth.links.map((slug) => { const related = GUIDES.find((item) => item.slug === slug); return `<a href="${route(locale, `/guides/${slug}`)}">${esc(related.title[locale])}</a>`; }).join("");
-  return `${head(locale, suffix, title, description, "article").replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>')}<body class="brand-surface editorial-page">${nav(locale, suffix)}<main class="editorial-shell"><article><header class="editorial-hero"><p class="brand-kicker">${guide.world === "koko" ? "Koko · English story practice" : "Nour · Chinese story practice"}</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><div class="editorial-today"><h2>${esc(todayHeading)}</h2><p>${esc(depth.today[locale])}</p></div><p class="editorial-byline" data-guide-editorial-byline data-editorial-standard><strong>${esc(c.team)}</strong> · ${c.published}: <time datetime="${datePublished}">${datePublished}</time> · ${c.updated}: <time datetime="${dateModified}">${dateModified}</time></p><p class="editorial-boundary" data-editorial-standard>${esc(c.intro)}</p></header><nav class="editorial-toc" aria-label="${esc(c.contents)}"><strong>${esc(c.contents)}</strong><ol>${depth.headings[locale].map((item, i) => `<li><a href="#section-${i + 1}">${esc(item)}</a></li>`).join("")}</ol></nav><div class="editorial-body">${articleBody(locale, guide)}${guideTool(locale, guide.tool)}<section data-guide-sources><h2>${esc(sourceHeading)}</h2><p data-editorial-standard>${esc(c.sourceNote)}</p><ul class="source-list">${sources}</ul><p data-guide-revision><strong>${c.updated}:</strong> ${esc(guide.details[locale].revision)}</p><p data-editorial-standard><a href="${route(locale, "/editorial-method")}">${esc(l.method)}</a> · <a href="${route(locale, "/contact")}#corrections">${esc(c.correction)}</a></p></section><section class="editorial-related" data-editorial-links><h2>${esc(relatedHeading)}</h2>${editorialLinks}</section><aside class="editorial-next"><a class="brand-btn" href="${story}">${esc(c.related)}</a><a class="brand-btn brand-btn--secondary" href="${product}">${esc(c.sample)}</a></aside>${inlineSubscribe(locale, "guide_end", guide.slug, guide.world === "noor" ? "noor" : "koko")}</div></article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schemas)}</script><script src="/js/site-shared-20261111-asinfix-inline.js"></script></body></html>`;
+  return `${head(locale, suffix, title, description, "article").replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>')}<body class="brand-surface editorial-page">${nav(locale, suffix)}<main class="editorial-shell"><article><header class="editorial-hero"><p class="brand-kicker">${guide.world === "koko" ? "Koko · English story practice" : "Nour · Chinese story practice"}</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><div class="editorial-today"><h2>${esc(todayHeading)}</h2><p>${esc(depth.today[locale])}</p></div><p class="editorial-byline" data-guide-editorial-byline data-editorial-standard><strong>${esc(c.team)}</strong> · ${c.published}: <time datetime="${datePublished}">${datePublished}</time> · ${c.updated}: <time datetime="${dateModified}">${dateModified}</time></p><p class="editorial-boundary" data-editorial-standard>${esc(c.intro)}</p></header><nav class="editorial-toc" aria-label="${esc(c.contents)}"><strong>${esc(c.contents)}</strong><ol>${depth.headings[locale].map((item, i) => `<li><a href="#section-${i + 1}">${esc(item)}</a></li>`).join("")}</ol></nav><div class="editorial-body">${articleBody(locale, guide)}${guideTool(locale, guide.tool)}<section data-guide-sources><h2>${esc(sourceHeading)}</h2><p data-editorial-standard>${esc(c.sourceNote)}</p><ul class="source-list">${sources}</ul><p data-guide-revision><strong>${c.updated}:</strong> ${esc(guide.details[locale].revision)}</p><p data-editorial-standard><a href="${route(locale, "/editorial-method")}">${esc(l.method)}</a> · <a href="${route(locale, "/contact")}#corrections">${esc(c.correction)}</a></p></section><section class="editorial-related" data-editorial-links><h2>${esc(relatedHeading)}</h2>${editorialLinks}</section><aside class="editorial-next"><a class="brand-btn" href="${story}">${esc(c.related)}</a><a class="brand-btn brand-btn--secondary" href="${product}">${esc(c.sample)}</a></aside>${inlineSubscribe(locale, "guide_end", guide.slug, guide.world === "noor" ? "noor" : "koko")}</div></article></main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schemas)}</script><script src="/js/site-shared-20261111-click-inline.js"></script></body></html>`;
 }
 function guidesHub(locale) {
   const l = LOCALES[locale];
@@ -301,10 +301,11 @@ function patchExistingIndexable(siteDir) {
 function patchLlms(siteDir) {
   const file = resolve(siteDir, "llms.txt");
   let text = readFileSync(file, "utf8");
-  text = text.replace(/Current expected Books\.com\.tw affiliate links: \d+/, "Current expected Books.com.tw affiliate links: 10");
-  text = text.replace(/Current expected Amazon affiliate links: \d+/, "Current expected Amazon affiliate links: 20");
+  text = text.replace(/Current expected Books\.com\.tw affiliate links: \d+/, "Current expected Books.com.tw affiliate links: 11");
+  text = text.replace(/Current expected Amazon affiliate links: \d+/, "Current expected Amazon affiliate links: 22");
   text = text.replace(/Koko printable presale-preparation page/gi, "Koko free printable family guide");
   text = text.replace(/Nour worksheet presale-preparation page/gi, "Nour free worksheet family guide");
+  text = text.replace(/Affiliate click tracking is expected on all \d+ public story and episode pages\./, "Affiliate click tracking is expected on all 18 public story and episode pages.");
   const start = "Editorial library:";
   const end = "Creator and sharing references:";
   const lines = [start, ...Object.values(LOCALES).flatMap((locale) => [
@@ -329,7 +330,7 @@ function patchSiteStructure(siteDir) {
   if (!data.sharedAssets.css.includes(CSS)) data.sharedAssets.css.push(CSS);
   if (!data.sharedAssets.css.includes("/css/inline-subscribe-20261101.css")) data.sharedAssets.css.push("/css/inline-subscribe-20261101.css");
   data.sharedAssets.js ||= [];
-  if (!data.sharedAssets.js.includes("/js/site-shared-20261111-asinfix-inline.js")) data.sharedAssets.js.push("/js/site-shared-20261111-asinfix-inline.js");
+  if (!data.sharedAssets.js.includes("/js/site-shared-20261111-click-inline.js")) data.sharedAssets.js.push("/js/site-shared-20261111-click-inline.js");
   if (!data.sharedAssets.js.includes("/js/editorial-nav-20261102-v1.js")) data.sharedAssets.js.push("/js/editorial-nav-20261102-v1.js");
   const retained = (data.pages || []).filter((page) => page.type !== "editorialGuide" && page.type !== "editorialTrust" && page.key !== "guides");
   const localizedRoutes = (suffix) => ({ en: suffix, "zh-TW": `/zh${suffix}`, ar: `/ar${suffix}` });

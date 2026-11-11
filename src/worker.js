@@ -1,3 +1,5 @@
+import { purchaseRoutes } from "./purchase-routes.js";
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -55,6 +57,7 @@ function goRedirectUrl(url) {
     "/go/koko-newsletter": "/join/koko", "/go/koko": "/join/koko",
     "/go/noor-newsletter": "/join/noor", "/go/noor": "/join/noor"
   };
+  if (purchaseRoutes[path]) return purchaseRoutes[path];
   const route = goRoutes[path];
   if (route?.startsWith("/join/")) return joinRedirectUrl(new URL(route + url.search, url.origin));
   const target = new URL(route || "/", url.origin);

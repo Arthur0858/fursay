@@ -143,14 +143,14 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20261111-asinfix-inline.js",
-      "bytes": 35427,
-      "sha256": "f6515ec054dec775b9cc98284dd54a85e4b12f495bb8bee4c53175a6ac2bf89d"
+      "path": "/js/site-shared-20261111-click-inline.js",
+      "bytes": 35767,
+      "sha256": "f15dec4265563bb00d08d52037e95f222a501cfbe5f1adbfe847de80b6527707"
     },
     {
-      "path": "/js/site-shared-20261111-asinfix.js",
-      "bytes": 34808,
-      "sha256": "9afee30b2cab8a12415e68b94cea56b0c06cec71a4a01df712ab4fdee31ee809"
+      "path": "/js/site-shared-20261111-click.js",
+      "bytes": 35148,
+      "sha256": "9407a89f1640b4419d08350e516f040d5edda7460fb08e379b13cfd9d7d6bf7a"
     },
     {
       "path": "/js/turnstile-subscribe-20261110-v1.js",

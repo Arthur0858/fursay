@@ -1,3 +1,4 @@
+import { purchaseRoutes } from "../src/purchase-routes.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -5,9 +6,9 @@ const DEFAULT_OUT = "/tmp/fursay-amazon-affiliate-links";
 const AMAZON_TAG = "parenttechche-20";
 const BOOKS_AFFILIATE_ID = "arthur0858";
 const PAGES = [
-  { path: "/", market: "amazon", affiliateRequired: false },
-  { path: "/zh/", market: "books", affiliateRequired: false },
-  { path: "/ar/", market: "amazon", affiliateRequired: false },
+  { path: "/", market: "amazon" },
+  { path: "/zh/", market: "books" },
+  { path: "/ar/", market: "amazon" },
   { path: "/koko", market: "amazon" },
   { path: "/zh/koko", market: "books" },
   { path: "/ar/koko", market: "amazon" },
@@ -102,10 +103,12 @@ function checkPage(page, html, status) {
   const booksLinks = [];
   const pathname = page.path;
   if (status !== 200) failures.push(`bad_status:${status}`);
-  const amazonAnchors = html.match(/<a\b[^>]*href=["']https:\/\/www\.amazon\.com\/dp\/[^"']+["'][^>]*>/gi) || [];
-  const booksAnchors = html.match(/<a\b[^>]*href=["']https:\/\/www\.books\.com\.tw\/exep\/assp\.php\/[^"']+["'][^>]*>/gi) || [];
+  const amazonAnchors = html.match(/<a\b[^>]*href=["']\/go\/amz-[^"']+["'][^>]*>/gi) || [];
+  const booksAnchors = html.match(/<a\b[^>]*href=["']\/go\/books-[^"']+["'][^>]*>/gi) || [];
   for (const anchor of amazonAnchors) {
-    const href = attr(anchor, "href");
+    const shortHref = attr(anchor, "href");
+    const href = purchaseRoutes[shortHref] || "";
+    if (!href) { failures.push(`unknown_purchase_route:${shortHref}`); continue; }
     const rel = attr(anchor, "rel").split(/\s+/).filter(Boolean);
     const className = attr(anchor, "class");
     const url = new URL(href);
@@ -118,7 +121,9 @@ function checkPage(page, html, status) {
     if (!className.split(/\s+/).includes("book-link")) failures.push(`amazon_missing_book_link_class:${href}`);
   }
   for (const anchor of booksAnchors) {
-    const href = attr(anchor, "href");
+    const shortHref = attr(anchor, "href");
+    const href = purchaseRoutes[shortHref] || "";
+    if (!href) { failures.push(`unknown_purchase_route:${shortHref}`); continue; }
     const rel = attr(anchor, "rel").split(/\s+/).filter(Boolean);
     const className = attr(anchor, "class");
     const productKey = booksProductKey(href);
