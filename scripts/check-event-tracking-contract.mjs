@@ -7,8 +7,8 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20261103-attrsafe.js";
-const SHARED_JS_INLINE = "/js/site-shared-20261103-attrsafe-inline.js";
+const SHARED_JS = "/js/site-shared-20261111-asinfix.js";
+const SHARED_JS_INLINE = "/js/site-shared-20261111-asinfix-inline.js";
 const SHARED_JS_OPTIONS = [SHARED_JS, SHARED_JS_INLINE];
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",

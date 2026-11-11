@@ -108,7 +108,7 @@ const CHECKS = [
     contentTypeIncludes: "text/css",
   },
   {
-    path: "/js/site-shared-20261103-attrsafe.js",
+    path: "/js/site-shared-20261111-asinfix.js",
     status: 200,
     cacheIncludes: ["public", "max-age=31536000", "immutable"],
     contentTypeIncludes: "text/javascript",

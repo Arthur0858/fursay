@@ -675,7 +675,7 @@ function sanitizeEvent(body) {
     const value = safeEventSlug(input[key], ["source_id", "creator", "placement"].includes(key));
     if (value) detail[key] = value;
   }
-  if (['0312527748','0316012491','0316450014','054515734X','0545560519','0805047905','0996099948','1419713108','B0DRVXFBMR','0010568432','0010661414','0010706003','0010785383','0010960916','0010985365'].includes(input.product_id)) detail.product_id = input.product_id;
+  if (['0312527748','0316012491','0316450014','1452150141','0786809140','0805047905','0996099948','1419713108','B0DRVXFBMR','0010568432','0010661414','0010706003','0010785383','0010960916','0010985365'].includes(input.product_id)) detail.product_id = input.product_id;
   if (input.outbound_kind === "youtube") detail.outbound_kind = input.outbound_kind;
   for (const key of ["path", "outbound_path"]) {
     const value = safeEventPath(input[key]);

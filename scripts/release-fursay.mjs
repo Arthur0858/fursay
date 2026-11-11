@@ -116,8 +116,8 @@ const AR_PRODUCT_INTEREST_SOCIAL_LINK = "https://fursay.com/ar/products?utm_sour
 const SITE_ACCESSIBILITY_CSS = "/css/site-accessibility-20261002-v1.css";
 const MODAL_ACCESSIBILITY_JS = "/js/modal-accessibility-20261002-v1.js";
 const INLINE_SUBSCRIBE_CSS = "/css/inline-subscribe-20261101.css";
-const SHARED_JS_ATTRSAFE = "/js/site-shared-20261103-attrsafe.js";
-const SHARED_JS_ATTRSAFE_INLINE = "/js/site-shared-20261103-attrsafe-inline.js";
+const SHARED_JS_ATTRSAFE = "/js/site-shared-20261111-asinfix.js";
+const SHARED_JS_ATTRSAFE_INLINE = "/js/site-shared-20261111-asinfix-inline.js";
 const DESKTOP_HERO_CSS = "/css/desktop-hero-layout-20261003-v1.css";
 const TURNSTILE_SUBSCRIBE_JS = "/js/turnstile-subscribe-20261110-v1.js";
 const TURNSTILE_SUBSCRIBE_TAG = `<script src="${TURNSTILE_SUBSCRIBE_JS}" defer></script>`;
@@ -367,7 +367,7 @@ function closeSectionEnd(html, sectionId) {
 function ensureTurnstileSubscribeAsset(html) {
   const hasForm = html.includes('id="subscribeModal"') || html.includes("data-subscribe-placement=");
   if (!hasForm || html.includes(`src="${TURNSTILE_SUBSCRIBE_JS}"`)) return html;
-  const shared = html.match(/<script src="\/js\/site-shared-20261103-attrsafe(?:-inline)?\.js"><\/script>/);
+  const shared = html.match(/<script src="\/js\/site-shared-20261111-asinfix(?:-inline)?\.js"><\/script>/);
   if (shared) return html.replace(shared[0], `${shared[0]}${TURNSTILE_SUBSCRIBE_TAG}`);
   if (!/<\/body\s*>/i.test(html)) throw new Error("missing_body_for_turnstile_subscribe_js");
   return html.replace(/<\/body\s*>/i, `${TURNSTILE_SUBSCRIBE_TAG}</body>`);
@@ -1957,7 +1957,7 @@ ${trafficLaunchChannelRows(item.channels)}
 ${trafficLaunchSprintSection(kit.activationSprints.noorFirstSubscriber)}
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "traffic-launch.html"), html + "\n");
@@ -2331,7 +2331,7 @@ ${rows}
       </table>
     </section>
   </main>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "noor-sprint-status.html"), html + "\n");
@@ -3590,7 +3590,7 @@ ${products}
       <p class="modal-note">No spam, ever. Unsubscribe anytime.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "products.html"), html + "\n");
@@ -3839,7 +3839,7 @@ ${products}
       <p class="modal-note">不寄垃圾信，可隨時取消訂閱。</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "zh/products.html"), html + "\n");
@@ -4028,7 +4028,7 @@ ${products}
       <p class="modal-note">لا رسائل مزعجة. يمكن إلغاء الاشتراك في أي وقت.</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "ar/products.html"), html + "\n");
@@ -4224,7 +4224,7 @@ ${cards}
       <p class="modal-note">${escapeHtml(spec.modalNote)}</p>
     </div>
   </div>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
     writeFileSync(resolve(siteDir, spec.path), html + "\n");
@@ -4862,7 +4862,7 @@ function writeCreatorKitPage(siteDir, kit) {
     </section>
 ${packCards}
   </main>
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "creator-kit.html"), html + "\n");
@@ -5012,7 +5012,7 @@ function writeShareKitPage(siteDir, kit) {
 ${packCards}
   </main>
   ${shareKitSubscribeModal()}
-  <script src="/js/site-shared-20261103-attrsafe.js"></script>
+  <script src="/js/site-shared-20261111-asinfix.js"></script>
 </body>
 </html>`;
   writeFileSync(resolve(siteDir, "share-kit.html"), html + "\n");
