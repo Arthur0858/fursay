@@ -21,5 +21,5 @@ export function productBooklist(locale, context) {
       : context === 'guide' ? ['color', locale === 'ar' ? 'bilingual' : 'bucket']
         : ['color', 'feelings'];
   const [heading, note, disclosure] = copy[locale];
-  return `<section class="booklist-sec" id="booklist"><h2>${heading}</h2><p class="booklist-editorial-note" data-booklist-editorial-note>${note}</p><ul>${keys.map((key) => `<li><a href="${books[key][1]}" rel="sponsored noopener" target="_blank">${books[key][0]}</a></li>`).join('')}</ul><p class="booklist-note">${disclosure}</p></section>`;
+  return `<style>@media print{.booklist-sec,#booklist{display:none!important}}</style><section class="booklist-sec" id="booklist"><h2>${heading}</h2><p class="booklist-editorial-note" data-booklist-editorial-note>${note}</p><ul>${keys.map((key) => `<li><a href="${books[key][1]}" rel="sponsored noopener" target="_blank">${books[key][0]}</a></li>`).join('')}</ul><p class="booklist-note">${disclosure}</p></section>`;
 }

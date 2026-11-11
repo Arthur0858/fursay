@@ -21,5 +21,6 @@ test('target pages have one disclosed booklist with the intended short URLs', ()
     assert.equal(sponsored.length, 2, file);
     assert.deepEqual(sponsored.map((m) => m[0].match(/href="\/go\/([^\"]+)"/)?.[1]).sort(), [...contexts[context]].sort(), file);
     assert.equal((sections[0][0].match(/rel="sponsored noopener"/g) || []).length, 2, file);
+    assert.match(html, /@media print\{\.booklist-sec,#booklist\{display:none!important\}\}/);
   }
 });
