@@ -15,7 +15,7 @@ var result = {};
 var value = safeAnonymousSlug(input[key], ['source_id','creator','placement'].indexOf(key) >= 0);
 if (value) result[key] = value;
 });
-if (['0312527748','0316012491','0316450014','054515734X','0545560519','0805047905','0996099948','1419713108','B0DRVXFBMR','0010568432','0010661414','0010706003','0010785383','0010960916','0010985365'].indexOf(input.product_id) >= 0) result.product_id = input.product_id;
+if (['0312527748','0316012491','0316450014','1452150141','0786809140','0805047905','0996099948','1419713108','B0DRVXFBMR','0010568432','0010661414','0010706003','0010785383','0010960916','0010985365'].indexOf(input.product_id) >= 0) result.product_id = input.product_id;
 if (input.outbound_kind === 'youtube') result.outbound_kind = input.outbound_kind;
 ['path','outbound_path'].forEach(function (key) { var value = safeAnonymousPath(input[key]); if (value) result[key] = value; });
 var hosts = ['fursay.com','www.fursay.com','youtube.com','www.youtube.com','youtu.be','amazon.com','www.amazon.com','books.com.tw','www.books.com.tw'];
