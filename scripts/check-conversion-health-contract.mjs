@@ -7,9 +7,9 @@ import { chromium } from "playwright";
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-conversion-health-contract";
 const PAGES = [
-  { path: "/", productInterest: true, affiliateRequired: false },
-  { path: "/zh/", productInterest: true, affiliateRequired: false },
-  { path: "/ar/", productInterest: true, affiliateRequired: false },
+  { path: "/", productInterest: true },
+  { path: "/zh/", productInterest: true },
+  { path: "/ar/", productInterest: true },
   { path: "/koko", productInterest: true },
   { path: "/zh/koko", productInterest: true },
   { path: "/ar/koko", productInterest: true },

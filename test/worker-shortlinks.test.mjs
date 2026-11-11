@@ -49,3 +49,13 @@ test("directory paths redirect to their trailing slash", async () => {
   assert.equal((await get("/zh/")).status, 200);
   assert.equal((await get("/nope")).status, 404);
 });
+
+ test("purchase routes redirect to exact affiliate destinations", async () => {
+  const { purchaseRoutes } = await import("../src/purchase-routes.js");
+  assert.equal(Object.keys(purchaseRoutes).length, 15);
+  for (const [path, destination] of Object.entries(purchaseRoutes)) {
+    const response = await get(path + "?tag=unexpected&email=private");
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get("location"), destination);
+  }
+});

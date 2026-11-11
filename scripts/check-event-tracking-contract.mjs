@@ -7,17 +7,17 @@ import { chromium } from "playwright";
 
 const SITE_DIR = resolve(process.cwd(), "fursay-optimized-site");
 const DEFAULT_OUT = "/tmp/fursay-event-tracking-contract";
-const SHARED_JS = "/js/site-shared-20261111-asinfix.js";
-const SHARED_JS_INLINE = "/js/site-shared-20261111-asinfix-inline.js";
+const SHARED_JS = "/js/site-shared-20261111-click.js";
+const SHARED_JS_INLINE = "/js/site-shared-20261111-click-inline.js";
 const SHARED_JS_OPTIONS = [SHARED_JS, SHARED_JS_INLINE];
 const LEGACY_JS = [
   "/js/site-shared-20260613-attribution1.js",
   "/js/site-shared-20260613-events1.js",
 ];
 const PAGES = [
-  { path: "/", lang: "en", campaign: "home_story_funnel", market: "amazon", affiliateRequired: false },
-  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel", market: "books", affiliateRequired: false },
-  { path: "/ar/", lang: "ar", campaign: "home_story_funnel", market: "amazon", affiliateRequired: false },
+  { path: "/", lang: "en", campaign: "home_story_funnel", market: "amazon" },
+  { path: "/zh/", lang: "zh-TW", campaign: "home_story_funnel", market: "books" },
+  { path: "/ar/", lang: "ar", campaign: "home_story_funnel", market: "amazon" },
   { path: "/koko", lang: "en", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
   { path: "/zh/koko", lang: "zh-TW", campaign: "koko_story_funnel", pack: "koko", market: "books" },
   { path: "/ar/koko", lang: "ar", campaign: "koko_story_funnel", pack: "koko", market: "amazon" },
@@ -157,12 +157,12 @@ async function clickFirstAffiliateLink(page) {
   return page.evaluate(() => {
     window.__fursayAffiliateNavigationBlocked = false;
     document.addEventListener("click", (event) => {
-      const link = event.target.closest?.('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]');
+      const link = event.target.closest?.('a.book-link[href^="/go/amz-"], a.book-link[href^="/go/books-"]');
       if (!link) return;
       event.preventDefault();
       window.__fursayAffiliateNavigationBlocked = true;
     }, { capture: true, once: true });
-    const candidates = [...document.querySelectorAll('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]')];
+    const candidates = [...document.querySelectorAll('a.book-link[href^="/go/amz-"], a.book-link[href^="/go/books-"]')];
     const link = candidates.find((el) => {
       const rect = el.getBoundingClientRect();
       const style = window.getComputedStyle(el);
@@ -173,10 +173,8 @@ async function clickFirstAffiliateLink(page) {
     link.click();
     return {
       href: link.href,
-      host: url.hostname.replace(/^www\./, ""),
-      productId: url.hostname.includes("amazon.com")
-        ? (url.pathname.match(/\/dp\/([^/?#]+)/) || [])[1] || ""
-        : (url.pathname.match(/\/products\/([^/?#]+)/) || [])[1] || "",
+      host: url.pathname.startsWith("/go/amz-") ? "amazon.com" : "books.com.tw",
+      productId: url.pathname.startsWith("/go/amz-") ? url.pathname.slice(8).toUpperCase() : url.pathname.slice(10),
     };
   });
 }

@@ -29,7 +29,7 @@ test('anonymous intake and download filter values before analytics and logs', as
   } finally { console.log = originalLog; console.error = originalError; }
 });
 
-for (const bundle of ['site-shared-20261111-asinfix.js', 'site-shared-20261111-asinfix-inline.js']) {
+for (const bundle of ['site-shared-20261111-click.js', 'site-shared-20261111-click-inline.js']) {
   test(`${bundle} filters anonymous details and URL attribution`, () => {
     const source = readFileSync(new URL(`../fursay-optimized-site/js/${bundle}`, import.meta.url), 'utf8');
     const helpers = source.slice(source.indexOf('function safeAnonymousSlug('), source.indexOf('function eventContext('));

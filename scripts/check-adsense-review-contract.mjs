@@ -43,8 +43,9 @@ async function mainRun() {
     if (!html.includes('hreflang="x-default"') || !html.includes('rel="canonical"')) failures.push(`${path}:discovery_links`);
     const affiliateLinks = (html.match(/rel="sponsored noopener"/g) || []).length;
     if (affiliateLinks > 2) failures.push(`${path}:affiliate_links_over_2:${affiliateLinks}`);
-    const bookSection = html.match(/<section class="booklist-sec"[\s\S]*?<\/section>/i)?.[0] || "";
-    if (affiliateLinks && ((html.match(/class="booklist-sec"/g) || []).length !== 1 || (!/class="booklist-note\b/.test(bookSection) && !/disclosure|聯盟|回饋|إفصاح|عمولة/i.test(visible(bookSection))))) failures.push(`${path}:affiliate_section_or_disclosure`);
+    const bookSections = html.match(/<section\b(?=[^>]*(?:class="booklist-sec"|id="recommended-books"))[^>]*>[\s\S]*?<\/section>/gi) || [];
+    const bookSection = bookSections[0] || "";
+    if (affiliateLinks && (bookSections.length !== 1 || (!/class="booklist-note\b/.test(bookSection) && !/disclosure|commission|聯盟|回饋|إفصاح|عمولة/i.test(visible(bookSection))))) failures.push(`${path}:affiliate_section_or_disclosure`);
   }
   const revisions = new Set();
   for (const locale of LOCALES) for (const slug of GUIDE_SLUGS) {

@@ -27,7 +27,7 @@ test("every page with a subscribe form loads the Turnstile helper exactly once, 
     }
     formPages += 1;
     assert.equal(count, 1, `${rel} must load the helper once`);
-    const shared = html.search(/<script src="\/js\/site-shared-20261111-asinfix(?:-inline)?\.js"><\/script>/);
+    const shared = html.search(/<script src="\/js\/site-shared-20261111-click(?:-inline)?\.js"><\/script>/);
     assert.ok(shared >= 0 && shared < html.indexOf(TAG), `${rel} helper must follow the shared script`);
     assert.equal(html.includes("challenges.cloudflare.com"), false, `${rel} must not hardcode the Turnstile api.js`);
   }

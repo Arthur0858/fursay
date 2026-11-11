@@ -1,3 +1,4 @@
+import { purchaseRoutes } from "../src/purchase-routes.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -230,7 +231,7 @@ function checkEpisode(episode, html) {
   const links = bookLinks(html);
   if (links.length < 2) failures.push(`${episode.path}:book_link_count:${links.length}<2`);
   for (const link of links) {
-    const href = attr(link, "href");
+    const href = purchaseRoutes[attr(link, "href")] || "";
     const rel = attr(link, "rel").split(/\s+/).filter(Boolean);
     if (episode.lang === "zh-TW") {
       if (!href.includes("https://www.books.com.tw/exep/assp.php/arthur0858/") || !href.includes("utm_source=arthur0858")) failures.push(`${episode.path}:bad_books_affiliate_link:${href || "none"}`);

@@ -1,3 +1,4 @@
+import { purchaseRoutes } from "../src/purchase-routes.js";
 import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
@@ -150,7 +151,7 @@ async function checkReference({ baseUrl, pages, shortlinkPaths, caches, sourceRo
 
   if (url.origin !== ORIGIN) return failures;
   if (url.pathname.endsWith(".html")) failures.push(`${sourceRoute}:${attrName}:html_suffix:${rawValue}`);
-  if (shortlinkPaths.has(url.pathname)) return failures;
+  if (shortlinkPaths.has(url.pathname) || Object.hasOwn(purchaseRoutes, url.pathname)) return failures;
   if (WORKER_ONLY_PATHS.has(url.pathname)) return failures;
   if (url.pathname === "/api/subscribe") return failures;
 

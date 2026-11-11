@@ -191,7 +191,7 @@ window.closeSubscribeModal();
 return;
 }
 
-var affiliateLink = event.target.closest('a.book-link[href*="amazon.com/dp/"], a.book-link[href*="books.com.tw/exep/assp.php/"]');
+var affiliateLink = event.target.closest('a.book-link[href^="/go/amz-"], a.book-link[href^="/go/books-"]');
 if (affiliateLink) {
 emitFursayEvent('fursay_affiliate_click', affiliateEventDetail(affiliateLink));
 }
@@ -384,7 +384,15 @@ link_text: slugify(anchor.textContent)
 try {
 var url = new URL(anchor.href);
 detail.outbound_host = url.hostname.replace(/^www\./, '');
-if (detail.outbound_host === 'amazon.com') {
+if (url.pathname.startsWith('/go/amz-')) {
+detail.outbound_host = 'amazon.com';
+detail.market = 'amazon';
+detail.product_id = url.pathname.slice('/go/amz-'.length).toUpperCase();
+} else if (url.pathname.startsWith('/go/books-')) {
+detail.outbound_host = 'books.com.tw';
+detail.market = 'books';
+detail.product_id = url.pathname.slice('/go/books-'.length);
+} else if (detail.outbound_host === 'amazon.com') {
 detail.market = 'amazon';
 detail.product_id = (url.pathname.match(/\/dp\/([^/?#]+)/) || [])[1] || '';
 } else if (detail.outbound_host === 'books.com.tw') {
