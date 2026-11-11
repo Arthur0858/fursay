@@ -143,16 +143,6 @@
       "sha256": "d7563ef8b3193e3ab3b212e7abd5c08f6cf849d8518877bb201c862c64e3cab7"
     },
     {
-      "path": "/js/site-shared-20261103-attrsafe-inline.js",
-      "bytes": 35427,
-      "sha256": "2d9e82a6b1c5ec276d240b57b2bdccc46895f7576ea04630bac3d06a050f117e"
-    },
-    {
-      "path": "/js/site-shared-20261103-attrsafe.js",
-      "bytes": 34808,
-      "sha256": "0b9c059ea4b861429f8904d308297700e28a32528428f9b5c2ba44248f944100"
-    },
-    {
       "path": "/js/site-shared-20261111-asinfix-inline.js",
       "bytes": 35427,
       "sha256": "f6515ec054dec775b9cc98284dd54a85e4b12f495bb8bee4c53175a6ac2bf89d"
