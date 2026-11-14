@@ -1,3 +1,5 @@
+import { SHORT_META_DESCRIPTIONS } from "./short-meta-descriptions.mjs";
+import { checkShortDescription } from "./short-description-contract.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -204,6 +206,14 @@ async function main() {
     const html = await readPage(args.baseUrl, page);
     checkPage(page, html, failures);
     pages.push({ path: page.path, file: page.file });
+  }
+
+  for (const path of Object.keys(SHORT_META_DESCRIPTIONS)) {
+    const page = { path, file: `${path.slice(1)}.html` };
+    const html = await readPage(args.baseUrl, page);
+    const head = html.match(/<head>([\s\S]*?)<\/head>/i)?.[1] || "";
+    const description = headValue(head, { type: "meta-name", name: "description" });
+    failures.push(...checkShortDescription(path, description));
   }
 
   await mkdir(args.outDir, { recursive: true });
