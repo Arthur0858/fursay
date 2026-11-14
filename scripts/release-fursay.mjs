@@ -635,7 +635,7 @@ function writeReleaseManifest() {
       productFamilyGuidePages: 6,
       policyPages: 18,
       editorialGuidePages: 36,
-      sitemapUrls: 84,
+      sitemapUrls: 87,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
