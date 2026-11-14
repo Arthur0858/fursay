@@ -329,7 +329,20 @@ async function serveAsset(request, env) {
     const cleanAsset = await env.ASSETS.fetch(new Request(candidate, request));
     if (cleanAsset.status === 200) return redirectWithHeaders(`${url.origin}${cleanPath}${url.search}`, 301);
   }
-  return withTrialLanguageAttribution(withAssetHeaders(html.status === 404 ? first : html, request), request);
+  if (html.status === 404) {
+    const fallbackUrl = new URL(request.url);
+    const locale = url.pathname.startsWith("/zh/") ? "/zh" : url.pathname.startsWith("/ar/") ? "/ar" : "";
+    fallbackUrl.pathname = `${locale}/404.html`;
+    const fallback = await env.ASSETS.fetch(new Request(fallbackUrl, request));
+    if (fallback.status === 200) {
+      const headers = new Headers(fallback.headers);
+      headers.set("Content-Type", "text/html; charset=utf-8");
+      headers.set("X-Robots-Tag", "noindex, follow");
+      return withAssetHeaders(new Response(fallback.body, { status: 404, headers }), request);
+    }
+    return withAssetHeaders(first, request);
+  }
+  return withTrialLanguageAttribution(withAssetHeaders(html, request), request);
 }
 
 function withAssetHeaders(response, request) {
