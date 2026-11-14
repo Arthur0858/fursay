@@ -5,7 +5,7 @@ import worker from "../src/worker.js";
 const origin = "https://fursay.com";
 const assets = { fetch: async request => {
   const path = new URL(request.url).pathname;
-  return new Response(path, { status: path === "/zh/index.html" ? 200 : 404 });
+  return new Response(path === "/404.html" ? "Page not found" : path, { status: ["/zh/index.html", "/404.html"].includes(path) ? 200 : 404 });
 } };
 const get = path => worker.fetch(new Request(origin + path), { ASSETS: assets });
 
@@ -20,5 +20,7 @@ test("English locale root redirects to the homepage with security headers", asyn
 
 test("other locale and English subpaths retain asset handling", async () => {
   assert.equal((await get("/zh/")).status, 200);
-  assert.equal((await get("/en/example")).status, 404);
+  const response = await get("/en/example");
+  assert.equal(response.status, 404);
+  assert.match(await response.text(), /Page not found/);
 });
