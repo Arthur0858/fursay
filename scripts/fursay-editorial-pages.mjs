@@ -1,3 +1,4 @@
+import { SHORT_META_DESCRIPTIONS } from "./short-meta-descriptions.mjs";
 import { productBooklist } from "./product-booklists.mjs";
 import { ZH_META_DESCRIPTIONS } from "./zh-meta-descriptions.mjs";
 import { sisterSiteLink } from "./sister-site-footer.mjs";
@@ -301,6 +302,19 @@ function patchExistingIndexable(siteDir) {
       const locale = path.startsWith("/zh/") || path === "/zh/" ? "zh" : path.startsWith("/ar/") || path === "/ar/" ? "ar" : "en";
       const note = locale === "zh" ? "書單只延伸本頁的核心故事主題，不是完成活動的必要步驟。我們保留兩本和角色情境最直接相關的書，讓家長先看內容說明，再自行判斷語言、文化、紙本形式與家庭預算是否合適。零售商決定供貨與版本；孩子不需要購買或讀完任何一本，仍可使用故事與免費樣本。" : locale === "ar" ? "تمتد القائمة من موضوع القصة الأساسي وليست خطوة لازمة لإكمال النشاط. نحتفظ بكتابين مرتبطين مباشرة بالمشهد كي يقرأ الوالد الوصف ويقرر ملاءمة اللغة والثقافة والصيغة والميزانية. يتحكم المتجر في التوفر والنسخ، ويمكن للأسرة استعمال القصة والعينة المجانية من دون شراء أو إكمال أي كتاب." : "The booklist extends the page's core story theme; it is not required to complete an activity. We keep two books with the clearest connection to the scene so an adult can read the description and decide whether the language, culture, format, and family budget fit. Retailers control availability and editions, and families can use the story and free sample without buying or finishing either book.";
       html = html.replace(/<p class="booklist-note([^"]*)">/, `<p class="booklist-editorial-note" data-booklist-editorial-note>${esc(note)}</p><p class="booklist-note$1">`);
+    }
+    const metaDescription = SHORT_META_DESCRIPTIONS[path];
+    if (metaDescription) {
+      for (const selector of ["name=\"description\"", "property=\"og:description\"", "name=\"twitter:description\""]) {
+        html = html.replace(new RegExp(`(<meta\\s+${selector}\\s+content=")[^"]*(")`, "i"), `$1${esc(metaDescription)}$2`);
+      }
+      // Update the page's primary structured-data description while preserving other entities.
+      let updated = false;
+      html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, (block) => {
+        if (updated || !/"description"\s*:/.test(block)) return block;
+        updated = true;
+        return block.replace(/("description"\s*:\s*)"(?:\\.|[^"\\])*"/, (_, prefix) => `${prefix}${JSON.stringify(metaDescription)}`);
+      });
     }
     writeFileSync(file, html);
   }
