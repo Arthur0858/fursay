@@ -2,6 +2,7 @@ const books = {
   color: ['The Color Monster', '/go/amz-0316450014'],
   bilingual: ['My First Bilingual Picture Book (EN-AR)', '/go/amz-b0drvxfbmr'],
   feelings: ['The Feelings Book', '/go/amz-0316012491'],
+  inMyHeart: ['In My Heart', '/go/amz-1419713108'],
   bucket: ['Have You Filled a Bucket Today?', '/go/amz-0996099948'],
   hotel: ['情緒大飯店', '/go/books-0010985365'],
   speak: ['我會好好說', '/go/books-0010960916'],
@@ -29,7 +30,11 @@ export function productBooklist(locale, context, guide = null) {
     : context === 'hub' ? ['color', 'bilingual']
       : context === 'guide' ? ['color', locale === 'ar' ? 'bilingual' : 'bucket']
         : ['color', 'feelings'];
-  if (context === 'guide' && guide?.world === 'noor') {
+  if (context === 'guide' && guide?.slug === 'bilingual-bedtime-books-for-toddlers') {
+    keys = locale === 'zh' ? ['bilingualZh', 'monsterZh'] : ['bilingual', 'color'];
+  } else if (context === 'guide' && guide?.slug === 'picture-books-for-naming-feelings') {
+    keys = locale === 'zh' ? ['hotel', 'speak'] : ['feelings', 'inMyHeart'];
+  } else if (context === 'guide' && guide?.world === 'noor') {
     if (guide.slug === 'nour-hello-goodbye-at-the-door') {
       keys = locale === 'zh' ? ['brownBearGreetingsZh', 'helloWorldZh'] : ['helloGoodbye', 'helloHello'];
     } else if (guide.slug === 'nour-colors-at-the-table') {

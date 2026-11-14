@@ -634,8 +634,8 @@ function writeReleaseManifest() {
       productLandingPages: 9,
       productFamilyGuidePages: 6,
       policyPages: 18,
-      editorialGuidePages: 36,
-      sitemapUrls: 84,
+      editorialGuidePages: 42,
+      sitemapUrls: 90,
       ownedProductSpecs: 2,
       productValidationPlans: 2,
       productSamplePreviewPages: 2,
@@ -5041,6 +5041,7 @@ async function main() {
   run("node", ["--check", "scripts/check-subscribe-api-contract.mjs"]);
   run("node", ["--check", "scripts/check-content-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-semantic-funnel-contract.mjs"]);
+  run("node", ["--test", "test/handwritten-guides.test.mjs"]);
   run("node", ["--check", "scripts/check-site-structure-contract.mjs"]);
   run("node", ["--check", "scripts/check-hero-preload-contract.mjs"]);
   run("node", ["--check", "scripts/check-visual-layout-contract.mjs"]);

@@ -1,0 +1,41 @@
+import { readFile, readdir } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+
+const root = 'fursay-optimized-site';
+const slug = 'picture-books-for-naming-feelings';
+const paths = ['', '/zh', '/ar'];
+const expected = { en: `https://fursay.com/guides/${slug}`, 'zh-TW': `https://fursay.com/zh/guides/${slug}`, ar: `https://fursay.com/ar/guides/${slug}`, 'x-default': `https://fursay.com/guides/${slug}` };
+const pages = await Promise.all(paths.map(p => readFile(`${root}${p}/guides/${slug}.html`, 'utf8')));
+const visible = html => html.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+const tokens = text => text.match(/[\u0600-\u06ff]+/g) || [];
+for (const html of pages) {
+  const links = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)];
+  assert.equal(links.length, 4); assert.deepEqual(Object.fromEntries(links.map(m => [m[1], m[2]])), expected);
+}
+const html = pages[2];
+assert.match(html, /<html lang="ar" dir="rtl">/);
+const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)[1];
+const all = tokens(visible(main));
+assert.ok(all.length >= 900 && all.length <= 1400, `Arabic words: ${all.length}`);
+const headings = [...main.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)].slice(0, 7).map(m => visible(m[1]));
+assert.ok(headings.length >= 5 && new Set(headings).size === headings.length);
+for (const marker of ['data-guide-editorial-byline', 'data-guide-revision', 'data-guide-sources']) assert.ok(html.includes(marker));
+const sourceSection = html.match(/<section data-guide-sources>([\s\S]*?)<\/section>/i)[1];
+const notes = [...sourceSection.matchAll(/<li><a href="([^"]+)"[^>]*>[\s\S]*?<\/a><p data-source-relevance>([\s\S]*?)<\/p><\/li>/gi)];
+assert.ok(notes.length >= 3 && new Set(notes.map(m => visible(m[2]))).size === notes.length);
+const revision = html.match(/<p data-guide-revision>([\s\S]*?)<\/p>/i)[1];
+const others = await Promise.all((await readdir(`${root}/ar/guides`)).filter(f => f.endsWith('.html') && f !== `${slug}.html`).map(f => readFile(`${root}/ar/guides/${f}`, 'utf8')));
+assert.ok(others.every(page => !page.includes(`<p data-guide-revision>${revision}</p>`) && notes.every(n => !page.includes(`<p data-source-relevance>${n[2]}</p>`))));
+const related = html.match(/<section class="editorial-related"[\s\S]*?<\/section>/i)[0];
+assert.ok([...related.matchAll(/href="[^"#?]*\/guides\/[^"#?]+"/g)].length >= 2 && [...related.matchAll(/href="[^"#?]*\/guides\/[^"#?]+"/g)].length <= 4);
+const schemas = [...html.matchAll(/<script[^>]+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)].flatMap(m => { const data = JSON.parse(m[1]); return data['@graph'] || [data]; });
+assert.ok(schemas.some(s => s['@type'] === 'Article' && s.datePublished && s.dateModified));
+assert.ok(schemas.some(s => s['@type'] === 'BreadcrumbList'));
+assert.ok(schemas.some(s => s['@type'] === 'Organization' && s.contactPoint));
+const substantive = main.replace(/<section\b(?=[^>]*class="booklist-sec")[^>]*>[\s\S]*?<\/section>/gi, '');
+const standard = [...substantive.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)].filter(m => /data-editorial-standard/i.test(m[1])).flatMap(m => tokens(visible(m[2]))).length;
+assert.ok(standard / all.length <= 0.1);
+const affiliate = [...html.matchAll(/<a\b[^>]*href="(\/go\/[^"]+)"[^>]*>/g)];
+assert.deepEqual(affiliate.map(m => m[1]), ['/go/amz-0316012491', '/go/amz-1419713108']);
+assert.ok(affiliate.every(m => /rel="sponsored noopener"/.test(m[0])) && /class="booklist-note"[^>]*>[^<]*عمولة/.test(html));
+console.log(`PASS: ${all.length} Arabic tokens; ${headings.length} unique headings; ${notes.length} sources; standard ${(100 * standard / all.length).toFixed(2)}%; four-way hreflang; schema and affiliate links`);

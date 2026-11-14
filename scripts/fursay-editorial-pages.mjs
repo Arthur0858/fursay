@@ -263,10 +263,20 @@ function trustPage(locale, kind) {
   const pageHead = head(locale, suffix, title, description);
   return `${hasSignup ? pageHead.replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>') : pageHead}<body class="brand-surface editorial-page policy-brand-page">${nav(locale, suffix)}<main class="editorial-shell"><article class="policy-card editorial-trust"><header><p class="brand-kicker">Fursay trust & accountability</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p class="editorial-byline"><strong>Fursay Family Learning Editorial Team</strong> · ${COPY[locale].updated}: <time datetime="${dateModified}">${dateModified}</time></p></header>${renderedSections}</article>${hasSignup ? `${infoLinks(locale)}${inlineSubscribe(locale, `${kind}_end`)}` : ""}</main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="${hasSignup ? "/js/site-shared-20261111-click-inline.js" : SHARED_JS}"></script></body></html>`;
 }
+// These six long-form pages are maintained by hand and must never be rewritten.
+export const HANDWRITTEN_GUIDE_SLUGS = new Set([
+  "bilingual-bedtime-books-for-toddlers",
+  "picture-books-for-naming-feelings",
+]);
+function isHandwrittenGuidePath(path) {
+  return /^(?:\/zh|\/ar)?\/guides\/([^/]+)$/.test(path)
+    && HANDWRITTEN_GUIDE_SLUGS.has(path.split("/").at(-1));
+}
 function patchExistingIndexable(siteDir) {
   const sitemap = readFileSync(resolve(siteDir, "sitemap.xml"), "utf8");
   const paths = [...sitemap.matchAll(/<loc>https:\/\/fursay\.com([^<]*)<\/loc>/g)].map((m) => m[1] || "/");
   for (const path of paths) {
+    if (isHandwrittenGuidePath(path)) continue;
     const file = resolve(siteDir, path === "/" ? "index.html" : path.endsWith("/") ? `${path.replace(/^\//, "")}index.html` : `${path.replace(/^\//, "")}.html`);
     let html = readFileSync(file, "utf8");
     html = html.replace(/<link rel="stylesheet" href="\/css\/editorial-[^"]+">/g, (tag) => tag.includes(CSS) ? tag : "");
@@ -407,7 +417,7 @@ function writeAdsenseReadiness(siteDir) {
   const stableWindowReadyAt = stableAnchor ? addDays(stableAnchor, 14) : null;
   const stableWindowComplete = Boolean(stableWindowReadyAt && today >= stableWindowReadyAt);
   const sourceUrls = new Set(Object.values(ALL_EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => ALL_EDITORIAL_SOURCES[key]?.[1]).filter(Boolean)));
-  const contentShapeReady = GUIDES.length === 12 && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
+  const contentShapeReady = GUIDES.length === 14 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
   const evidenceFresh = Object.entries(gates).filter(([key]) => key !== "editorialPagesWithImpressions").every(([, gate]) => gate.fresh);
   const loveReady = gates.lovetypesReady?.status === "ready" && gates.lovetypesReady.fresh;
   const impressionsReady = gates.editorialPagesWithImpressions?.status === "passed" && gates.editorialPagesWithImpressions.value >= 5 && gates.editorialPagesWithImpressions.fresh;
@@ -442,7 +452,14 @@ function writeAdsenseReadiness(siteDir) {
 export function writeEditorialBundle(siteDir) {
   for (const locale of Object.keys(LOCALES)) {
     write(siteDir, route(locale, "/guides"), guidesHub(locale));
-    for (const guide of GUIDES) write(siteDir, route(locale, `/guides/${guide.slug}`), guidePage(locale, guide));
+    for (const guide of GUIDES) {
+      if (HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)) {
+        // Fail closed if an authored page is missing rather than generating a replacement.
+        readFileSync(resolve(siteDir, `${route(locale, `/guides/${guide.slug}`).slice(1)}.html`));
+        continue;
+      }
+      write(siteDir, route(locale, `/guides/${guide.slug}`), guidePage(locale, guide));
+    }
     for (const kind of ["about", "editorial-method", "contact", "terms", "privacy", "support"]) write(siteDir, route(locale, `/${kind}`), trustPage(locale, kind));
   }
   writeCss(siteDir);
