@@ -75,3 +75,26 @@ test("an unchanged tracked file keeps its commit date across builds and is cache
   assert.equal(calls, 1);
   assert.equal(createSitemapLastmodResolver({ repoDir, siteDir, buildDate: "2026-12-01", git })("https://fursay.com/arabic"), "2026-09-25");
 });
+
+test("published sitemap points to HTML and excludes noindex pages", async () => {
+  const { readFile, readdir, access } = await import("node:fs/promises");
+  const actualSite = resolve("fursay-optimized-site");
+  const xml = await readFile(resolve(actualSite, "sitemap.xml"), "utf8");
+  const urls = [...xml.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(match => match[1].trim());
+  assert.ok(urls.length > 0);
+  const files = new Set(urls.map(url => sitemapFilePath(url, actualSite)));
+  for (const file of files) await access(file);
+  async function checkDirectory(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const file = resolve(directory, entry.name);
+      if (entry.isDirectory()) await checkDirectory(file);
+      else if (entry.name.endsWith(".html")) {
+        const html = await readFile(file, "utf8");
+        if (/<meta\s+name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/i.test(html) || entry.name === "404.html") {
+          assert.ok(!files.has(file), `${relative(actualSite, file)} must not be in the sitemap`);
+        }
+      }
+    }
+  }
+  await checkDirectory(actualSite);
+});
