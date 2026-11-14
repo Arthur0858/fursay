@@ -1,3 +1,4 @@
+import { applyGuideStructuredData } from "./guide-structured-data.mjs";
 import { subscriptionNote } from "./subscription-note.mjs";
 import { inlineSubscribe } from "./inline-subscribe.mjs";
 import { spawnSync } from "node:child_process";
@@ -662,6 +663,7 @@ function writeReleaseManifest() {
   writeProductsManifest(siteDir, source);
   writeBrandProductsBundle(siteDir);
   writeEditorialBundle(siteDir);
+  applyGuideStructuredData(siteDir);
   writeSitemap(siteDir);
   run("node", ["scripts/build-product-sample-pdfs.mjs"]);
   writeMonetizationRoadmap(siteDir, source);
