@@ -13,6 +13,8 @@ export const GUIDE_SLUGS = [
   "three-chinese-words-a-day",
   "three-minute-chinese-routine",
   ...ROUND3_GUIDES.map((guide) => guide.slug),
+  "bilingual-bedtime-books-for-toddlers",
+  "picture-books-for-naming-feelings",
 ];
 
 const SOURCES = {
@@ -295,4 +297,17 @@ const CORE_GUIDES = [
   },
 ];
 
-export const GUIDES = [...CORE_GUIDES, ...ROUND3_GUIDES];
+const HANDWRITTEN_GUIDES = [
+  {
+    slug: "bilingual-bedtime-books-for-toddlers", world: "koko", dateModified: "2026-11-14",
+    title: localized("Bilingual bedtime books for toddlers", "給幼兒的雙語睡前繪本：從一張圖開始", "كتب ثنائية اللغة لوقت النوم مع الأطفال الصغار"),
+    description: localized("A gentle bilingual bedtime reading routine for toddlers, using pictures, familiar words, and a free sample.", "用熟悉的語言、圖片與簡短晚安，挑選適合家庭的雙語睡前共讀方式；不購書也能試試。", "روتين هادئ للقراءة قبل النوم بلغتين، باستخدام الصور والكلمات المألوفة ونموذج مجاني."),
+  },
+  {
+    slug: "picture-books-for-naming-feelings", world: "koko", dateModified: "2026-11-14",
+    title: localized("Picture books for naming feelings with toddlers", "和幼兒一起用繪本說出情緒", "كتب مصورة لتسمية المشاعر مع الأطفال الصغار"),
+    description: localized("Use picture books, playful questions, and a free sample to explore feelings words with your toddler.", "運用繪本、有趣的提問與免費樣本，陪幼兒探索表達情緒的詞語。", "استخدموا الكتب المصورة والأسئلة المرحة ونموذجًا مجانيًا لاستكشاف كلمات المشاعر مع طفلكم الصغير."),
+  },
+];
+
+export const GUIDES = [...CORE_GUIDES, ...ROUND3_GUIDES, ...HANDWRITTEN_GUIDES];

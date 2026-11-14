@@ -278,6 +278,26 @@
       }
     },
     {
+      "key": "guide-bilingual-bedtime-books-for-toddlers",
+      "route": "/guides/bilingual-bedtime-books-for-toddlers",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/bilingual-bedtime-books-for-toddlers",
+        "zh-TW": "/zh/guides/bilingual-bedtime-books-for-toddlers",
+        "ar": "/ar/guides/bilingual-bedtime-books-for-toddlers"
+      }
+    },
+    {
+      "key": "guide-picture-books-for-naming-feelings",
+      "route": "/guides/picture-books-for-naming-feelings",
+      "type": "editorialGuide",
+      "localizedRoutes": {
+        "en": "/guides/picture-books-for-naming-feelings",
+        "zh-TW": "/zh/guides/picture-books-for-naming-feelings",
+        "ar": "/ar/guides/picture-books-for-naming-feelings"
+      }
+    },
+    {
       "key": "about",
       "route": "/about",
       "type": "editorialTrust",

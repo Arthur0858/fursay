@@ -87,6 +87,8 @@ https://fursay.com/guides/koko-feelings-at-bedtime
 https://fursay.com/guides/koko-brave-after-a-hard-day
 https://fursay.com/guides/nour-hello-goodbye-at-the-door
 https://fursay.com/guides/nour-colors-at-the-table
+https://fursay.com/guides/bilingual-bedtime-books-for-toddlers
+https://fursay.com/guides/picture-books-for-naming-feelings
 https://fursay.com/zh/guides
 https://fursay.com/zh/about
 https://fursay.com/zh/editorial-method
@@ -104,6 +106,8 @@ https://fursay.com/zh/guides/koko-feelings-at-bedtime
 https://fursay.com/zh/guides/koko-brave-after-a-hard-day
 https://fursay.com/zh/guides/nour-hello-goodbye-at-the-door
 https://fursay.com/zh/guides/nour-colors-at-the-table
+https://fursay.com/zh/guides/bilingual-bedtime-books-for-toddlers
+https://fursay.com/zh/guides/picture-books-for-naming-feelings
 https://fursay.com/ar/guides
 https://fursay.com/ar/about
 https://fursay.com/ar/editorial-method
@@ -121,6 +125,8 @@ https://fursay.com/ar/guides/koko-feelings-at-bedtime
 https://fursay.com/ar/guides/koko-brave-after-a-hard-day
 https://fursay.com/ar/guides/nour-hello-goodbye-at-the-door
 https://fursay.com/ar/guides/nour-colors-at-the-table
+https://fursay.com/ar/guides/bilingual-bedtime-books-for-toddlers
+https://fursay.com/ar/guides/picture-books-for-naming-feelings
 
 Creator and sharing references:
 - Creator link for Koko descriptions: https://fursay.com/creator/koko
