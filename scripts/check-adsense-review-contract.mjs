@@ -32,7 +32,7 @@ async function mainRun() {
   const sitemapResponse = await get(options.baseUrl, "/sitemap.xml");
   const urls = [...sitemapResponse.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   metrics.sitemapUrls = urls.length;
-  if (urls.length !== 85 || new Set(urls).size !== 85) failures.push(`sitemap_expected_85_unique:${urls.length}:${new Set(urls).size}`);
+  if (urls.length !== 86 || new Set(urls).size !== 86) failures.push(`sitemap_expected_86_unique:${urls.length}:${new Set(urls).size}`);
   if (urls.some((url) => !url.startsWith(`${ORIGIN}/`))) failures.push("sitemap_noncanonical_origin");
   for (const url of urls) {
     const path = new URL(url).pathname; const response = await get(options.baseUrl, path); const html = response.text;

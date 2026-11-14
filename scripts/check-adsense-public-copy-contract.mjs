@@ -33,7 +33,7 @@ async function run() {
   await mkdir(options.outDir, { recursive: true });
   const sitemap = await get(options.baseUrl, "/sitemap.xml");
   const urls = [...sitemap.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  if (urls.length !== 85 || new Set(urls).size !== 85) failures.push(`sitemap_count:${urls.length}`);
+  if (urls.length !== 86 || new Set(urls).size !== 86) failures.push(`sitemap_count:${urls.length}`);
   const forbiddenCopy = /presale[\s-]*preparation|review-required|checkoutEnabled|paymentLinksAllowed|publicPrice|what\s+is\s+being\s+prepared|still\s+no\s+public\s+price|no\s+public\s+price\s+or\s+payment\s+link|正在準備|預售準備|審核中|قيد الإعداد|قيد المراجعة|البيع المسبق/i;
   const unsupportedCount = /(?:\+\s*1000|1000\s*\+|\+\s*100|100\s*\+)\s*(?:stories|episodes|chapters|集|篇|حلقة)/i;
   const unsupportedAdFreePromise = /no ads?[,]?\s*ever|لا إعلانات أبداً|لا اعلانات ابدا/i;
