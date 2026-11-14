@@ -456,19 +456,8 @@ export function writeEditorialBundle(siteDir) {
 export function editorialSitemapEntries(sitemapUrl) {
   const localized = (suffix) => ({ en: `${ORIGIN}${suffix}`, "zh-TW": `${ORIGIN}/zh${suffix}`, ar: `${ORIGIN}/ar${suffix}`, "x-default": `${ORIGIN}${suffix}` });
   const paths = ["/guides", ...GUIDE_SLUGS.map((slug) => `/guides/${slug}`), "/about", "/editorial-method", "/contact", "/terms"];
-  const entries = paths.flatMap((path) => {
+  return paths.flatMap((path) => {
     const alts = localized(path); const priority = path === "/guides" ? "0.8" : path.startsWith("/guides/") ? "0.7" : "0.4";
     return [sitemapUrl(`${ORIGIN}${path}`, alts, priority), sitemapUrl(`${ORIGIN}/zh${path}`, alts, priority), sitemapUrl(`${ORIGIN}/ar${path}`, alts, priority)];
   });
-  const bedtime = `${ORIGIN}/guides/bilingual-bedtime-books-for-toddlers`;
-  const bedtimeZh = `${ORIGIN}/zh/guides/bilingual-bedtime-books-for-toddlers`;
-  const bedtimeAlternates = { en: bedtime, "zh-TW": bedtimeZh, "x-default": bedtime };
-  const feelings = `${ORIGIN}/guides/picture-books-for-naming-feelings`;
-  const feelingsAlternates = { en: feelings, "x-default": feelings };
-  return [
-    ...entries,
-    sitemapUrl(bedtime, bedtimeAlternates, "0.6"),
-    sitemapUrl(bedtimeZh, bedtimeAlternates, "0.6"),
-    sitemapUrl(feelings, feelingsAlternates, "0.6"),
-  ];
 }

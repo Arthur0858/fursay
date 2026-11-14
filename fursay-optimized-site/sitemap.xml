@@ -924,30 +924,4 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/terms"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/terms"/>
   </url>
-  <url>
-    <loc>https://fursay.com/guides/bilingual-bedtime-books-for-toddlers</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/bilingual-bedtime-books-for-toddlers"/>
-    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/bilingual-bedtime-books-for-toddlers"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/bilingual-bedtime-books-for-toddlers"/>
-  </url>
-  <url>
-    <loc>https://fursay.com/zh/guides/bilingual-bedtime-books-for-toddlers</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/bilingual-bedtime-books-for-toddlers"/>
-    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/bilingual-bedtime-books-for-toddlers"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/bilingual-bedtime-books-for-toddlers"/>
-  </url>
-  <url>
-    <loc>https://fursay.com/guides/picture-books-for-naming-feelings</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/picture-books-for-naming-feelings"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/picture-books-for-naming-feelings"/>
-  </url>
 </urlset>
