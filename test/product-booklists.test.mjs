@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { productBooklist } from '../scripts/product-booklists.mjs';
 
 const expected = {
   en: { hub: ['amz-0316450014', 'amz-b0drvxfbmr'], sample: ['amz-0316450014', 'amz-0316012491'], guide: ['amz-0316450014', 'amz-0996099948'] },
@@ -66,5 +67,28 @@ test('all guide translations have the specified disclosed books before sources',
     assert.deepEqual(links.map((m) => [m[2], m[1]]), guideBooks[locale][group], file);
     assert.equal((html.match(/rel="sponsored noopener"/g) || []).length, 2, file);
     assert.match(html, /@media print\{\.booklist-sec,#booklist\{display:none!important\}\}/);
+  }
+});
+
+
+test('purchase guides select the existing localized book links', () => {
+  const pairs = {
+    'bilingual-bedtime-books-for-toddlers': {
+      en: ['amz-b0drvxfbmr', 'amz-0316450014'],
+      zh: ['books-0010785383', 'books-0010706003'],
+      ar: ['amz-b0drvxfbmr', 'amz-0316450014'],
+    },
+    'picture-books-for-naming-feelings': {
+      en: ['amz-0316012491', 'amz-1419713108'],
+      zh: ['books-0010985365', 'books-0010960916'],
+      ar: ['amz-0316012491', 'amz-1419713108'],
+    },
+  };
+  for (const [slug, locales] of Object.entries(pairs)) for (const [locale, expectedLinks] of Object.entries(locales)) {
+    const html = productBooklist(locale, 'guide', { slug, world: 'koko' });
+    const links = [...html.matchAll(/href="\/go\/([^" ]+)" rel="sponsored noopener"/g)].map((match) => match[1]);
+    assert.deepEqual(links, expectedLinks, `${locale}/${slug}`);
+    assert.ok(html.includes(disclosures[locale]));
+    assert.ok(html.includes(notes[locale]));
   }
 });
