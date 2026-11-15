@@ -12,6 +12,7 @@ const SECURITY_HEADERS = {
 const CHECKS = [
   { name: "home_html", path: "/", method: "GET", status: 200 },
   { name: "story_html", path: "/koko", method: "GET", status: 200 },
+  { name: "chinese_html", path: "/zh/", method: "GET", status: 200 },
   { name: "manifest_json", path: "/release.json", method: "GET", status: 200 },
   { name: "css_asset", path: "/css/picture-world-shared-20260613-traffic12.css", method: "GET", status: 200 },
   { name: "image_asset", path: "/og-koko.png", method: "GET", status: 200 },
@@ -84,6 +85,25 @@ async function main() {
     for (const [header, expected] of Object.entries(SECURITY_HEADERS)) {
       if (response.headers.get(header) !== expected) {
         responseFailures.push(`bad_${header}:${response.headers.get(header) || "none"}`);
+      }
+    }
+    if (check.name.endsWith("_html")) {
+      const csp = response.headers.get("content-security-policy") || "";
+      const directives = new Map(csp.split(";").map((part) => {
+        const [name, ...sources] = part.trim().split(/\s+/);
+        return [name, sources];
+      }));
+      for (const [directive, sources] of Object.entries({
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://challenges.cloudflare.com"],
+        "style-src": ["'self'", "https://fonts.googleapis.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com"],
+        "connect-src": ["'self'", "https://challenges.cloudflare.com"],
+        "frame-src": ["https://challenges.cloudflare.com", "https://www.youtube-nocookie.com"],
+      })) {
+        for (const source of sources) {
+          if (!directives.get(directive)?.includes(source)) responseFailures.push(`csp_missing:${directive}:${source}`);
+        }
       }
     }
     checkCors(check.name, response, responseFailures);
