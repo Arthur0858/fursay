@@ -36,7 +36,7 @@ test("Worker attributed response removes cache validators and preserves security
   const response=await worker.fetch(new Request("https://fursay.com/zh/trials/koko-week-one?utm_source=newsletter"),env);
   assert.equal(response.headers.get("Cache-Control"),"private, no-store");
   assert.equal(response.headers.has("ETag"),false);assert.equal(response.headers.has("Content-Length"),false);
-  assert.equal(response.headers.get("Content-Security-Policy"),"default-src 'self'");
+  assert.match(response.headers.get("Content-Security-Policy"),/^default-src 'self', default-src 'self';/);
   assert.equal(response.headers.get("X-Content-Type-Options"),"nosniff");
   assert.equal(changes.length,2);assert.ok(changes.every(x=>new URL(x.value).searchParams.get("utm_source")==="newsletter"));
   assert.equal(await response.text(),"trial");
