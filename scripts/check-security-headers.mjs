@@ -95,10 +95,10 @@ async function main() {
       }));
       for (const [directive, sources] of Object.entries({
         "default-src": ["'self'"],
-        "script-src": ["'self'", "https://challenges.cloudflare.com"],
+        "script-src": ["'self'", "https://challenges.cloudflare.com", "https://static.cloudflareinsights.com"],
         "style-src": ["'self'", "https://fonts.googleapis.com"],
         "font-src": ["'self'", "https://fonts.gstatic.com"],
-        "connect-src": ["'self'", "https://challenges.cloudflare.com"],
+        "connect-src": ["'self'", "https://challenges.cloudflare.com", "https://cloudflareinsights.com"],
         "frame-src": ["https://challenges.cloudflare.com", "https://www.youtube-nocookie.com"],
       })) {
         for (const source of sources) {
