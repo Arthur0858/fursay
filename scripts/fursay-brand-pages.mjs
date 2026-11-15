@@ -179,7 +179,7 @@ function hubPage(locale) {
   const path = l.products;
   const meta = {
     en: ["Koko English Feelings & Nour Chinese Story Packs", "Try Koko's English feelings stories for Chinese-speaking families or Nour's Chinese stories with Arabic parent prompts. Free printable samples are available."],
-    zh: ["Koko 英文情緒與努爾中文故事包", "選 Koko 練習英文情緒詞，或選努爾與 Zayd 的中文故事，搭配阿語家長提示。兩份免費可列印樣本都可先預覽或下載。家長可以依孩子的興趣與家庭步調，一起看故事、說詞語，選擇適合的親子活動。"],
+    zh: ["華語家庭的 Koko 英文陪讀與努爾中文故事包", "華語家庭可用 Koko 英文情緒故事包親子陪讀，家長不必英文流利，也能和孩子看圖聊天。另有給阿語家庭的努爾與 Zayd 中文故事包；兩份免費可列印樣本都可預覽或下載。"],
     ar: ["قصص Koko للمشاعر بالإنجليزية ونور بالصينية", "جرّبوا قصص Koko للمشاعر بالإنجليزية للأسر الناطقة بالصينية، أو قصص نور وزيد بالصينية مع توجيهات عربية وعينات مجانية للطباعة."]
   }[locale];
   const cards = Object.values(PRODUCTS).map((product) => {
