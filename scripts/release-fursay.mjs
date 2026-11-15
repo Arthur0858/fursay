@@ -572,6 +572,7 @@ function writeReleaseManifest() {
       "scripts/check-subscription-copy-contract.mjs",
       "scripts/check-public-kit-parity.mjs",
       "scripts/check-amazon-affiliate-links.mjs",
+      "scripts/check-purchase-guide-links.mjs",
       "scripts/check-worker-shortlinks.mjs",
       "scripts/check-structured-data.mjs",
       "scripts/check-social-preview-contract.mjs",
@@ -5058,6 +5059,7 @@ async function main() {
   run("node", ["--check", "scripts/test-koko-slot-ledger.mjs"]);
   run("node", ["--check", "scripts/check-public-kit-parity.mjs"]);
   run("node", ["--check", "scripts/check-amazon-affiliate-links.mjs"]);
+  run("node", ["--check", "scripts/check-purchase-guide-links.mjs"]);
   run("node", ["--check", "scripts/check-worker-shortlinks.mjs"]);
   run("node", ["--check", "scripts/check-structured-data.mjs"]);
   run("node", ["--check", "scripts/check-social-preview-contract.mjs"]);
@@ -5120,6 +5122,7 @@ async function main() {
   run("node", ["--test", "scripts/test-koko-slot-ledger.mjs"]);
   run("node", ["scripts/check-public-kit-parity.mjs", "--out-dir", join(outRoot, "public-kit-parity-local")]);
   run("node", ["scripts/check-amazon-affiliate-links.mjs", "--out-dir", join(outRoot, "amazon-affiliate-local")]);
+  run("node", ["scripts/check-purchase-guide-links.mjs"]);
   run("node", ["scripts/check-worker-shortlinks.mjs", "--out-dir", join(outRoot, "worker-shortlinks-local")]);
   run("node", ["scripts/check-structured-data.mjs", "--out-dir", join(outRoot, "structured-data-local")]);
   run("node", ["scripts/check-social-preview-contract.mjs", "--out-dir", join(outRoot, "social-preview-local")]);

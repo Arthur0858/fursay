@@ -40,6 +40,7 @@ const STATUS_MANIFESTS_WITHOUT_SOURCE = new Set([
   "/noor-sprint-action.json",
 ]);
 const LIVE_SMOKE_EXCLUDES = new Set([
+  "scripts/check-purchase-guide-links.mjs",
   "scripts/check-editorial-utility-layout.mjs",
   "scripts/check-koko-nour-contract.mjs",
   "scripts/check-locale-route-map.mjs",
