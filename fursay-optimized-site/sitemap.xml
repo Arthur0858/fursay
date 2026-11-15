@@ -3,7 +3,7 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://fursay.com/</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/"/>
@@ -36,7 +36,7 @@
 
   <url>
     <loc>https://fursay.com/koko</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
@@ -47,7 +47,7 @@
 
   <url>
     <loc>https://fursay.com/zh/koko</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
@@ -58,7 +58,7 @@
 
   <url>
     <loc>https://fursay.com/ar/koko</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/koko"/>
@@ -91,7 +91,7 @@
 
   <url>
     <loc>https://fursay.com/ar/arabic</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/arabic"/>
@@ -102,7 +102,7 @@
 
   <url>
     <loc>https://fursay.com/episodes/koko-feelings</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/koko-feelings"/>
@@ -124,7 +124,7 @@
 
   <url>
     <loc>https://fursay.com/ar/episodes/koko-feelings</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/koko-feelings"/>
@@ -179,7 +179,7 @@
 
   <url>
     <loc>https://fursay.com/zh/episodes/noor-greetings</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-greetings"/>
@@ -190,7 +190,7 @@
 
   <url>
     <loc>https://fursay.com/ar/episodes/noor-greetings</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/episodes/noor-greetings"/>
@@ -201,7 +201,7 @@
 
   <url>
     <loc>https://fursay.com/products</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>
@@ -223,7 +223,7 @@
 
   <url>
     <loc>https://fursay.com/ar/products</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/products"/>
@@ -399,7 +399,7 @@
 
   <url>
     <loc>https://fursay.com/guides/english-storytime-without-fluent-english</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/english-storytime-without-fluent-english"/>
@@ -421,7 +421,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/english-storytime-without-fluent-english</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/english-storytime-without-fluent-english"/>
@@ -432,7 +432,7 @@
 
   <url>
     <loc>https://fursay.com/guides/feelings-words-through-stories</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/feelings-words-through-stories"/>
@@ -443,7 +443,7 @@
 
   <url>
     <loc>https://fursay.com/zh/guides/feelings-words-through-stories</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/feelings-words-through-stories"/>
@@ -454,7 +454,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/feelings-words-through-stories</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/feelings-words-through-stories"/>
@@ -465,7 +465,7 @@
 
   <url>
     <loc>https://fursay.com/guides/repetition-without-pressure</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/repetition-without-pressure"/>
@@ -476,7 +476,7 @@
 
   <url>
     <loc>https://fursay.com/zh/guides/repetition-without-pressure</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/repetition-without-pressure"/>
@@ -487,7 +487,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/repetition-without-pressure</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/repetition-without-pressure"/>
@@ -531,7 +531,7 @@
 
   <url>
     <loc>https://fursay.com/guides/chinese-storytime-for-arabic-speaking-families</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/chinese-storytime-for-arabic-speaking-families"/>
@@ -553,7 +553,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/chinese-storytime-for-arabic-speaking-families</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/chinese-storytime-for-arabic-speaking-families"/>
@@ -652,7 +652,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/three-minute-chinese-routine</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/three-minute-chinese-routine"/>
@@ -663,7 +663,7 @@
 
   <url>
     <loc>https://fursay.com/guides/koko-feelings-at-bedtime</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/koko-feelings-at-bedtime"/>
@@ -674,7 +674,7 @@
 
   <url>
     <loc>https://fursay.com/zh/guides/koko-feelings-at-bedtime</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/koko-feelings-at-bedtime"/>
@@ -685,7 +685,7 @@
 
   <url>
     <loc>https://fursay.com/ar/guides/koko-feelings-at-bedtime</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/koko-feelings-at-bedtime"/>
@@ -872,7 +872,7 @@
 
   <url>
     <loc>https://fursay.com/zh/about</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/about"/>
