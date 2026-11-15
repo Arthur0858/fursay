@@ -53,7 +53,7 @@ export const EDITORIAL_DEPTH = {
       ["ashaMultilingual", localized("Clarifies that multilingual exposure is not itself a disorder; it cannot assess an individual child.", "說明多語接觸本身不是障礙；不能用來評估個別孩子。", "يوضح أن التعرض لعدة لغات ليس اضطرابًا بحد ذاته، ولا يقيم طفلًا بعينه.")],
       ["harvardServeReturn", localized("Explains responsive back-and-forth interaction; it does not test English pronunciation.", "說明回應式來回互動的重要性；不評量英文發音。", "يشرح التفاعل المتبادل المستجيب، ولا يختبر النطق الإنجليزي.")],
     ],
-    links: ["repetition-without-pressure", "feelings-words-through-stories"],
+    links: ["repetition-without-pressure", "feelings-words-through-stories", "bilingual-bedtime-books-for-toddlers"],
   },
   "feelings-words-through-stories": {
     headings: localized(
@@ -80,7 +80,7 @@ export const EDITORIAL_DEPTH = {
       ["healthyCommunication", localized("Supports naming feelings alongside verbal and nonverbal cues; it does not assign labels to a child.", "支持把情緒詞連到口語與非口語線索；不替孩子貼標籤。", "يدعم ربط كلمات المشاعر بالإشارات اللفظية وغير اللفظية ولا يصنف الطفل.")],
       ["harvardServeReturn", localized("Supports responsive turns and accepting the child's signal; it does not prove vocabulary growth from one story.", "支持回應孩子訊號與來回互動；不證明一則故事能提升詞彙。", "يدعم تبادل الاستجابة وقبول إشارة الطفل ولا يثبت نمو المفردات من قصة واحدة.")],
     ],
-    links: ["english-storytime-without-fluent-english", "repetition-without-pressure"],
+    links: ["english-storytime-without-fluent-english", "repetition-without-pressure", "picture-books-for-naming-feelings"],
   },
   "repetition-without-pressure": {
     headings: localized(
@@ -107,7 +107,7 @@ export const EDITORIAL_DEPTH = {
       ["iesVocabulary", localized("Explains repeated exposure in dialogic reading; it does not set a home viewing quota.", "說明對話式閱讀中的重複接觸；不設定家庭觀看次數。", "يشرح التعرض المتكرر ولا يحدد حصة مشاهدة منزلية.")],
       ["harvardExecutive", localized("Provides background on predictable routines and practice; it does not assess repetitive behavior.", "提供可預測流程與練習的背景；不評估重複行為。", "يقدم خلفية عن الروتين المتوقع ولا يقيم السلوك التكراري.")],
     ],
-    links: ["english-storytime-without-fluent-english", "from-video-to-five-minute-printable"],
+    links: ["english-storytime-without-fluent-english", "from-video-to-five-minute-printable", "bilingual-bedtime-books-for-toddlers"],
   },
   "from-video-to-five-minute-printable": {
     headings: localized(
@@ -161,7 +161,7 @@ export const EDITORIAL_DEPTH = {
       ["headStartStories", localized("Offers multilingual family story practices; it does not measure gains from one bilingual viewing.", "提供多語家庭故事做法；不衡量一次雙語觀看的成果。", "يقدم ممارسات قصص متعددة اللغات ولا يقيس نتيجة مشاهدة واحدة.")],
       ["unescoMultilingual", localized("Provides policy context for multilingual education; it does not evaluate an individual child or Fursay.", "提供多語教育政策背景；不評估個別兒童或 Fursay。", "يقدم سياقًا لسياسة التعليم متعدد اللغات ولا يقيم طفلًا أو Fursay.")],
     ],
-    links: ["pinyin-and-tones-for-parents", "three-chinese-words-a-day"],
+    links: ["pinyin-and-tones-for-parents", "three-chinese-words-a-day", "bilingual-bedtime-books-for-toddlers"],
   },
   "pinyin-and-tones-for-parents": {
     headings: localized(

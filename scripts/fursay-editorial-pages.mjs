@@ -313,6 +313,21 @@ function patchExistingIndexable(siteDir) {
       const note = locale === "zh" ? "書單只延伸本頁的核心故事主題，不是完成活動的必要步驟。我們保留兩本和角色情境最直接相關的書，讓家長先看內容說明，再自行判斷語言、文化、紙本形式與家庭預算是否合適。零售商決定供貨與版本；孩子不需要購買或讀完任何一本，仍可使用故事與免費樣本。" : locale === "ar" ? "تمتد القائمة من موضوع القصة الأساسي وليست خطوة لازمة لإكمال النشاط. نحتفظ بكتابين مرتبطين مباشرة بالمشهد كي يقرأ الوالد الوصف ويقرر ملاءمة اللغة والثقافة والصيغة والميزانية. يتحكم المتجر في التوفر والنسخ، ويمكن للأسرة استعمال القصة والعينة المجانية من دون شراء أو إكمال أي كتاب." : "The booklist extends the page's core story theme; it is not required to complete an activity. We keep two books with the clearest connection to the scene so an adult can read the description and decide whether the language, culture, format, and family budget fit. Retailers control availability and editions, and families can use the story and free sample without buying or finishing either book.";
       html = html.replace(/<p class="booklist-note([^"]*)">/, `<p class="booklist-editorial-note" data-booklist-editorial-note>${esc(note)}</p><p class="booklist-note$1">`);
     }
+    const purchaseGuideTargets = {
+      "/koko": "picture-books-for-naming-feelings",
+      "/arabic": "bilingual-bedtime-books-for-toddlers",
+      "/episodes/koko-feelings": "picture-books-for-naming-feelings",
+      "/episodes/noor-greetings": "bilingual-bedtime-books-for-toddlers",
+    };
+    const locale = path.startsWith("/zh/") ? "zh" : path.startsWith("/ar/") ? "ar" : "en";
+    const localPath = locale === "en" ? path : path.slice(3);
+    const purchaseGuideSlug = purchaseGuideTargets[localPath];
+    if (purchaseGuideSlug && !html.includes("data-purchase-guide-link")) {
+      const guide = GUIDES.find((item) => item.slug === purchaseGuideSlug);
+      const lead = { en: "Looking for book suggestions?", zh: "想看選書建議？", ar: "هل تبحثون عن اقتراحات للكتب؟" }[locale];
+      const link = `<p data-purchase-guide-link>${lead} <a href="${route(locale, `/guides/${purchaseGuideSlug}`)}">${esc(guide.title[locale])}</a></p>`;
+      html = html.replace(/(<section class="booklist-sec"[\s\S]*?)(<\/section>)/, (_, section, end) => `${section}${link}${end}`);
+    }
     const metaDescription = SHORT_META_DESCRIPTIONS[path];
     if (metaDescription) {
       for (const selector of ["name=\"description\"", "property=\"og:description\"", "name=\"twitter:description\""]) {

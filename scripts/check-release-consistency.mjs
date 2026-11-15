@@ -30,6 +30,7 @@ const BADGE_PAGES = [
   "/monetization-roadmap",
 ];
 const LIVE_SMOKE_LOCAL_ONLY_EXCLUSIONS = new Set([
+  "scripts/check-purchase-guide-links.mjs",
   "scripts/check-editorial-utility-layout.mjs",
   "scripts/check-koko-nour-contract.mjs",
   "scripts/check-locale-route-map.mjs",
