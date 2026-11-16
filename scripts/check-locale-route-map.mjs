@@ -31,6 +31,15 @@ for (const file of walk(root)) {
   if (/noor|nour|arabic/i.test(route) && /\b(?:ni\s+hao|zai\s+jian|xie\s+xie)\b/i.test(text)) failures.push(`${route}: toneless pinyin`);
   const links = [...html.matchAll(/<a\b([^>]*)>\s*(EN|中文|عربي)\s*<\/a>/gi)];
   const switches = links.filter(m => /\bhref\s*=/.test(m[1]));
+  if (["/zh/guides/bilingual-bedtime-books-for-toddlers", "/zh/guides/picture-books-for-naming-feelings"].includes(route)) {
+    const languageNav = html.match(/<div\b[^>]*class=["'][^"']*\bbrand-language\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] ?? "";
+    for (const [label, prefix] of [["EN", ""], ["中文", "/zh"], ["عربي", "/ar"]]) {
+      const base = route.replace(/^\/zh/, "");
+      const expected = `${prefix}${base}`;
+      const navLinks = [...languageNav.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>\s*(EN|中文|عربي)\s*<\/a>/gi)];
+      if (navLinks.filter(link => link[2] === label && link[1] === expected).length !== 1 || navLinks.filter(link => link[2] === label).length !== 1) failures.push(`${route}: expected ${label} language navigation to ${expected}`);
+    }
+  }
   if (new Set(switches.map(m => m[2])).size === 3) {
     const base = route.replace(/^\/(?:zh|ar)(?=\/|$)/, "") || "/";
     const match = Object.entries(localeRoutes).flatMap(([kind, resources]) => Object.entries(resources).map(([resource, value]) => ({ kind, resource, value }))).find(item => item.value === base);
