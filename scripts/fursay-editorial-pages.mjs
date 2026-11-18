@@ -343,6 +343,19 @@ function patchExistingIndexable(siteDir) {
         return block.replace(/("description"\s*:\s*)"(?:\\.|[^"\\])*"/, (_, prefix) => `${prefix}${JSON.stringify(metaDescription)}`);
       });
     }
+    // Search snippets are independent of visible headings and social metadata.
+    const searchSnippets = {
+      "/about": { title: "About Fursay: Bilingual Stories and Parent Guides | Fursay" },
+      "/ar/guides/three-minute-chinese-routine": {
+        title: "روتين لتعلّم الصينية مع الطفل في ثلاث دقائق | Fursay",
+        description: "جرّبوا نشاطًا صينيًا قصيرًا مع الطفل: ابدؤوا بتحية نور، واستخدموا لعبة لفعل واحد، ثم اختاروا الوداع أو إعادة النشاط مرة واحدة."
+      }
+    };
+    const snippet = searchSnippets[path];
+    if (snippet) {
+      html = html.replace(/<title>[^<]*<\/title>/i, `<title>${esc(snippet.title)}</title>`);
+      if (snippet.description) html = html.replace(/(<meta name="description" content=")[^"]*(")/i, `$1${esc(snippet.description)}$2`);
+    }
     writeFileSync(file, html);
   }
   const linksFile = resolve(siteDir, "links.html");
