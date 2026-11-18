@@ -122,6 +122,8 @@ function sampleDownloadRedirectUrl(url, request, env) {
 function joinRedirectUrl(url) {
   const path = url.pathname.replace(/\/+$/, "").toLowerCase();
   const routes = {
+    "/koko-live": { target: "/koko", source: "youtube", medium: "live", campaign: "koko-live" },
+    "/noor-live": { target: "/ar/arabic", source: "youtube", medium: "live", campaign: "noor-live" },
     "/join/koko": {
       target: "/koko",
       pack: "koko",
@@ -247,11 +249,11 @@ function joinRedirectUrl(url) {
   if (!route) return null;
 
   const target = new URL(route.target, url.origin);
-  target.searchParams.set("subscribe", route.pack);
+  if (route.pack) target.searchParams.set("subscribe", route.pack);
   target.searchParams.set("utm_source", route.source || "shortlink");
   target.searchParams.set("utm_medium", route.medium || "direct");
   target.searchParams.set("utm_campaign", route.campaign);
-  target.searchParams.set("utm_content", route.content);
+  if (route.content) target.searchParams.set("utm_content", route.content);
   copyShortlinkPassthroughParams(url, target);
   return target.toString();
 }
