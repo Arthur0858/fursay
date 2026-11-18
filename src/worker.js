@@ -54,6 +54,11 @@ function goRedirectUrl(url) {
   const goRoutes = {
     "/go/koko-sample": "/download/koko-printable-sample",
     "/go/noor-sample": "/download/noor-worksheet-sample",
+    "/go/koko-printable": "/product-samples/koko-printable",
+    "/go/noor-worksheet": "/product-samples/noor-worksheet",
+    "/go/printable": "/products",
+    "/go/join": "/",
+    "/go/youtube": "/",
     "/go/koko-newsletter": "/join/koko", "/go/koko": "/join/koko",
     "/go/noor-newsletter": "/join/noor", "/go/noor": "/join/noor"
   };
