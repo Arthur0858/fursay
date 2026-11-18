@@ -30,6 +30,18 @@ test("go sample and newsletter routes", async () => {
   }
   assert.equal(new URL((await get("/go/noor-sample")).headers.get("location")).pathname, "/download/noor-worksheet-sample");
 });
+test("registered shortlinks preserve attribution parameters", async () => {
+  for (const [path, destination] of [["/go/koko-printable", "/product-samples/koko-printable"], ["/go/noor-worksheet", "/product-samples/noor-worksheet"], ["/go/printable", "/products"], ["/go/join", "/"], ["/go/youtube", "/"]]) {
+    const response = await get(path + "?source_id=abc&utm_source=campaign&email=private");
+    const url = new URL(response.headers.get("location"));
+    assert.equal(response.status, 302);
+    assert.equal(url.pathname, destination);
+    assert.equal(url.searchParams.get("source_id"), "abc");
+    assert.equal(url.searchParams.has("utm_source"), false);
+    assert.equal(url.searchParams.has("email"), false);
+    assert.notEqual(url.searchParams.get("utm_content"), "go_unknown");
+  }
+});
 test("trailing slash redirects only existing clean HTML pages", async () => {
   const response = await get("/koko/?utm_source=x");
   assert.equal(response.status, 301); assert.equal(response.headers.get("location"), origin + "/koko?utm_source=x");
