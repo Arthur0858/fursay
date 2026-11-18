@@ -2168,7 +2168,7 @@ async function checkDiscoveryFiles(baseUrl) {
   for (const key of ["email", "groups", "channel", "subscribe", "utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
     if (!shortlinks.safety?.blockedParams?.includes(key)) failures.push(`shortlinks_missing_blocked_param:${key}`);
   }
-  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== JOIN_ROUTES.length) {
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== JOIN_ROUTES.length + 2) {
     failures.push(`shortlinks_route_count:${shortlinks.routes?.length || 0}`);
   }
   const shortlinkByPath = new Map((shortlinks.routes || []).map((route) => [route.path, route]));

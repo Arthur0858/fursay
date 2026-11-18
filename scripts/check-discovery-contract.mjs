@@ -247,7 +247,7 @@ function checkShortlinkRoute(route, failures, knownPages) {
     const parts = routeUrl.pathname.split("/").filter(Boolean);
     const kind = parts[0] === "creator" && parts.length > 2 ? `${parts[2]}` : parts[0];
     const baseKind = parts[0] === "creator" ? "creator" : kind;
-    const expected = expectedAttribution(route.pack, baseKind);
+    const expected = route.pack ? expectedAttribution(route.pack, baseKind) : { campaign: route.path.slice(1) };
     if (expected.campaign && route.attribution?.utm_campaign !== expected.campaign) {
       failures.push(`shortlink_bad_campaign:${route.path}:${route.attribution?.utm_campaign || "none"}`);
     }

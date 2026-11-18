@@ -94,11 +94,11 @@ function compareWorkerSourceToManifest(workerData, shortlinks) {
       continue;
     }
     if (workerRoute.target !== manifestRoute.targetPath) failures.push(`worker_target_mismatch:${path}:${workerRoute.target || "none"}`);
-    if (workerRoute.pack !== manifestRoute.pack) failures.push(`worker_pack_mismatch:${path}:${workerRoute.pack || "none"}`);
+    if (workerRoute.pack !== (manifestRoute.pack || "")) failures.push(`worker_pack_mismatch:${path}:${workerRoute.pack || "none"}`);
     if (workerRoute.source !== manifestRoute.attribution?.utm_source) failures.push(`worker_source_mismatch:${path}:${workerRoute.source || "none"}`);
     if (workerRoute.medium !== manifestRoute.attribution?.utm_medium) failures.push(`worker_medium_mismatch:${path}:${workerRoute.medium || "none"}`);
     if (workerRoute.campaign !== manifestRoute.attribution?.utm_campaign) failures.push(`worker_campaign_mismatch:${path}:${workerRoute.campaign || "none"}`);
-    if (workerRoute.content !== manifestRoute.attribution?.utm_content) failures.push(`worker_content_mismatch:${path}:${workerRoute.content || "none"}`);
+    if (workerRoute.content !== (manifestRoute.attribution?.utm_content || "")) failures.push(`worker_content_mismatch:${path}:${workerRoute.content || "none"}`);
   }
   for (const path of workerRoutes.keys()) {
     if (!manifestRoutes.has(path)) failures.push(`worker_extra_route:${path}`);
@@ -191,7 +191,7 @@ async function main() {
   for (const key of Object.keys(PRIVATE_PROBE)) {
     if (!blockedPrivateParams.includes(key)) failures.push(`manifest_missing_blocked_private_param:${key}`);
   }
-  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) {
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 18) {
     failures.push(`bad_route_count:${shortlinks.routes?.length || 0}`);
   }
   if (!args.baseUrl) {

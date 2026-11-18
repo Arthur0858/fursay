@@ -248,7 +248,7 @@ async function main() {
   if (creatorKit.safety?.smokeSubmitsToMailerLite !== false) failures.push("creator_kit_bad_smoke_contract");
   if (creatorKit.safety?.shortlinkManifest !== "https://fursay.com/shortlinks.json") failures.push("creator_kit_missing_shortlink_manifest");
   if (shortlinks.platform !== "cloudflare-workers-static-assets") failures.push("shortlinks_bad_platform");
-  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) failures.push(`shortlinks_bad_route_count:${shortlinks.routes?.length || 0}`);
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 18) failures.push(`shortlinks_bad_route_count:${shortlinks.routes?.length || 0}`);
   if (shortlinks.safety?.ownedAttributionCannotBeOverridden !== true) failures.push("shortlinks_missing_owned_attribution_guard");
   if (!shortlinks.safety?.passthroughParams?.includes("utm_term") || !shortlinks.safety?.passthroughParams?.includes("ref")) {
     failures.push("shortlinks_missing_passthrough_contract");

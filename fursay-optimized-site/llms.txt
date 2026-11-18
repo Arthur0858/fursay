@@ -199,3 +199,7 @@ Technical discovery:
 - Deploy readiness gate: npm run deploy:ready
 - Local release gate: npm run check
 - Cloudflare deploy command: npm run deploy
+
+Live stream landing links:
+- Koko: https://fursay.com/koko-live
+- Noor: https://fursay.com/noor-live

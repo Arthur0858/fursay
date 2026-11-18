@@ -71,3 +71,16 @@ test("directory paths redirect to their trailing slash", async () => {
     assert.equal(response.headers.get("location"), destination);
   }
 });
+
+test("live links redirect to the relevant family pages with campaign attribution", async () => {
+  for (const [path, target, campaign] of [["/koko-live", "/koko", "koko-live"], ["/noor-live", "/ar/arabic", "noor-live"]]) {
+    const response = await worker.fetch(new Request(`https://fursay.com${path}?utm_source=other`), {});
+    assert.equal(response.status, 302);
+    const location = new URL(response.headers.get("location"));
+    assert.equal(location.origin, "https://fursay.com");
+    assert.equal(location.pathname, target);
+    assert.equal(location.searchParams.get("utm_source"), "youtube");
+    assert.equal(location.searchParams.get("utm_medium"), "live");
+    assert.equal(location.searchParams.get("utm_campaign"), campaign);
+  }
+});
