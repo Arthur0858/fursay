@@ -191,7 +191,7 @@ async function main() {
   for (const key of Object.keys(PRIVATE_PROBE)) {
     if (!blockedPrivateParams.includes(key)) failures.push(`manifest_missing_blocked_private_param:${key}`);
   }
-  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 16) {
+  if (!Array.isArray(shortlinks.routes) || shortlinks.routes.length !== 18) {
     failures.push(`bad_route_count:${shortlinks.routes?.length || 0}`);
   }
   if (!args.baseUrl) {
