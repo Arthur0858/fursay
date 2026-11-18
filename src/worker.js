@@ -122,8 +122,18 @@ function sampleDownloadRedirectUrl(url, request, env) {
 function joinRedirectUrl(url) {
   const path = url.pathname.replace(/\/+$/, "").toLowerCase();
   const routes = {
-    "/koko-live": { target: "/koko", source: "youtube", medium: "live", campaign: "koko-live" },
-    "/noor-live": { target: "/ar/arabic", source: "youtube", medium: "live", campaign: "noor-live" },
+    "/koko-live": {
+      target: "/koko",
+      source: "youtube",
+      medium: "live",
+      campaign: "koko-live",
+    },
+    "/noor-live": {
+      target: "/ar/arabic",
+      source: "youtube",
+      medium: "live",
+      campaign: "noor-live",
+    },
     "/join/koko": {
       target: "/koko",
       pack: "koko",

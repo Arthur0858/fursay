@@ -303,6 +303,8 @@ function applyDesktopHeroLayout(siteDir) {
 
 function shortlinkRoutes() {
   return [
+    { path: "/koko-live", target: "/koko", source: "youtube", medium: "live", campaign: "koko-live" },
+    { path: "/noor-live", target: "/ar/arabic", source: "youtube", medium: "live", campaign: "noor-live" },
     { path: "/join/koko", target: "/koko", pack: "koko", campaign: "koko_story_funnel", content: "join_koko" },
     { path: "/join/noor", target: "/arabic", pack: "noor", campaign: "noor_story_funnel", content: "join_noor" },
     { path: "/sample/koko", target: "/koko", pack: "koko", campaign: "koko_story_funnel", content: "sample_koko" },
@@ -2599,11 +2601,11 @@ function writeShortlinkManifest(siteDir, source) {
   const blockedPrivateParams = ["email", "name", "phone", "address", "token", "secret", "subscriberId", "mailerLiteSubscriberId"];
   const routes = shortlinkRoutes().map((route) => {
     const landing = new URL(route.target, "https://fursay.com");
-    landing.searchParams.set("subscribe", route.pack);
+    if (route.pack) landing.searchParams.set("subscribe", route.pack);
     landing.searchParams.set("utm_source", route.source || "shortlink");
     landing.searchParams.set("utm_medium", route.medium || "direct");
     landing.searchParams.set("utm_campaign", route.campaign);
-    landing.searchParams.set("utm_content", route.content);
+    if (route.content) landing.searchParams.set("utm_content", route.content);
     return {
       path: route.path,
       shortlink: `https://fursay.com${route.path}`,
@@ -2613,11 +2615,11 @@ function writeShortlinkManifest(siteDir, source) {
       status: 302,
       cacheControl: "public, max-age=300, must-revalidate",
       attribution: {
-        subscribe: route.pack,
+        ...(route.pack ? { subscribe: route.pack } : {}),
         utm_source: route.source || "shortlink",
         utm_medium: route.medium || "direct",
         utm_campaign: route.campaign,
-        utm_content: route.content,
+        ...(route.content ? { utm_content: route.content } : {}),
       },
       passthroughParams: SHORTLINK_PASSTHROUGH_PARAMS,
       blockedParams,
