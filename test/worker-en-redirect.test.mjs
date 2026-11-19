@@ -24,3 +24,12 @@ test("other locale and English subpaths retain asset handling", async () => {
   assert.equal(response.status, 404);
   assert.match(await response.text(), /Page not found/);
 });
+
+test("contact aliases redirect to the contact page and preserve queries", async () => {
+  for (const path of ["/contactus/", "/contact-us/"]) {
+    const response = await get(`${path}?ref=example`);
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get("location"), `${origin}/contact?ref=example`);
+    assert.ok(response.headers.get("x-content-type-options"));
+  }
+});
