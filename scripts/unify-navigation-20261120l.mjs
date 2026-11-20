@@ -15,7 +15,10 @@ export function unifyNavigation(root){
   }
   let langs=original.filter(x=>['EN','中文','عربي'].includes(x[1]));if(langs.length<3)langs=[['/','EN'],['/zh/','中文'],['/ar/','عربي']];
   const seen=new Set([...standard,...langs,['/','']].map(x=>x[0]));const extra=original.filter(x=>!seen.has(x[0]));
-  const markup=`<nav class="l3-nav" aria-label="Main navigation"><div class="l3-nav-inner"><a class="l3-logo" href="/" aria-label="Fursay home"><svg aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg><span>Fursay</span></a><div class="l3-primary">${standard.slice(0,3).map(link).join('')}</div><div class="l3-desktop">${[...standard.slice(3),...langs].map(link).join('')}</div><details class="l3-menu"><summary aria-label="Open menu">☰</summary><div class="l3-menu-panel">${[...standard.slice(3),...extra,...langs].map(link).join('')}</div></details></div></nav>`;
+  const attrs = (nav?.[0] || "").match(/\bdata-[\w-]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?/g) || [];
+  if (/\/(?:products|products\/(?:koko-printable|noor-worksheet))\.html$/.test(path) && !attrs.some(a => a.startsWith("data-editorial-nav"))) attrs.push("data-editorial-nav");
+  const preservedData = [...new Set(attrs)].map(a => ` ${a}`).join("");
+  const markup=`<nav class="l3-nav" aria-label="Main navigation"${preservedData}><div class="l3-nav-inner"><a class="l3-logo" href="/" aria-label="Fursay home"><svg aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg><span>Fursay</span></a><div class="l3-primary">${standard.slice(0,3).map(link).join('')}</div><div class="l3-desktop">${[...standard.slice(3),...langs].map(link).join('')}</div><details class="l3-menu"><summary aria-label="Open menu">☰</summary><div class="l3-menu-panel">${[...standard.slice(3),...extra,...langs].map(link).join('')}</div></details></div></nav>`;
   s=(nav?s.replace(nav[0],markup):s.replace(/(<body\b[^>]*>)/i,`$1${markup}`)).replace('</head>','<link rel="stylesheet" href="/css/site-navigation-20261120l.css"></head>');writeFileSync(path,s);
  }
 }
