@@ -117,7 +117,7 @@ const PAGES = [
     leadSelector: "noor-lead-magnet",
     leadVariant: "weekly-sample-v2",
     sharePack: "noor",
-    h1Needles: ["Arabic", "Chinese"],
+    h1Needles: ["Nour", "Chinese"],
   },
   {
     path: "/zh/arabic",

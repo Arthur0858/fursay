@@ -378,15 +378,18 @@
       "/css/site-accessibility-20261002-v1.css",
       "/css/desktop-hero-layout-20261003-v1.css",
       "/css/home-fonts-20261004-v1.css",
-      "/css/inline-subscribe-20261101.css"
+      "/css/inline-subscribe-20261101.css",
+      "/css/site-navigation-20261120m.css"
     ],
     "js": [
-      "/js/site-shared-20261111-click.js",
+      "/js/site-shared-20261120m-click.js",
       "/js/modal-accessibility-20261002-v1.js",
       "/js/four-week-interest-20260930-v1.js",
-      "/js/site-shared-20261111-click-inline.js",
+      "/js/site-shared-20261120m-click-inline.js",
       "/js/editorial-nav-20261102-v1.js",
-      "/js/turnstile-subscribe-20261110-v1.js"
+      "/js/turnstile-subscribe-20261110-v1.js",
+      "/js/site-shared-20261111-click.js",
+      "/js/site-shared-20261111-click-inline.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
