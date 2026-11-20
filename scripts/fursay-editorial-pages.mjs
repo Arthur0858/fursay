@@ -301,7 +301,7 @@ function patchExistingIndexable(siteDir) {
     html = html.replace("Preview a printable, download the Koko PDF, or open the Nour story path. No payment or checkout is involved.", "Preview an activity, download the Koko PDF, or open Nour's story path. The free sample needs no email signup.");
     html = html.replace("可以先預覽活動、下載 Koko PDF，或打開努爾故事入口。這裡沒有付款或結帳。", "可先預覽活動、下載 Koko PDF，或打開努爾故事入口；使用免費樣本不需加入電子郵件名單。");
     html = html.replace("عاينوا نشاطا، نزّلوا ملف Koko، أو افتحوا مسار قصة نور. لا يوجد دفع أو إتمام شراء.", "عاينوا نشاطًا أو نزّلوا ملف Koko أو افتحوا قصة نور؛ لا تحتاج العينة المجانية إلى تسجيل بريد.");
-    if (!html.includes("editorial-page") && !html.includes("data-editorial-nav")) {
+    if (!html.includes("editorial-page") && !html.includes("data-editorial-nav") && !html.includes('class="l3-nav"')) {
       const locale = path.startsWith("/zh/") || path === "/zh/" ? "zh" : path.startsWith("/ar/") || path === "/ar/" ? "ar" : "en";
       const links = `<div class="editorial-utility-links" data-editorial-nav><a href="${route(locale, "/guides")}">${LOCALES[locale].guides}</a><a href="${route(locale, "/about")}">${LOCALES[locale].about}</a><a href="${route(locale, "/editorial-method")}">${LOCALES[locale].method}</a></div>`;
       html = html.replace(/<\/nav>/i, `${links}</nav>`);
