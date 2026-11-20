@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20",
+  "generatedAt": "2026-11-11",
   "purpose": "Immutable-cache CSS/JS fingerprint guard for fursay.com static assets.",
   "assets": [
     {
@@ -113,11 +113,6 @@
       "sha256": "0875067da140a84162b1ef02aae52c66857a4d7582ba1853639106c5518eb858"
     },
     {
-      "path": "/css/site-navigation-20261120l.css",
-      "bytes": 1624,
-      "sha256": "072de925281d62b15378f8a24af57a067baee698632272042f503917fa2e7f57"
-    },
-    {
       "path": "/css/story-page-common-20260613-css1.css",
       "bytes": 3878,
       "sha256": "7fc76f5b5a856e91d4d4c423ef1ed46717f1e59b15479e698aee63b9a62eff1d"
@@ -156,16 +151,6 @@
       "path": "/js/site-shared-20261111-click.js",
       "bytes": 35148,
       "sha256": "9407a89f1640b4419d08350e516f040d5edda7460fb08e379b13cfd9d7d6bf7a"
-    },
-    {
-      "path": "/js/site-shared-20261120l-click-inline.js",
-      "bytes": 35767,
-      "sha256": "29a9d6f6ffbb12780c679d695dad2d34ec86ab48fca1e4ff4336efc68203582c"
-    },
-    {
-      "path": "/js/site-shared-20261120l-click.js",
-      "bytes": 35148,
-      "sha256": "b526efd442c1b33094ac3aa933aeebf7181a1f7b6beafae0687f6ae8e7abbafb"
     },
     {
       "path": "/js/turnstile-subscribe-20261110-v1.js",

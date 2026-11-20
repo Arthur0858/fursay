@@ -67,7 +67,7 @@
           "name": "Bilingual Story Worlds and Packs",
           "itemListElement": [
             {"@type": "Offer","name": "Koko's Forest Adventure","description": "English-Chinese forest stories with story packs for ages 2-8","price": "0","priceCurrency": "USD"},
-            {"@type": "Offer","name": "Nour's Chinese Picture Book","description": "Arabic-Chinese picture book stories with Pinyin story packs for ages 3-6","price": "0","priceCurrency": "USD"}
+            {"@type": "Offer","name": "Arabic Kids Chinese Picture Book","description": "Arabic-Chinese picture book stories with Pinyin story packs for ages 3-6","price": "0","priceCurrency": "USD"}
           ]
         }
       },
@@ -82,7 +82,7 @@
           {
             "@type": "Question",
             "name": "What age is Fursay for?",
-            "acceptedAnswer": {"@type": "Answer","text": "Koko's Forest Adventure is designed for ages 2–8. Nour's Chinese Picture Book is designed for ages 3–6. Episodes work well across the whole range because stories are layered — younger kids enjoy the pictures and sounds, older kids pick up the vocabulary."}
+            "acceptedAnswer": {"@type": "Answer","text": "Koko's Forest Adventure is designed for ages 2–8. Arabic Kids Chinese Picture Book is designed for ages 3–6. Episodes work well across the whole range because stories are layered — younger kids enjoy the pictures and sounds, older kids pick up the vocabulary."}
           },
           {
             "@type": "Question",
@@ -138,11 +138,32 @@
 .home-pack-text { background:none; border:0; padding:0; color:#245d43; text-decoration:underline; cursor:pointer; font:inherit; }
 @media(max-width:600px){.home-pack-cards{grid-template-columns:1fr}}
 </style>
-<link rel="stylesheet" href="/css/site-navigation-20261120l.css"></head>
+</head>
 <body class="picture-world world-home"><a class="skip-link" href="#main-content">Skip to content</a>
 
   <!-- Navigation -->
-  <nav class="l3-nav" data-editorial-nav aria-label="Main navigation" data-lang-menu><div class="l3-nav-inner"><a class="l3-logo" href="/" aria-label="Fursay home"><svg aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg><span>Fursay</span></a><div class="l3-primary"><a href="/#channels">Stories</a><a href="/#weekly-pack">Free pack</a><a href="/products">Products</a></div><div class="l3-desktop"><a href="/#rhythm">How It Works</a><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a><a href="/">EN</a><a href="/zh/">中文</a><a href="/ar/">عربي</a></div><details class="l3-menu"><summary aria-label="Open menu">☰</summary><div class="l3-menu-panel"><a href="/#rhythm">How It Works</a><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a><a href="#channels">Story Worlds</a><a href="#rhythm">How It Works</a><a href="#weekly-pack">Free Pack</a><a href="/">EN</a><a href="/zh/">中文</a><a href="/ar/">عربي</a></div></details></div></nav><script src="/js/editorial-nav-20261102-v1.js" defer></script>
+  <nav id="mainNav">
+    <a href="/" class="nav-logo"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#paw"></use></svg> Fursay</a>
+    <button class="nav-burger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
+    <div class="nav-right">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#channels"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg> Story Worlds</a></li>
+        <li><a href="#rhythm"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#steps"></use></svg> How It Works</a></li>
+        <li><a href="#weekly-pack" class="nav-cta"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> Free Pack</a></li>
+        <li><a href="/products"><svg class="brand-icon" aria-hidden="true"><use href="/images/brand-icons.svg#sample"></use></svg> Products</a></li>
+      </ul>
+      <div class="lang-switcher" data-lang-menu>
+        <button type="button" class="lang-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
+          <span>EN</span><span aria-hidden="true">⌄</span>
+        </button>
+        <div class="lang-menu" role="menu" id="languageMenu">
+          <a href="/" class="lang-btn active" aria-current="page" role="menuitem">EN</a>
+          <a href="/zh/" class="lang-btn" role="menuitem">中文</a>
+          <a href="/ar/" class="lang-btn" role="menuitem">عربي</a>
+        </div>
+      </div>
+    </div>
+  <div class="editorial-utility-links" data-editorial-nav><a href="/guides">Parent guides</a><a href="/about">About</a><a href="/editorial-method">Editorial method</a></div></nav><script src="/js/editorial-nav-20261102-v1.js" defer></script>
 
   <!-- Hero -->
   <main id="main-content" tabindex="-1"><section class="hero">
@@ -429,6 +450,6 @@
     </div>
   </div>
 
-<script src="/js/site-shared-20261120l-click-inline.js"></script><script src="/js/turnstile-subscribe-20261110-v1.js" defer></script>
+<script src="/js/site-shared-20261111-click-inline.js"></script><script src="/js/turnstile-subscribe-20261110-v1.js" defer></script>
 <script src="/js/modal-accessibility-20261002-v1.js"></script></body>
 </html>
