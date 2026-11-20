@@ -182,6 +182,14 @@ async function collectLayout(page) {
     const packSample = document.querySelector(".koko-pack-sample, .noor-pack-sample");
     const packSteps = document.querySelector(".koko-pack-steps, .noor-pack-steps");
     const campaignQrCard = document.querySelector(".campaign-qr-card");
+    // A collapsed share disclosure has no usable layout; inspect its QR card open.
+    const shareDisclosure = campaignQrCard?.closest("details:not([open])");
+    if (shareDisclosure) shareDisclosure.open = true;
+    const campaignQrLayout = campaignQrCard ? {
+      rect: rectFor(campaignQrCard),
+      overflowX: campaignQrCard.scrollWidth > Math.ceil(campaignQrCard.clientWidth) + 1,
+    } : null;
+    if (shareDisclosure) shareDisclosure.open = false;
     const sampleHero = document.querySelector("[data-product-sample-preview-page]");
     const samplePreview = document.querySelector("[data-product-sample-preview]");
     const sampleActivity = document.querySelector("[data-product-sample-activity]");
@@ -278,10 +286,7 @@ async function collectLayout(page) {
           rect: rectFor(packSteps),
           overflowX: packSteps.scrollWidth > Math.ceil(packSteps.clientWidth) + 1,
         } : null,
-        qr: campaignQrCard ? {
-          rect: rectFor(campaignQrCard),
-          overflowX: campaignQrCard.scrollWidth > Math.ceil(campaignQrCard.clientWidth) + 1,
-        } : null,
+        qr: campaignQrLayout,
       } : null,
       sample: sampleHero ? {
         pack: samplePack,
