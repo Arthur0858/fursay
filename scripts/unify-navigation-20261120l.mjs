@@ -20,7 +20,14 @@ export function unifyNavigation(root, baseRoot=root){
   const path=join(root,e.name);if(e.isDirectory()){unifyNavigation(path,baseRoot);continue}if(!e.name.endsWith('.html'))continue;
   let s=readFileSync(path,'utf8');if(!/<html\b[^>]*\blang=["']en/i.test(s))continue;
   s=s.replace(/(<form\b[^>]*>[\s\S]*?<\/form\s*>|<textarea\b[^>]*>[\s\S]*?<\/textarea\s*>|<script\b[^>]*>[\s\S]*?<\/script\s*>|<style\b[^>]*>[\s\S]*?<\/style\s*>|<[^>]+>)|([^<]+)/gi,(m,tag,txt)=>tag || txt.replace(/\bNoor\b/g,'Nour'));
-  if(s.includes('class="l3-nav"')){writeFileSync(path,languageLinks(s,path,baseRoot));continue;}
+  if(s.includes('class="l3-nav"')){
+   s=s.replace(/<nav\b[^>]*class="l3-nav"[^>]*>[\s\S]*?<\/nav>/, nav => {
+    if (!/<div class="editorial-utility-links"[^>]*data-editorial-nav/.test(nav)) return nav;
+    nav=nav.replace(/<div class="editorial-utility-links"[^>]*data-editorial-nav[^>]*>[\s\S]*?<\/div>/, "");
+    return /<nav\b[^>]*data-editorial-nav/.test(nav) ? nav : nav.replace('<nav class="l3-nav"', '<nav class="l3-nav" data-editorial-nav');
+   });
+   writeFileSync(path,languageLinks(s,path,baseRoot));continue;
+  }
   const nav=s.match(/<nav\b[^>]*>[\s\S]*?<\/nav\s*>/i);
   const original=[];for(const a of (nav?.[0] || "").matchAll(/<a\b[^>]*\bhref=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)){
    let label=a[2].replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();let href=a[1].replaceAll('&amp;','&');if(label)original.push([href,label]);
