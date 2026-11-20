@@ -128,7 +128,17 @@
 <link rel="stylesheet" href="/css/editorial-20261102-v1.css"><link rel="stylesheet" href="/css/site-accessibility-20261002-v1.css"><link rel="stylesheet" href="/css/desktop-hero-layout-20261003-v1.css"><link rel="stylesheet" href="/css/home-fonts-20261004-v1.css"><style>@media (max-width: 900px) { html { --editorial-nav-height: 99px; } }
 @media (min-width: 1200px) { body.world-home .hero h1 { min-height: 3lh; } }
 .hp-field { position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }</style>
-<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>
+<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"><style>
+#weekly-pack .story-pick-inner { display:block; }
+#weekly-pack .inline-subscribe { margin: 1.25rem auto; }
+.home-pack-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin-top:1.5rem; }
+.home-pack-cards article { background:#fff; border-radius:16px; padding:1.25rem; }
+.home-pack-cards h3 { margin:0 0 .75rem; }
+.home-pack-cards p { margin:.75rem 0; }
+.home-pack-text { background:none; border:0; padding:0; color:#245d43; text-decoration:underline; cursor:pointer; font:inherit; }
+@media(max-width:600px){.home-pack-cards{grid-template-columns:1fr}}
+</style>
+</head>
 <body class="picture-world world-home"><a class="skip-link" href="#main-content">Skip to content</a>
 
   <!-- Navigation -->
@@ -237,7 +247,7 @@
         <div class="card-header">
           <div class="card-icon"><svg class="home-focus-icon" aria-hidden="true"><use href="/images/brand-icons.svg#story"></use></svg></div>
           <span class="card-tag">Chinese Learning</span>
-          <div class="card-title">Arabic Kids Chinese Picture Book</div>
+          <div class="card-title">Nour’s Chinese Picture Book</div>
           <picture>
           <source srcset="images/chars/arabic_nour.avif" type="image/avif">
           <source srcset="images/chars/arabic_nour.webp" type="image/webp">
@@ -253,15 +263,33 @@
           </div>
           <div class="card-stats">
             <div class="stat"><div class="stat-num">Growing</div><div class="stat-label">story library</div></div>
-            <div class="stat"><div class="stat-num">3–6</div><div class="stat-label">Ages</div></div><p>Story · ages 3–6: a listening and picture-book story designed for ages 3–6.</p><p>Worksheet · ages 2–8: an adult-guided activity. For ages 2–3, point and say; for 3–6, use as-is; for 6–8, write, trace, or say a sentence.</p>
+            <div class="stat"><div class="stat-num">3–6</div><div class="stat-label">Ages</div></div>
             <div class="stat"><div class="stat-num">عربي · 中</div><div class="stat-label">Bilingual</div></div>
           </div>
+          <p class="card-desc">Story · ages 3–6; Worksheet · ages 2–8: an adult-guided activity to point and say, trace, or write together.</p>
           <span class="card-link">Start here →</span>
         </div>
       </a>
 
     </div>
   </section>
+
+  <section class="story-pick" id="weekly-pack">
+    <div class="story-pick-inner reveal"><p>Available now · Get the printable immediately; no email required. Full product — join the waitlist · Not yet available – waitlist. The full product is not available yet.</p>
+      <div>
+        <span class="story-pick-kicker">Free story-time sample</span>
+        <h2>Try one story pack before you join anything.</h2>
+        <p>Preview an activity, download the Koko PDF, or open Nour's story path. The free sample needs no email signup.</p>
+      </div>
+      <section class="inline-subscribe" aria-labelledby="inline-subscribe-title"><h2 id="inline-subscribe-title">Get this week’s story pack</h2><p>One story, bilingual phrases, parent questions, and a printable activity.</p><form data-subscribe-placement="home_mid" data-signup-source="home_mid"><div class="hp-field" aria-hidden="true"><label for="inline-website">Website</label><input type="text" id="inline-website" name="website" tabindex="-1" autocomplete="off"></div><div class="modal-field"><label for="inline-email">Email address</label><input type="email" id="inline-email" autocomplete="email" required></div><fieldset><legend>Send me</legend><label><input type="checkbox" name="groups" value="koko" checked> Koko’s Forest story pack</label><label><input type="checkbox" name="groups" value="noor"> Arabic Kids Chinese story pack</label></fieldset><p class="subscription-note">For parents and caregivers aged 18+. Newsletter emails are in Chinese only — there is no English newsletter. Choose which story world you want updates about. Occasional, at most one email a week. We only use your email address to send these emails; unsubscribe any time. <a href="/privacy">Privacy</a>.</p><button type="submit" class="modal-submit">Send me the free story pack</button><p class="modal-note is-hidden" role="status" aria-live="polite" aria-atomic="true"></p></form></section>
+      <div class="home-pack-cards" aria-label="Choose a free story sample">
+        <article><h3>Koko</h3><a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">Get sample now</a><p><a class="home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="home_koko_printable_pdf">Download Koko PDF</a></p><button class="home-pack-text" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Koko pack</button></article>
+        <article><h3>Nour</h3><a class="btn btn-newsletter home-sample-link" data-home-sample-link="noor" href="/product-samples/noor-worksheet?utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">Preview Nour sample</a><p><a class="home-noor-pdf-sample" href="/download/noor-worksheet-sample?source_id=home_noor_worksheet_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="noor" data-interest-stage="home_sample_pdf_download" data-signup-source="home_noor_worksheet_pdf">Download Nour PDF</a></p><button class="home-pack-text" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Nour pack</button></article>
+      </div>
+    </div>
+  </section>
+
+
 
   <!-- How It Works -->
   <section class="rhythm" id="recommended-books" aria-labelledby="recommended-books-title">
@@ -294,31 +322,7 @@
     </div>
   </section>
 
-  <section class="story-pick" id="weekly-pack">
-    <div class="story-pick-inner reveal"><p>Available now · Get the printable immediately; no email required. Full product — join the waitlist · Not yet available – waitlist. The full product is not available yet.</p>
-      <div>
-        <span class="story-pick-kicker">Free story-time sample</span>
-        <h2>Try one story pack before you join anything.</h2>
-        <p>Preview an activity, download the Koko PDF, or open Nour's story path. The free sample needs no email signup.</p>
-      </div>
-      <div class="home-pack-actions" aria-label="Choose a free story sample">
-        <button class="btn btn-newsletter" data-open-subscribe="koko" data-signup-source="home_weekly_pack_koko" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Koko pack</button>
-        <button class="btn btn-secondary" data-open-subscribe="noor" data-signup-source="home_weekly_pack_noor" aria-haspopup="dialog" aria-controls="subscribeModal">Get the Nour pack</button>
-        <a class="btn btn-newsletter home-sample-link" data-home-sample-link="koko" href="/product-samples/koko-printable?source_id=home_koko_sample_preview&amp;creator=fursay&amp;placement=home_weekly_pack">Get sample now</a>
-        <a class="btn btn-outline home-koko-pdf-sample" href="/download/koko-printable-sample?source_id=home_koko_printable_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="koko" data-interest-stage="home_sample_pdf_download" data-signup-source="home_koko_printable_pdf">Download Koko PDF</a>
-        <a class="btn btn-outline home-sample-link" data-home-sample-link="noor" href="/product-samples/noor-worksheet?utm_source=home&amp;utm_medium=site&amp;utm_campaign=noor_story_funnel&amp;utm_content=home_noor_sample_link">Preview Nour sample</a>
-        <a class="btn btn-outline home-noor-pdf-sample" href="/download/noor-worksheet-sample?source_id=home_noor_worksheet_pdf&amp;creator=fursay&amp;placement=home_weekly_pack" download data-product-sample-download="noor" data-interest-stage="home_sample_pdf_download" data-signup-source="home_noor_worksheet_pdf">Download Nour PDF</a>
-      </div>
-      <div class="parent-toolkit weekly-toolkit" aria-label="What parents receive">
-        <div class="toolkit-card"><strong>One short story</strong><span>Ready to watch together.</span></div>
-        <div class="toolkit-card"><strong>One phrase</strong><span>Easy to repeat after the story.</span></div>
-        <div class="toolkit-card"><strong>One activity</strong><span>Use it only when your child wants more.</span></div>
-      </div>
-      <div class="home-focus-trust" aria-label="Fursay trust notes"><span>Free to preview</span><span>No checkout</span><span>Anonymous interaction signals only</span></div>
-    </div>
-  </section>
 
-  <section class="inline-subscribe" aria-labelledby="inline-subscribe-title"><h2 id="inline-subscribe-title">Get this week’s story pack</h2><p>One story, bilingual phrases, parent questions, and a printable activity.</p><form data-subscribe-placement="home_mid" data-signup-source="home_mid"><div class="hp-field" aria-hidden="true"><label for="inline-website">Website</label><input type="text" id="inline-website" name="website" tabindex="-1" autocomplete="off"></div><div class="modal-field"><label for="inline-email">Email address</label><input type="email" id="inline-email" autocomplete="email" required></div><fieldset><legend>Send me</legend><label><input type="checkbox" name="groups" value="koko" checked> Koko’s Forest story pack</label><label><input type="checkbox" name="groups" value="noor"> Arabic Kids Chinese story pack</label></fieldset><p class="subscription-note">For parents and caregivers aged 18+. Newsletter emails are in Chinese only — there is no English newsletter. Choose which story world you want updates about. Occasional, at most one email a week. We only use your email address to send these emails; unsubscribe any time. <a href="/privacy">Privacy</a>.</p><button type="submit" class="modal-submit">Send me the free story pack</button><p class="modal-note is-hidden" role="status" aria-live="polite" aria-atomic="true"></p></form></section>
 
   <section class="home-explore" id="explore-more" data-product-interest-section>
     <h2 class="section-title reveal">More paths, kept out of the way</h2>
