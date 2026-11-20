@@ -288,7 +288,7 @@ async function validateHtmlRoutes(structure, stories, context, failures, data) {
     pushMismatch(failures, `html_lang:${entry.route}`, lang, entry.locale);
     pushMismatch(failures, `html_dir:${entry.route}`, dir, entry.locale === "ar" ? "rtl" : "ltr");
     pushMismatch(failures, `html_canonical:${entry.route}`, canonical, expectedCanonical);
-    if (!["/js/site-shared-20261111-click.js", "/js/site-shared-20261111-click-inline.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
+    if (!["/js/site-shared-20261120m-click.js", "/js/site-shared-20261120m-click-inline.js"].some((asset) => js.includes(asset))) failures.push(`html_missing_shared_js:${entry.route}`);
 
     if (entry.channel) {
       const channel = structure.channels?.[entry.channel];
@@ -312,6 +312,7 @@ async function validateHtmlRoutes(structure, stories, context, failures, data) {
     if (!seenCss.has(asset)) failures.push(`shared_css_not_referenced_by_main_routes:${asset}`);
   }
   for (const asset of sharedJs) {
+    if (/site-shared-20261111-click(?:-inline)?\.js$/.test(asset)) continue; // Retained immutable URLs for existing caches.
     if (!seenJs.has(asset)) failures.push(`shared_js_not_referenced_by_main_routes:${asset}`);
   }
 }

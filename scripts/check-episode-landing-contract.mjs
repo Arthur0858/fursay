@@ -40,7 +40,7 @@ const EPISODES = [
     lang: "en",
     campaign: "noor_story_funnel",
     words: ["hong se", "lan se", "lu se"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
   {
     path: "/zh/episodes/noor-colors",
@@ -49,7 +49,7 @@ const EPISODES = [
     lang: "zh-TW",
     campaign: "noor_story_funnel",
     words: ["hong se", "lan se", "lu se"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
   {
     path: "/ar/episodes/noor-colors",
@@ -58,7 +58,7 @@ const EPISODES = [
     lang: "ar",
     campaign: "noor_story_funnel",
     words: ["hong se", "lan se", "lu se"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
   {
     path: "/episodes/noor-greetings",
@@ -67,7 +67,7 @@ const EPISODES = [
     lang: "en",
     campaign: "noor_story_funnel",
     words: ["ni hao", "zai jian", "xie xie"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
   {
     path: "/zh/episodes/noor-greetings",
@@ -76,7 +76,7 @@ const EPISODES = [
     lang: "zh-TW",
     campaign: "noor_story_funnel",
     words: ["ni hao", "zai jian", "xie xie"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
   {
     path: "/ar/episodes/noor-greetings",
@@ -85,7 +85,7 @@ const EPISODES = [
     lang: "ar",
     campaign: "noor_story_funnel",
     words: ["ni hao", "zai jian", "xie xie"],
-    schemaSeries: "Arabic Kids Chinese Picture Book",
+    schemaSeries: "Nour's Chinese Picture Book",
   },
 ];
 
