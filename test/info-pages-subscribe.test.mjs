@@ -14,7 +14,7 @@ test('info pages have one working signup and localized discovery links', () => {
     const placement = page === 'guides' ? 'guides_index_end' : `${page}_end`;
     assert.deepEqual([...html.matchAll(/<form\b[^>]*data-subscribe-placement="([^"]+)"/g)].map(m => m[1]), [placement], file);
     assert.match(html, /\/css\/inline-subscribe-20261101\.css/);
-    assert.match(html, /\/js\/site-shared-20261111-click-inline\.js/);
+    assert.match(html, /\/js\/site-shared-20261120l-click-inline\.js/);
     assert.ok(html.includes(`href="${prefix}/products"`), file);
     if (page !== 'guides') assert.ok(html.includes(`href="${prefix}/guides"`), file);
     if (prefix === '/zh') assert.ok(html.includes(subscriptionNote('zh')), file);
