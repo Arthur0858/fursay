@@ -425,11 +425,11 @@ function withSecurityHeaders(response) {
       headers.set("Content-Type", "text/html; charset=utf-8");
       headers.append("Content-Security-Policy", [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
+        "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
-        "img-src 'self' data:",
-        "connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com",
+        "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+        "connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
         "frame-src 'self' https://challenges.cloudflare.com https://www.youtube-nocookie.com",
         "object-src 'none'",
         "base-uri 'self'",

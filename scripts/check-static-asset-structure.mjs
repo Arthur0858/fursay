@@ -33,6 +33,7 @@ const EXPECTED_CSS = [
   "site-accessibility-20260925-v1.css",
 ];
 const EXPECTED_JS = [
+  "ga4-20261120o.js",
   "site-shared-20261111-click.js",
   "site-shared-20261111-click-inline.js",
   "editorial-nav-20261102-v1.js",
@@ -54,7 +55,7 @@ const MAX_MAIN_SHARED_CSS_BYTES = 150_000;
 const MAX_SINGLE_CSS_BYTES = 100_000;
 // Both immutable shared versions coexist for cached pages; each page loads only one.
 // +4 KB headroom for the Turnstile subscribe helper (turnstile-subscribe-20261110-v1.js).
-const MAX_TOTAL_JS_BYTES = 84_000;
+const MAX_TOTAL_JS_BYTES = 86_000;
 const MAX_SINGLE_JS_BYTES = 37_000;
 const MAIN_STORY_HTML = new Set([
   "index.html",

@@ -552,7 +552,7 @@ function writeReleaseManifest() {
     },
     assets: { css, js },
     qualityGates: [
-      "scripts/check-fursay-funnel.mjs",
+      "scripts/check-fursay-funnel-20261120o-ga4.mjs",
       "scripts/check-noor-list-activation.mjs",
       "scripts/check-localized-cta-contract.mjs",
       "scripts/check-event-tracking-contract.mjs",
@@ -684,6 +684,13 @@ function writeReleaseManifest() {
   applyHomeKokoInlineSubscribe(siteDir);
   applyTurnstileSubscribeAsset(siteDir);
   unifyNavigation(siteDir);
+  // Generated and hand-maintained public HTML share the same GA head.
+  const gaHead = "<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-4CVTMWFRQN\"></script>\n<script defer src=\"/js/ga4-20261120o.js\"></script>\n";
+  for (const relative of htmlFilesUnder(siteDir)) {
+    const file = resolve(siteDir, relative);
+    const html = readFileSync(file, "utf8");
+    if (!html.includes("G-4CVTMWFRQN")) writeFileSync(file, html.replace(/<\/head\s*>/i, gaHead + "</head>"));
+  }
 }
 
 function writeDeployReadinessManifest(siteDir, source) {
@@ -5039,7 +5046,7 @@ async function main() {
 
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/worker-turnstile.test.mjs", "test/turnstile-subscribe-assets.test.mjs", "test/worker-en-redirect.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
-  run("node", ["--check", "scripts/check-fursay-funnel.mjs"]);
+  run("node", ["--check", "scripts/check-fursay-funnel-20261120o-ga4.mjs"]);
   run("node", ["--check", "scripts/check-noor-list-activation.mjs"]);
   run("node", ["--check", "scripts/check-localized-cta-contract.mjs"]);
   run("node", ["--check", "scripts/check-event-tracking-contract.mjs"]);
@@ -5107,7 +5114,7 @@ async function main() {
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
 
-  run("node", ["scripts/check-fursay-funnel.mjs", "--out-dir", join(outRoot, "funnel-local")]);
+  run("node", ["scripts/check-fursay-funnel-20261120o-ga4.mjs", "--out-dir", join(outRoot, "funnel-local")]);
   run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
   run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
   run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
@@ -5167,7 +5174,7 @@ async function main() {
   }
 
   if (!args.skipLive) {
-    run("node", ["scripts/check-fursay-funnel.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
+    run("node", ["scripts/check-fursay-funnel-20261120o-ga4.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "funnel-live")]);
     run("node", ["scripts/check-noor-list-activation.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "noor-live")]);
     run("node", ["scripts/check-localized-cta-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "localized-cta-live")]);
     run("node", ["scripts/check-event-tracking-contract.mjs", "--base-url", args.baseUrl, "--out-dir", join(outRoot, "event-tracking-live")]);
