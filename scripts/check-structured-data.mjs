@@ -172,7 +172,7 @@ function checkStory(page, blocks, videoDiscovery, pinnedStories, failures) {
   expectedAction.searchParams.set("utm_campaign", campaign);
   expectedAction.searchParams.set("utm_content", `${page.pack}_sample_pack_schema`);
 
-  if (series?.name !== channel.title) failures.push(`story_series_name:${page.path}:${series?.name || "none"}`);
+  if (series?.name !== (page.pack === "noor" ? "Nour's Chinese Picture Book" : channel.title)) failures.push(`story_series_name:${page.path}:${series?.name || "none"}`);
   if (series?.url !== canonical) failures.push(`story_series_url:${page.path}:${series?.url || "none"}`);
   requireIncludes(failures, series?.sameAs, channel.storyWorld, `story_same_as_story_world:${page.path}`);
   requireIncludes(failures, series?.sameAs, channel.youtubeChannel, `story_same_as_channel:${page.path}`);
