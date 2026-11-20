@@ -6,6 +6,7 @@ const DEFAULT_OUT = "/tmp/fursay-static-asset-structure";
 const SITE_DIR = "fursay-optimized-site";
 const IMMUTABLE_ASSET_MANIFEST = "data/immutable-asset-fingerprints.json";
 const EXPECTED_CSS = [
+  "site-navigation-20261120l.css",
   "inline-subscribe-20261101.css",
   "home-fonts-20261004-v1.css",
   "home-common-20260613-cache1.css",
@@ -32,15 +33,19 @@ const EXPECTED_CSS = [
   "site-accessibility-20260925-v1.css",
 ];
 const EXPECTED_JS = [
-  "editorial-nav-20261102-v1.js",
-  "four-week-interest-20260930-v1.js",
   "site-shared-20261111-click.js",
   "site-shared-20261111-click-inline.js",
+  "editorial-nav-20261102-v1.js",
+  "four-week-interest-20260930-v1.js",
+  "site-shared-20261120l-click.js",
+  "site-shared-20261120l-click-inline.js",
   "modal-accessibility-20261002-v1.js",
   "modal-accessibility-20260925-v1.js",
   "turnstile-subscribe-20261110-v1.js",
 ];
 const RETAINED_ASSETS = new Set([
+  "/js/site-shared-20261111-click.js",
+  "/js/site-shared-20261111-click-inline.js",
   "/css/site-accessibility-20260925-v1.css",
   "/js/modal-accessibility-20260925-v1.js",
 ]);
@@ -284,7 +289,7 @@ async function main() {
   if (totalCssBytes > MAX_TOTAL_CSS_BYTES) failures.push(`css_total_bytes:${totalCssBytes}`);
   // Retain the previous immutable script for cached HTML. Keep the existing
   // 41 kB budget for current assets; current pages must not load the old pair.
-  const activeJsBytes = totalJsBytes - (assetSizes.js["modal-accessibility-20260925-v1.js"] || 0);
+  const activeJsBytes = totalJsBytes - [...RETAINED_ASSETS].filter(x => x.startsWith("/js/")).reduce((sum, x) => sum + (assetSizes.js[x.slice(4)] || 0), 0);
   if (activeJsBytes > MAX_TOTAL_JS_BYTES) failures.push(`js_total_bytes:${activeJsBytes}`);
   for (const asset of RETAINED_ASSETS) {
     if ([...referenced.css, ...referenced.js].includes(asset)) failures.push(`retired_accessibility_asset_referenced:${asset}`);
