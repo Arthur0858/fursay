@@ -367,7 +367,7 @@ function patchLlms(siteDir) {
   const file = resolve(siteDir, "llms.txt");
   let text = readFileSync(file, "utf8");
   text = text.replace(/Current expected Books\.com\.tw affiliate links: \d+/, "Current expected Books.com.tw affiliate links: 11");
-  text = text.replace(/Current expected Amazon affiliate links: \d+/, "Current expected Amazon affiliate links: 22");
+  text = text.replace(/Current expected Amazon affiliate links: \d+/, "Current expected Amazon affiliate links: 24");
   text = text.replace(/Koko printable presale-preparation page/gi, "Koko free printable family guide");
   text = text.replace(/Nour worksheet presale-preparation page/gi, "Nour free worksheet family guide");
   text = text.replace(/Affiliate click tracking is expected on all \d+ public story and episode pages\./, "Affiliate click tracking is expected on all 18 public story and episode pages.");

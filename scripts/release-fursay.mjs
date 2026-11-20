@@ -611,7 +611,7 @@ function writeReleaseManifest() {
     liveExpectations: {
       pages: 9,
       funnelChecks: 41,
-      amazonAffiliateLinks: 22,
+      amazonAffiliateLinks: 24,
       amazonAffiliateTag: "parenttechche-20",
       booksAffiliateLinks: 11,
       booksAffiliateId: "arthur0858",
