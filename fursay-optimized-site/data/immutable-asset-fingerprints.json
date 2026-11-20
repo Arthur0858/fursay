@@ -138,6 +138,11 @@
       "sha256": "c95e2b8c83311e07c793d28e0f3335af27dd7c72aaaad9ad29ba11ffa4eb647e"
     },
     {
+      "path": "/js/ga4-20261120o.js",
+      "bytes": 1306,
+      "sha256": "1def526e1a5b62de5abb1d23a1820b177b675d0fd22138a7fb330b8ffdcd2d31"
+    },
+    {
       "path": "/js/modal-accessibility-20260925-v1.js",
       "bytes": 3453,
       "sha256": "73b5dabff7f986ac36ab02cdefd82c1a07a5c38bb0ae163eff60ad26aa220fa2"

@@ -2,11 +2,11 @@
   "site": "Fursay",
   "origin": "https://fursay.com",
   "platform": "cloudflare-workers-static-assets",
-  "updatedAt": "2026-11-03",
+  "updatedAt": "2026-11-20",
   "source": {
-    "branch": "main",
-    "commit": "8c0b3c3",
-    "summary": "Merge pull request #22 from Arthur0858/codex/fursay-src-fur-03-download-events-20261103"
+    "branch": "codex/o3-ga4-20261120",
+    "commit": "cb1c20a",
+    "summary": "Merge pull request #64 from Arthur0858/n2-koko-layout"
   },
   "measurement": {
     "anonymousEventEndpoint": "https://fursay.com/api/event",
@@ -112,7 +112,7 @@
   "coverage": {
     "publicStoryPages": 9,
     "subscribeOpenPages": 18,
-    "affiliateClickPages": 15,
+    "affiliateClickPages": 18,
     "outboundClickPages": 18,
     "shareOrCopyPages": 18,
     "productInterestPages": 9,
@@ -204,9 +204,9 @@
   ],
   "monetization": {
     "affiliate": {
-      "amazonLinks": 20,
+      "amazonLinks": 24,
       "amazonTag": "parenttechche-20",
-      "booksLinks": 10,
+      "booksLinks": 11,
       "booksAffiliateId": "arthur0858",
       "localePolicy": "zh-TW pages use Books.com.tw; English and Arabic pages use Amazon"
     },

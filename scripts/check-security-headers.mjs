@@ -95,10 +95,11 @@ async function main() {
       }));
       for (const [directive, sources] of Object.entries({
         "default-src": ["'self'"],
-        "script-src": ["'self'", "https://challenges.cloudflare.com", "https://static.cloudflareinsights.com"],
+        "script-src": ["'self'", "https://challenges.cloudflare.com", "https://static.cloudflareinsights.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://*.google-analytics.com", "https://*.analytics.google.com", "https://*.googletagmanager.com"],
         "style-src": ["'self'", "https://fonts.googleapis.com"],
+        "img-src": ["'self'", "data:", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://*.google-analytics.com", "https://*.analytics.google.com", "https://*.googletagmanager.com"],
         "font-src": ["'self'", "https://fonts.gstatic.com"],
-        "connect-src": ["'self'", "https://challenges.cloudflare.com", "https://cloudflareinsights.com"],
+        "connect-src": ["'self'", "https://challenges.cloudflare.com", "https://cloudflareinsights.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://*.google-analytics.com", "https://*.analytics.google.com", "https://*.googletagmanager.com"],
         "frame-src": ["https://challenges.cloudflare.com", "https://www.youtube-nocookie.com"],
       })) {
         for (const source of sources) {

@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-11-11T13:51:35.102Z",
+  "updatedAt": "2026-11-20T15:37:24.262Z",
   "samples": {
     "koko-printable-sample.pdf": {
       "source": "product-samples/koko-printable.html",
       "assets": [
         "css/sample-activity-20260718-v1.css"
       ],
-      "sourceHash": "96244f540ff51b5c37da03884386590978f5b59dee0e37132e5c95de41b0c230",
+      "sourceHash": "6aa1ca9a5d9b69dfc6fc757f119e15014c3cd76d29e92ad7896508ab22fa824f",
       "pages": 3,
-      "bytes": 566749
+      "bytes": 544001
     },
     "noor-worksheet-sample.pdf": {
       "source": "ar/product-samples/noor-worksheet.html",
       "assets": [
         "css/sample-activity-20260718-v1.css"
       ],
-      "sourceHash": "c0b33c0427a99218fcd9c30ae70a184f1577dc853092d7070075120327b7ccd6",
+      "sourceHash": "a975753052ba8006781ca7a9d64a7b5ed3566117d47df53d02ac33097b1430e3",
       "pages": 3,
-      "bytes": 665607
+      "bytes": 674544
     }
   }
 }

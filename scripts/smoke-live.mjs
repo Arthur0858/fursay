@@ -7,7 +7,7 @@ const DEFAULT_OUT_DIR = "/tmp/fursay-smoke-live";
 const DEFAULT_GATE_TIMEOUT_MS = 60_000;
 
 const LIVE_GATES = [
-  { command: "node", args: ["scripts/check-fursay-funnel.mjs"], timeoutMs: 120_000 },
+  { command: "node", args: ["scripts/check-fursay-funnel-20261120o-ga4.mjs"], timeoutMs: 120_000 },
   { command: "node", args: ["scripts/check-noor-list-activation.mjs"] },
   { command: "node", args: ["scripts/check-localized-cta-contract.mjs"] },
   { command: "node", args: ["scripts/check-event-tracking-contract.mjs"], timeoutMs: 120_000 },

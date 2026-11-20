@@ -72,4 +72,4 @@ Sample download clicks are client interaction events (`fursay_product_sample_dow
 
 Anonymous event URLs retain only approved HTTPS hosts, a validated path, and single lowercase slug values for `utm_source`, `utm_medium`, `utm_campaign`, and `utm_content`; userinfo, fragments, other query parameters and invalid values are discarded. Affiliate product IDs are limited to the site’s known catalog and outbound kind to `youtube`. The event contract compares filtered URLs because complete URLs can contain personal data.
 
-- 英文頁統一導覽使用 `/css/site-navigation-20261120m.css`；目前共用互動腳本為 `/js/site-shared-20261120m-click.js` 和 `/js/site-shared-20261120m-click-inline.js`。舊版 URL 保留供快取頁面使用。
+- 英文頁統一導覽使用 `/css/site-navigation-20261120m.css`；目前共用互動腳本為 `/js/site-shared-20261120m-click.js` 和 `/js/site-shared-20261120m-click-inline.js`。舊版 URL 保留供快取頁面使用。GA4 初始化與轉換事件使用 `/js/ga4-20261120o.js`。

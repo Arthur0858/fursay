@@ -389,7 +389,8 @@
       "/js/editorial-nav-20261102-v1.js",
       "/js/turnstile-subscribe-20261110-v1.js",
       "/js/site-shared-20261111-click.js",
-      "/js/site-shared-20261111-click-inline.js"
+      "/js/site-shared-20261111-click-inline.js",
+      "/js/ga4-20261120o.js"
     ],
     "scenes": [
       "/images/scenes/story-world-home.webp",
