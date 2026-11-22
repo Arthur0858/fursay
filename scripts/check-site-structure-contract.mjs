@@ -307,6 +307,13 @@ async function validateHtmlRoutes(structure, stories, context, failures, data) {
     data.routes.push({ ...entry, file, css, js });
   }
 
+  // The products hub stylesheet is intentionally loaded only on its three localized pages.
+  const productsCss = "/css/products-first-fold-20261123.css";
+  for (const file of ["products.html", "zh/products.html", "ar/products.html"]) {
+    const html = await readText(context, context.baseUrl ? `/${file.replace(/\.html$/, "")}` : file);
+    if (!stylesheetHrefs(html).includes(productsCss)) failures.push(`products_css_missing:${file}`);
+  }
+  seenCss.add(productsCss);
   for (const asset of sharedCss) {
     if (TOOL_ONLY_CSS.has(asset)) continue;
     if (!seenCss.has(asset)) failures.push(`shared_css_not_referenced_by_main_routes:${asset}`);

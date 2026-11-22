@@ -7,6 +7,7 @@ const SITE_DIR = "fursay-optimized-site";
 const IMMUTABLE_ASSET_MANIFEST = "data/immutable-asset-fingerprints.json";
 const EXPECTED_CSS = [
   "site-navigation-20261120m.css",
+  "products-first-fold-20261123.css",
   "inline-subscribe-20261101.css",
   "home-fonts-20261004-v1.css",
   "home-common-20260613-cache1.css",
