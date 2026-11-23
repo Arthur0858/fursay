@@ -1,0 +1,21 @@
+.products-brand-page .brand-hero { padding-block: 28px 36px; }
+.products-brand-page .brand-hero__grid { grid-template-columns: minmax(0, 1fr) 150px; gap: 20px; align-items: center; }
+.products-brand-page .brand-hero h1 { margin: 6px 0; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; }
+.products-brand-page .brand-hero__lede { margin: 8px 0; }
+.products-brand-page .brand-hero__art img { width: 100%; height: auto; }
+.hub-more { display: inline-block; margin-block: 4px; }
+.hub-quick-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.hub-quick-card { background: #fffdf8; border: 1px solid #d4e3d8; border-radius: 16px; padding: 16px; }
+.hub-quick-card h2 { font-size: 1.2rem; line-height: 1.2; margin: 0 0 6px; }
+.hub-quick-card p { line-height: 1.35; margin: 0 0 10px; }
+.hub-quick-card .brand-btn { font-size: .95rem; padding: 10px 14px; }
+@media (max-width: 600px) {
+  .products-brand-page .brand-hero { padding-block: 16px 24px; }
+  .products-brand-page .brand-hero__grid { grid-template-columns: minmax(0, 1fr) 72px; gap: 10px; }
+  .products-brand-page .brand-hero h1 { font-size: 1.8rem; }
+  .products-brand-page .brand-hero__lede { font-size: .9rem; line-height: 1.3; }
+  .hub-quick-grid { grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
+  .hub-quick-card { padding: 10px 12px; }
+  .hub-quick-card h2 { font-size: 1.05rem; }
+  .hub-quick-card p { font-size: .9rem; margin-bottom: 6px; }
+}
