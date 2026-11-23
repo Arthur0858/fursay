@@ -5042,7 +5042,7 @@ async function main() {
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
 
-  if (!args.checkOnly) writeReleaseManifest();
+  writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
   run("node", ["--test", "test/worker-trial-attribution.test.mjs", "test/worker-cache-headers.test.mjs", "test/worker-subscribe.test.mjs", "test/worker-turnstile.test.mjs", "test/turnstile-subscribe-assets.test.mjs", "test/worker-en-redirect.test.mjs", "test/sitemap-dates.test.mjs", "test/sitemap-generation.test.mjs"]);
