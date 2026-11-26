@@ -188,7 +188,7 @@ export const EDITORIAL_DEPTH = {
       ["mandarinToneCambridge", localized("Explains tone perception and training evidence; it does not certify a pronunciation method.", "說明聲調感知與訓練證據；不認證特定發音方法。", "يشرح دليل إدراك النغمة وتدريبها ولا يعتمد طريقة نطق.")],
       ["mandarinToneWords", localized("Provides original evidence about tone and word learning; it does not define a home mastery target.", "提供聲調與詞彙學習原始證據；不設定家庭精熟目標。", "يقدم دليلًا أصليًا عن النغمة وتعلم الكلمات ولا يحدد هدف إتقان منزلي.")],
     ],
-    links: ["chinese-storytime-for-arabic-speaking-families", "three-chinese-words-a-day"],
+    links: ["chinese-storytime-for-arabic-speaking-families", "three-chinese-words-a-day", "three-minute-chinese-routine"],
   },
   "three-chinese-words-a-day": {
     headings: localized(
@@ -215,7 +215,7 @@ export const EDITORIAL_DEPTH = {
       ["headStartLanguageInfo", localized("Frames language learning within family interaction; it does not predict a child's vocabulary count.", "把語言學習放在家庭互動中；不預測孩子詞彙量。", "يضع تعلم اللغة في تفاعل الأسرة ولا يتنبأ بعدد مفردات الطفل.")],
       ["naeycDiversity", localized("Supports culturally and linguistically responsive practice; it does not require replacing Arabic.", "支持文化與語言回應式做法；不要求取代阿語。", "يدعم الممارسة المستجيبة ثقافيًا ولغويًا ولا يطلب استبدال العربية.")],
     ],
-    links: ["chinese-storytime-for-arabic-speaking-families", "three-minute-chinese-routine"],
+    links: ["chinese-storytime-for-arabic-speaking-families", "three-minute-chinese-routine", "pinyin-and-tones-for-parents"],
   },
   "three-minute-chinese-routine": {
     headings: localized(
@@ -242,7 +242,7 @@ export const EDITORIAL_DEPTH = {
       ["harvardExecutive", localized("Provides background on predictable routines and adult scaffolding; it does not prove language outcomes.", "提供可預測流程與成人支持背景；不證明語言成果。", "يقدم خلفية عن الروتين المتوقع ودعم البالغ ولا يثبت نتائج لغوية.")],
       ["aapLiteracy", localized("Supports shared parent-child literacy moments; it does not set a daily duration or attendance target.", "支持親子共同讀寫時刻；不設定每日時長或出席目標。", "يدعم لحظات القراءة المشتركة ولا يحدد مدة يومية أو هدف حضور.")],
     ],
-    links: ["three-chinese-words-a-day", "from-video-to-five-minute-printable"],
+    links: ["three-chinese-words-a-day", "from-video-to-five-minute-printable", "pinyin-and-tones-for-parents"],
   },
 };
 
