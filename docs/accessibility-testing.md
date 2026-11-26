@@ -54,6 +54,19 @@ This suite does not claim screen-reader, Firefox, WebKit, or production testing.
 
 ## Release gate
 
+`npm run check` requires preinstalled Playwright Chromium and fails if its
+browser binaries are missing; it does not install them automatically. On shared
+computers or in Codex, do not install Playwright, Chrome, or Chromium, or run
+`npx playwright install`, unless Arthur opens a separate approval card.
+
+When Chromium is unavailable, run `npm run check:static` for the check-only
+gate’s non-browser steps, including syntax, Node tests, and contracts. It skips
+the browser-based funnel, Noor activation, localized CTA, event tracking,
+conversion health, visual layout, newsletter traffic kit, and accessibility
+checks. Report that these browser checks were not run. A passing static check is not
+a passing full `npm run check`; the full gate still requires the browser stage.
+
+
 `scripts/release-fursay.mjs` runs this browser checker immediately after the
 existing markup accessibility contract and writes its JSON under the release
 artifact directory as `accessibility-browser-local/accessibility-browser.json`.
