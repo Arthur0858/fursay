@@ -36,6 +36,8 @@ for (const page of pages) {
     const privacy = { en: '/privacy', zh: '/zh/privacy', ar: '/ar/privacy' }[lang];
     if (!/18\+/.test(note) || !cadence.test(note) || !note.includes(`href="${privacy}"`) || form.indexOf(note) > form.search(/<button\b[^>]*type="submit"/i)) failures.push(`${page}: missing subscription note before submit`);
     if (lang === 'en' && !/chinese only|no English newsletter/i.test(note)) failures.push(`${page}: missing Chinese-only newsletter disclosure`);
+    if (lang === 'zh' && !/電子報郵件僅以中文寄送/.test(note)) failures.push(`${page}: missing Chinese-only newsletter disclosure`);
+    if (lang === 'ar' && !/رسائل النشرة البريدية باللغة الصينية فقط/.test(note)) failures.push(`${page}: missing Chinese-only newsletter disclosure`);
     const samplePromise = { en: /first email[^.]*sample[^.]*confirm/i, zh: /確認訂閱後[^。]*第一封[^。]*樣本/, ar: /الرسالة الأولى[^.]*نموذج قصير[^.]*تأكيد الاشتراك/ }[lang];
     if (samplePromise.test(note)) failures.push(`${page}: sample email promise in subscription note`);
   }
