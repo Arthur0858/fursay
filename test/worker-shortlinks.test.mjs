@@ -84,3 +84,27 @@ test("live links redirect to the relevant family pages with campaign attribution
     assert.equal(location.searchParams.get("utm_campaign"), campaign);
   }
 });
+
+test("localized shortlinks preserve registered attribution and select the locale", async () => {
+  for (const locale of ["zh", "ar"]) {
+    for (const kind of ["join", "sample", "share", "bio", "creator"]) {
+      for (const pack of ["koko", "noor"]) {
+        const suffixes = kind === "creator" ? ["", "/youtube", "/social", "/newsletter"] : [""];
+        for (const suffix of suffixes) {
+          const path = `/${kind}/${pack}${suffix}?ref=abc&utm_source=ignored&email=private`;
+          const root = new URL((await get(path)).headers.get("location"));
+          const response = await get(`/${locale}${path}`);
+          const localized = new URL(response.headers.get("location"));
+          assert.equal(response.status, 302);
+          assert.equal(localized.pathname, `/${locale}${root.pathname}`);
+          assert.equal(localized.search, root.search);
+          assert.equal(localized.searchParams.get("subscribe"), pack);
+          assert.equal(localized.searchParams.get("ref"), "abc");
+          assert.equal(localized.searchParams.has("email"), false);
+        }
+      }
+    }
+    assert.equal((await get(`/${locale}/sample`)).status, 404);
+    assert.equal((await get(`/${locale}/join/unknown`)).status, 404);
+  }
+});
