@@ -19,6 +19,7 @@ function parseArgs() {
     skipLive: false,
     pushGit: false,
     checkOnly: false,
+    staticOnly: false,
   };
   for (let i = 0; i < args.length; i += 1) {
     if (args[i] === "--base-url") parsed.baseUrl = args[++i].replace(/\/$/, "");
@@ -26,6 +27,10 @@ function parseArgs() {
     if (args[i] === "--skip-live") parsed.skipLive = true;
     if (args[i] === "--push-git") parsed.pushGit = true;
     if (args[i] === "--check-only") parsed.checkOnly = true;
+    if (args[i] === "--static-only") parsed.staticOnly = true;
+  }
+  if (parsed.staticOnly && !parsed.checkOnly) {
+    throw new Error("--static-only requires --check-only");
   }
   if (parsed.checkOnly) {
     parsed.skipDeploy = true;
@@ -5042,6 +5047,7 @@ async function main() {
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
 
+  if (args.staticOnly) console.log("Static-only: browser checks will not run; see docs/accessibility-testing.md.");
   writeReleaseManifest();
 
   run("node", ["--check", "src/worker.js"]);
@@ -5114,11 +5120,11 @@ async function main() {
   run("node", ["--check", "scripts/smoke-live.mjs"]);
   run("node", ["scripts/check-deploy-readiness.mjs", "--out-dir", join(outRoot, "deploy-readiness-local")]);
 
-  run("node", ["scripts/check-fursay-funnel-20261120o-ga4.mjs", "--out-dir", join(outRoot, "funnel-local")]);
-  run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
-  run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
-  run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
-  run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-fursay-funnel-20261120o-ga4.mjs", "--out-dir", join(outRoot, "funnel-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-noor-list-activation.mjs", "--out-dir", join(outRoot, "noor-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-localized-cta-contract.mjs", "--out-dir", join(outRoot, "localized-cta-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-event-tracking-contract.mjs", "--out-dir", join(outRoot, "event-tracking-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-conversion-health-contract.mjs", "--out-dir", join(outRoot, "conversion-health-local")]);
   run("node", ["scripts/check-growth-dashboard-contract.mjs", "--out-dir", join(outRoot, "growth-dashboard-local")]);
   run("node", ["scripts/check-event-analytics-contract.mjs", "--out-dir", join(outRoot, "event-analytics-local")]);
   run("node", ["scripts/check-analytics-enablement-contract.mjs", "--out-dir", join(outRoot, "analytics-enablement-local")]);
@@ -5129,9 +5135,9 @@ async function main() {
   run("node", ["scripts/check-site-structure-contract.mjs", "--out-dir", join(outRoot, "site-structure-local")]);
   run("node", ["scripts/check-hero-preload-contract.mjs", "--out-dir", join(outRoot, "hero-preload-local")]);
   run("node", ["scripts/check-editorial-utility-layout.mjs"]);
-  run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-visual-layout-contract.mjs", "--out-dir", join(outRoot, "visual-layout-local")]);
   run("node", ["scripts/check-internal-links-contract.mjs", "--out-dir", join(outRoot, "internal-links-local")]);
-  run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
+  if (!args.staticOnly) run("node", ["scripts/check-newsletter-traffic-kit.mjs", "--out-dir", join(outRoot, "newsletter-traffic-kit-local")]);
   run("node", ["scripts/check-newsletter-state-contract.mjs", "--out-dir", join(outRoot, "newsletter-state-local")]);
   run("node", ["scripts/check-subscription-copy-contract.mjs"]);
   run("node", ["--test", "scripts/test-newsletter-readback-contract.mjs"]);
@@ -5144,7 +5150,11 @@ async function main() {
   run("node", ["scripts/check-social-preview-contract.mjs", "--out-dir", join(outRoot, "social-preview-local")]);
   run("node", ["scripts/check-head-metadata.mjs", "--out-dir", join(outRoot, "head-metadata-local")]);
   run("node", ["scripts/check-accessibility-contract.mjs", "--out-dir", join(outRoot, "accessibility-local")]);
-  run("node", ["scripts/check-accessibility-browser.mjs", "--out-dir", join(outRoot, "accessibility-browser-local")]);
+  if (args.staticOnly) {
+    console.log("\nBrowser accessibility check not run (--static-only); see docs/accessibility-testing.md.");
+  } else {
+    run("node", ["scripts/check-accessibility-browser.mjs", "--out-dir", join(outRoot, "accessibility-browser-local")]);
+  }
   run("node", ["scripts/check-discovery-contract.mjs", "--out-dir", join(outRoot, "discovery-local")]);
   run("node", ["scripts/check-content-growth-contract.mjs", "--out-dir", join(outRoot, "content-growth-local")]);
   run("node", ["scripts/check-episode-landing-contract.mjs", "--out-dir", join(outRoot, "episode-landing-local")]);

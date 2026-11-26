@@ -3,7 +3,8 @@
 Cloudflare **Worker** (not Pages) serving the Fursay site + newsletter + render queue.
 
 ## Commands
-- `npm run check` — `release-fursay --check-only`. Run after any edit.
+- `npm run check` — `release-fursay --check-only`. Run after any edit; it requires preinstalled Playwright Chromium. Missing browser binaries fail the check and are never installed automatically.
+- On shared computers / in Codex, do not install Playwright, Chrome, or Chromium, or run `npx playwright install`, unless Arthur opens a separate approval card. If Chromium is unavailable, run `npm run check:static` instead and report that the browser checks were not run. Static checks do not replace the full gate. See [accessibility testing](docs/accessibility-testing.md).
 - `npm run deploy` — build + stage to CF Workers. BLOCKED until Workers token present.
 - `npm run deploy:push` — also push git.
 - `npm run analytics:enablement:check` — verify Analytics Engine contract before touching analytics.
