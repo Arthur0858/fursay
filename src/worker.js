@@ -124,7 +124,9 @@ function sampleDownloadRedirectUrl(url, request, env) {
 }
 
 function joinRedirectUrl(url) {
-  const path = url.pathname.replace(/\/+$/, "").toLowerCase();
+  const normalized = url.pathname.replace(/\/+$/, "").toLowerCase();
+  const localeMatch = normalized.match(/^\/(zh|ar)(?=\/(?:join|sample|share|bio|creator)\/)/);
+  const path = localeMatch ? normalized.slice(3) : normalized;
   const routes = {
     "/koko-live": {
       target: "/koko",
@@ -262,7 +264,7 @@ function joinRedirectUrl(url) {
   const route = routes[path];
   if (!route) return null;
 
-  const target = new URL(route.target, url.origin);
+  const target = new URL(localeMatch ? `/${localeMatch[1]}${route.target}` : route.target, url.origin);
   if (route.pack) target.searchParams.set("subscribe", route.pack);
   target.searchParams.set("utm_source", route.source || "shortlink");
   target.searchParams.set("utm_medium", route.medium || "direct");
