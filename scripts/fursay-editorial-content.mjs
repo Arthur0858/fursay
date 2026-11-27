@@ -13,6 +13,7 @@ export const GUIDE_SLUGS = [
   "three-chinese-words-a-day",
   "three-minute-chinese-routine",
   ...ROUND3_GUIDES.map((guide) => guide.slug),
+  "nour-name-in-chinese",
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
 ];
@@ -298,6 +299,11 @@ const CORE_GUIDES = [
 ];
 
 const HANDWRITTEN_GUIDES = [
+  {
+    slug: "nour-name-in-chinese", world: "noor", dateModified: "2026-11-27",
+    title: localized("Nour in Chinese: name and pronunciation", "努爾的中文名怎麼說、怎麼唸？", "اسم نور بالصينية وطريقة نطقه"),
+    description: localized("Nour is 努爾 (Nǔ'ěr) in the Fursay story; Zayd is 扎伊德 (Zhāyīdé). See the names and pinyin together.", "Fursay 故事角色 Nour 的中文名是努爾（Nǔ'ěr），Zayd 是扎伊德（Zhāyīdé）；一起認識中文寫法和拼音。", "اسم نور في قصة Fursay هو 努爾 ‏(Nǔ'ěr)، واسم زيد هو 扎伊德 ‏(Zhāyīdé). تعرفوا إلى الكتابة والنطق بالحروف اللاتينية."),
+  },
   {
     slug: "bilingual-bedtime-books-for-toddlers", world: "koko", dateModified: "2026-11-14",
     title: localized("Bilingual bedtime books for toddlers", "給幼兒的雙語睡前繪本：從一張圖開始", "كتب ثنائية اللغة لوقت النوم مع الأطفال الصغار"),

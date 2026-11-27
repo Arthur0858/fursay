@@ -267,6 +267,7 @@ function trustPage(locale, kind) {
 }
 // These six long-form pages are maintained by hand and must never be rewritten.
 export const HANDWRITTEN_GUIDE_SLUGS = new Set([
+  "nour-name-in-chinese",
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
 ]);
@@ -447,7 +448,7 @@ function writeAdsenseReadiness(siteDir) {
   const stableWindowReadyAt = stableAnchor ? addDays(stableAnchor, 14) : null;
   const stableWindowComplete = Boolean(stableWindowReadyAt && today >= stableWindowReadyAt);
   const sourceUrls = new Set(Object.values(ALL_EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => ALL_EDITORIAL_SOURCES[key]?.[1]).filter(Boolean)));
-  const contentShapeReady = GUIDES.length === 14 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
+  const contentShapeReady = GUIDES.length === 15 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
   const evidenceFresh = Object.entries(gates).filter(([key]) => key !== "editorialPagesWithImpressions").every(([, gate]) => gate.fresh);
   const loveReady = gates.lovetypesReady?.status === "ready" && gates.lovetypesReady.fresh;
   const impressionsReady = gates.editorialPagesWithImpressions?.status === "passed" && gates.editorialPagesWithImpressions.value >= 5 && gates.editorialPagesWithImpressions.fresh;
