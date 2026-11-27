@@ -264,8 +264,8 @@ const CORE_GUIDES = [
   },
   {
     slug: GUIDE_SLUGS[7], world: "noor", sources: SOURCES.sharedReading,
-    title: localized("A three-minute Chinese routine that stops on time", "能準時結束的三分鐘中文小習慣", "روتين صيني لثلاث دقائق ينتهي في وقته"),
-    description: localized("Build a repeatable beginning, middle, and ending so a short Chinese activity remains calm and honest.", "用固定的開始、中段與結尾，讓短中文活動保持平靜、可重複，也誠實面對家庭狀態。", "ابنوا بداية ووسطًا ونهاية قابلة للتكرار كي يبقى النشاط الصيني القصير هادئًا وصادقًا."),
+    title: localized("Three-minute Chinese routine for families", "親子三分鐘中文日常練習", "روتين لتعلّم الصينية مع الطفل في ثلاث دقائق"),
+    description: localized("Try a three-minute Chinese routine with a greeting, one story activity, and a clear ending for your family.", "從問候、故事活動到道別，陪孩子試試三分鐘中文日常，依家庭狀態調整或提前結束。", "جرّبوا نشاطًا صينيًا قصيرًا مع الطفل: ابدؤوا بتحية نور، واستخدموا لعبة لفعل واحد، ثم اختاروا الوداع أو إعادة النشاط مرة واحدة."),
     details: localized({
       scene: "A parent says the activity will take three minutes, but keeps adding one more word, question, and worksheet box. The child learns that the promised ending is unreliable. A trustworthy short routine needs an ending that adults honor.",
       goal: "Use a recognizable shape: greet, explore one story moment, and close. The timer protects the relationship rather than measuring the child. Finishing early is allowed, and stopping on time builds confidence that another session will also be manageable.",
