@@ -1,6 +1,6 @@
 export const TRUST_OVERRIDES = {
   about: {
-    en: ["About Fursay", "A parent-facing source of family stories, guides, and free printables", [
+    en: ["About Fursay", "Bilingual family stories, practical parent guides, and free printable samples for shared storytime", [
       ["How the story worlds began", "Fursay grew from a family interest in calmer shared reading. Koko offers English story moments for Mandarin-speaking households; Nour and Zayd create small Chinese story moments that Arabic-speaking caregivers can adapt."],
       ["Who uses this site", "The site, newsletter, guides, and printable resources are intended for adult parents and caregivers. Children may join an adult for a story, but Fursay does not offer child accounts or ask children to submit personal information."],
       ["What is available", "Families can read stories and parent guides, download free PDF samples, and choose to receive adult email updates. Book recommendations are optional and disclosed where affiliate links appear."],
