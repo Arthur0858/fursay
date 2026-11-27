@@ -265,8 +265,9 @@ function trustPage(locale, kind) {
   const pageHead = head(locale, suffix, metaTitle, description);
   return `${hasSignup ? pageHead.replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>') : pageHead}<body class="brand-surface editorial-page policy-brand-page">${nav(locale, suffix)}<main class="editorial-shell"><article class="policy-card editorial-trust"><header><p class="brand-kicker">Fursay trust & accountability</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p class="editorial-byline"><strong>Fursay Family Learning Editorial Team</strong> · ${COPY[locale].updated}: <time datetime="${dateModified}">${dateModified}</time></p></header>${renderedSections}</article>${hasSignup ? `${infoLinks(locale)}${inlineSubscribe(locale, `${kind}_end`)}` : ""}</main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="${hasSignup ? "/js/site-shared-20261120m-click-inline.js" : SHARED_JS}"></script></body></html>`;
 }
-// These six long-form pages are maintained by hand and must never be rewritten.
+// These long-form pages are maintained by hand and must never be rewritten.
 export const HANDWRITTEN_GUIDE_SLUGS = new Set([
+  "do-you-write-tone-marks",
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
 ]);
@@ -447,7 +448,7 @@ function writeAdsenseReadiness(siteDir) {
   const stableWindowReadyAt = stableAnchor ? addDays(stableAnchor, 14) : null;
   const stableWindowComplete = Boolean(stableWindowReadyAt && today >= stableWindowReadyAt);
   const sourceUrls = new Set(Object.values(ALL_EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => ALL_EDITORIAL_SOURCES[key]?.[1]).filter(Boolean)));
-  const contentShapeReady = GUIDES.length === 14 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
+  const contentShapeReady = GUIDES.length === 15 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
   const evidenceFresh = Object.entries(gates).filter(([key]) => key !== "editorialPagesWithImpressions").every(([, gate]) => gate.fresh);
   const loveReady = gates.lovetypesReady?.status === "ready" && gates.lovetypesReady.fresh;
   const impressionsReady = gates.editorialPagesWithImpressions?.status === "passed" && gates.editorialPagesWithImpressions.value >= 5 && gates.editorialPagesWithImpressions.fresh;
