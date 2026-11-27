@@ -990,4 +990,34 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/terms"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/terms"/>
   </url>
+  <url>
+    <loc>https://fursay.com/guides/nour-and-zayd</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-and-zayd"/>
+  </url>
+  <url>
+    <loc>https://fursay.com/zh/guides/nour-and-zayd</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-and-zayd"/>
+  </url>
+  <url>
+    <loc>https://fursay.com/ar/guides/nour-and-zayd</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-and-zayd"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-and-zayd"/>
+  </url>
 </urlset>

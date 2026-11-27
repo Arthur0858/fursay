@@ -15,6 +15,7 @@ export const GUIDE_SLUGS = [
   ...ROUND3_GUIDES.map((guide) => guide.slug),
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
+  "nour-and-zayd",
 ];
 
 const SOURCES = {
@@ -298,6 +299,11 @@ const CORE_GUIDES = [
 ];
 
 const HANDWRITTEN_GUIDES = [
+  {
+    slug: "nour-and-zayd", world: "noor", dateModified: "2026-11-27",
+    title: localized("Who are Nour and Zayd? A parent’s guide", "努爾與 Zayd 是誰？給家長的故事指南", "من هما نور وزيد؟ دليل للوالدين"),
+    description: localized("Meet Nour and Zayd in Fursay’s Chinese stories and find greeting and color activities for families.", "認識 Fursay 中文故事中的努爾與 Zayd，找到問候與顏色的家庭練習。", "تعرفوا إلى نور وزيد في قصص Fursay الصينية واختاروا نشاطًا للتحية أو الألوان."),
+  },
   {
     slug: "bilingual-bedtime-books-for-toddlers", world: "koko", dateModified: "2026-11-14",
     title: localized("Bilingual bedtime books for toddlers", "給幼兒的雙語睡前繪本：從一張圖開始", "كتب ثنائية اللغة لوقت النوم مع الأطفال الصغار"),
