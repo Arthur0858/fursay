@@ -230,9 +230,13 @@ function infoLinks(locale, includeGuides = true) {
 }
 function guidesHub(locale) {
   const l = LOCALES[locale];
-  const title = locale === "zh" ? "家長雙語共讀指南" : locale === "ar" ? "أدلة القراءة الثنائية للوالدين" : "Parent guides for bilingual story time";
-  const count = GUIDE_SLUGS.length;
-  const description = locale === "zh" ? `${count} 篇可在家嘗試的英文與中文家庭情境指南，附具體步驟、限制、來源和可直接使用的小工具。` : locale === "ar" ? `${count} دليلًا عمليًا لمواقف عائلية مع الإنجليزية والصينية، بخطوات وحدود ومصادر وأدوات قابلة للاستخدام.` : `${count} practical guides for English and Chinese family moments, with distinct steps, limits, sources, and usable activities.`;
+  const copy = {
+    en: { title: "Bilingual Storytime, Pinyin & Feelings Guides", heading: "Bilingual storytime, Pinyin and feelings: parent guides", description: "Explore parent guides to bilingual storytime, Pinyin and tones, and talking about feelings through stories. Find a small family routine to try.", lede: "Explore 14 guides for English and Chinese family moments, from shared stories and Pinyin to talking about feelings.", label: "Find a guide:", links: ["English storytime", "Pinyin and tones", "Feelings through stories"] },
+    zh: { title: "親子共讀、拼音與情緒故事指南", heading: "親子共讀、拼音與情緒故事：家長指南", description: "探索英文與中文親子共讀、拼音聲調和故事中的情緒詞，從家長指南選一個今天能嘗試的家庭小活動。", lede: "探索 14 篇英文與中文家庭情境指南，從親子共讀、拼音聲調到用故事談情緒，選一個小活動開始。", label: "依主題找指南：", links: ["英文故事共讀", "拼音與聲調", "用故事談情緒"] },
+    ar: { title: "أدلة القراءة مع الأطفال وPinyin والمشاعر", heading: "أدلة الوالدين للقراءة وPinyin والمشاعر", description: "اكتشفوا أدلة للقراءة العائلية بالإنجليزية والصينية، وPinyin والنغمات، والحديث عن المشاعر من خلال القصص.", lede: "اكتشفوا 14 دليلًا لمواقف عائلية مع الإنجليزية والصينية، من القراءة المشتركة وPinyin إلى الحديث عن المشاعر بالقصص.", label: "اختاروا دليلًا:", links: ["قراءة قصة إنجليزية", "Pinyin والنغمات", "المشاعر من خلال القصص"] },
+  }[locale];
+  const { title, heading, description, lede, label, links } = copy;
+  const shortcuts = ["english-storytime-without-fluent-english", "pinyin-and-tones-for-parents", "feelings-words-through-stories"].map((slug, i) => `<a href="${route(locale, `/guides/${slug}`)}">${esc(links[i])}</a>`).join(" · ");
   const starterSlugs = new Set(["english-storytime-without-fluent-english", "repetition-without-pressure", "three-chinese-words-a-day", "three-minute-chinese-routine"]);
   const groupDefs = [
     { key: "starter", title: localizedGuideHubTitle(locale, "starter"), select: (g) => starterSlugs.has(g.slug) },
@@ -240,8 +244,8 @@ function guidesHub(locale) {
     { key: "nour", title: localizedGuideHubTitle(locale, "nour"), select: (g) => g.world === "noor" && !starterSlugs.has(g.slug) },
   ];
   const groups = groupDefs.map((group) => `<section class="guide-group guide-group--${group.key}"><h2>${esc(group.title)}</h2><div class="guide-grid">${GUIDES.filter(group.select).map((g) => `<article class="guide-card"><p class="brand-kicker">${g.world === "koko" ? "Koko · English" : "Nour · Chinese"}</p><h3><a href="${route(locale, `/guides/${g.slug}`)}">${esc(g.title[locale])}</a></h3><p>${esc(g.description[locale])}</p><p><strong>${COPY[locale].team}</strong> · ${g.dateModified || EDITORIAL_UPDATED}</p></article>`).join("")}</div></section>`).join("");
-  const schema = { "@context": "https://schema.org", "@type": "CollectionPage", name: title, description, url: `${ORIGIN}${route(locale, "/guides")}`, inLanguage: l.lang, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_CURRENT, hasPart: GUIDES.map((g) => ({ "@type": "Article", name: g.title[locale], url: `${ORIGIN}${route(locale, `/guides/${g.slug}`)}` })) };
-  return `${head(locale, "/guides", title, description).replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>')}<body class="brand-surface editorial-page">${nav(locale, "/guides")}<main class="editorial-shell"><header class="editorial-hero"><p class="brand-kicker">Fursay editorial library</p><h1>${esc(title)}</h1><p class="editorial-lede">${esc(description)}</p><p>${esc(COPY[locale].intro)}</p></header>${groups}${infoLinks(locale, false)}${inlineSubscribe(locale, "guides_index_end")}</main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="/js/site-shared-20261120m-click-inline.js"></script></body></html>`;
+  const schema = { "@context": "https://schema.org", "@type": "CollectionPage", name: heading, description, url: `${ORIGIN}${route(locale, "/guides")}`, inLanguage: l.lang, datePublished: EDITORIAL_UPDATED, dateModified: EDITORIAL_CURRENT, hasPart: GUIDES.map((g) => ({ "@type": "Article", name: g.title[locale], url: `${ORIGIN}${route(locale, `/guides/${g.slug}`)}` })) };
+  return `${head(locale, "/guides", title, description).replace("</head>", '<link rel="stylesheet" href="/css/inline-subscribe-20261101.css"></head>')}<body class="brand-surface editorial-page">${nav(locale, "/guides")}<main class="editorial-shell"><header class="editorial-hero"><p class="brand-kicker">Fursay editorial library</p><h1>${esc(heading)}</h1><p class="editorial-lede">${esc(lede)}</p><p>${esc(COPY[locale].intro)}</p><p>${esc(label)} ${shortcuts}</p></header>${groups}${infoLinks(locale, false)}${inlineSubscribe(locale, "guides_index_end")}</main>${footer(locale)}<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="/js/site-shared-20261120m-click-inline.js"></script></body></html>`;
 }
 function localizedGuideHubTitle(locale, group) {
   const titles = {
