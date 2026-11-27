@@ -237,5 +237,6 @@ async function main() {
 
 main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
+  if (error?.code === "ENOENT") console.error("Missing local file. Run npm run check:artifacts first to generate local check artifacts.");
   process.exit(1);
 });

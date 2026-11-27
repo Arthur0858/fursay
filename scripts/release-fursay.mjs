@@ -442,7 +442,7 @@ function applyHomeKokoInlineSubscribe(siteDir) {
   }
 }
 
-function writeReleaseManifest() {
+function writeReleaseManifest({ localArtifactsOnly = false } = {}) {
   const siteDir = resolve(process.cwd(), "fursay-optimized-site");
   const siteStructure = readJson(resolve(siteDir, "data/site-structure.json"));
   const css = siteStructure.sharedAssets?.css?.find((asset) => asset.includes("picture-world-shared-")) || "";
@@ -660,6 +660,13 @@ function writeReleaseManifest() {
   writeLinksManifest(siteDir, source);
   writeShareKit(siteDir, source);
   writeTrafficLaunchKit(siteDir, source);
+  if (localArtifactsOnly) {
+    writeVideoDiscovery(siteDir, source);
+    writeProductsManifest(siteDir, source);
+    writeMonetizationRoadmap(siteDir, source);
+    writeMonetizationRoadmapPage(siteDir);
+    return;
+  }
   writeNoorSprintStatus(siteDir, source);
   writeVideoDiscovery(siteDir, source);
   writeShortlinkManifest(siteDir, source);
@@ -5038,6 +5045,11 @@ ${packCards}
 }
 
 async function main() {
+  if (process.argv.slice(2).length === 1 && process.argv[2] === "--local-check-artifacts") {
+    writeReleaseManifest({ localArtifactsOnly: true });
+    console.log("Local check artifacts generated.");
+    return;
+  }
   const args = parseArgs();
   const outRoot = `/tmp/fursay-release-${stamp}`;
   ensureOutDir(outRoot);
