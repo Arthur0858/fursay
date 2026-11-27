@@ -990,4 +990,31 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/terms"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/terms"/>
   </url>
-</urlset>
+<url>
+    <loc>https://fursay.com/guides/nour-name-in-chinese</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-name-in-chinese"/>
+  </url><url>
+    <loc>https://fursay.com/zh/guides/nour-name-in-chinese</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-name-in-chinese"/>
+  </url><url>
+    <loc>https://fursay.com/ar/guides/nour-name-in-chinese</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fursay.com/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://fursay.com/zh/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fursay.com/ar/guides/nour-name-in-chinese"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fursay.com/guides/nour-name-in-chinese"/>
+  </url></urlset>
