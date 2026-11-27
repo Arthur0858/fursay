@@ -1287,6 +1287,7 @@ function writeLinksPage(siteDir, links) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fursay Links</title>
   <meta name="description" content="Choose a Fursay story pack: Koko English stories or Nour Arabic-Chinese stories, with tracked signup and share links.">
+  <meta name="robots" content="noindex,follow">
   <meta property="og:title" content="Fursay story pack links">
   <meta property="og:description" content="Choose Koko or Nour and get a free family story pack.">
   <meta property="og:url" content="https://fursay.com/links">
