@@ -23,21 +23,21 @@ export const TRUST_OVERRIDES = {
     ]]
   },
   "editorial-method": {
-    en: ["Fursay editorial method", "How the team selects, checks, translates, updates, and corrects parent-facing material", [
+    en: ["How Fursay Creates Parent Guides", "We start with family questions, check relevant sources, review three languages, and welcome reports of sentences needing correction.", [
       ["Choose a specific family question", "Each guide starts from a recognizable moment and gives adults a small option they can try without buying anything. We write for parents and caregivers rather than promising a result for a child."],
       ["Check relevant sources", "We prefer official organizations, original research, and professional guidance. Each source note explains which principle it supports and what it cannot establish about a Fursay activity or an individual family."],
       ["Review three language versions", "The team checks English, Traditional Chinese, and Arabic wording for clarity, local context, and usable steps. Translation does not replace professional review where a specialist judgment is needed, and we do not invent individual qualifications."],
       ["Keep boundaries visible", "Before publication we review examples, limitations, affiliate disclosures, links, accessibility, and structured data. Guides are parent-facing ideas, not diagnosis, therapy, or guaranteed instruction."],
       ["Correct and update responsibly", "Each guide lists a publication date, modification date, and its own revision note. Readers can report a specific sentence through Contact. A material correction updates the page, structured data, and sitemap date; a major content deployment restarts the 14-day stability period used in review preparation."]
     ]],
-    zh: ["Fursay 編輯方法", "團隊如何選題、核對、翻譯、更新與修正家長內容", [
+    zh: ["Fursay 家長指南如何編輯", "從家庭問題選題、核對相關來源、審閱三種語言，也讓讀者指出需要修正的句子。", [
       ["從具體家庭問題開始", "每篇指南都從容易辨認的生活時刻出發，提供不需購買任何內容就能嘗試的小選擇。文字寫給父母與照顧者，不替孩子保證成果。"],
       ["核對來源相關性", "優先選用官方組織、原始研究與專業指引。每個來源旁都說明它支持哪個原則，以及它無法證明 Fursay 活動或個別家庭會有什麼結果。"],
       ["審閱三種語言", "團隊檢查英文、繁體中文與阿文是否清楚、符合在地情境並包含可執行步驟。需要專業判斷時，翻譯不能取代專業審查；我們不虛構個人資格。"],
       ["清楚呈現界線", "發布前檢查例子、限制、聯盟揭露、連結、無障礙與結構化資料。指南是給家長的想法，不是診斷、治療或保證有效的教學。"],
       ["負責任地修正更新", "每篇指南列出發布日期、修改日期與獨立修訂說明。讀者可透過聯絡頁指出具體句子。重大修正會更新頁面、結構化資料與 sitemap 日期；重大內容部署會重新開始 14 日穩定期。"]
     ]],
-    ar: ["منهج تحرير Fursay", "كيف يختار الفريق المحتوى ويتحقق منه ويترجمه ويحدثه ويصححه", [
+    ar: ["كيف يُعدّ Fursay أدلة الوالدين", "نبدأ بأسئلة الأسرة، ونتحقق من المصادر، ونراجع اللغات الثلاث، ونستقبل بلاغات القراء عن الجمل التي تحتاج إلى تصحيح.", [
       ["اختيار سؤال عائلي محدد", "يبدأ كل دليل بلحظة معروفة ويقترح خيارًا صغيرًا يمكن للبالغ تجربته بلا شراء. نكتب للوالدين ومقدمي الرعاية ولا نعد بنتيجة للطفل."],
       ["التحقق من صلة المصدر", "نفضل المنظمات الرسمية والبحث الأصلي والإرشاد المهني. يشرح كل تعليق المصدر المبدأ الذي يدعمه وما لا يستطيع إثباته عن نشاط Fursay أو أسرة بعينها."],
       ["مراجعة اللغات الثلاث", "يراجع الفريق وضوح الإنجليزية والصينية التقليدية والعربية وسياقها المحلي وخطواتها العملية. لا تحل الترجمة محل المراجعة المتخصصة عند الحاجة ولا نخترع مؤهلات شخصية."],
