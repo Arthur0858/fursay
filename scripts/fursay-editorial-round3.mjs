@@ -37,8 +37,8 @@ function guide(slug, world, title, description, revision, detailText, depth, too
 export const ROUND3_GUIDES = [
   guide(
     "koko-feelings-at-bedtime", "koko",
-    localized("A quieter Koko story before bed: naming one feeling", "睡前讀 Koko：用一個情緒詞收好今天", "قصة Koko قبل النوم: تسمية شعور واحد"),
-    localized("A low-pressure bedtime story plan for noticing a character's feeling, keeping the family language, and ending on time.", "把睡前共讀縮成一個表情、一個情緒詞與平靜收尾；不必把夜晚變成英文練習課。", "خطة هادئة لقصة ما قبل النوم تلاحظ شعور الشخصية وتحافظ على لغة الأسرة وتنتهي في وقت مناسب."),
+    localized("Koko bedtime story: name one feeling together", "Koko 睡前故事：陪孩子說一個情緒詞", "قصة Koko قبل النوم: سموا شعورًا معًا"),
+    localized("Try a gentle Koko bedtime story routine: notice one picture, name a possible feeling in your family language, and close the story when ready.", "睡前一起看 Koko 一張圖，用家庭語言說一個可能的感覺，再依孩子的狀態收尾。", "جربوا قصة Koko قبل النوم: لاحظوا صورة، وسموا شعورًا محتملًا بلغة الأسرة، ثم اختتموا القصة عندما تكونون مستعدين."),
     localized("We added a one-feeling limit, a short ending option, and a printable bedtime cue card; this is a family reading idea, not sleep or mental-health treatment.", "本次新增單一情緒詞上限、縮短收尾方案與睡前提示卡；這是家庭共讀想法，不是睡眠或心理治療。", "أضفنا حدًا لشعور واحد وخيارًا لنهاية قصيرة وبطاقة تذكير؛ هذه فكرة للقراءة العائلية وليست علاجًا للنوم أو للصحة النفسية."),
     {
       en: [
