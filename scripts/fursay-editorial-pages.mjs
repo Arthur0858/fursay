@@ -232,7 +232,7 @@ function guidesHub(locale) {
   const l = LOCALES[locale];
   const title = locale === "zh" ? "家長雙語共讀指南" : locale === "ar" ? "أدلة القراءة الثنائية للوالدين" : "Parent guides for bilingual story time";
   const count = GUIDE_SLUGS.length;
-  const description = locale === "zh" ? `${count} 篇可在家嘗試的英文與中文家庭情境指南，附具體步驟、限制、來源和可直接使用的小工具。` : locale === "ar" ? `${count} دليلًا عمليًا لمواقف عائلية مع الإنجليزية والصينية، بخطوات وحدود ومصادر وأدوات قابلة للاستخدام.` : `${count} practical guides for English and Chinese family moments, with distinct steps, limits, sources, and usable activities.`;
+  const description = locale === "zh" ? `${count} 篇可在家嘗試的英文與中文家庭情境指南，涵蓋故事、家庭練習與親子共讀。` : locale === "ar" ? `${count} دليلًا عمليًا لمواقف عائلية مع الإنجليزية والصينية، تضم قصصًا وأفكارًا للقراءة والأنشطة العائلية.` : `${count} practical guides for English and Chinese family moments, covering stories, family practice, and shared reading.`;
   const starterSlugs = new Set(["english-storytime-without-fluent-english", "repetition-without-pressure", "three-chinese-words-a-day", "three-minute-chinese-routine"]);
   const groupDefs = [
     { key: "starter", title: localizedGuideHubTitle(locale, "starter"), select: (g) => starterSlugs.has(g.slug) },
@@ -269,6 +269,7 @@ function trustPage(locale, kind) {
 export const HANDWRITTEN_GUIDE_SLUGS = new Set([
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
+  "nour-and-zayd",
 ]);
 function isHandwrittenGuidePath(path) {
   return /^(?:\/zh|\/ar)?\/guides\/([^/]+)$/.test(path)
@@ -447,7 +448,7 @@ function writeAdsenseReadiness(siteDir) {
   const stableWindowReadyAt = stableAnchor ? addDays(stableAnchor, 14) : null;
   const stableWindowComplete = Boolean(stableWindowReadyAt && today >= stableWindowReadyAt);
   const sourceUrls = new Set(Object.values(ALL_EDITORIAL_DEPTH).flatMap((guide) => guide.sources.map(([key]) => ALL_EDITORIAL_SOURCES[key]?.[1]).filter(Boolean)));
-  const contentShapeReady = GUIDES.length === 14 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
+  const contentShapeReady = GUIDES.length === 15 && GUIDES.filter((guide) => !HANDWRITTEN_GUIDE_SLUGS.has(guide.slug)).every((guide) => ALL_EDITORIAL_DEPTH[guide.slug]) && Object.keys(ALL_EDITORIAL_DEPTH).length === 12 && Object.values(ALL_EDITORIAL_DEPTH).every((guide) => guide.sources.length >= 3 && guide.links.length >= 2);
   const evidenceFresh = Object.entries(gates).filter(([key]) => key !== "editorialPagesWithImpressions").every(([, gate]) => gate.fresh);
   const loveReady = gates.lovetypesReady?.status === "ready" && gates.lovetypesReady.fresh;
   const impressionsReady = gates.editorialPagesWithImpressions?.status === "passed" && gates.editorialPagesWithImpressions.value >= 5 && gates.editorialPagesWithImpressions.fresh;
