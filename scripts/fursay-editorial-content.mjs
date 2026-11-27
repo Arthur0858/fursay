@@ -15,6 +15,7 @@ export const GUIDE_SLUGS = [
   ...ROUND3_GUIDES.map((guide) => guide.slug),
   "bilingual-bedtime-books-for-toddlers",
   "picture-books-for-naming-feelings",
+  "do-you-write-tone-marks",
 ];
 
 const SOURCES = {
@@ -298,6 +299,11 @@ const CORE_GUIDES = [
 ];
 
 const HANDWRITTEN_GUIDES = [
+  {
+    slug: "do-you-write-tone-marks", world: "noor", datePublished: "2026-11-27", dateModified: "2026-11-27",
+    title: localized("Should you write tone marks on Pinyin syllables?", "寫拼音音節要標聲調嗎？", "هل نكتب علامات النغمة على مقاطع Pinyin؟"),
+    description: localized("For family practice, mark tones on an adult reference when useful, and listen to a reliable model first.", "家庭練習時，可在成人參考紙上標聲調，先聽可靠示範，再回到故事。", "في تدريب الأسرة، ضعوا العلامة على مرجع البالغ عند الحاجة واستمعوا أولًا إلى نموذج موثوق."),
+  },
   {
     slug: "bilingual-bedtime-books-for-toddlers", world: "koko", dateModified: "2026-11-14",
     title: localized("Bilingual bedtime books for toddlers", "給幼兒的雙語睡前繪本：從一張圖開始", "كتب ثنائية اللغة لوقت النوم مع الأطفال الصغار"),
