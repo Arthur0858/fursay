@@ -198,8 +198,8 @@ const CORE_GUIDES = [
   },
   {
     slug: GUIDE_SLUGS[5], world: "noor", sources: SOURCES.language,
-    title: localized("Pinyin and tones: a parent-friendly starting point", "拼音與聲調：家長可以採用的簡單起點", "Pinyin والنغمات: بداية مناسبة للوالدين"),
-    description: localized("Use Pinyin and Mandarin tone cues carefully without turning a family story into a phonetics class.", "謹慎使用拼音與中文聲調提示，不把家庭故事變成語音學課堂。", "استخدموا Pinyin وإشارات نغمات الصينية بعناية من دون تحويل القصة العائلية إلى درس صوتيات."),
+    title: localized("Pinyin and tones: a parent-friendly starting point", "拼音與聲調怎麼陪孩子讀？家長共讀指南", "Pinyin والنغمات: بداية مناسبة للوالدين"),
+    description: localized("Use Pinyin and Mandarin tone cues carefully without turning a family story into a phonetics class.", "拼音與聲調是共讀時的有限提示：先聽可靠示範，在短句中使用，再回到故事。不必先學會所有聲調，也不必把家庭故事變成語音學課堂。", "استخدموا Pinyin وإشارات نغمات الصينية بعناية من دون تحويل القصة العائلية إلى درس صوتيات."),
     details: localized({
       scene: "A parent sees mā, má, mǎ, and mà and assumes every tone must be mastered before saying a useful word. The marks are important, but beginning with an accurate model, a gesture, and one meaningful phrase is more practical than studying a full chart during story time.",
       goal: "Treat Pinyin as a map between a Chinese character and a sound model. The tone mark reminds the adult that pitch movement matters. It does not guarantee the right consonant, vowel, rhythm, or natural use by itself.",
