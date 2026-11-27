@@ -18,7 +18,7 @@ export const SHORT_META_DESCRIPTIONS = {
   "/zh/editorial-method": "了解親子共讀家長指南的編輯方法：團隊從家庭問題選題、核對來源、審閱三種語言，並檢查內容限制與連結。頁面也說明指南內容的更新方式，以及讀者如何透過聯絡頁提出修正。",
   "/zh/terms": "了解家庭故事與親子共讀指南的使用條款，包括免費下載的家庭個人使用方式、成人電子郵件更新，以及選擇性書籍連結。頁面也說明內容的使用界線以及條款可能更新的方式與範圍。",
   "/privacy": "Learn how Fursay handles adult email submissions, anonymous interaction data, children’s information, and privacy requests.",
-  "/about": "Meet Fursay, a parent-facing source of family stories, practical guides, and free printables for English and Chinese storytime.",
+  "/about": "Discover Fursay’s bilingual family stories, practical parent guides, and free printable samples for English and Chinese storytime.",
   "/contact": "Contact the Fursay team about a story, guide, correction, privacy request, or technical issue, and include the relevant page.",
   "/terms": "Read the terms for using Fursay’s free family stories, guides, downloads, optional book links, and adult email updates.",
   "/ar/privacy": "تعرّفوا على طريقة تعامل Fursay مع بريد البالغين وإشارات التفاعل المجهولة وبيانات الأطفال، وكيفية تقديم طلب خصوصية.",
